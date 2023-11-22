@@ -21,7 +21,7 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../../../bin/libintl.lib")
+//#pragma comment(lib,"../../../../bin/libintl.lib")
 #ifdef __INTEL_COMPILER
 #pragma comment(lib,"libiomp5md.lib")
 #endif

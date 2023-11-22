@@ -14,7 +14,7 @@
  */
 
 #ifdef _MSC_VER
-#pragma comment(lib, "../../bin/libxml2.lib")
+//#pragma comment(lib, "../../bin/libxml2.lib")
 #endif
 
 #include <libxml/xmlreader.h>

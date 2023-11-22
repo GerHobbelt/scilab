@@ -139,8 +139,8 @@ static void clearOpenedMatfiles()
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../bin/libintl.lib")
-#pragma comment(lib,"../../bin/libmatio.lib")
+//#pragma comment(lib,"../../bin/libintl.lib")
+//#pragma comment(lib,"../../bin/libmatio.lib")
 /*--------------------------------------------------------------------------*/
 int WINAPI DllMain(HINSTANCE hinstDLL, DWORD flag, LPVOID reserved)
 {

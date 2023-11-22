@@ -1,8 +1,8 @@
 /*--------------------------------------------------------------------------*/
 /* Example only for Windows */
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib, "../../../../../../bin/call_scilab.lib")
-#pragma comment(lib, "../../../../../../bin/api_scilab.lib")
+//#pragma comment(lib, "../../../../../../bin/call_scilab.lib")
+//#pragma comment(lib, "../../../../../../bin/api_scilab.lib")
 /*--------------------------------------------------------------------------*/
 #include <stdlib.h>
 #include <stdio.h>

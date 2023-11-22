@@ -22,10 +22,10 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib, "../../bin/pcre.lib")
-#pragma comment(lib, "../../bin/pcreposix.lib")
-#pragma comment(lib, "../../bin/libintl.lib")
-#pragma comment(lib, "../../bin/libxml2.lib")
+//#pragma comment(lib, "../../bin/pcre.lib")
+//#pragma comment(lib, "../../bin/pcreposix.lib")
+//#pragma comment(lib, "../../bin/libintl.lib")
+//#pragma comment(lib, "../../bin/libxml2.lib")
 /*--------------------------------------------------------------------------*/
 int WINAPI DllMain(HINSTANCE hInstance, DWORD reason, PVOID pvReserved)
 {

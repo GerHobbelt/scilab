@@ -27,7 +27,7 @@
 #endif
 #include <windows.h>
 
-#pragma comment(lib,"../../bin/libintl.lib")
+//#pragma comment(lib,"../../bin/libintl.lib")
 #if defined(TCL_MAJOR_VERSION) && defined(TCL_MAJOR_VERSION)
 #if TCL_MAJOR_VERSION == 8
 #if TCL_MINOR_VERSION == 4

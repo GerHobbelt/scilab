@@ -22,16 +22,16 @@
 #include <windows.h>
 #include "machine.h"
 /*-----------------------------------------------------------------------------------*/
-#pragma comment(lib, "../../../../bin/libxml2.lib")
-#pragma comment(lib, "../../../../bin/libintl.lib")
-#pragma comment(lib, "../../../../bin/blasplus.lib")
-#pragma comment(lib, "../../../../bin/lapack.lib")
+//#pragma comment(lib, "../../../../bin/libxml2.lib")
+//#pragma comment(lib, "../../../../bin/libintl.lib")
+//#pragma comment(lib, "../../../../bin/blasplus.lib")
+//#pragma comment(lib, "../../../../bin/lapack.lib")
 /*-----------------------------------------------------------------------------------*/
 /* force linking fortran libraries */
-#pragma comment(lib, "../../../../bin/core_f.lib")
-#pragma comment(lib, "../../../../bin/elementary_functions_f.lib")
-#pragma comment(lib, "../../../../bin/linpack_f.lib")
-#pragma comment(lib, "../../../../bin/output_stream_f.lib")
+//#pragma comment(lib, "../../../../bin/core_f.lib")
+//#pragma comment(lib, "../../../../bin/elementary_functions_f.lib")
+//#pragma comment(lib, "../../../../bin/linpack_f.lib")
+//#pragma comment(lib, "../../../../bin/output_stream_f.lib")
 /*-----------------------------------------------------------------------------------*/
 extern int C2F(withf2c)(int *bOK);
 /*-----------------------------------------------------------------------------------*/

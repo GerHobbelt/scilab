@@ -18,7 +18,7 @@
 #include "context.hxx"
 
 #ifdef _MSC_VER
-#pragma comment(lib,"../../../../bin/libintl.lib")
+//#pragma comment(lib,"../../../../bin/libintl.lib")
 #endif
 
 extern "C"

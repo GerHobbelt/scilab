@@ -23,7 +23,7 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../../../bin/libintl.lib")
+//#pragma comment(lib,"../../../../bin/libintl.lib")
 /*--------------------------------------------------------------------------*/
 /* COMMON used by fortran */
 typedef struct

@@ -23,7 +23,7 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../../../bin/libintl.lib")
+//#pragma comment(lib,"../../../../bin/libintl.lib")
 /*--------------------------------------------------------------------------*/
 /* defines & exports fortran COMMON in C */
 /* required by F2C */

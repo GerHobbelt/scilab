@@ -20,7 +20,7 @@
 #include "copyBlasFile.h"
 #include "GetPathOfThisExe.h"
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../bin/libxml2.lib")
+//#pragma comment(lib,"../../bin/libxml2.lib")
 /*--------------------------------------------------------------------------*/
 #define LOG_FILENAME L"SetupAtlas.log"
 #define ATLASSPEC_FILENAME L"Atlas.spec"

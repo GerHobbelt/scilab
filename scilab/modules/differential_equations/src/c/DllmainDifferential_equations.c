@@ -24,7 +24,7 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../../../bin/libintl.lib")
+//#pragma comment(lib,"../../../../bin/libintl.lib")
 /*--------------------------------------------------------------------------*/
 
 /* we force fortran COMMON initialization */

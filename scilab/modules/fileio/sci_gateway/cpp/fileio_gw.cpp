@@ -20,7 +20,7 @@
 #define MODULE_NAME L"fileio"
 
 #ifdef _MSC_VER
-#pragma comment(lib,"../../../../bin/archive.lib")
+//#pragma comment(lib,"../../../../bin/archive.lib")
 #endif
 
 extern "C"

@@ -20,8 +20,8 @@
 // Create a C code to use call_scilab:
 
 #ifdef _MSC_VER
-#pragma comment(lib, "call_scilab.lib")
-#pragma comment(lib, "libscilab.lib")
+//#pragma comment(lib, "call_scilab.lib")
+//#pragma comment(lib, "libscilab.lib")
 #endif
 /*--------------------------------------------------------------------------*/
 #include <stdio.h>
