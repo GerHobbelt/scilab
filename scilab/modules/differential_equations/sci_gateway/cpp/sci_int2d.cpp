@@ -204,14 +204,14 @@ types::Function::ReturnValue sci_int2d(types::typed_list &in, int _iRetCount, ty
     // params (optional)
     if (in.size() == iFPar+2)
     {
-        if (in[3]->isDouble() == false)
+        if (in[iFPar+1]->isDouble() == false)
         {
             Scierror(999, _("%s: Wrong type for input argument #%d: A real matrix expected.\n"), "int2d", iFPar+2);
             DifferentialEquation::removeDifferentialEquationFunctions();
             return types::Function::Error;
         }
 
-        pDblParams = in[3]->getAs<types::Double>();
+        pDblParams = in[iFPar+1]->getAs<types::Double>();
         if (pDblParams->isComplex())
         {
             Scierror(999, _("%s: Wrong type for input argument #%d: A real matrix expected.\n"), "int2d", iFPar+2);
