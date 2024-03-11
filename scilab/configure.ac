@@ -1004,7 +1004,7 @@ if test "$with_javasci" != no -o "$with_gui" != no -o "$enable_build_help" != no
                 AC_SUBST(JAKARTA_ACTIVATION_API)
 
                 # JOGL 2
-                AC_JAVA_CHECK_JAR([jogl],[jogamp.opengl.x11.glx.GLX],[Scilab 3D rendering], [], [], 2.5)
+                AC_JAVA_CHECK_JAR([jogl],[com.jogamp.opengl.GLAutoDrawable],[Scilab 3D rendering], [], [], 2.5)
                 JOGL2=$PACKAGE_JAR_FILE
                 AC_SUBST(JOGL2)
 
