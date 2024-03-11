@@ -42,8 +42,10 @@ POSSIBILITY OF SUCH DAMAGE.
 modules, but which are not relevant to the exported API. This includes some
 functions whose names all begin with "_pcre_". */
 
-#ifndef PCRE_INTERNAL_H
-#define PCRE_INTERNAL_H
+#ifndef PCRE2_INTERNAL_H
+#define PCRE2_INTERNAL_H
+
+#include <stdint.h>
 
 /* Define DEBUG to get debugging output on stdout. */
 
@@ -1102,7 +1104,7 @@ sense, but are not part of the PCRE public API. */
 
 extern BOOL         _pcre_is_newline(const uschar *, int, const uschar *,
                                      int *, BOOL);
-extern int          _pcre_ord2utf8(int, uschar *);
+extern int          _pcre_ord2utf8(uint32_t cvalue, uint8_t *utf8bytes);
 extern real_pcre   *_pcre_try_flipped(const real_pcre *, real_pcre *,
                                       const pcre_study_data *, pcre_study_data *);
 extern int          _pcre_ucp_findprop(const unsigned int, int *, int *);
