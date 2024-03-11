@@ -1,30 +1,19 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2021 - UTC - Stéphane MOTTELET
+// Copyright (C) 2024 - 3DS - Vincent COUVERT
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
-// <-- TEST WITH GRAPHIC -->
 // <-- NO CHECK REF -->
-//
-// <-- Non-regression test for bug 16734 -->
+// <-- Non-regression test for issue 17211 -->
 //
 // <-- GitLab URL -->
-// https://gitlab.com/scilab/scilab/-/issues/16734
+// https://gitlab.com/scilab/scilab/-/issues/17211
 //
 // <-- Short Description -->
-// findobj severely degrades run time performance in Scilab 6.1.1
+// int2d returns an error when called with 6 input arguments.
 
-clf
-plot();
-gce().children(7).tag = "foo";
+deff("z=f(x,y)", "z=cos(x+y)");
+[I,e] = int2d(0,1,0,1,f,[1.d-10, 1, 50, 4000, 1]);
 
-N=1000;
-timer();
-for i=1:N
-    h = findobj("tag","foo");
-end
-t = timer()/N;
-
-assert_checktrue(t<1e-4)

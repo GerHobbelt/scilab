@@ -560,14 +560,15 @@ private :
         add_vars(*e.getArgs().getAs<ArrayListVar>());
         add_vars(*e.getReturns().getAs<ArrayListVar>());
     }
-
-    void visit(const ListExp& e)  /* done */
+    /*
+    void visit(const ListExp& e)
     {
         add_ast(30, e);
         add_exp(e.getStart());
         add_exp(e.getStep());
         add_exp(e.getEnd());
     }
+    */
 
     void visit(const AssignExp& e)
     {
@@ -629,6 +630,15 @@ private :
     {
         add_ast(39, e);
         add_exps(e.getExps());
+    }
+
+    void visit(const ListExp& e)
+    {
+        add_ast(40, e);
+        add_bool(e.hasExplicitStep());
+        add_exp(e.getStart());
+        add_exp(e.getStep());
+        add_exp(e.getEnd());
     }
 
   public:

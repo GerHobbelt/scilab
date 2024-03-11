@@ -110,6 +110,40 @@ std::map<std::wstring, std::function<bool(types::InternalType*)>> typeValidator 
     {L"tab", mustBeUIControlStyle<__GO_UI_TAB__>}
 };
 
+static types::InternalType* callComparison(std::function<types::InternalType*(types::InternalType*, types::InternalType*)> cmp, ast::OpExp::Oper oper, types::InternalType* x, types::InternalType* y)
+{
+    types::InternalType* pIT = cmp(x, y);
+    if (pIT == nullptr)
+    {
+        types::typed_list in = {x, y};
+        types::typed_list out;
+        types::Function::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(oper), in, 1, out, true);
+        if (ret == types::Function::ReturnValue::OK)
+        {
+            return out[0];
+        }
+    }
+
+    return pIT;
+}
+
+static types::InternalType* callComparison(std::function<types::InternalType*(types::InternalType*, types::InternalType*, const std::wstring&)> cmp, ast::OpExp::Oper oper, const std::wstring& operstr, types::InternalType* x, types::InternalType* y)
+{
+    types::InternalType* pIT = cmp(x, y, operstr);
+    if (pIT == nullptr)
+    {
+        types::typed_list in = {x, y};
+        types::typed_list out;
+        types::Function::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(oper), in, 1, out, true);
+        if (ret == types::Function::ReturnValue::OK)
+        {
+            return out[0];
+        }
+    }
+
+    return pIT;
+}
+
 template<class T_OUT, class T_IN>
 types::InternalType* convertNum(types::InternalType* val)
 {
@@ -413,9 +447,7 @@ bool orBool(types::InternalType* ret)
 
 int mustBePositive(types::typed_list& x)
 {
-    types::Double* tmp = new types::Double(0);
-    types::InternalType* tmp2 = GenericGreater(x[0], tmp);
-    tmp->killMe();
+    types::InternalType* tmp2 = callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], new types::Double(0));
     if (tmp2)
     {
         bool res = andBool(tmp2);
@@ -428,9 +460,7 @@ int mustBePositive(types::typed_list& x)
 
 int mustBeNonpositive(types::typed_list& x)
 {
-    types::Double* tmp = new types::Double(0);
-    types::InternalType* tmp2 = GenericLessEqual(x[0], tmp);
-    tmp->killMe();
+    types::InternalType* tmp2 = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], new types::Double(0));
     if (tmp2)
     {
         bool res = andBool(tmp2);
@@ -443,9 +473,7 @@ int mustBeNonpositive(types::typed_list& x)
 
 int mustBeNonnegative(types::typed_list& x)
 {
-    types::Double* tmp = new types::Double(0);
-    types::InternalType* tmp2 = GenericGreaterEqual(x[0], tmp);
-    tmp->killMe();
+    types::InternalType* tmp2 = callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], new types::Double(0)); 
     if (tmp2)
     {
         bool res = andBool(tmp2);
@@ -458,9 +486,7 @@ int mustBeNonnegative(types::typed_list& x)
 
 int mustBeNegative(types::typed_list& x)
 {
-    types::Double* tmp = new types::Double(0);
-    types::InternalType* tmp2 = GenericLess(x[0], tmp);
-    tmp->killMe();
+    types::InternalType* tmp2 = callComparison(GenericLess, ast::OpExp::Oper::le, L"<", x[0], new types::Double(0));
     if (tmp2)
     {
         bool res = andBool(tmp2);
@@ -538,23 +564,47 @@ int mustBeNonsparse(types::typed_list& x)
     return x[0]->isSparse() ? 1 : 0;
 }
 
+static int isComplex(const double* val, size_t size, double eps)
+{
+    for (size_t i = 0; i < size; ++i)
+    {
+        if (abs(val[i]) > eps)
+        {
+            return 1;
+        }
+    }
+
+    return 0;
+}
+
 int mustBeReal(types::typed_list& x)
 {
     if (x[0]->isDouble() || x[0]->isPoly() || x[0]->isSparse())
     {
         if (x[0]->isDouble() && x[0]->getAs<types::Double>()->isComplex())
         {
-            return 1;
+            types::Double* d = x[0]->getAs<types::Double>();
+            return isComplex(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
         }
 
         if (x[0]->isPoly() && x[0]->getAs<types::Polynom>()->isComplex())
         {
-            return 1;
+            types::Polynom* p = x[0]->getAs<types::Polynom>();
+            types::Double* d = p->getCoef();
+            int ret = isComplex(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
+            d->killMe();
+            return ret;
         }
 
         if (x[0]->isSparse() && x[0]->getAs<types::Sparse>()->isComplex())
         {
-            return 1;
+            types::Sparse* sp = x[0]->getAs<types::Sparse>();
+            size_t nonZeros = sp->nonZeros();
+            std::vector<double> NonZeroR(nonZeros);
+            std::vector<double> NonZeroI(nonZeros);
+            sp->outputValues(NonZeroR.data(), NonZeroI.data());
+
+            return isComplex(NonZeroI.data(), nonZeros, x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
         }
     }
 
@@ -585,11 +635,30 @@ int mustBeInteger(types::typed_list& x)
 
 int mustBeMember(types::typed_list& x)
 {
-    types::InternalType* tmp2 = GenericComparisonEqual(x[0], x[1]);
-    if (tmp2)
+    types::InternalType* tmp = nullptr;
+    if (x[1]->isCell())
     {
-        bool res = orBool(tmp2);
-        tmp2->killMe();
+        types::Cell* ce = x[1]->getAs<types::Cell>();
+        types::Bool* tmp2 = new types::Bool(1, ce->getSize());
+        for (int i = 0; i < ce->getSize(); ++i)
+        {
+            types::InternalType* tmp3 = GenericComparisonEqual(x[0], ce->get(i));
+            bool res = andBool(tmp3);
+            tmp2->set(i, res);
+            tmp3->killMe();
+        }
+
+        tmp = tmp2;
+    }
+    else
+    {
+        tmp = GenericComparisonEqual(x[0], x[1]);
+    }
+
+    if (tmp)
+    {
+        bool res = orBool(tmp);
+        tmp->killMe();
         return res ? 0 : 1;
     }
 
@@ -598,11 +667,11 @@ int mustBeMember(types::typed_list& x)
 
 int mustBeGreaterThan(types::typed_list& x)
 {
-    types::InternalType* tmp2 = GenericGreater(x[0], x[1]);
-    if (tmp2)
+    types::InternalType* tmp = callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], x[1]);
+    if (tmp)
     {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
+        bool res = andBool(tmp);
+        tmp->killMe();
         return res ? 0 : 1;
     }
 
@@ -611,11 +680,11 @@ int mustBeGreaterThan(types::typed_list& x)
 
 int mustBeGreaterThanOrEqual(types::typed_list& x)
 {
-    types::InternalType* tmp2 = GenericGreaterEqual(x[0], x[1]);
-    if (tmp2)
+    types::InternalType* tmp = callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], x[1]);
+    if (tmp)
     {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
+        bool res = andBool(tmp);
+        tmp->killMe();
         return res ? 0 : 1;
     }
 
@@ -624,11 +693,11 @@ int mustBeGreaterThanOrEqual(types::typed_list& x)
 
 int mustBeLessThan(types::typed_list& x)
 {
-    types::InternalType* tmp2 = GenericLess(x[0], x[1]);
-    if (tmp2)
+    types::InternalType* tmp = callComparison(GenericLess, ast::OpExp::Oper::lt, L"<", x[0], x[1]);
+    if (tmp)
     {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
+        bool res = andBool(tmp);
+        tmp->killMe();
         return res ? 0 : 1;
     }
 
@@ -637,11 +706,11 @@ int mustBeLessThan(types::typed_list& x)
 
 int mustBeLessThanOrEqual(types::typed_list& x)
 {
-    types::InternalType* tmp2 = GenericLessEqual(x[0], x[1]);
-    if (tmp2)
+    types::InternalType* tmp = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], x[1]);
+    if (tmp)
     {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
+        bool res = andBool(tmp);
+        tmp->killMe();
         return res ? 0 : 1;
     }
 
@@ -702,6 +771,39 @@ int mustBeScalarOrEmpty(types::typed_list& x)
 int mustBeVector(types::typed_list& x)
 {
     return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector() && x[0]->getAs<types::GenericType>()->isScalar() == false) ? 0 : 1;
+    //return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
+}
+
+int mustBeSquare(types::typed_list& x)
+{
+    if (x[0]->isGenericType() == false)
+    {
+        return 1;
+    }
+    
+    types::GenericType* gt = x[0]->getAs<types::GenericType>();
+
+    if (gt->isDouble() && gt->getAs<types::Double>()->isEmpty())
+    {
+        return 1;
+    }
+
+    if (gt->getDims() != 2)
+    {
+        return 1;
+    }
+
+    int* dims = gt->getDimsArray();
+    int ref = dims[0];
+    for (int i = 1; i < gt->getDims(); ++i)
+    {
+        if (dims[i] < 1 || dims[i] != ref) //-1 0
+        {
+            return 1;
+        }
+    }
+
+    return 0;
 }
 
 int mustBeInRange(types::typed_list& x)
@@ -794,19 +896,57 @@ int mustBeEqualDims(types::typed_list& x)
 {
     int iDims1 = x[0]->getAs<types::GenericType>()->getDims();
     int iDims2 = x[1]->getAs<types::GenericType>()->getDims();
+    std::vector<int> ref = {-1};
 
-    if (iDims2 != iDims2)
+    if (x.size() == 3)
     {
-        return 1;
+        types::Double* pref = x[2]->getAs<types::Double>();
+        ref.clear();
+        ref.reserve(pref->getSize());
+        for (int i = 0; i < pref->getSize(); ++i)
+        {
+            ref.push_back(static_cast<int>(pref->get()[i]));
+        }
+    }
+
+    if (ref.size() >= 1 && ref[0] != -1)
+    {
+        for (int i = 0; i < ref.size(); ++i)
+        {
+            if (iDims1 < ref[i] || iDims2 < ref[i])
+            {
+                return 1;
+            }
+        }
+    }
+    else
+    {
+        if (iDims2 != iDims2)
+        {
+            return 1;
+        }
     }
 
     int* piDims1 = x[0]->getAs<types::GenericType>()->getDimsArray();
     int* piDims2 = x[1]->getAs<types::GenericType>()->getDimsArray();
-    for (int i = 0; i < iDims1; ++i)
+    if (ref.size() >= 1 && ref[0] != -1)
     {
-        if (piDims1[i] != piDims2[i])
+        for (int i = 0; i < ref.size(); ++i)
         {
-            return 1;
+            if (piDims1[ref[i] - 1] != piDims2[ref[i] - 1])
+            {
+                return 1;
+            }
+        }
+    }
+    else
+    {
+        for (int i = 0; i < iDims1; ++i)
+        {
+            if (piDims1[i] != piDims2[i])
+            {
+                return 1;
+            }
         }
     }
 
@@ -863,7 +1003,7 @@ std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::v
     {L"mustBeNonNan", {mustBeNonNan, {1}}},
     {L"mustBeNonzero", {mustBeNonzero, {1}}},
     {L"mustBeNonsparse", {mustBeNonsparse, {1}}},
-    {L"mustBeReal", {mustBeReal, {1}}},
+    {L"mustBeReal", {mustBeReal, {1, 2}}},
     {L"mustBeInteger", {mustBeInteger, {1}}},
     {L"mustBeGreaterThan", {mustBeGreaterThan, {2}}},
     {L"mustBeLessThan", {mustBeLessThan, {2}}},
@@ -876,13 +1016,14 @@ std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::v
     {L"mustBeNonempty", {mustBeNonempty, {1}}},
     {L"mustBeScalarOrEmpty", {mustBeScalarOrEmpty, {1}}},
     {L"mustBeVector", {mustBeVector, {1}}},
+    {L"mustBeSquare", {mustBeSquare, {1}}},
     {L"mustBeMember", {mustBeMember, {2}}},
-    {L"mustBeInRange", {mustBeInRange, {3,4}}},
+    {L"mustBeInRange", {mustBeInRange, {3, 4}}},
     {L"mustBeFile", {mustBeFile, {1}}},
     {L"mustBeFolder", {mustBeFolder, {1}}},
     {L"mustBeNonzeroLengthText", {mustBeNonzeroLengthText, {1}}},
     {L"mustBeValidVariableName", {mustBeValidVariableName, {1}}},
-    {L"mustBeEqualDims", {mustBeEqualDims, {2}}},
+    {L"mustBeEqualDims", {mustBeEqualDims, {2, 3}}},
     {L"mustBeSameType", {mustBeSameType, {2}}},
     {L"mustBeEqualDimsOrScalar", {mustBeEqualDimsOrScalar, {-1}}}
 };
@@ -910,6 +1051,7 @@ std::map<std::wstring, std::tuple<std::string, int>> errorValidators = {
     {L"mustBeNonempty", {"%s: Wrong type for input argument #%d: Must not be empty.\n", 2}},
     {L"mustBeScalarOrEmpty", {"%s: Wrong type for input argument #%d: Must be a scalar or empty.\n", 2}},
     {L"mustBeVector", {"%s: Wrong type for input argument #%d: Must be a vector.\n", 2}},
+    {L"mustBeSquare", {"%s: Wrong type for input argument #%d: Must be a square matrix.\n", 2}},
     {L"mustBeMember", {"%s: Wrong type for input argument #%d: Must be member of %s.\n", 3}},
     {L"mustBeInRange", {"%s: Wrong value for input argument #%d: Must be in range [%s, %s].\n", 4}},
     {L"mustBeFile", {"%s: Wrong type for input argument #%d: Must be a file.\n", 2}},
@@ -1022,7 +1164,7 @@ types::InternalType* expandvar(types::InternalType* x, const std::vector<std::tu
                     std::tie(dim, v) = d;
                     if (v == nullptr)
                     {
-                        if (dim.size() == 1)
+                        if (dim.size() == 1 && dim[0] != -1)
                         {
                             convertDims.push_back(dim[0]);
                         }
@@ -1167,54 +1309,61 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
     return nullptr;
 }
 
-std::wstring sub2str(const std::vector<int>& dims)
+std::vector<std::vector<int>> todims(const std::vector<std::tuple<std::vector<int>, symbol::Variable*>>& dims)
 {
-    if (dims.size() == 1)
-    {
-        return dims[0] == -1 ? L":" : std::to_wstring(dims[0]);
-    }
-
-    std::wstring res = L"";
+    std::vector<std::vector<int>> ret;
     for (auto&& s : dims)
     {
-        if (res.empty() == false)
+        std::vector<int> d;
+        symbol::Variable* v;
+        std::tie(d, v) = s;
+        if (v == nullptr)
         {
-            res += L", ";
+            ret.push_back(d);
         }
-
-        res += std::to_wstring(s);
+        else
+        {
+            ret.push_back({static_cast<int>(v->top()->m_pIT->getAs<types::Double>()->get()[0])});
+        }
     }
 
-    return L"[" + res + L"]";
-}
-
-std::wstring sub2str(const std::tuple<std::vector<int>, symbol::Variable*>& dim)
-{
-    std::vector<int> d;
-    symbol::Variable* v;
-    std::tie(d, v) = dim;
-    if (v == nullptr)
-    {
-        return sub2str(d);
-    }
-    else
-    {
-        return sub2str({static_cast<int>(v->top()->m_pIT->getAs<types::Double>()->get()[0])});
-    }
+    return ret;
 }
 
 std::wstring dims2str(const std::vector<std::tuple<std::vector<int>, symbol::Variable*>>& dims)
 {
     std::wstring res = L"";
-    for (auto&& s : dims)
+
+    std::vector<std::vector<int>> c = todims(dims);
+    for (int i = 0; i < c.size(); ++i)
     {
+        auto s = c[i];
         if (res.empty() == false)
         {
             res += L" x ";
         }
 
-        res += sub2str(s);
+        if (s.size() == 1)
+        {
+            res += s[0] == -1 ? std::wstring(1, L'm' + i) : std::to_wstring(s[0]);
+        }
+        else
+        {
+            std::wstring res2;
+            for (auto&& d : s)
+            {
+                if (res2.empty() == false)
+                {
+                    res2 += L", ";
+                }
+
+                res2 += std::to_wstring(d);
+            }
+
+            res += L"[" + res2 + L"]";
+        }
     }
+
     return res;
 }
 
@@ -1475,19 +1624,29 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                 types::InternalType* skipArgs = symbol::Context::getInstance()->get(symbol::Symbol(L"%skipArgs"));
                 if (skipArgs == nullptr)
                 {
-                    int expected = 0;
+                    int expectedmin = 0;
+                    int expectedmax = 0;
                     for (auto&& a : m_arguments)
                     {
-                        expected += a.second.default_value == nullptr ? 1 : 0;
+                        expectedmin += a.second.default_value == nullptr ? 1 : 0;
+                        expectedmax += 1;
                     }
 
-                    if (in.size() < expected || in.size() > m_arguments.size())
+                    if (in.size() < expectedmin || in.size() > m_arguments.size())
                     {
-                        Scierror(999, _("%s: Wrong number of input argument(s): %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), (int)m_arguments.size());
+                        if (expectedmin != expectedmax)
+                        {
+                            Scierror(999, _("%s: Wrong number of input arguments: %d to %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), expectedmin, expectedmax);
+                        }
+                        else
+                        {
+                            Scierror(999, _("%s: Wrong number of input argument(s): %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), (int)m_arguments.size());
+                        }
                         return types::Function::Error;
                     }
                 }
 
+                //manage default_value of all inputs before everything else
                 for (int i = 0; i < m_inputArgs->size(); ++i)
                 {
                     std::wstring name = (*m_inputArgs)[i]->getSymbol().getName();
@@ -1508,101 +1667,105 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
 
                             pIT->IncreaseRef();
                             pContext->put(symbol::Symbol(name), pIT);
+                            in.push_back(pIT);
                             delete exec;
                         }
                     }
-                    else
+                }
+
+                for (int i = 0; i < m_inputArgs->size(); ++i)
+                {
+                    std::wstring name = (*m_inputArgs)[i]->getSymbol().getName();
+                    ARG arg = m_arguments[name];
+                    if (arg.dimsConvertor)
                     {
-                        if (arg.dimsConvertor)
+                        // check size + expand + transpose
+                        types::InternalType* p = arg.dimsConvertor(in[i]);
+                        if (p == nullptr)
                         {
-                            // check size + expand + transpose
-                            types::InternalType* p = arg.dimsConvertor(in[i]);
-                            if (p == nullptr)
+                            if (skipArgs == nullptr)
                             {
-                                if (skipArgs == nullptr)
-                                {
-                                    char msg[128];
-                                    os_sprintf(msg, _("%s: Wrong size of input argument #%d: %ls expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, arg.dimsStr().c_str());
-                                    throw ast::InternalError(scilab::UTF8::toWide(msg));
-                                }
+                                char msg[128];
+                                os_sprintf(msg, _("%s: Wrong size of input argument #%d: %ls expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, arg.dimsStr().c_str());
+                                throw ast::InternalError(scilab::UTF8::toWide(msg));
+                            }
 
-                                p = in[i]; // no error and send "bad formatted var to function, following 'skipArguments' status"
-                            }
-                            else
-                            {
-                                if (in[i] != p)
-                                {
-                                    // update var
-                                    pContext->put(symbol::Symbol(name), p);
-                                }
-                            }
+                            p = in[i]; // no error and send "bad formatted var to function, following 'skipArguments' status"
                         }
-
-                        for (auto&& convertor : arg.convertors)
+                        else
                         {
-                            types::InternalType* p = convertor.convertor(in[i]);
-                            if (p)
+                            if (in[i] != p)
                             {
-                                if (arg.dimsConvertor)
-                                {
-                                    p = arg.dimsConvertor(p);
-                                }
-
+                                // update var
                                 pContext->put(symbol::Symbol(name), p);
                             }
                         }
+                    }
 
-                        if (skipArgs == nullptr)
+                    for (auto&& convertor : arg.convertors)
+                    {
+                        types::InternalType* p = convertor.convertor(in[i]);
+                        if (p)
                         {
-                            for (int j = 0; j < arg.validators.size(); ++j)
+                            if (arg.dimsConvertor)
                             {
-                                types::typed_list args;
-                                for (int k = 0; k < arg.validators[j].inputs.size(); ++k)
+                                p = arg.dimsConvertor(p);
+                            }
+
+                            pContext->put(symbol::Symbol(name), p);
+                        }
+                    }
+
+                    if (skipArgs == nullptr)
+                    {
+                        for (int j = 0; j < arg.validators.size(); ++j)
+                        {
+                            types::typed_list args;
+                            for (int k = 0; k < arg.validators[j].inputs.size(); ++k)
+                            {
+                                int index = -1;
+                                types::InternalType* val = nullptr;
+                                std::tie(index, val) = arg.validators[j].inputs[k];
+                                if (index != -1)
                                 {
-                                    int index = -1;
-                                    types::InternalType* val = nullptr;
-                                    std::tie(index, val) = arg.validators[j].inputs[k];
-                                    if (index != -1)
-                                    {
-                                        args.push_back(in[index]);
-                                    }
-                                    else
-                                    {
-                                        args.push_back(val);
-                                    }
+                                    args.push_back(in[index]);
+                                }
+                                else
+                                {
+                                    args.push_back(val);
+                                }
+                            }
+
+                            int ret = arg.validators[j].validator(args);
+                            if (ret != 0)
+                            {
+                                auto error = arg.validators[j].error;
+                                auto errorArgs = arg.validators[j].errorArgs;
+                                char msg[128];
+
+                                switch (abs(std::get<1>(error)))
+                                {
+                                    case 2:
+                                        os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1);
+                                        break;
+                                    case 3:
+                                        os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data());
+                                        break;
+                                    case 4:
+                                        os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data());
+                                        break;
+                                    case 5:
+                                        os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data(), errorArgs[2].data());
+                                        break;
                                 }
 
-                                int ret = arg.validators[j].validator(args);
-                                if (ret != 0)
-                                {
-                                    auto error = arg.validators[j].error;
-                                    auto errorArgs = arg.validators[j].errorArgs;
-                                    char msg[128];
-
-                                    switch (abs(std::get<1>(error)))
-                                    {
-                                        case 2:
-                                            os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1);
-                                            break;
-                                        case 3:
-                                            os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, std::get<1>(error) > 0 ? errorArgs[0].data() : std::to_string(ret).data());
-                                            break;
-                                        case 4:
-                                            os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data());
-                                            break;
-                                        case 5:
-                                            os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data(), errorArgs[2].data());
-                                            break;
-                                    }
-
-                                    throw ast::InternalError(scilab::UTF8::toWide(msg));
-                                }
+                                throw ast::InternalError(scilab::UTF8::toWide(msg));
                             }
                         }
                     }
                 }
             }
-            catch (const ast::InternalError& ie)
+            catch (const ast::InternalError& /*ie*/)
             {
                 pContext->scope_end();
                 ConfigVariable::macroFirstLine_end();
@@ -1928,20 +2091,24 @@ void Macro::updateArguments()
                 std::wstring name;
                 if (dec->getArgumentName()->isSimpleVar())
                 {
+                    std::vector<std::wstring> allowedVar = {L"%eps", L"%i", L"%inf", L"%nan"};
                     name = dec->getArgumentName()->getAs<ast::SimpleVar>()->getSymbol().getName();
-                    if (m_arguments.size() >= inputNames.size() || inputNames[m_arguments.size()] != name)
+                    if (std::find(allowedVar.begin(), allowedVar.end(), name) == allowedVar.end())
                     {
-                        char msg[128];
-                        if (std::find(inputNames.begin(), inputNames.end(), name) == inputNames.end())
+                        if (m_arguments.size() >= inputNames.size() || inputNames[m_arguments.size()] != name)
                         {
-                            os_sprintf(msg, _("%s: Identifier '%s' must be an input argument.\n"), scilab::UTF8::toUTF8(m_wstName).data(), scilab::UTF8::toUTF8(name).data());
-                        }
-                        else
-                        {
-                            os_sprintf(msg, _("%s: Identifier must be define in same order that parameters.\n"), scilab::UTF8::toUTF8(m_wstName).data());
-                        }
+                            char msg[128];
+                            if (std::find(inputNames.begin(), inputNames.end(), name) == inputNames.end())
+                            {
+                                os_sprintf(msg, _("%s: Identifier '%s' must be an input argument.\n"), scilab::UTF8::toUTF8(m_wstName).data(), scilab::UTF8::toUTF8(name).data());
+                            }
+                            else
+                            {
+                                os_sprintf(msg, _("%s: Identifier must be define in same order that parameters.\n"), scilab::UTF8::toUTF8(m_wstName).data());
+                            }
 
-                        throw ast::InternalError(scilab::UTF8::toWide(msg), 999, dec->getArgumentType()->getLocation());
+                            throw ast::InternalError(scilab::UTF8::toWide(msg), 999, dec->getArgumentType()->getLocation());
+                        }
                     }
                 }
                 else // FieldExp
@@ -2166,8 +2333,24 @@ void Macro::updateArguments()
                         {
                             if (inputs[i]->isSimpleVar())
                             {
-                                int pos = static_cast<int>(std::find(inputNames.begin(), inputNames.end(), inputs[i]->getAs<ast::SimpleVar>()->getSymbol().getName()) - inputNames.begin());
-                                argValidator.inputs.push_back({pos, nullptr});
+                                std::vector<std::wstring> allowedVar = {L"%eps", L"%i", L"%inf", L"%nan"};
+                                std::wstring name = inputs[i]->getAs<ast::SimpleVar>()->getSymbol().getName();
+                                if (std::find(allowedVar.begin(), allowedVar.end(), name) == allowedVar.end())
+                                {
+                                    if (std::find(inputNames.begin(), inputNames.end(), name) == inputNames.end())
+                                    {
+                                        char msg[128];
+                                        os_sprintf(msg, _("%s: Identifier '%s' must be an input argument.\n"), scilab::UTF8::toUTF8(m_wstName).data(), scilab::UTF8::toUTF8(name).data());
+                                        throw ast::InternalError(scilab::UTF8::toWide(msg), 999, dec->getArgumentType()->getLocation());
+                                    }
+
+                                    int pos = static_cast<int>(std::find(inputNames.begin(), inputNames.end(), inputs[i]->getAs<ast::SimpleVar>()->getSymbol().getName()) - inputNames.begin());
+                                    argValidator.inputs.push_back({pos, nullptr});
+                                }
+                                else
+                                {
+                                    argValidator.inputs.push_back({-1, symbol::Context::getInstance()->get(symbol::Symbol(name))});
+                                }
                             }
                             else // constant
                             {
@@ -2287,7 +2470,7 @@ bool Macro::checkStaticDims(const std::vector<std::tuple<std::vector<int>, symbo
     bool res = true;
     for (auto&& d : dims)
     {
-        if (std::get<1>(d) != nullptr)
+        if (std::get<1>(d) == nullptr)
         {
             return false;
         }

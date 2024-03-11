@@ -54,7 +54,6 @@ SciCurl::~SciCurl()
     if(_formpost)
     {
         curl_formfree(_formpost);
-        curl_formfree(_lastptr);
     }
 }
 

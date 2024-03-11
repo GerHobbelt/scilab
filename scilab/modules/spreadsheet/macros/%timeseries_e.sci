@@ -57,6 +57,7 @@ function out = %timeseries_e(varargin)
                 error(msprintf(_("Unknown field: %s"), i));
             end
         end
+        return
     elseif type(varargin(1)) == 1 | type(varargin(1)) == 129 | type(varargin(1)) == 2 then
         ts = varargin($);
         if nargin == 2 then
@@ -76,25 +77,13 @@ function out = %timeseries_e(varargin)
             error(msprintf(_("Extraction not possible.\n")));
         end
         out = ts;
-        //update props
-        for f = fieldnames(out.props)'
-            if f == "userdata" then
-                out.props(f) = [];
-                continue;
-            end
-
-            if size(out.props(f), "*") == 1 then
-                out.props(f) = [out.props(f)(1)];
-            else
-                out.props(f) = [out.props(f)(1) out.props(f)(2:$)(1, j)];
-            end
-        end
 
         out.vars = [out.vars(1) out.vars(1, 2:$)(1, j)];
 
         for c = 1:size(out.vars, "*")
             out.vars(c).data = out.vars(c).data(i);
         end
+
     elseif type(varargin(1)) == 4 then
         idx = varargin(1);
         ts = varargin($);
@@ -159,5 +148,54 @@ function out = %timeseries_e(varargin)
         end
 
         out = ts(find(nb == 1), j);
+    end
+
+    if out == [] then
+        return
+    end
+
+    //update props
+    timeStep = %nan;
+    sampleRate = %nan;
+    time = out.vars(1).data;
+    if size(time, "*") > 1 then
+        [tmp, step] = isregular(time);
+        if ~tmp then
+            timeUnit = ["years", "months", "days"];
+            for tu = timeUnit
+                [tmp, step] = isregular(time, tu)
+                if tmp then
+                    break;
+                end
+            end
+        end
+        if ~isnan(step) then
+            timeStep = step;
+            if isduration(timeStep) then
+                sampleRate = seconds(1) / timeStep;
+            else
+                sampleRate = %nan;
+            end
+            
+        end
+    end
+
+    for f = fieldnames(out.props)'
+        select f
+        case "userdata"
+            out.props(f) = [];
+        case "startTime"
+            out.props(f) = time(1);
+        case "timeStep"
+            out.props(f) = timeStep;
+        case "sampleRate"
+            out.props(f) = sampleRate;
+        else
+            if size(out.props(f), "*") == 1 then
+                out.props(f) = [out.props(f)(1)];
+            else
+                out.props(f) = [out.props(f)(1) out.props(f)(2:$)(1, j)];
+            end
+        end
     end
 endfunction

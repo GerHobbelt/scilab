@@ -180,10 +180,10 @@ assert_checkequal(ts.Properties.VariableNames, ["Time", "Info"]);
 t = timeseries(datetime(2023, 3, 15:20)', [1:6]');
 assert_checkequal(t(%f), []);
 assert_checkequal(t([%f, %f, %f, %f, %f, %f]), []);
-assert_checktrue(t(%t) == t(1));
+assert_checktrue(string(t(%t)) == string(t(1)));
 assert_checktrue(t([%t %f %t]) == t([1 3]));
-assert_checktrue(t([%t %f; %f %t; %t %t]) == t([1 3 5 6]));
-assert_checktrue(t([%t %f  %f; %t %t %t]) == t([1 2 4 6]));
+assert_checktrue(string(t([%t %f; %f %t; %t %t])) == string(t([1 3 5 6])));
+assert_checktrue(string(t([%t %f  %f; %t %t %t])) == string(t([1 2 4 6])));
 
 // -----------------------------------------------------------------------
 // timeseries with matrices

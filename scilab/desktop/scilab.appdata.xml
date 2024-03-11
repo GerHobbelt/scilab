@@ -41,6 +41,12 @@
       </screenshot>
     </screenshots>
     <releases>
+      <release version="2024.0.0" date="2023-10-24">
+        <url>https://help.scilab.org/docs/2024.0.0/en_US/CHANGES.html</url>
+      </release>
+      <release version="2023.1.0" date="2023-05-23">
+        <url>https://help.scilab.org/docs/2023.1.0/en_US/CHANGES.html</url>
+      </release>
       <release version="2023.0.0" date="2023-03-10">
         <url>https://help.scilab.org/docs/2023.0.0/en_US/CHANGES.html</url>
       </release>

@@ -86,17 +86,17 @@ function out = datetime(varargin)
 
         select size(t, 2)
         case 3
-            d(idx, [1 2 3]) = t(:, index(:,1));
+            d(idx, index(:,1)) = t(:, [1 2 3]);
         case 5
-            d(idx, [1 2 3 4 5]) = t(:, index(:,1));
+            d(idx, index(:,1)) = t(:, [1 2 3 4 5]);
         case 6
-            d(idx, :) = t(:, index(:,1));
+            d(idx, index(:,1)) = t;
         case 7
-            d(idx, :) = t(:, index(:,1));
+            d(idx, index(:,1)) = t(:, [1:6]);
             if t(:, 7) > 1 then
                 t(:,7) = t(:,7) * 1d-3;
             end
-            d(idx, 6) = t(:, index(:,1)==6) + t(:,7);
+            d(idx, index(:,1) == 6) = d(idx, index(:,1) == 6) + t(:,7);
         end
 
         year_val = d(:, 1);

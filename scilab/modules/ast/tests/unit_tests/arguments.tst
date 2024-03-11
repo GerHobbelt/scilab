@@ -18,26 +18,26 @@ function checkAllCombination(v1, v2, v3, v4, v5, v6, v7, v8, v9, v10, v11, v12, 
         v3 double
         v4 (1,:) double
         v5 {mustBePositive}
-        v6 {mustBeMember(x, "value")}
+        v6 {mustBeMember(v6, "value")}
         v7 (1,:) {mustBePositive}
-        v8 (1,:) {mustBeMember(x, "value")}
+        v8 (1,:) {mustBeMember(v8, "value")}
         v9 double {mustBePositive}
-        v10 double {mustBeMember(x, "value")}
+        v10 double {mustBeMember(v10, "value")}
         v11 (1,:) double {mustBePositive}
-        v12 (1,:) double {mustBeMember(x, "value")}
+        v12 (1,:) double {mustBeMember(v12, "value")}
         // with defaults values
         v13 = 42
         v14 (1,:) = 42
         v15 double = 42
         v16 (1,:) double = 42
         v17 {mustBePositive} = 42
-        v18 {mustBeMember(x, "value")} = 42
+        v18 {mustBeMember(v18, "value")} = 42
         v19 (1,:) {mustBePositive} = 42
-        v20 (1,:) {mustBeMember(x, "value")} = 42
+        v20 (1,:) {mustBeMember(v20, "value")} = 42
         v21 double {mustBePositive} = 42
-        v22 double {mustBeMember(x, "value")} = 42
+        v22 double {mustBeMember(v22, "value")} = 42
         v23 (1,:) double {mustBePositive} = 42
-        v24 (1,:) double {mustBeMember(x, "value")} = 42
+        v24 (1,:) double {mustBeMember(v24, "value")} = 42
         // comment line
     end
 end

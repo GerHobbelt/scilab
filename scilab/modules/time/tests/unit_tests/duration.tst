@@ -236,6 +236,9 @@ checkstring(d, "61.017 m");
 d.format = "s";
 checkstring(d, "3661.000 s");
 
+d = duration(1, 0, 0);
+assert_checkequal(d(1):d($), d(1));
+
 
 // checkerror
 msg = msprintf(_("%s: Wrong number of input argument: %d to %d expected, except to %d.\n"), "duration", 1, 8, 2);

@@ -79,44 +79,20 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 groupbins = groupbins{1};
             end
 
-            [val, tmp1, vindex, count] = unique(t.vars(groupvars).data);
-
             d = t.vars(groupvars).data;
-            if groupbins <> "none" then
+            if groupbins == "none" then
+                [uniqueVal(1), km, vindex, count] = unique(d)
+            else
                 // for example: groupbins = ["second", "minute", "hour", "day", "month", "year", "dayname", "monthname"])
-                d = groupBinsCheck(groupbins, d);
+                [uniqueVal(1), km, vindex, count] = groupBinsCheck(groupbins, d, includeEmpty);
+                if includeEmpty then
+                    nb = zeros(size(uniqueVal(1), "r"), 1);
+                    nb(unique(vindex)) = count;
+                    count = nb;
+                end
             end
 
-            [val, ki] = gsort(d, "g", "i");
-            tmp = val(2:$) == val(1:$-1);
-            vindex(ki) = cumsum(~[%f; tmp]);
-            count = [0; find(~tmp)'; size(val, "*")];
-            count = count(2:$) - count(1:$-1);
-            tmp = find(tmp);
-            if tmp <> [] then tmp = tmp + 1; end
-            val(tmp) = [];
-            ki(tmp) = [];
-            if and(groupbins <> ["none", "dayname"]) then
-                [ki, kk] = gsort(ki, "g", "i");
-                val = val(kk);
-                count = count(kk);
-            end
-            // if groupbins == "none" then
-            //     val(tmp) = [];
-            //     ki(tmp) = [];
-            // else
-            //     tmp = find(tmp);
-            //     if tmp <> [] then tmp = tmp + 1; end
-            //     val(tmp) = [];
-            //     ki(tmp) = [];
-            //     if groupbins <> "dayname" then
-            //         [ki, kk] = gsort(ki, "g", "i");
-            //         val = val(kk);
-            //         count = count(kk);
-            //     end
-            // end
-            val = list(val);
-            uniqueVal = val;
+            val = uniqueVal;
         end
     else
 
@@ -234,15 +210,19 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                     // for example: groupbins = ["second", "minute", "hour", "day", "month", "year", "dayname", "monthname"])
                     for i = 1:sizeGroupvars
                         d = t.vars(groupvars(i)).data;
-                        d = groupBinsCheck(groupbins, d)
-                        [uniqueVal(i), kmd(i), V(:,i), nb] = unique(d)
+                        [uniqueVal(i), kmd(i), V(:, i), nb] = groupBinsCheck(groupbins, d, includeEmpty);
                     end
                 end  
                     
                 [rV, km, vindex, nbV] = unique(V, "r");
 
                 if includeEmpty then
-                    [val, b] = %_allCombinations(uniqueVal, V, kmd)
+                    vv = list();
+                    kmd = list();
+                    for i = 1:sizeGroupvars
+                        [tmp, kmd(i), vv(i)] = unique(uniqueVal(i));
+                    end
+                    [val, b] = %_allCombinations(uniqueVal, vv, kmd)
                     count = zeros(size(b, 1), 1);
                     [res, kmres, index, nbres] = unique([b; rV], "r");
                     count(nbres == 2) = nbV;
@@ -267,15 +247,14 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                         d = t.vars(groupvars(k)).data;
 
                         if bins == "none" then
-                            [uniqueVal(k), kmd(k), V(:,k), nb] = unique(d)
+                            [uniqueVal(k), kmd(k), V(:, k), nb] = unique(d)
                         else
-                            d = groupBinsCheck(bins, d)
-                            [uniqueVal(k), kmd(k), V(:,k), nb] = unique(d)
+                            [uniqueVal(k), kmd(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
                         end
                     end
 
                 elseif type(groupbins) == 17 then
-                    // possible cases: ["none", "month"], ["month", "year"], ["year", "none"]
+                    // possible cases: {"none", "month"}, {"month", "year"}, {"year", "none"}
                     for k = 1:sizeGroupbins
                         bins = groupbins{k}
                         d = t.vars(groupvars(k)).data;
@@ -331,8 +310,7 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                             if bins == "none" then
                                 [uniqueVal(k), kmd(k), V(:,k), nb] = unique(d)
                             else
-                                d = groupBinsCheck(bins, d)
-                                [uniqueVal(k), kmd(k), V(:,k), nb] = unique(d)
+                                [uniqueVal(k), kmd(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
                             end
                         end
                     end
@@ -341,7 +319,12 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 [rV, km, vindex, nbV] = unique(V, "r");
 
                 if includeEmpty then
-                    [val, b] = %_allCombinations(uniqueVal, V, kmd)
+                    vv = list();
+                    kmd = list();
+                    for i = 1:sizeGroupvars
+                        [tmp, kmd(i), vv(i)] = unique(uniqueVal(i));
+                    end
+                    [val, b] = %_allCombinations(uniqueVal, vv, kmd)
                     count = zeros(size(b, 1), 1);
                     [res, km, index, nbres] = unique([b; rV], "r", "keepOrder");
                     count(nbres == 2) = nbV;
@@ -358,77 +341,114 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
     end
 endfunction
 
-function d = groupBinsCheck(bins, d)
+function [u, km, vindex, count] = groupBinsCheck(bins, d, includeEmpty)
     select bins
     case "year"
         if isdatetime(d) then
             d = d.Year;
+            c = 1;
         else
             d = years(floor(years(d)));
+            c = years(1);
         end
+
     case "month"
         if isduration(d) then
             error(msprintf(_("groupbins must be used with datetime data.\n")));
         end
+
         d.date = d.date - d.Day + 1;
         d.time = zeros(d.time);
-        // d.Day = 1;
-        // d.Hour = 0;
-        // d.Minute = 0;
-        // d.Second = 0;
         d.format = "MMM-yyyy";
+        c = calmonths(1);
+
     case "monthname"
         if isduration(d) then
             error(msprintf(_("groupbins must be used with datetime data.\n")));
         end
-        y = d.Year(1);
-        d.date = d.date - d.Year + y;
+
+        d.Year = ones(d.Year);
         d.date = d.date - d.Day + 1;
         d.time = zeros(d.time);
-        // d.Year = d.Year(1);
-        // d.Day = 1;
-        // d.Hour = 0;
-        // d.Minute = 0;
-        // d.Second = 0;
         d.format = "MMMM";
+        d = string(d);
+        g = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"]';
+        [nb, d] = members(d, g);
+
     case "day"
         if isdatetime(d) then
             d.time = zeros(d.time);
-            // d.Hour = 0;
-            // d.Minute = 0;
-            // d.Second = 0;
-            d.format = "dd-MMM-yyyy"
+            c = caldays(1);
         else
             d = days(floor(days(d)));
+            c = days(1);
         end
+
     case "dayname"
         if isduration(d) then
             error(msprintf(_("groupbins must be used with datetime data.\n")));
         end
+
         d.format = "eeee";
         d = string(d);
+        g = ["Sunday"; "Monday"; "Tuesday"; "Wednesday"; "Thursday"; "Friday"; "Saturday"];
+        [nb, d] = members(d, g);
+
     case "hour"
         if isdatetime(d) then
             d.time = d.time - d.Minute*60 - d.Second;
-            // d.Minute = 0;
-            // d.Second = 0;
-            d.format = "dd-MMM-yyyy HH:mm:ss";
         else
             d = hours(floor(hours(d)));
         end
+
+        c = hours(1);
+
     case "minute"
         if isdatetime(d) then
             d.time = d.time - d.Second;
-            // d.Second = 0;
-            d.format = "dd-MMM-yyyy HH:mm:ss";
         else
             d = minutes(floor(minutes(d)));
         end
+
+        c = minutes(1);
+
     case "second"
-        if isdatetime(d) then
-            d.format = "dd-MMM-yyyy HH:mm:ss";
-        else
+        if isduration(d) then
             d = seconds(floor(seconds(d)));
+        end
+
+        c = seconds(1);
+    end
+
+    monthOrdayname = or(bins == ["monthname", "dayname"]);
+
+    if ~monthOrdayname then
+        b = gsort(d, 'g', 'i');
+        g = (b(1):c:b($))';
+    end
+
+    [u, km, vindex, count] = unique(d)
+    if includeEmpty then
+        if isdatetime(d) then
+            a = d.date * 24 * 60 *60 + d.time;
+            b = g.date * 24 * 60 * 60 + g.time;
+        elseif isduration(d) then
+            a = d.duration;
+            b = g.duration;
+        else
+            if monthOrdayname then
+                a = g(d);
+            else
+                a = d;
+            end
+            b = g;
+        end
+        u = g;
+        [nb, vindex] = members(a, b);
+    else
+        // only necessary for monthname and dayname
+        if monthOrdayname then
+            u = g(u);
         end
     end
 endfunction

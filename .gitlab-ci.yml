@@ -87,7 +87,7 @@ workflow:
           - .gitlab-ci/linux-images/Dockerfile*
       variables:
         GIT_STRATEGY: "fetch"
-        GIT_CLEAN_FLAGS: "none"
+        GIT_CLEAN_FLAGS: "-fX **.bin **/lib"
         BRANCH: "${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}"
         SCI_VERSION_STRING: "scilab-mr${CI_MERGE_REQUEST_IID}-${CI_COMMIT_SHORT_SHA}"
         DOCKER_LINUX_BUILDER: "${CI_REGISTRY_IMAGE}/linux-builder-${BRANCH}"
@@ -98,7 +98,7 @@ workflow:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event"
       variables:
         GIT_STRATEGY: "fetch"
-        GIT_CLEAN_FLAGS: "none"
+        GIT_CLEAN_FLAGS: "-fX **.bin **/lib"
         SCI_VERSION_STRING: "scilab-mr${CI_MERGE_REQUEST_IID}-${CI_COMMIT_SHORT_SHA}"
     # update docker images after a MR merge
     - if: $CI_PIPELINE_SOURCE == "push"

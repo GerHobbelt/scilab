@@ -21,7 +21,7 @@ function n=datenum(varargin)
     select rhs
     case 0
         Date = getdate();
-        n = %datenum(Date(1), Date(2), Date(6), Date(7), Date(8), Date(9))
+        n = %datenum(Date(1), Date(2), Date(6), Date(7), Date(8), Date(9) + Date(10)/1000)
 
     case 1
         DateIn = varargin(1);

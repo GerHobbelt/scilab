@@ -122,8 +122,7 @@ types::Function::ReturnValue sci_http_put_post(types::typed_list &in, types::opt
         if(isJson)
         {
             query.addHTTPHeader("Accept: application/json");
-            query.addHTTPHeader("Content-Type: application/json");
-            query.addHTTPHeader("charsets: utf-8");
+            query.addHTTPHeader("Content-Type: application/json;charset=utf-8");
         }
 
         query.setData(pcData);

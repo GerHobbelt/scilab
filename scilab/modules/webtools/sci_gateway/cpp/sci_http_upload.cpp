@@ -100,14 +100,6 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
         return types::Function::Error;
     }
 
-    char* pcVarName = wide_string_to_UTF8(in[2]->getAs<types::String>()->get(0));
-    for(auto f : files)
-    {
-        query.addFileToForm(pcVarName, f);
-    }
-    FREE(pcVarName);
-    cleanup(files);
-
     if(in.size() > 3)
     {
         // get data
@@ -135,6 +127,15 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
             FREE(pcFieldName);
         }
     }
+
+    // Add file to form after data in case data contents is mandatory for file upload (identifier, ticket, ...)
+    char* pcVarName = wide_string_to_UTF8(in[2]->getAs<types::String>()->get(0));
+    for (auto f : files)
+    {
+        query.addFileToForm(pcVarName, f);
+    }
+    FREE(pcVarName);
+    cleanup(files);
 
     // specific optional argument
     for (const auto& o : opt)

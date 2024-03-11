@@ -428,4 +428,15 @@
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2024.1</revnumber>
+                <revdescription>
+                    <literal>datetime()</literal> and <literal>datetime("now")</literal> handle milliseconds values.
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

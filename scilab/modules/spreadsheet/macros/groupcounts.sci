@@ -92,7 +92,7 @@ function g = groupcounts(varargin)
         // groupbins
         // groupcounts(t, groupvars, groupbins, opts)
         groupbins = varargin(3);
-        defaultGroupbins = ["none","second", "minute", "hour", "day", "month", "year", "dayname", "monthname"];
+        defaultGroupbins = ["none", "second", "minute", "hour", "day", "month", "year", "dayname", "monthname"];
         previousname = emptystr(1, size(groupbins, "*"));
 
         if typeof(groupbins) == "constant" then
@@ -106,6 +106,19 @@ function g = groupcounts(varargin)
         else
             if size(groupbins, "*") <> 1 && size(groupbins, "*") <> size(groupvars, "*") then
                 error(msprintf(_("%s: Wrong size for input argument #%d: Must be the same size as #%d.\n"), fname, 3, 2));
+            end
+
+            if size(groupbins, "*") == 1 then
+                if typeof(groupbins) == "ce" then
+                    groupbins = groupbins{1};
+                end
+                if groupbins <> "none" then
+                    for i = 1:size(groupvars, "*")
+                        if ~isdatetime(t.vars(groupvars(i)).data) && ~isduration(t.vars(groupvars(i)).data) then
+                            error(msprintf(_("%s: Wrong value for input argument #%d.\n"), fname, 3))
+                        end
+                    end
+                end
             end
 
             if typeof(groupbins) == "string" then

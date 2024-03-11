@@ -6,7 +6,7 @@
     <!-- File menu -->
     <menu label="&amp;File" enabled="true">
         <submenu label="&amp;Execute..." accelerator="OSSCKEY E">
-            <callback instruction="%fileToExec = uigetfile(&quot;*.sc*&quot;, &quot;&quot;, gettext(&quot;Select a file to execute&quot;)); if ~(%fileToExec == &quot;&quot;) then exec(%fileToExec); disp(msprintf(gettext(&quot;Execution done.\n&quot;))); end; clear(&quot;%fileToExec&quot;);" type="0"/>
+            <callback instruction="%fileToExec = uigetfile(&quot;*.sc*&quot;, &quot;&quot;, gettext(&quot;Select a file to execute&quot;)); if ~(%fileToExec == &quot;&quot;) then exec(%fileToExec,-1); disp(msprintf(gettext(&quot;Execution done.\n&quot;))); end; clear(&quot;%fileToExec&quot;);" type="0"/>
         </submenu>
         <separator/>
         <submenu label="&amp;Open a file..." accelerator="OSSCKEY O" icon="document-open-sci">

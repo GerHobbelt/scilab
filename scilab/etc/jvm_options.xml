@@ -19,6 +19,9 @@ $SCILAB : scilab path (SCI in Scilab)
     <option value="-Djava.library.path="/>
     <option value="-Djava.class.path=$SCILAB/modules/jvm/jar/org.scilab.modules.jvm.jar"/>
     <option value="-Djava.system.class.loader=org.scilab.modules.jvm.ScilabClassLoader"/>
+    <!-- Use of Scilab class loader requires to disable class data sharing to hide a "Archived non-system classes are disabled" warning at startup -->
+    <!-- See https://gitlab.com/scilab/scilab/-/issues/17144 -->
+    <option value="-Xshare:off"/>
 
     <!-- Needed for Linux version startup -->
     <option value="--add-opens=java.desktop/sun.awt.X11=ALL-UNNAMED" os="linux"/>
