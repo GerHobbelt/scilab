@@ -150,8 +150,11 @@ function out = %timeseries_e(varargin)
             j = varargin(2);
             if type(j) == 10 then
                 str = ts.props.variableNames
-                [xxx, j] = members(j, str);
-                j = j - 1;
+                [xxx, jdx] = members(j, str);
+                if and(jdx == 0) then
+                    error(msprintf(_("Unknown field: %s"), j));
+                end
+                j = jdx - 1;
             end
         end
 

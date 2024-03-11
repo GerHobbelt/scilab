@@ -40,9 +40,9 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
         return types::Function::Error;
     }
 
-    if (_iRetCount > 2)
+    if (_iRetCount > 3)
     {
-        Scierror(78, _("%s: Wrong number of output argument(s): %d to %d expected.\n"), fname, 1, 2);
+        Scierror(78, _("%s: Wrong number of output argument(s): %d to %d expected.\n"), fname, 1, 3);
         return types::Function::Error;
     }
 
@@ -184,9 +184,14 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
     }
 
     out.push_back(query.getResult());
-    if(_iRetCount == 2)
+    if(_iRetCount > 1)
     {
         out.push_back(new types::Double((double)query.getResponseCode()));
+    }
+
+    if(_iRetCount > 2)
+    {
+        out.push_back(query.getHeaders());
     }
 
     return types::Function::OK;

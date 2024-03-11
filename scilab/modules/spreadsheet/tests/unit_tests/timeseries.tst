@@ -112,6 +112,23 @@ checkstring(tscomputed(:, $), [%duration_string(time) v3]);
 checkstring(tscomputed(2:3), [%duration_string(time(2:3)) string(v1(2:3)) string(v2(2:3)) v3(2:3)]);
 checkstring(tscomputed(2, 2:3), [%duration_string(time(2)) string(v2(2)) v3(2)]);
 
+n = 10;
+t = datetime(2000, 1, 1) + caldays(1:n)';
+y = floor(10 * rand(n, 3)) + 10;
+ts = timeseries(t, y(:, 1), y(:, 2), y(:, 3), "VariableNames", ["Time", "Var 1", "Var 2", "Var3"]);
+ts(t, :) = 1;
+checkstring(ts, [%datetime_string(t) string(ones(10,3))]);
+ts(datetime(2000, 1, 2), "Var 2") = 2;
+checkstring(ts(:,2), [%datetime_string(t) string([2; ones(9,1)])]);
+
+t = seconds(1:n)';
+ts = timeseries(t, y(:, 1), "VariableNames", ["seconds", "Var 1"]);
+ts(t, :) = 1;
+checkstring(ts, [%duration_string(t) string(ones(10,1))]);
+ts(seconds(1:2:n), :) = [2;3;4;5;6];
+checkstring(ts, [%duration_string(t) string([2;1;3;1;4;1;5;1;6;1])])
+
+
 // -----------------------------------------------------------------------
 // Others tests
 // -----------------------------------------------------------------------

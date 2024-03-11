@@ -223,6 +223,30 @@ checkdatetime2(datetime(2022, 10, (6:10)') + caldays(6:10)', 2022, 10, (6:10)' +
 checkdatetime2(caldays(6:10) + datetime(2022, 10, 6:10), 2022, 10, (6:10) + (6:10), d1);
 checkdatetime2(caldays(6:10)' + datetime(2022, 10, (6:10)'), 2022, 10, (6:10)' + (6:10)', d2);
 
+checkstring(datetime(2023, 1, 29) + caldays(29), "2023-02-27");
+checkstring(datetime(2023, 1, 29) + caldays(30), "2023-02-28");
+
+checkstring(datetime(2023, 1, 30) + caldays(29), "2023-02-28");
+checkstring(datetime(2023, 1, 30) + caldays(30), "2023-03-01");
+
+checkstring(datetime(2023, 1, 31) + caldays(29), "2023-03-01");
+checkstring(datetime(2023, 1, 31) + caldays(30), "2023-03-02");
+
+checkstring(datetime(2024, 1, 29) + caldays(29), "2024-02-27");
+checkstring(datetime(2024, 1, 29) + caldays(30), "2024-02-28");
+
+checkstring(datetime(2024, 1, 30) + caldays(29), "2024-02-28");
+checkstring(datetime(2024, 1, 30) + caldays(30), "2024-02-29");
+
+checkstring(datetime(2024, 1, 31) + caldays(29), "2024-02-29");
+checkstring(datetime(2024, 1, 31) + caldays(30), "2024-03-01");
+
+checkstring(datetime(2023, 3, 1) - caldays(29), "2023-01-31");
+checkstring(datetime(2023, 3, 1) - caldays(30), "2023-01-30");
+
+checkstring(datetime(2024, 3, 1) - caldays(29), "2024-02-01");
+checkstring(datetime(2024, 3, 1) - caldays(30), "2024-01-31");
+
 // datetime - datetime
 computed = datetime("2022-10-6") - datetime("2022-10-5");
 assert_checktrue(computed == days(1));
