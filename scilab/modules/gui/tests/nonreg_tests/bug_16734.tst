@@ -21,10 +21,10 @@ plot();
 gce().children(7).tag = "foo";
 
 N=1000;
-tic();
+timer();
 for i=1:N
     h = findobj("tag","foo");
 end
-t = toc()/N;
+t = timer()/N;
 
 assert_checktrue(t<1e-4)

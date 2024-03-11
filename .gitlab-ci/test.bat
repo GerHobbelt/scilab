@@ -64,18 +64,18 @@ rem can append in case of restarting a test job with same conccurency
 if exist -d "%SCIHOME%" rmdir "%SCIHOME%" 
 mkdir "%SCIHOME%"
 
-REM check if scilab.bat exists
-if not exist "%INSTALL_DIR%\bin\scilab.bat" (
-  echo "%INSTALL_DIR%\bin\scilab.bat does not exist."
+REM check if Scilex exists
+if not exist "%INSTALL_DIR%\bin\Scilex.exe" (
+  echo "%INSTALL_DIR%\bin\Scilex.exe does not exist."
   exit 1
 )
 
 @echo on
-call "%INSTALL_DIR%\bin\scilab.bat" -nwni -scihome "%SCIHOME%" -quit -e "test_run('%TEST%',[],[],'%LOG_PATH%\%TEST%.xml')"
+call "%INSTALL_DIR%\bin\Scilex.exe" -scihome "%SCIHOME%" -quit -e "test_run('%TEST%',[],[],'%LOG_PATH%\%TEST%.xml'); [__msg__, __err__] = lasterror(), exit(__err__)"
 if errorlevel 1 (
-  echo "Scilab failed to start tests"
+  echo "Scilab exit with code %errorlevel%"
   exit 1
-) 
+)
 
 rem fail without xml report
 copy "%LOG_PATH%\%TEST%.xml" "%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\test\"

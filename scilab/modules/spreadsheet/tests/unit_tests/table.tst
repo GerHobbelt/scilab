@@ -275,3 +275,6 @@ assert_checkequal(string(T), ["1+%i" "2" "T" "toto"]);
 
 T = table([1;2], [3;%i], [2*%i; 4]);
 assert_checkequal(string(T), ["1" "3" "%i*2"; "2" "%i" "4"]);
+
+msg = msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), "table", 1);
+assert_checkerror("table()", msg);

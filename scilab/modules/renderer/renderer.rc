@@ -67,7 +67,7 @@ BEGIN
             VALUE "FileDescription", "renderer module"
             VALUE "FileVersion", "2025, 0, 0, 0"
             VALUE "InternalName", "renderer module"
-            VALUE "LegalCopyright", "Copyright (C) 2023"
+            VALUE "LegalCopyright", "Copyright (C) 2024"
             VALUE "OriginalFilename", "scirenderer.dll"
             VALUE "ProductName", "renderer module"
             VALUE "ProductVersion", "2025, 0, 0, 0"

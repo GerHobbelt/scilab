@@ -2047,7 +2047,7 @@ void Macro::updateArguments()
                     arg.dimsStr = [dims](){ return dims2str(dims); };
                 }
 
-                // convertion
+                // conversion
                 if (dec->getArgumentType()->isSimpleVar())
                 {
                     ARG_CONVERTOR argConv;
@@ -2056,7 +2056,7 @@ void Macro::updateArguments()
                     if (f == nullptr)
                     {
                         char msg[128];
-                        os_sprintf(msg, _("%s: Unknown convertion function '%s'\n"), scilab::UTF8::toUTF8(m_wstName).data(), scilab::UTF8::toUTF8(name).data());
+                        os_sprintf(msg, _("%s: Unknown conversion function '%s'\n"), scilab::UTF8::toUTF8(m_wstName).data(), scilab::UTF8::toUTF8(name).data());
                         throw ast::InternalError(scilab::UTF8::toWide(msg), 999, dec->getArgumentType()->getLocation());
                     }
 

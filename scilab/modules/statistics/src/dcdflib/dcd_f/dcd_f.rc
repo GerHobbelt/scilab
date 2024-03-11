@@ -67,7 +67,7 @@ BEGIN
             VALUE "FileDescription", "dcd library"
             VALUE "FileVersion", "2025, 0, 0, 0"
             VALUE "InternalName", "dcd library for Scilab"
-            VALUE "LegalCopyright", "Copyright (C) 2023"
+            VALUE "LegalCopyright", "Copyright (C) 2024"
             VALUE "OriginalFilename", "dcd_f.dll"
             VALUE "ProductName", "dcd library for Scilab"
             VALUE "ProductVersion", "2025, 0, 0, 0"

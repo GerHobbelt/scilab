@@ -192,6 +192,9 @@ checkstring(ts, expected);
 // -----------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------
+msg = msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), "timeseries", 1);
+assert_checkerror("timeseries()", msg);
+
 AmbientTemperature = [18; 18.5; 20; 20.2; 20.5];
 FlowRate = [50; 52; 53; 55; 60];
 msg = msprintf(_("%s: Wrong type for %s argument #%d: duration or calendarDuration expected"), "timeseries", "TimeStep", 4);

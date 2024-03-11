@@ -46,6 +46,8 @@ types::Function::ReturnValue sci_idempotence(types::typed_list& in, int _iRetCou
 
     types::String* pS = in[0]->getAs<types::String>();
     Parser parser;
+    int iErrCount = 0;
+    int iOkCount = 0;
 
     for (int i = 0; i < pS->getSize(); ++i)
     {
@@ -56,10 +58,11 @@ types::Function::ReturnValue sci_idempotence(types::typed_list& in, int _iRetCou
         FREE(path);
         if (parser.getExitStatus() != Parser::Succeded)
         {
-            Scierror(999, _("%s: Enable to parse %ls.\n"), "idempotence", pS->get()[i]);
-            delete parser.getTree();
+            sciprint("Unable to parse %ls.\n", pS->get()[i]);
+            //delete parser.getTree();
             ThreadManagement::UnlockParser();
-            return types::Function::Error;
+            iErrCount++;
+            continue;
         }
 
         ast::Exp* tree1 = parser.getTree();
@@ -76,10 +79,11 @@ types::Function::ReturnValue sci_idempotence(types::typed_list& in, int _iRetCou
         parser.parse(ostr1.str().c_str());
         if (parser.getExitStatus() != Parser::Succeded)
         {
-            Scierror(999, _("%s: Enable to parse the second time %ls.\n"), "idempotence", pS->get()[i]);
-            delete parser.getTree();
+            sciprint("Unable to parse the second time %ls.\n", pS->get()[i]);
+            //delete parser.getTree();
             ThreadManagement::UnlockParser();
-            return types::Function::Error;
+            iErrCount++;
+            continue;
         }
 
         //--pretty-print 2
@@ -91,11 +95,20 @@ types::Function::ReturnValue sci_idempotence(types::typed_list& in, int _iRetCou
 
         if (ostr1.str() != ostr2.str())
         {
-            Scierror(999, _("%s: Idempotence check failed on file %ls.\n"), "idempotence", pS->get()[i]);
+            sciprint("Idempotence check failed on file %ls.\n", pS->get()[i]);
             sciprint("step 1: \n%ls\n", ostr1.str().c_str());
             sciprint("step 2: \n%ls\n", ostr2.str().c_str());
-            return types::Function::Error;
+            iErrCount++;
+            continue;
         }
+        iOkCount++;
+    }
+
+    sciprint("Ok : %d || Failed : %d\n", iOkCount, iErrCount);
+    if (iErrCount != 0) 
+    {
+        Scierror(999, _("%s: Failed on %d tests.\n"), "idempotence", iErrCount);
+        return types::Function::Error;
     }
 
     return types::Function::OK;

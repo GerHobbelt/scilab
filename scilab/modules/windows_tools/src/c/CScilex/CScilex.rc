@@ -109,7 +109,7 @@ BEGIN
             VALUE "FileDescription", "Scilab 2025.0.0 (Console)"
             VALUE "FileVersion", "2025, 0, 0, 0"
             VALUE "InternalName", "WScilex"
-            VALUE "LegalCopyright", "Copyright (C) 2023"
+            VALUE "LegalCopyright", "Copyright (C) 2024"
             VALUE "OriginalFilename", "WScilex.exe"
             VALUE "ProductName", "Scilab 2025.0.0 Application"
             VALUE "ProductVersion", "2025, 0, 0, 0"

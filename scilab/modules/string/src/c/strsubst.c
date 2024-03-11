@@ -385,7 +385,7 @@ wchar_t *wcssub_reg(const wchar_t* _pwstInput, const wchar_t* _pwstSearch, const
         /*group substitution*/
         wchar_t* p = result;
         int iDollar = 0;
-        while ((p = wcsstr(p, L"$")) != NULL)
+        while ((p = wcsstr(p, L"$")) != NULL && iDollar < replacement_len)
         {
             BOOL sfree = FALSE;
             wchar_t* s = NULL;

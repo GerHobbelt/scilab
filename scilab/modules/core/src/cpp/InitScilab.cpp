@@ -422,6 +422,9 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
         if (parser.getExitStatus() == Parser::Failed)
         {
             scilabWriteW(parser.getErrorMessage());
+            // set lasterror to return an error number at scilab exit when -quit is used
+            ConfigVariable::setLastErrorNumber(999);
+            ConfigVariable::setLastErrorMessage(parser.getErrorMessage());
         }
         else if (parser.getControlStatus() !=  Parser::AllControlClosed)
         {

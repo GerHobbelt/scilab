@@ -41,6 +41,10 @@ function ts = timeseries(varargin)
     fname = "timeseries";
 
     rhs = nargin;
+    if rhs == 0 then
+        error(msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), fname, 1));
+    end
+    
     if rhs == 1 then
         if typeof(varargin(1)) == "st" then
             variableNames = fieldnames(st)';

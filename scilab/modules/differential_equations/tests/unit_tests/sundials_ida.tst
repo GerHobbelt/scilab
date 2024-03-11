@@ -155,21 +155,21 @@ y0 = [1-1e-3; 0; 1e-3];
 yp0 = [-0.0400; 0.0400; 0];
 tspan = [0 4e6];
 
-tic;
+timer();
 for i=1:10
 [t1,y1,info1] = ida("SUN_chemres",tspan,y0,yp0);
 end
-et1=toc();
-tic;
+et1=timer()
+
 for i=1:10
 [t2,y2,info2] = ida(robertsidae,tspan,y0,yp0);
 end
-et2=toc();
-tic;
+et2=timer()
+
 for i=1:10
 [t3,y3,info3] = ida("SUN_chemres",tspan,y0,yp0,jacobian="SUN_chemjac");
 end
-et3=toc();
+et3=timer()
 
 assert_checktrue(max(abs(y1(:,$)-y2(:,$)))<=1e-6)
 assert_checktrue(max(abs(info1.yp(:,$)-info2.yp(:,$)))<=1e-10)

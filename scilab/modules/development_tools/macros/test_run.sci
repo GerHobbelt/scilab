@@ -1064,7 +1064,7 @@ function status = test_single(_module, _testPath, _testName)
 
         if isfile(tmp_err) & tmp_errfile_info(1) <> 0 then
             status.id = 5;
-            status.message = "failed: error_output not empty\n   Use ''no_check_error_output'' option to disable this check.";
+            status.message = "failed: error_output not empty. Use ''no_check_error_output'' option to disable this check.";
             status.details = checkthefile(tmp_err);
             return;
         end
@@ -1077,7 +1077,7 @@ function status = test_single(_module, _testPath, _testName)
         dia = mgetl(tmp_dia);
     else
         status.id = 6;
-        status.message = "failed: Cannot find the dia file: " + tmp_dia + "\nCheck if the Scilab used correctly starts";
+        status.message = "failed: Cannot find the dia file: " + tmp_dia + ". Check if the Scilab used correctly starts.";
         status.details = checkthefile(tmp_dia);
         return;
     end
@@ -1090,8 +1090,8 @@ function status = test_single(_module, _testPath, _testName)
         execstr(dia(tmpdir2_line));
     catch
         status.id = 6;
-        status.message = "failed: Cannot grep the dia file: " + tmp_dia + "\nCheck its content";
-        status.details = checkthefile(tmp_dia);
+        status.message = "failed: Cannot grep the dia file: " + tmp_dia + ". Check its content.";
+        status.details = "";
         return;
     end
     
