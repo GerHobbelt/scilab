@@ -519,7 +519,7 @@ int CallWindowsShellW(wchar_t* _pstCommand)
     CmdLine     = (wchar_t*)MALLOC(iCmdSize * sizeof(wchar_t));
     os_swprintf(CmdLine, iCmdSize, L"%ls /a /c \"%ls\"", shellCmd, _pstCommand);
 
-    if (CreateProcessW(NULL, CmdLine, NULL, NULL, FALSE, 0, NULL, NULL, &siStartInfo, &piProcInfo)) 
+    if (CreateProcessW(NULL, CmdLine, NULL, NULL, TRUE, 0, NULL, NULL, &siStartInfo, &piProcInfo))
     {
         WaitForSingleObject(piProcInfo.hProcess, INFINITE);
 

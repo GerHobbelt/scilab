@@ -90,6 +90,7 @@ extern "C"
 #endif
 
 #include "InitializeTclTk.h"
+#include "TerminateTclTk.h"
 #include "dynamic_link.h"
 
     /* Defined without include to avoid useless header dependency */
@@ -578,6 +579,7 @@ void StopScilabEngine(ScilabEngineInfo* _pSEI)
     {
         TerminateGraphics();
         TerminateJVM();
+        TerminateTclTk();
     }
 
     // reset struct to prevent the use of deleted objects
@@ -637,12 +639,9 @@ void StopScilabEngine(ScilabEngineInfo* _pSEI)
     ConfigVariable::clearLastError();
     ConfigVariable::setEndProcessing(false);
 
-    // wait for thread ends before leaving (and free _pSEI)
-    if (_pSEI->iStartConsoleThread)
-    {
-        __WaitThreadDie(threadIdConsole);
-    }
-
+    // wait for the "command" thread end before leaving (and free _pSEI)
+    // the "console" thread may be waiting for a command, so don't wait for it to die
+    // ie: exit in a callback will not release the console
     __WaitThreadDie(threadIdCommand);
 }
 
@@ -732,7 +731,7 @@ void* scilabReadAndExecCommand(void* param)
         processCommand(_pSEI);
         FREE(command);
     }
-    while (ConfigVariable::getForceQuit() == false);
+    while (ConfigVariable::getForceQuit() == false || isEmptyCommandQueue() == false);
 
     return NULL;
 }
@@ -980,7 +979,7 @@ static int interactiveMain(ScilabEngineInfo* _pSEI)
 
         ThreadManagement::SendAwakeRunnerSignal();
     }
-    while (ConfigVariable::getForceQuit() == false);
+    while (ConfigVariable::getForceQuit() == false || isEmptyCommandQueue() == false);
 
     return iRet;
 }

@@ -28,11 +28,6 @@
 
 #PARALLEL_CPP_SOURCES =
 
-#GATEWAY_CPP_SOURCES =
-#sci_gateway/cpp/sci_parallel_run.cpp
-
-#PARALLEL_C_SOURCES =
-
 # Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 # Copyright (C) 2006-2008 - INRIA - Sylvestre LEDRU <sylvestre.ledru@inria.fr>
 # Copyright (C) 2008      - INRIA - Pierre MARECHAL <pierre.marechal@inria.fr>
@@ -192,8 +187,10 @@ libsciparallel_la_LIBADD =
 am__libsciparallel_la_SOURCES_DIST = src/noparallel/noparallel.h \
 	src/noparallel/noparallel.c
 am__dirstamp = $(am__leading_dot)dirstamp
+am__objects_1 = src/noparallel/libsciparallel_la-noparallel.lo
 @OPENMP_FALSE@am_libsciparallel_la_OBJECTS =  \
 @OPENMP_FALSE@	src/noparallel/libsciparallel_la-noparallel.lo
+@OPENMP_TRUE@am_libsciparallel_la_OBJECTS = $(am__objects_1)
 libsciparallel_la_OBJECTS = $(am_libsciparallel_la_OBJECTS)
 AM_V_lt = $(am__v_lt_@AM_V@)
 am__v_lt_ = $(am__v_lt_@AM_DEFAULT_V@)
@@ -587,6 +584,14 @@ top_build_prefix = @top_build_prefix@
 top_builddir = @top_builddir@
 top_srcdir = @top_srcdir@
 yacc_present = @yacc_present@
+
+#GATEWAY_CPP_SOURCES =
+#sci_gateway/cpp/sci_parallel_run.cpp
+GATEWAY_CPP_SOURCES = \
+src/noparallel/noparallel.c
+
+
+#PARALLEL_C_SOURCES =
 libsciparallel_la_CPPFLAGS = \
     $(OPENMP_CXXFLAGS) \
     -I$(srcdir)/includes/ \

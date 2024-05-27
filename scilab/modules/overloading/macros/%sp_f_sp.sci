@@ -9,12 +9,19 @@
 // along with this program.
 
 function c=%sp_f_sp(a,b) 
-    [ija,va,dimsa]=spget(a);
-    [ijb,vb,dimsb]=spget(b);
 
-    if ijb(:,1) <> [] then
-        ijb(:,1)=ijb(:,1)+dimsa(1);
+    if size(a, "*") == 0 then
+        c = b;
+    elseif size(b, "*") == 0 then
+        c = a;
+    else
+        [ija va dimsa] = spget(a);
+        [ijb vb dimsb] = spget(b);
+
+        if ijb(:,1) <> [] then
+            ijb(:, 1) = ijb(:, 1) + dimsa(1);
+        end
+
+        c = sparse([ija;ijb], [va;vb], [dimsa(1) + dimsb(1) dimsa(2)]);
     end
-
-    c=sparse([ija;ijb],[va;vb],[dimsa(1)+dimsb(1) dimsa(2)]);
 end

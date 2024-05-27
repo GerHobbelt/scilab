@@ -442,7 +442,7 @@ bool FuncManager::LoadModules()
 
 bool FuncManager::EndModules()
 {
-    //excute .start file
+    //excute .quit file
     for (const auto & it : m_ModuleName)
     {
         ExecuteQuitFile(it);

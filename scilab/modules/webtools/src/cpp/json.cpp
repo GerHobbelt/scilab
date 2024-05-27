@@ -571,7 +571,7 @@ std::string toJSON(scilabEnv env, scilabVar var, int indent)
 std::string toJSON(types::InternalType* it, int indent)
 {
     std::wostringstream os;
-    scilabVar var = (int*)it;
+    scilabVar var = (scilabVar)it;
 
     export_data(nullptr, var, indent, os);
 

@@ -854,6 +854,8 @@ function status = test_single(_module, _testPath, _testName)
         "   lasterror()";
         "end";
         ];
+    else
+        tail = [tail; "errclear();"];
     end
 
     tail = [ tail; "diary(0);" ];
@@ -963,7 +965,7 @@ function status = test_single(_module, _testPath, _testName)
         if ~isempty(tmp_errfile_info) then
             txt = mgetl(tmp_err);
 
-            
+
             if ~isempty(txt) then
                 // some Concurrent exception are reported on the console without stacktrace
                 toRemove = grep(txt, "java.util.ConcurrentModificationException");
@@ -989,7 +991,7 @@ function status = test_single(_module, _testPath, _testName)
                     txt(toRemove) = [];
                 end
             end
-        
+
             if getos() == "Linux" then
                 if ~isempty(txt) then
                     // Ignore JOGL2 debug message
@@ -1041,7 +1043,7 @@ function status = test_single(_module, _testPath, _testName)
                     txt(toRemove) = [];
                 end
             end
-            
+
             if isempty(txt) then
                 deletefile(tmp_err);
             end
@@ -1094,7 +1096,7 @@ function status = test_single(_module, _testPath, _testName)
         status.details = "";
         return;
     end
-    
+
     //Check for execution errors
     if try_catch & grep(dia,"<--Error on the test script file-->") <> [] then
         details = [ launchthecommand(testFile); ..
@@ -1169,7 +1171,7 @@ function status = test_single(_module, _testPath, _testName)
         status.details = details;
         if params.show_error == %t then
             status.details = [ status.details; dia($-min(10, size(dia, "*")-1):$) ]
-        end          
+        end
         return;
     end
 
@@ -1181,7 +1183,7 @@ function status = test_single(_module, _testPath, _testName)
         return;
     end
 
-    
+
     // Check the reference file only if check_ref (i.e. for the whole
     // test sequence) is true and this_check_ref (i.e. for the specific current .tst)
     // is true.
@@ -1194,7 +1196,7 @@ function status = test_single(_module, _testPath, _testName)
             return;
         end
     end
-    
+
     // Comparaison ref <--> dia
 
     if   (reference=="check" & _module.reference=="check") | ..
@@ -1299,7 +1301,7 @@ function status = test_single(_module, _testPath, _testName)
             end
         end
     end
-    
+
     deletetmpfiles(tmp_tst, tmp_dia, tmp_res, tmp_err);
 endfunction
 

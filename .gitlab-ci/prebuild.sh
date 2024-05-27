@@ -201,6 +201,9 @@ make_binary_directory() {
         --strip-components=1 \
         --exclude=demo \
         bwidget-$BWIDGET_VERSION/images bwidget-$BWIDGET_VERSION/lang --wildcards bwidget-$BWIDGET_VERSION/*.tcl
+    # fix permissions to fix issue #17231
+    chmod 644 $(find "$TCL_DIR/BWidget" -type f)
+    chmod 755 $(find "$TCL_DIR/BWidget" -type d)
 
     #################
     ##### EIGEN #####
@@ -593,7 +596,7 @@ build_tcl() {
     make install DESTDIR="$INSTALL_DIR"
 
     cp -a "$INSTALL_DIR"/lib/libtcl*.so* "$INSTALLUSRDIR/lib/"
-    chmod 644 "$INSTALLUSRDIR"/lib/libtcl*.so*
+    chmod 755 "$INSTALLUSRDIR"/lib/libtcl*.so*
 
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 
@@ -602,9 +605,11 @@ build_tcl() {
     # install in module
     cp -a "$INSTALL_DIR"/lib/tcl* "$TCL_DIR"
     rm "$TCL_DIR/tclConfig.sh"
+    rm -rf "$TCL_DIR/tcl*/tzdata"
     # install in usr/lib
     cp -a "$INSTALL_DIR"/lib/tcl* "$INSTALLUSRDIR/lib/"
     rm "$INSTALLUSRDIR/lib/tclConfig.sh"
+    rm -rf "$INSTALLUSRDIR/tcl*/tzdata"
 }
 
 build_tk() {
@@ -619,7 +624,7 @@ build_tk() {
     make install DESTDIR="$INSTALL_DIR"
 
     cp -a "$INSTALL_DIR"/lib/libtk*.so* "$INSTALLUSRDIR/lib/"
-    chmod 644 "$INSTALLUSRDIR"/lib/libtk*.so*
+    chmod 755 "$INSTALLUSRDIR"/lib/libtk*.so*
 
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 

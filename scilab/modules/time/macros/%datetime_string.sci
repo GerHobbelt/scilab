@@ -201,13 +201,23 @@ function out = %datetime_string(dt)
                         [_, args(i)] = weekday(w, "en_US");
                     end
                 elseif order(i) == 8 then //AM PM
-                    AMPM = "AM";
                     hh = datetime_items(:, 4);
-                    idx = find(hh > 12);
-                    
+                    AMPM = "AM" + emptystr(hh);
+
+                    idx = find(hh > 11);
                     if idx <> [] then
-                        hh(idx) = hh(idx) - 12;
-                        AMPM = "PM";
+                        time = hh(idx);
+                        jdx = find(time <> 12);
+                        if jdx <> [] then
+                            time(jdx) = time(jdx) - 12;
+                        end
+                        hh(idx) = time;
+                        AMPM(idx) = "PM";
+                    end
+
+                    idx = find(hh == 0);
+                    if idx <> [] then
+                        hh(idx) = 12;
                     end
 
                     select index(i, 2)

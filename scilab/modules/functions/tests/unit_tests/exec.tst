@@ -1,10 +1,12 @@
-//<-- CLI SHELL MODE -->
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2009 - DIGITEO - Allan CORNET
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
+
+// <-- NO CHECK REF -->
+// <-- CLI SHELL MODE -->
 
 tab_ref = [
 "世界您好",
@@ -59,3 +61,13 @@ assert_checkequal(y, 25);
 filename = TMPDIR + filesep() + "testmclose.sce";
 mputl("mclose(""all"");",filename);
 exec(filename);
+
+
+// errormsg & callstack
+mputl('acosd(''d'');', fullfile(TMPDIR, '/exec.tst'));
+[a b c] = exec(fullfile(TMPDIR, '/exec.tst'), 'errcatch');
+assert_checktrue(a <> 0);
+assert_checktrue(typeof(b) == "string");
+assert_checktrue(length(b) <> 0);
+assert_checktrue(typeof(c) == "string");
+assert_checktrue(length(c) <> 0);

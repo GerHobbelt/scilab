@@ -259,18 +259,40 @@ void RunVisitorT<T>::visitprivate(const CellExp & e)
     exps_t::const_iterator row;
     exps_t::const_iterator col;
     int iColMax = 0;
+    int iLineMax = 0;
 
     exps_t lines = e.getLines();
+    iLineMax = static_cast<int>(lines.size());
+
     //check dimmension
     for (row = lines.begin(); row != lines.end(); ++row)
     {
         exps_t cols = (*row)->getAs<MatrixLineExp>()->getColumns();
-        if (iColMax == 0)
+        int iCurrentCols = static_cast<int>(cols.size());
+        for (col = cols.begin(); col != cols.end(); ++col)
         {
-            iColMax = static_cast<int>(cols.size());
+            // remove comments in the columns count
+            if((*col)->isCommentExp())
+            {
+                iCurrentCols--;
+            }
         }
 
-        if (iColMax != static_cast<int>(cols.size()))
+        // only comments in the line, 
+        // don't count them and go to the next one
+        if(iCurrentCols == 0)
+        {
+            iLineMax--;
+            continue;
+        }
+
+        // initialise the number of columns
+        if (iColMax == 0)
+        {
+            iColMax = iCurrentCols;
+        }
+
+        if (iColMax != iCurrentCols)
         {
             std::wostringstream os;
             os << _W("inconsistent row/column dimensions\n");
@@ -281,16 +303,14 @@ void RunVisitorT<T>::visitprivate(const CellExp & e)
     }
 
     //alloc result cell
-    types::Cell *pC = new types::Cell(static_cast<int>(lines.size()), iColMax);
-
+    types::Cell *pC = new types::Cell(iLineMax, iColMax);
     int i = 0;
     int j = 0;
-
     //insert items in cell
-    for (i = 0, row = lines.begin(); row != lines.end(); ++row, ++i)
+    for (i = 0, row = lines.begin(); row != lines.end(); ++row)
     {
         exps_t cols = (*row)->getAs<MatrixLineExp>()->getColumns();
-        for (j = 0, col = cols.begin(); col != cols.end(); ++col, ++j)
+        for (j = 0, col = cols.begin(); col != cols.end(); ++col)
         {
             try
             {
@@ -304,17 +324,29 @@ void RunVisitorT<T>::visitprivate(const CellExp & e)
             }
 
             types::InternalType *pIT = getResult();
+            if (pIT == NULL)
+            {
+                continue;
+            }
+
             if (pIT->isImplicitList())
             {
                 types::InternalType * _pIT = pIT->getAs<types::ImplicitList>()->extractFullMatrix();
-                if(_pIT) 
+                if(_pIT)
                 {
                     pIT = _pIT;
                 }
             }
 
-            pC->set(i, j, pIT);
+            pC->set(i, j++, pIT);
             clearResult();
+        }
+
+        // increment row iterator only 
+        // when the row is not empty
+        if(j)
+        {
+            i++;
         }
     }
 
@@ -1298,7 +1330,6 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
             pMacro->setFileName(e.getMacro()->getFileName());
         }
 
-        pMacro->IncreaseRef();
         const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
     }
 

@@ -45,6 +45,7 @@ struct ARG
     std::function<std::wstring()> dimsStr;
     std::vector<ARG_VALIDATOR> validators;
     ast::Exp* default_value = nullptr;
+    Location loc;
 };
 
 namespace types

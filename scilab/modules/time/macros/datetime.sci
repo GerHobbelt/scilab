@@ -67,11 +67,20 @@ function out = datetime(varargin)
         end
 
         tmp = csvTextScan(t, " ");
+        
+        if size(tmp, "c") > 3 & (or(tmp(:, 4) > 24) | or(tmp(:, 5) > 59) | or(tmp(:,6) > 59)) then
+            error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 24], minutes in [0, 59] and seconds in [0, 59].\n"), "datetime"))
+        end
 
         if and(isnan(tmp(:,$))) then
-            jdx = find(part(t, $-1:$) == "PM");
-            if jdx <> [] then
-                tmp(jdx, 4) = modulo(tmp(jdx, 4) + 12, 24);
+            varAMPM = part(t, $-1:$);
+            if or(tmp(:, 4) > 12) then
+                error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 12].\n"), "datetime"));
+            end
+            hasAMPM = (varAMPM == "PM" & tmp(:, 4) <> 12) | (varAMPM == "AM" & tmp(:, 4) == 12);
+            if or(hasAMPM) then
+                jdx = find(hasAMPM);
+                tmp(jdx, 4) = modulo(tmp(jdx, 4) + hasAMPM(jdx) * 12, 24);
             end
             tmp(:,$) = [];
         end
@@ -674,9 +683,13 @@ function out = datetime(varargin)
                         d(:, order == 4) = d2(:, 1);
                         d(:, order == 5) = d2(:, 2);
                         d(:, order == 6) = d2(:, 3);
-                        hasPM = AMPM == "PM";
+                        if or(d(:, order == 4) > 12)  | or(d(:, order == 5) > 59) | or(d(:, order == 6) > 59) then
+                            error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 12], minutes in [0, 59] and seconds in [0, 59].\n"), "datetime"))
+                        end
+                        hasPM = (AMPM == "PM" & d(:, 4) <> 12) | (AMPM == "AM" & d(:, 4) == 12);
                         if or(hasPM) then
-                            d(hasPM, order == 4) = modulo(d(hasAMPM, order == 4) + 12, 24);
+                            jdx = find(hasPM);
+                            d(jdx, order == 4) = modulo(d(jdx, order == 4) + hasPM * 12, 24);
                         end
                     end
 

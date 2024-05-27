@@ -1581,6 +1581,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         }
 
         pContext->scope_end();
+        ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
         ConfigVariable::macroFirstLine_end();
         return Callable::Error;
     }
@@ -1603,6 +1604,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         {
             Scierror(999, _("%s: Named argument are not compatible with arguments block.\n"), scilab::UTF8::toUTF8(m_wstName).data());
             pContext->scope_end();
+            ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
             ConfigVariable::macroFirstLine_end();
             return Callable::Error;
         }
@@ -1634,15 +1636,17 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
 
                     if (in.size() < expectedmin || in.size() > m_arguments.size())
                     {
+                        char msg[128];
                         if (expectedmin != expectedmax)
                         {
-                            Scierror(999, _("%s: Wrong number of input arguments: %d to %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), expectedmin, expectedmax);
+                            os_sprintf(msg, _("%s: Wrong number of input arguments: %d to %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), expectedmin, expectedmax);
                         }
                         else
                         {
-                            Scierror(999, _("%s: Wrong number of input argument(s): %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), (int)m_arguments.size());
+                            os_sprintf(msg, _("%s: Wrong number of input argument(s): %d expected.\n"), scilab::UTF8::toUTF8(m_wstName).data(), (int)m_arguments.size());
                         }
-                        return types::Function::Error;
+
+                        throw ast::InternalError(scilab::UTF8::toWide(msg), 999, getBody()->getLocation());
                     }
                 }
 
@@ -1759,18 +1763,19 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                                         break;
                                 }
 
-                                throw ast::InternalError(scilab::UTF8::toWide(msg));
+                                throw ast::InternalError(scilab::UTF8::toWide(msg), 999, arg.loc);
                             }
                         }
                     }
                 }
             }
-            catch (const ast::InternalError& /*ie*/)
+            catch (const ast::InternalError& ie)
             {
                 pContext->scope_end();
+                ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
                 ConfigVariable::macroFirstLine_end();
-                return types::Function::Error;
-                //throw ie;
+                //return types::Function::Error;
+                throw ie;
             }
         }
     }
@@ -2143,6 +2148,7 @@ void Macro::updateArguments()
 
 
                 ARG arg;
+                arg.loc = d->getLocation();
 
                 // dims
                 std::vector<std::tuple<std::vector<int>, symbol::Variable*>> dims = {};

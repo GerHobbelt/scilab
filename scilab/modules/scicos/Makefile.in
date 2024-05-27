@@ -471,7 +471,7 @@ libsciscicos_la_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX \
 	$(LDFLAGS) -o $@
 @GUI_TRUE@@XCOS_TRUE@am_libsciscicos_la_rpath = -rpath $(pkglibdir)
 am__XML2Modelica_SOURCES_DIST = $(srcdir)/src/xml2modelica/xMLTree.ml \
-	$(srcdir)/src/modelica_compiler/linenum.mll \
+	$(srcdir)/src/xml2modelica/linenum.mll \
 	$(srcdir)/src/xml2modelica/stringParser.ml \
 	$(srcdir)/src/xml2modelica/stringLexer.ml \
 	$(srcdir)/src/xml2modelica/xMLParser.ml \
@@ -1354,7 +1354,7 @@ HELP_CHAPTERLANG = en_US fr_FR pt_BR
 ### XML2Modelica
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica_SOURCES = \
 @OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/xml2modelica/xMLTree.ml \
-@OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/modelica_compiler/linenum.mll \
+@OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/xml2modelica/linenum.mll \
 @OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/xml2modelica/stringParser.ml \
 @OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/xml2modelica/stringLexer.ml \
 @OCAML_TRUE@@XCOS_TRUE@	$(srcdir)/src/xml2modelica/xMLParser.ml \
@@ -1416,7 +1416,6 @@ HELP_CHAPTERLANG = en_US fr_FR pt_BR
 @OCAML_TRUE@@XCOS_TRUE@modelicac_SOURCES_mly = $(modelicac_SOURCES:.mly=.ml)
 @OCAML_TRUE@@XCOS_TRUE@MLS_modelicac = $(modelicac_SOURCES_mly:.mll=.ml)
 @OCAML_TRUE@@XCOS_TRUE@BASE_PATH_MODELICAC = $(srcdir)/src/modelica_compiler
-@OCAML_TRUE@@XCOS_TRUE@INCLUDE = -I $(BASE_PATH_MODELICAC) -I $(BASE_PATH_XML2Modelica)
 @OCAML_TRUE@@XCOS_TRUE@CLEANFILES = $(BASE_PATH)/*/*.cmi \
 @OCAML_TRUE@@XCOS_TRUE@	$(BASE_PATH)/*/*.o \
 @OCAML_TRUE@@XCOS_TRUE@	$(BASE_PATH)/*/*.cmo \
@@ -3813,16 +3812,16 @@ distclean-local:
 # Build the binaries, disabling parallel building as ocamldep ordering seems to fail on some systems
 
 @OCAML_TRUE@@XCOS_TRUE@modelicac: $(modelicac_SOURCES) $(MLS_modelicac)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ $(INCLUDE) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicac)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicac)
 
 @OCAML_TRUE@@XCOS_TRUE@modelicac.ocamlc: $(modelicac_SOURCES) $(MLS_modelicac)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ $(INCLUDE) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicac)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicac)
 
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ $(INCLUDE) $(OCAMLCFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_XML2Modelica)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_XML2Modelica)
 
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica.ocamlc: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ $(INCLUDE) $(OCAMLCFLAGS) $(OCAMLLIBS) $(MLS_XML2Modelica)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS) $(MLS_XML2Modelica)
 
 @OCAML_TRUE@@XCOS_TRUE@modelicat: $(modelicat_SOURCES) $(MLS_modelicat)
 @OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicat)
