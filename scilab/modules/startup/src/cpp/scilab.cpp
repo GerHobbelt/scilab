@@ -387,7 +387,7 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLin
     {
         argv[i] = wide_string_to_UTF8(szArglist[i]);
     }
-
+    LocalFree(szArglist);
     setWindowShowMode(iCmdShow);
 
 #else
@@ -410,24 +410,7 @@ int main(int argc, char *argv[])
     setScilabMode(SCILAB_STD);
 #endif
 
-    //#if defined(_WIN32) && !defined(WITHOUT_GUI)
-    //    {
-    //        LPSTR my_argv[256];
-    //        int nArgs = 0;
-    //        LPWSTR *szArglist = CommandLineToArgvW(GetCommandLineW(), &nArgs);
-    //        if (szArglist)
-    //        {
-    //            for (int i = 0; i < nArgs; i++)
-    //            {
-    //                my_argv[i] = wide_string_to_UTF8(szArglist[i]);
-    //            }
-    //            LocalFree(szArglist);
-    //        }
-    //        get_option(nArgs, my_argv, pSEI);
-    //    }
-    //#else
     get_option(argc, argv, pSEI);
-    //#endif
 
     // if WITHOUT_GUI is defined
     // force Terminal IO -> Terminal IO + StartScilabEngine
@@ -519,24 +502,20 @@ int main(int argc, char *argv[])
     int val = setjmp(ScilabJmpEnv);
     if (!val)
     {
-        iRet = StartScilabEngine(pSEI);
-        if (iRet == 0)
+        val = StartScilabEngine(pSEI);
+        if (val == 0)
         {
-            iRet = RunScilabEngine(pSEI);
+            val = RunScilabEngine(pSEI);
         }
 
         StopScilabEngine(pSEI);
-        FREE(pSEI);
-        return iRet;
     }
     else
     {
         // We probably had a segfault so print error
         std::wcerr << getLastErrorMessage() << std::endl;
-        return val;
     }
 
-#if defined(_WIN32) && !defined(WITHOUT_GUI) && defined(WITH_CONSOLE_JAVA)
-    LocalFree(szArglist);
-#endif
+    FREE(pSEI);
+    return val;
 }

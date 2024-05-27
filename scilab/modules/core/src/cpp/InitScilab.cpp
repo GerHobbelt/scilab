@@ -96,6 +96,11 @@ extern "C"
     extern BOOL isItTheDisabledLib(void);
 }
 
+__threadId threadIdConsole;
+__threadKey threadKeyConsole;
+__threadId threadIdCommand;
+__threadKey threadKeyCommand;
+
 static void Add_i(void);
 static void Add_pi(void);
 static void Add_eps(void);
@@ -631,6 +636,14 @@ void StopScilabEngine(ScilabEngineInfo* _pSEI)
 
     ConfigVariable::clearLastError();
     ConfigVariable::setEndProcessing(false);
+
+    // wait for thread ends before leaving (and free _pSEI)
+    if (_pSEI->iStartConsoleThread)
+    {
+        __WaitThreadDie(threadIdConsole);
+    }
+
+    __WaitThreadDie(threadIdCommand);
 }
 
 static void processCommand(ScilabEngineInfo* _pSEI)
@@ -925,11 +938,6 @@ static int interactiveMain(ScilabEngineInfo* _pSEI)
     {
         return 1;
     }
-
-    __threadId threadIdConsole;
-    __threadKey threadKeyConsole;
-    __threadId threadIdCommand;
-    __threadKey threadKeyCommand;
 
     if (_pSEI->iStartConsoleThread)
     {

@@ -106,4 +106,5 @@ Packaging & Supported Operating Systems
 API/ABI modification
 --------------------
 
+- External toolboxes can use C++14, C++17, C++20 or more recent versions
 - __add information about api/abi modification before and keep this line__
