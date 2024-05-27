@@ -14,22 +14,23 @@
  *
  -->
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
-          xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns4="http://www.w3.org/1999/xhtml"
-          xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook"
-          xmlns:scilab="http://www.scilab.org" xml:id="scilab" xml:lang="en">
+    xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns4="http://www.w3.org/1999/xhtml"
+    xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook"
+    xmlns:scilab="http://www.scilab.org" xml:id="startup_options" xml:lang="ja">
     <refnamediv>
         <refname>scilab</refname>
-            <refpurpose>runs Scilab in interactive or batch mode with command line options
+        <refpurpose>
+            Scilabおよび関連ツールを起動するためのツール
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
-        <title>Syntax</title>
+        <title>呼出し手順</title>
         <synopsis>
 scilab &lt;Options&gt;
         </synopsis>
     </refsynopsisdiv>
     <refsection role="arguments">
-        <title>Options</title>
+        <title>説定</title>
         <para>
             The list of Scilab launching options -- including options for developers --
             can be displayed in the OS terminal through the <literal>--help</literal> option.
@@ -139,30 +140,28 @@ evstr(a(i+2))*2
  ans  =
  This session has been launched from "C:\Users\Me"
 ]]></screen>
-                    </para>
+                     </para>
                     <para>
-                      Note here that <literal>>scilab -nw</literal> has been translated into
+                      Note here that <literal>> scilab -nw</literal> has been translated into
                       <literal>Wscilex-cli.exe</literal> by the <literal>scilab</literal> batch file,
                       in such a way that the "-nw" option is not returned by <literal>sciargs()</literal>
                       (see further below).
                     </para>
-                    <para>
-                        <note>
-                           Using <literal>-args</literal> as the <emphasis role="italic">last</emphasis>
-                           command line option is safer.
-                        </note>
-                    </para>
+                     <para>
+                     <note>Using <literal>-args</literal> as the <emphasis role="italic">last</emphasis> command line option is safer.
+                     </note>
+                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-display Display</term>
                 <listitem>
                     <para>
-                        For use under Xwindow systems only to set a specific X server
-                        display. Default display is unix:0.0.
+                        Xwindow システム上でのみ使用可能で, 表示する Xサーバーを指定します.
+                        デフォルトの表示先は unix:0.0 です.
                     </para>
                     <para>
-                        <literal>-display</literal> can be abbreviated by <literal>-d</literal>.
+                        <literal>-display</literal> は, <literal>-d</literal>と短縮形で指定できます.
                     </para>
                 </listitem>
             </varlistentry>
@@ -173,22 +172,18 @@ evstr(a(i+2))*2
                         At the end of the whole session startup, this option
                         <itemizedlist>
                             <listitem>
-                                <para>
-                                    sets the current working directory to the shell directory
-                                    from which Scilab has been launched. Please see the example
-                                    given here-below for the <literal>-f</literal> option. Then,
+                                <para>sets the current working directory to the shell directory from which Scilab has been launched. Please see the example given here-below for the <literal>-f</literal> option. Then,
                                 </para>
                             </listitem>
                             <listitem>
-                                <para>executes Scilab <literal>Instructions</literal> provided
-                                in a string. Example:
+                                <para>executes Scilab <literal>Instructions</literal> provided in a string. Example:
                                     <screen><![CDATA[OS> scilab -nw -e  "disp(\"Hello\"); a=%pi+%i; disp(exp(a)); exit;" -nb]]></screen>
                                 </para>
                             </listitem>
                         </itemizedlist>
                     </para>
                     <warning>
-                        <literal>-e</literal> and <literal>-f</literal> options can't be used together.
+                        <literal>-e</literal> および <literal>-f</literal> オプションは相互に排他的です.
                     </warning>
                 </listitem>
             </varlistentry>
@@ -196,59 +191,48 @@ evstr(a(i+2))*2
                 <term>-f file</term>
                 <listitem>
                     <para>
-                        If this option is used, then at the beginning of the Scilab session,
-                        after the execution of the scilab and user startup files, and after the
-                        setting of user Preferences -- including the working directory ones --,
+                        If this option is used, then at the beginning of the Scilab session, after the execution of the scilab and user startup files, and after the setting of user Preferences -- including the working directory ones --,
                         <itemizedlist>
                             <listitem>
                                 <para>
-                                    the current Scilab working directory is set to the shell
-                                    directory from which Scilab has been launched. For instance,
+                                    the current Scilab working directory is set to the shell directory from which Scilab has been launched. For instance,
                                     <screen><![CDATA[ D:\users\me\scilab\dev> C:\SCIdir\bin\scilab -f ..\test.sce]]></screen>
                                     will do a <literal>cd("D:\users\me\scilab\dev")</literal>.
                                 </para>
                             </listitem>
                             <listitem>
                                 <para>
-                                    the Scilab script <literal>file</literal> is executed.
-                                    If a relative path is used (default <literal>.\</literal>,
-                                    or like <literal>..\</literal> in the sample here-above),
-                                    it refers to the new Scilab working directory.
+                                    the Scilab script <literal>file</literal> is executed. If a relative path is used (default <literal>.\</literal>, or like <literal>..\</literal> in the sample here-above), it refers to the new Scilab working directory.
                                 </para>
                             </listitem>
                         </itemizedlist>
                     </para>
-                    <para>
-                        A file with .xcos extension will be opened by Xcos.
-                    </para>
+                    <para>.xcos 拡張子を有するファイルはXcosで開かれます.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-quit</term>
                 <listitem>
-                    <para>
-                        This option forces scilab to always exit after the instruction(s) passed
-                        with the <literal>-e</literal> option, or the script referred to by the
-                        <literal>-f</literal> option, have been executed, even in case of a runtime
-                        error. This option should always be used in batch mode.
-                        It is ignored if neither <literal>-e</literal> nor <literal>-f</literal>
-                        options are present.
+                    <para>This option forces scilab to always exit after the instruction(s) passed with the <literal>-e</literal>
+                    option, or the script referred to by the <literal>-f</literal> option, have been executed,
+                    even in case of a runtime error. This option should always be used in batch mode.
+                    It is ignored if neither <literal>-e</literal> nor <literal>-f</literal> options are present.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-l lang</term>
                 <listitem>
-                    <para>If this option is present, it sets the user language.
-                        <emphasis>lang</emphasis> can be: <emphasis>ca_ES de_DE en_US es_ES
-                            fr_FR ja_JP pt_BR ru_RU zh_CN zh_TW
-                        </emphasis>.
+                    <para>このオプションを指定した場合,
+                        ユーザ言語を指定します.
+                        <emphasis>lang</emphasis> は以下の値を指定できます:
+                        <emphasis>
+                            ca_ES de_DE en_US es_ES fr_FR ja_JP pt_BR ru_RU zh_CN zh_TW
+                        </emphasis>
                     </para>
                     <para>
-                        For compatibility reasons, other possible <literal>lang</literal> values
-                        are <literal>'fr'</literal> for french, <literal>'en'</literal> for
-                        English, or <literal>'pt'</literal> for Brasilian Portuguese.
-                        The default language is English.
+                        互換性維持のため，その他に <literal>lang</literal> の値は,フランス語として
+                        <literal>'fr'</literal> および英語として <literal>'en'</literal> を使用可能です, or <literal>'pt'</literal> for Brasilian Portuguese.
                     </para>
                     <note>
                         On Windows, in "-nw" or "-nwni" modes, the selected font of the terminal
@@ -256,38 +240,39 @@ evstr(a(i+2))*2
                         <emphasis>Monospaced</emphasis> (best choice if available) or
                         <emphasis>Consolas</emphasis> or <emphasis>Lucida Console</emphasis>..
                     </note>
-                    <para>
-                        On some systems, locales must be compiled to render correctly
-                        UTF-8 fonts.
+                    <para>いくつかのシステムでは,UTF-8フォントを正しく描画するために,
+                        ロケールをコンパイルする必要があります.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-nb</term>
                 <listitem>
-                    <para>"no banner": Cancels the display of the Scilab's loading message.
+                    <para>"no banner" :
+                        このオプションが指定された場合, Scilabの Welcome バナーは表示されません.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-ns</term>
                 <listitem>
-                    <para>"No Startup files": Cancels the execution of the main startup file
-                        <literal>SCI/etc/scilab.start</literal> and of the user startup files
+                    <para>"No Startup files" :
+                        このオプションが指定された場合, スタートアップファイル
+                        <literal>SCI/etc/scilab.start</literal> およびユーザスタートアップファイル
                         <literal>SCIHOME/.scilab</literal>,
-                        <literal>SCIHOME/scilab.ini</literal>.
+                        <literal>SCIHOME/scilab.ini</literal> は実行されません.
                     </para>
-                    <para>This option will disable many features in Scilab. Please use it only if
-                        you know what you are doing.
+                    <para>このオプションは, Scilabの多くの機能を無効にします (動作を理解している場合のみ
+                        使用してください).
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-nouserstartup</term>
                 <listitem>
-                    <para>Cancels the execution of the user startup files
-                        <literal>SCIHOME/.scilab</literal> and
-                        <literal>SCIHOME/scilab.ini</literal>.
+                    <para>このオプションが指定された場合, スタートアップファイル
+                        <literal>SCIHOME/.scilab</literal>,
+                        <literal>SCIHOME/scilab.ini</literal> は実行されません.
                     </para>
                 </listitem>
             </varlistentry>
@@ -295,25 +280,27 @@ evstr(a(i+2))*2
                 <term>-noatomsautoload</term>
                 <listitem>
                     <para>
-                        Cancels the autoloading of installed ATOMS modules at startup.
+                        このオプションが指定された場合,イントール済みのATOMモジュールは
+                        このセッションでロードされません.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-nw</term>
                 <listitem>
-                    <para>If this option is present, Scilab is started as command line
-                        with advanced features still available (graphics, export, xcos, scinotes, help browser, ...).
+                    <para>
+                        このオプションが指定された場合, Scilab は
+                        先進的な機能(グラフィック, export, xcos, scinotes, ヘルプブラウザ, ...)
+                        と共にコマンドラインで起動されます.
                     </para>
                     <para>
-                        pipes are enabled for all operating systems. See the examples for
-                        further details.
+                        全てのオペレーティングシステムについて パイプが有効です (詳細については例を参照ください).
                     </para>
                     <para>
-                        The actual Scilab binary file executed when using the "-nw" option is
+                        Scilab のディストリビューションには, <literal>-nw</literal>と同様のバイナリを提供します:
                         <itemizedlist>
                             <listitem>
-                                on Windows: <literal>WScilex-cli.exe</literal>.
+                                Windows: <literal>WScilex-cli.exe</literal>.
                             </listitem>
                             <listitem>
                                 on Linux and MacOS: <literal>scilab-adv-cli</literal>
@@ -326,22 +313,19 @@ evstr(a(i+2))*2
             <varlistentry>
                 <term>-nwni / -nogui</term>
                 <listitem>
-                    <important>
-                        This mode prevents loading the Java Virtual Machine.
-                        It starts faster and uses less memory. But then...
+                    <important>このモードでは Java 仮想マシンはロードされません.
+                        (起動は高速化され,メモリ消費量は減少します)
                     </important>
-                    <warning>
-                        Scilab is started as command line interpreter without any advanced features
-                        requiring the JVM: graphics, export, xcos, scinotes, help browser, other
-                        java interfaces, the Java module,... are not available.
-                    </warning>
-                    <para>
-                        Anyway, pipes are enabled for all operating systems.
-                        See the examples for further details.
+                    <para>このオプションが指定された場合, Scilab は先進的な機能
+                        (グラフィック, export, xcos, scinotes, ヘルプブラウザ, ...)なしで
+                        コマンドラインで起動されます.
                     </para>
                     <para>
-                        Dedicated executable files performing the <literal>-nwni</literal> mode are
-                        provided:
+                        全てのオペレーティングシステムについて パイプが有効です (詳細については例を参照ください).
+                    </para>
+                    <para>
+                        Scilab のディストリビューションでは,
+                        <literal>-nwni</literal>と同じ専用バイナリが提供されています
                         <itemizedlist>
                             <listitem>
                                 Windows: <literal>Scilex.exe</literal>.
@@ -358,10 +342,9 @@ evstr(a(i+2))*2
                 <listitem>
                     <para>
                         Forces SCIHOME to the <literal>dir</literal> directory. If the path
-                        includes some white space, it must be specified between
-                        double-quotes (no single quotes!).
-                        if <literal>dir</literal> is a relative path, <literal>dir</literal>
-                        is added to the parent standard SCIHOME folder.
+                        includes some white space, it must be specified between double-quotes (no
+                        single quotes!).
+                        if <literal>dir</literal> is a relative path, <literal>dir</literal> is add to parent standard SCIHOME folder.
                         <table>
                             <tr><td>On Windows: </td>
                                 <td>%USERPROFILE%\AppData\Roaming\Scilab\<literal>dir</literal></td>
@@ -389,73 +372,79 @@ evstr(a(i+2))*2
                 <term>-version</term>
                 <listitem>
                     <para>
-                        Only displays the Scilab's version in the OS terminal,
-                        without launching any Scilab session.
+                        このオプションはプロダクトのバージョンを出力し,終了します. No Scilab session is opened.
                     </para>
                 </listitem>
             </varlistentry>
         </variablelist>
     </refsection>
+
     <refsection role="arguments">
         <title>Additional options for Unix/Linux and Mac OS X</title>
-        <para>Advice: use theses options on a Scilab source tree.</para>
+        <para>助言: これらのオプションをScilabソースツリー上で使用してください.</para>
         <variablelist>
             <varlistentry>
                 <term>-debug</term>
                 <listitem>
-                    <para>Start Scilab under the debugger gdb.</para>
+                    <para>デバッガgdb上でScilabを開始します.</para>
                     <para>
-                        The variable <literal>SCILAB_GDB_OPT</literal> may be set to add custom options to gdb.
+                        gdb にカスタムオプションを追加する場合,
+                        変数<literal>SCILAB_GDB_OPT</literal>を定義します.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-debug-rr</term>
                 <listitem>
-                    <para>Start Scilab under <ulink url="https://rr-project.org/">rr</ulink>.</para>
+                    <para>rr上でScilabを開始します.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-debug-kdbg</term>
                 <listitem>
-                    <para>Start Scilab under kdbg.</para>
+                    <para>kdbg上でScilabを開始します.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-profiling</term>
                 <listitem>
-                    <para>Start Scilab under valgrind.</para>
-                    <para>The variable SCILAB_VALGRIND_OPT may be set to add custom options
-                        to valgrind (and override the existing valgrind options).
+                    <para>valgrind上でScilabを開始します.</para>
+                    <para>
+                        valgrind にカスタムオプションを追加する場合
+                        (および既存の valgrind オプションを上書きする場合),SCILAB_VALGRIND_OPT
+                        を定義してください.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-profiling-visu</term>
                 <listitem>
-                    <para>Start Scilab under callgrind.</para>
-                    <para>The variable SCILAB_VALGRIND_OPT may be set to add custom options
-                        to callgrind (and override the existing callgrind options).
+                    <para>callgrind上でScilabを開始します.</para>
+                    <para>
+                        callgrind にカスタムオプションを追加する場合
+                        (および既存の callgrind オプションを上書きする場合),SCILAB_VALGRIND_OPT
+                        を定義してください.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-electric-fence</term>
                 <listitem>
-                    <para>Start Scilab with the Electric Fence.</para>
+                    <para>Electric Fence を指定して Scilab を開始します.</para>
                 </listitem>
             </varlistentry>
         </variablelist>
     </refsection>
+
     <refsection role="description">
-        <title>Environment variables</title>
+        <title>環境変数の説明</title>
         <variablelist>
             <varlistentry>
                 <term>SCIVERBOSE</term>
                 <listitem>
                     <para>
-                        If this variable is present, Scilab startup script will show a startup debug information.
-                        Mainly used for bug report and debugging purposes.
+                        この変数が存在した場合, Scilab起動スクリプトは起動時デバッグ情報を表示します.
+                        主にバグレポートおよびデバッグ目的で使用されます.
                     </para>
                 </listitem>
             </varlistentry>
@@ -463,53 +452,54 @@ evstr(a(i+2))*2
                 <term>JAVA_HOME</term>
                 <listitem>
                     <para>
-                        Specify which Java to use. For example,
-                        <literal>JAVA_HOME=/usr/lib/jvm/java-7-openjdk/ scilab</literal> will start Scilab with Java 7.
+                        使用するJavaを指定します. 例えば,
+                        <literal>JAVA_HOME=/usr/lib/jvm/java-7-openjdk/ scilab</literal> は
+                        Java 7 でScilabを起動します.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>SCI_DISABLE_TK</term>
                 <listitem>
-                    <para>Disable Tk (but not Tcl) features.</para>
+                    <para>Tk (Tclではなく) 機能を無効にします.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>SCI_JAVA_ENABLE_HEADLESS</term>
                 <listitem>
                     <para>
-                        Enable Java Headless VM (i.e. without GUI features).
+                        ヘッドレスJava仮想マシン (すなわち,GUI機能なし).
                     </para>
                 </listitem>
             </varlistentry>
         </variablelist>
     </refsection>
     <refsection role="description">
-        <title>Java Virtual Machine options</title>
+        <title>Java 仮想マシンオプション</title>
         <warning>
             The options described here-below are useless and are cancelled if the option <literal>-nwni</literal> is used.
         </warning>
-        <para>Starting from Scilab 5.0, the graphical user interface (GUI) and the
-            build documentation are based on Java features. In some cases, it can be
-            important to edit the JVM options (Java Virtual Machine).
+        <para>Scilab 5.0以降, グラフィカルユーザインターフェイス (GUI) および
+            ドキュメントの構築は,Java機能に基づいています.
+            いくつかのケースでは,
+            JVM (Java仮想マシン)オプションを編集することが重要となります.
         </para>
-        <para>
-            These options are available in the <emphasis>SCI/etc/jvm_options.xml</emphasis> file.
-            <emphasis>
-                The three following options are easily accessible in this file:
-            </emphasis>
+        <para>これらのオプションは,
+            <emphasis>SCI/etc/jvm_options.xml</emphasis>ファイルで利用可能です.
+            デフォルトで, 以下の3つのオプションが  設定ファイルで容易にアクセス可能です:
         </para>
         <variablelist>
             <varlistentry>
                 <term>-XmxXXXm</term>
                 <listitem>
-                    <para>This option set the amount of memory available by the Java
-                        Virtual Machine. By default, 256M are allocated. If you change this
-                        value, check that the value does not exceed the memory available on
-                        the system.
+                    <para>
+                        このオプションは,Java仮想マシンで利用可能なメモリ量を設定します.
+                        デフォルトで, 256M が確保されます.
+                        この値を変更した場合, その値がシステムで利用可能なメモリを
+                        超えないことを確認してください.
                     </para>
                     <para>
-                        This value can be changed in the preferences menu.
+                        この値は設定メニュー内で変更可能です.
                     </para>
                 </listitem>
             </varlistentry>
@@ -517,35 +507,38 @@ evstr(a(i+2))*2
                 <term>-Djava.compiler=JIT</term>
                 <listitem>
                     <para>
-                        This option with the argument <emphasis>JIT</emphasis> enables
-                        the Java Just In Time compiler. It is activated by default.
-                        <emphasis>NONE</emphasis> disables the JIT and decreases
-                        dramatically performances.
+                        このオプションを引数<emphasis>JIT</emphasis>を付けて指定すると,
+                        Java Just In Time compilerが有効になります.
+                        このオプションはデフォルトで有効となります.
+                        <emphasis>NONE</emphasis>によりJITは無効となり,
+                        著しく性能が低下します.
                     </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>-verbose:jni / -Xcheck:jni</term>
                 <listitem>
-                    <para>These options enable more checks and output from the JNI
-                        calls. These options are useful in case of debugging and are
-                        disabled by default since they decreases performances.
+                    <para>
+                        これらのオプションは,JNIコールとその出力をより詳細に確認します.
+                        デバッグ時にはこれらのオプションを利用可能ですが,
+                        性能を低下させるためデフォルトでは無効となっています.
                     </para>
                 </listitem>
             </varlistentry>
         </variablelist>
-        <para>Many more options are available. They can improve the performances,
-            change look and feel, change memory managements... See: <ulink url="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</ulink>.
+        <para>より多くのオプションが利用可能です.
+            これにより性能を改善したり,ルックアンドフィールを変更したり,
+            メモリ管理を変更したりといったことが可能です.
+            参照:  <ulink url="http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html">http://www.oracle.com/technetwork/java/javase/tech/vmoptions-jsp-140102.html</ulink>
         </para>
     </refsection>
     <refsection role="examples">
-        <title>Examples</title>
+        <title>例</title>
         <screen><![CDATA[
 # Let's start Scilab in profiling mode without attaching a gdb once a SIGSEGV is met.
 # We are under Bash shell
 export SCILAB_VALGRIND_OPT="--db-attach=no --log-file=myfile.txt"
 scilab -profiling
-
 # Let's start Scilab in debug mode without stopping after each SIGSEGV
 # First, we write a small command file
 echo "handle SIGSEGV nostop" > debug.txt
@@ -560,19 +553,16 @@ scilab -debug ]]></screen>
 $ echo "disp(%pi)" | scilab-cli
 or
 $ echo "disp(%pi)" | scilab -nwni
-
 # Only open the Scilab help window:
 $ scilab-adv-cli -e "help()"
 or
 $ scilab -nw -e "help()"
-
-
 # Scilab can be used for scripting aspects:
 echo "if 1&lt;>2 then exit(99) end"|scilab-cli
 echo $? ]]></screen>
     </refsection>
     <refsection role="see also">
-        <title>See also</title>
+        <title>参照</title>
         <simplelist type="inline">
             <member>
                 <link linkend="startup">startup</link>
@@ -607,7 +597,7 @@ echo $? ]]></screen>
         </simplelist>
     </refsection>
     <refsection role="history">
-        <title>History</title>
+        <title>履歴</title>
         <revhistory>
             <revision>
                 <revnumber>5.2.0</revnumber>
@@ -616,12 +606,13 @@ echo $? ]]></screen>
             <revision>
                 <revnumber>5.4.0</revnumber>
                 <revremark>
-                    -noatomsautoload added. The Java Heap memory can be set through the preferences.
+                    -noatomsautoload が追加されました.
+                    The Java Heap memory can be set through the preferences.
                 </revremark>
             </revision>
             <revision>
                 <revnumber>5.4.1</revnumber>
-                <revremark>scinotes and xcos individual scripts introduced. See SEP #87.</revremark>
+                <revremark>scinotes と xcos 個別スクリプトが導入されました. SEP #87参照.</revremark>
             </revision>
             <revision>
                 <revnumber>6.0.0</revnumber>
@@ -660,12 +651,7 @@ echo $? ]]></screen>
             <revision>
                 <revnumber>6.0.1</revnumber>
                 <revremark>
-                  <para><literal>-scihome</literal> option added.</para>
-                  <para>On Windows, a new <literal>scilab.bat</literal> file becomes the main
-                    executable script managing all launching options. There are now 3 binaries
-                    Wscilex.exe, Wscilex-cli.exe, and Scilex.exe corresponding to each Scilab
-                    running mode (STD, NW, NWNI).
-                  </para>
+                    <literal>-scihome</literal> option added.
                 </revremark>
             </revision>
         </revhistory>

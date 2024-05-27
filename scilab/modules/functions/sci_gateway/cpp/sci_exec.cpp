@@ -87,6 +87,7 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
     std::string stFile;
     std::ifstream* file = NULL;
     std::wstring wstFile;
+    std::wstring lastExecFile = ConfigVariable::getExecutedFile();
 
     if (ConfigVariable::getStartProcessing() == false)
     {
@@ -350,6 +351,7 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
         closeFile(file, iID, wstFile, pExp);
         ConfigVariable::macroFirstLine_end();
         ConfigVariable::setPromptMode(oldVal);
+        ConfigVariable::setExecutedFile(lastExecFile);
         ConfigVariable::setSilentError(bSilentError);
         throw ia;
     }
@@ -360,7 +362,7 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
             closeFile(file, iID, wstFile, pExp);
             ConfigVariable::macroFirstLine_end();
             ConfigVariable::setPromptMode(oldVal);
-            ConfigVariable::setExecutedFile(L"");
+            ConfigVariable::setExecutedFile(lastExecFile);
             ConfigVariable::setSilentError(bSilentError);
             throw ie;
         }
@@ -378,6 +380,7 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
     //restore previous prompt mode
     ConfigVariable::macroFirstLine_end();
     ConfigVariable::setPromptMode(oldVal);
+    ConfigVariable::setExecutedFile(lastExecFile);
     ConfigVariable::setSilentError(bSilentError);
     if (bErrCatch)
     {

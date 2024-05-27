@@ -163,6 +163,16 @@ assert_checkequal(ts.Properties.SampleRate, %nan);
 ts.Properties.StartTime = datetime(2019, 6, 25);
 assert_checktrue(ts.Time == datetime(2019, 6:10, [25 27 25 26 27])');
 
+// with duration
+time = [duration(0,0,0): minutes(15): duration(2,0,0)]';
+v1 = ones(length(time), 1);
+ts = timeseries(time, v1, "VariableNames", ["time", "v1"]);
+ts.time.format = "hh:mm";
+
+time.format = "hh:mm";
+
+assert_checkequal(string(ts.time), string(time));
+
 
 // -----------------------------------------------------------------------
 // [ts; ts], [ts ts]

@@ -16,7 +16,7 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
     xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns4="http://www.w3.org/1999/xhtml"
     xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook"
-    xmlns:scilab="http://www.scilab.org" xml:id="scilab" xml:lang="ru">
+    xmlns:scilab="http://www.scilab.org" xml:id="startup_options" xml:lang="ru">
     <refnamediv>
         <refname>scilab</refname>
         <refpurpose>
@@ -264,7 +264,7 @@ evstr(a(i+2))*2
                     </para>
                     <note>
                         В Windows в режимах "-nw" или "-nwni" выбранный шрифт терминала должен
-                        быть TrueType для поддержки символов UTF-8, например 
+                        быть TrueType для поддержки символов UTF-8, например
                         <emphasis>Monospaced</emphasis> (лучший выбор, если доступен), или
                         <emphasis>Consolas</emphasis> или <emphasis>Lucida Console</emphasis>.
                     </note>
@@ -378,10 +378,10 @@ evstr(a(i+2))*2
                 <listitem>
                     <para>
                         Переключает SCIHOME в директорию <literal>dir</literal>. Если путь
-                        содержит пробелы, то он должен быть заключён в двойные кавычки (не 
+                        содержит пробелы, то он должен быть заключён в двойные кавычки (не
                         одинарные!).
-                        Если <literal>dir</literal> является относительным путём, то 
-                        <literal>dir</literal> добавляется к родительской стандартной папке 
+                        Если <literal>dir</literal> является относительным путём, то
+                        <literal>dir</literal> добавляется к родительской стандартной папке
                         SCIHOME.
                         <table>
                             <tr><td>В Windows: </td>

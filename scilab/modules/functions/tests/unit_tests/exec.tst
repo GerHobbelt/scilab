@@ -71,3 +71,12 @@ assert_checktrue(typeof(b) == "string");
 assert_checktrue(length(b) <> 0);
 assert_checktrue(typeof(c) == "string");
 assert_checktrue(length(c) <> 0);
+
+// recursive file execution
+mputl(["exec TMPDIR/subfun.sce"; "function currentfun(), subfun(); end"; "currentfun()"], fullfile(TMPDIR, "/execfile.sce"));
+mputl("function subfun(), cos(); end", fullfile(TMPDIR, "/subfun.sce"));
+[_, _, c] = exec(fullfile(TMPDIR, "/execfile.sce"), "errcatch");
+lines = strsplit(c, ascii(10));
+assert_checktrue(strstr(lines(1), fullfile(TMPDIR, "/subfun.sce")) <> "");
+assert_checktrue(strstr(lines(2), fullfile(TMPDIR, "/execfile.sce")) <> "");
+assert_checktrue(strstr(lines(3), fullfile(TMPDIR, "/execfile.sce")) <> "");
