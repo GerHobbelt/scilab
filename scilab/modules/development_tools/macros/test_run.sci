@@ -360,7 +360,7 @@ function status = test_module(_params)
     directories = [];
     for i=1:size(my_types,"*")
         if (_params.testTypes == "all_tests") | (_params.testTypes == my_types(i)) then
-            directory_path = module.path + "/tests/" + my_types(i);
+            directory_path = module.path + filesep() + "tests" + filesep() + my_types(i);
             for j=2:size(name,"*")
                 directory_path = directory_path + filesep() + name(j);
             end
@@ -433,7 +433,9 @@ function status = test_module(_params)
     end
 
     // For the XML export
-    testsuite.name=moduleName
+    [branch info] = getversion();
+    OS = getos();
+    testsuite.name = strcat([moduleName OS info(2)], " ")
     testsuite.time=0
     testsuite.tests=0
     testsuite.errors=0 // unexpected errors / exception on execution
@@ -577,7 +579,7 @@ function status = test_single(_module, _testPath, _testName)
     xcosNeeded    = %F;
 
     //some paths
-    result_path = TMPDIR + "/";
+    result_path = TMPDIR + filesep();
     if isfield(params, "output_dir") then
         result_path = params.output_dir;
     end
@@ -952,16 +954,23 @@ function status = test_single(_module, _testPath, _testName)
         if params.show_error == %T then
             res = mgetl(tmp_res)
             res(res=="") = []
+            if res <> [] then
+                res = [""
+                       "----- " + tmp_res + " -----"
+                       "    " + res];
+            else
+                res = ""
+            end
             err = mgetl(tmp_err)
             err(err=="") = []
-            status.details = [ status.details; strsubst(strsubst([""
-            "----- " + tmp_res + " -----"
-            "    " + res
-            ""
-            "----- " + tmp_err + " -----"
-            "    " + err
-            ""
-            ], SCI, "SCI"), TMPDIR, "TMPDIR") ];
+            if err <> [] then
+                err = [""
+                       "----- " + tmp_err + " -----"
+                       "    " + err];
+            else
+                err = ""
+            end
+            status.details = [ status.details; strsubst(strsubst([res ; err], SCI, "SCI"), TMPDIR, "TMPDIR") ];
         end
         return;
     end
@@ -1494,7 +1503,16 @@ function exportToXUnitFormat(exportToFile, testsuites)
 
         appendIntoFile = %f;
     end
+
+    [branch info] = getversion();
+
     root = xmlElement(doc, "testsuites");
+
+    properties = xmlElement(doc,"properties");
+    branchProperty = xmlElement(doc, "property");
+    branchProperty.attributes.name = "branch";
+    branchProperty.attributes.value = branch;
+    properties.children(1) = branchProperty;
 
     for i=1:size(testsuites, "*") // Export module by module
         module = testsuites(i);
@@ -1507,14 +1525,13 @@ function exportToXUnitFormat(exportToFile, testsuites)
         testsuite.attributes.errors = string(module.errors);
         testsuite.attributes.failures = string(module.failures);
 
-
         if isfield(module, "testcase") then
             for j=1:size(module.testcase,"*") // Export test by test
                 testsuite.children(j) = xmlElement(doc,"testcase");
                 unitTest = module.testcase(j);
                 testsuite.children(j).attributes.name = unitTest.name;
                 testsuite.children(j).attributes.time = string(unitTest.time);
-                testsuite.children(j).attributes.classname = getversion()+"."+module.name;
+                testsuite.children(j).attributes.classname = module.name;
                 if isfield(unitTest,"error") & size(unitTest.error,"*") >= 1 then
                     testsuite.children(j).children(1) = xmlElement(doc,"error");
                     testsuite.children(j).children(1).attributes.type = unitTest.error.type;
@@ -1542,6 +1559,8 @@ function exportToXUnitFormat(exportToFile, testsuites)
                 end
             end
         end
+        
+        testsuite.children(length(testsuite.children)+1) = properties;
 
         if appendIntoFile then
             // We will add the new elements into 'testsuites'
