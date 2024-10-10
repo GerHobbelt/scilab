@@ -151,18 +151,16 @@ function stop = myoutputcmd(state, data)
     ssize = optimsimplex_size ( simplex )
     //
     // Plot current solution
-    if ( %t & modulo(iter,10) == 0) then
-        h = findobj ( "user_data" , "nmpolygon" );
+    if (modulo(iter, 10) == 0) then
+        h = get("nmpolygon");
         nv = size(x,"*")/2
         r = x(1:nv)
         t = x(nv+1:$)
         polygon_update(h.children.children,r ,t , nv)
         a = polygon_area(r ,t , nv);
         str = msprintf("Largest Small Polygon - Area=%f",a);
-        h.title.text = str
-    end
-    //
-    if ( modulo(iter,10) == 0 ) then
+        h.title.text = str;
+
         mprintf ( "Iter. #%3d, Feval #%3d, Fval = %f, S = %.1e\n", ..
         iter, fc, fval, ssize);
     end
@@ -180,14 +178,14 @@ function [A,r,t] = findlargestpolygon (nv)
     radius = 0.45;
     [r,t] = polygon_regular (nv);
     r = radius*r;
-    scf()
+    h = scf(100001);
+    clf(h, "reset");
     polygon_draw(r ,t , nv);
-    h = gcf();
     h.children.data_bounds = [
     -0.6 -0.6
     0.6 0.6
     ];
-    h.children.user_data = "nmpolygon";
+    h.children.tag = "nmpolygon";
     x0 = [r;t];
     index = 6;
     [ f0 , c0 , index ] = largesmallpolygon ( x0 , index );
@@ -236,7 +234,7 @@ nv = 6;
 radius = 0.5;
 [r,t] = polygon_regular (nv);
 r = radius*r;
-h = scf();
+h = scf(100001);
 polygon_draw(r ,t , nv);
 f = polygon_area(r ,t , nv);
 //
@@ -251,7 +249,7 @@ dmax = max(d);
 mprintf("Maximum diameter=%f (expected = %f)\n",dmax,2*radius);
 dmin = min(d(d<>0));
 mprintf("Minimum diameter=%f (expected=%f)\n",dmin,radius);
-close(h);
+
 
 ////////////////////////////////////////////////////////
 //
