@@ -22,19 +22,25 @@ import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
 import java.awt.event.KeyEvent;
+import java.io.IOException;
 import java.util.Arrays;
 
+import javax.swing.JButton;
 import javax.swing.SwingUtilities;
 
 import org.scilab.modules.commons.ScilabCommons;
 import org.scilab.modules.commons.ScilabConstants;
+import org.scilab.modules.commons.gui.FindIconHelper;
 import org.scilab.modules.commons.gui.ScilabGUIUtilities;
+import org.scilab.modules.graphic_objects.graphicObject.CallBack;
 import org.scilab.modules.gui.bridge.ScilabBridge;
 import org.scilab.modules.gui.bridge.helpbrowser.SwingScilabHelpBrowser;
 import org.scilab.modules.gui.bridge.tab.SwingScilabDockablePanel;
+import org.scilab.modules.gui.bridge.toolbar.SwingScilabToolBar;
 import org.scilab.modules.gui.bridge.window.SwingScilabWindow;
 import org.scilab.modules.gui.console.ScilabConsole;
 import org.scilab.modules.gui.dockable.ScilabDockable;
+import org.scilab.modules.gui.events.callback.CommonCallBack;
 import org.scilab.modules.gui.menubar.MenuBar;
 import org.scilab.modules.gui.tab.ScilabTab;
 import org.scilab.modules.gui.tab.Tab;
@@ -42,6 +48,8 @@ import org.scilab.modules.gui.tabfactory.HelpBrowserTabFactory;
 import org.scilab.modules.gui.tabfactory.ScilabTabFactory;
 import org.scilab.modules.gui.textbox.ScilabTextBox;
 import org.scilab.modules.gui.textbox.TextBox;
+import org.scilab.modules.gui.toolbar.ScilabToolBar;
+import org.scilab.modules.gui.toolbar.ToolBar;
 import org.scilab.modules.gui.utils.ClosingOperationsManager;
 import org.scilab.modules.gui.utils.ConfigManager;
 import org.scilab.modules.gui.utils.MenuBarBuilder;
@@ -136,6 +144,25 @@ public class ScilabHelpBrowser extends ScilabDockable implements HelpBrowser {
 
         SwingScilabHelpBrowser browser = (SwingScilabHelpBrowser) ((ScilabHelpBrowser) instance).component;
         browser.setCurrentID(lastID);
+
+        /* Manage toolbar, see issue #9630 */
+        ToolBar toolbar = ScilabToolBar.createToolBar();
+        /* Copy "standard" JHelp buttons */
+        int nbComp = browser.getToolbar().getComponentCount();
+        for (int i = 0; i < nbComp; ++i) {
+            ((SwingScilabToolBar) toolbar.getAsSimpleToolBar()).add(browser.getToolbar().getComponent(0));
+        }
+        /* Add "About Scilab..." button as in "?" menu */
+        JButton aboutBtn = new JButton(CommonCallBack.createCallback("about();", CallBack.SCILAB_INSTRUCTION));
+        try {
+            aboutBtn.setIcon(FindIconHelper.loadIcon("help-browser"));
+            aboutBtn.setToolTipText(Messages.gettext("About Scilab..."));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        ((SwingScilabToolBar) toolbar.getAsSimpleToolBar()).add(aboutBtn);
+        helpTab.addToolBar(toolbar);
+
         ((SwingScilabDockablePanel) helpTab.getAsSimpleTab()).setAssociatedXMLIDForHelp("helpbrowser");
         WindowsConfigurationManager.restorationFinished((SwingScilabDockablePanel) helpTab.getAsSimpleTab());
 

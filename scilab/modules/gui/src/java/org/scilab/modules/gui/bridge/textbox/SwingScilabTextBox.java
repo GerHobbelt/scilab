@@ -17,7 +17,6 @@ package org.scilab.modules.gui.bridge.textbox;
 
 import java.awt.Color;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
