@@ -60,10 +60,14 @@ private:
     static std::unique_ptr<DebuggerManager> me;
     DebuggerManager() :
         breakpoints(),
-        debuggers(),
         callstack(),
-        pExp(nullptr), interrupted(false), currentBreakPoint(-1),
-        action(Continue), level(0), request_pause(false) {}
+        debuggers(),
+        pExp(nullptr),
+        interrupted(false),
+        request_pause(false),
+        currentBreakPoint(-1),
+        action(Continue),
+        level(0) {}
 
     std::mutex breakpoints_lock;
     Breakpoints breakpoints;

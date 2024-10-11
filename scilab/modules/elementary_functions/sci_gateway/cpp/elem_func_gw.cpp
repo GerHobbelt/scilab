@@ -109,8 +109,6 @@ int ElemFuncModule::Load()
 
 bool getDimsFromArguments(types::typed_list& in, const std::string& _pstName, int* _iDims, int** _piDims, bool* _alloc)
 {
-    types::Double* pOut = 0;
-
     *_alloc = false;
     *_iDims = 0;
     *_piDims = NULL;

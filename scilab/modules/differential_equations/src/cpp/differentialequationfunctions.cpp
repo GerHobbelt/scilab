@@ -1432,7 +1432,6 @@ void DifferentialEquationFunctions::callMacroG(int* n, double* t, double* y, int
 double DifferentialEquationFunctions::callIntgMacroF(double* t)
 {
     char errorMsg[256];
-    int one         = 1;
     int iRetCount   = 1;
 
     args_t args;
@@ -1488,7 +1487,6 @@ double DifferentialEquationFunctions::callIntgMacroF(double* t)
 double DifferentialEquationFunctions::callInt2dMacroF(double* x, double* y)
 {
     char errorMsg[256];
-    int one         = 1;
     int iRetCount   = 1;
 
     args_t args;
@@ -1604,7 +1602,6 @@ void DifferentialEquationFunctions::callInt3dMacroF(double* xyz, int* numfun, do
 void DifferentialEquationFunctions::callFevalMacroF(int* nn, double* x1, double* x2, double* xres, int* itype)
 {
     char errorMsg[256];
-    int one         = 1;
     int iRetCount   = 1;
 
     args_t args;
@@ -1679,7 +1676,6 @@ void DifferentialEquationFunctions::callFevalMacroF(int* nn, double* x1, double*
 void DifferentialEquationFunctions::callBvodeMacroGsub(int* i, double* z, double* g)
 {
     char errorMsg[256];
-    int one         = 1;
     int iRetCount   = 1;
 
     args_t args;
