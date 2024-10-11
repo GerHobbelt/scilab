@@ -231,6 +231,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_Import.def" /SUBSYSTEM:WINDOWS /MACH
     <ClCompile Include="..\sci_eye.cpp" />
     <ClCompile Include="..\sci_floor.cpp" />
     <ClCompile Include="..\sci_frexp.cpp" />
+    <ClCompile Include="..\sci_gallery.cpp" />
     <ClCompile Include="..\sci_gsort.cpp" />
     <ClCompile Include="..\sci_imag.cpp" />
     <ClCompile Include="..\sci_imult.cpp" />

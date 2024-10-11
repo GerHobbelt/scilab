@@ -96,9 +96,6 @@
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                <link linkend="testmatrix">testmatrix</link>
-            </member>
-            <member>
                 <link linkend="toeplitz">toeplitz</link>
             </member>
         </simplelist>

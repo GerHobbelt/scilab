@@ -105,7 +105,7 @@
 // Condition number of a non-square matrix
 cond([1 0 -1 ; 0 1 -1])
 
-A = testmatrix('hilb',6);
+A = invhilb(6);
 // condition number in 2-norm
 cond(A)
 cond(A, 2)

@@ -107,7 +107,7 @@
 // 非正方行列の条件番号
 cond([1 0 -1 ; 0 1 -1])
 
-A=testmatrix('hilb',6);
+A=invhilb(6);
 // 2-ノルムの条件数
 cond(A)
 cond(A, 2)

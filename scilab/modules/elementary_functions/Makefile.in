@@ -413,7 +413,8 @@ am__objects_8 =  \
 	sci_gateway/cpp/libscielementary_functions_la-sci_bitstring.lo \
 	sci_gateway/cpp/libscielementary_functions_la-sci_base2dec.lo \
 	sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo \
-	sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo
+	sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo \
+	sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo
 am_libscielementary_functions_la_OBJECTS = $(am__objects_7) \
 	$(am__objects_8)
 libscielementary_functions_la_OBJECTS =  \
@@ -464,6 +465,7 @@ am__depfiles_remade = sci_gateway/c/$(DEPDIR)/libscielementary_functions_la-sci_
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_eye.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_floor.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_frexp.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gsort.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imag.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imult.Plo \
@@ -1299,7 +1301,8 @@ GATEWAY_CXX_SOURCES = \
     sci_gateway/cpp/sci_bitstring.cpp \
     sci_gateway/cpp/sci_base2dec.cpp \
     sci_gateway/cpp/sci_dec2base.cpp \
-    sci_gateway/cpp/sci_vander.cpp
+    sci_gateway/cpp/sci_vander.cpp \
+    sci_gateway/cpp/sci_gallery.cpp
 
 EISPACK_SOURCES = src/fortran/eispack/balbak.f
 
@@ -2293,6 +2296,9 @@ sci_gateway/cpp/libscielementary_functions_la-sci_dec2base.lo:  \
 sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
+sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo:  \
+	sci_gateway/cpp/$(am__dirstamp) \
+	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 
 libscielementary_functions.la: $(libscielementary_functions_la_OBJECTS) $(libscielementary_functions_la_DEPENDENCIES) $(EXTRA_libscielementary_functions_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) $(am_libscielementary_functions_la_rpath) $(libscielementary_functions_la_OBJECTS) $(libscielementary_functions_la_LIBADD) $(LIBS)
@@ -2347,6 +2353,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_eye.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_floor.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_frexp.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gsort.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imag.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imult.Plo@am__quote@ # am--include-marker
@@ -3294,6 +3301,13 @@ sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo: sci_gateway/cpp/sci
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscielementary_functions_la-sci_vander.lo `test -f 'sci_gateway/cpp/sci_vander.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_vander.cpp
 
+sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo: sci_gateway/cpp/sci_gallery.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Tpo -c -o sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo `test -f 'sci_gateway/cpp/sci_gallery.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_gallery.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Tpo sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/sci_gallery.cpp' object='sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscielementary_functions_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscielementary_functions_la-sci_gallery.lo `test -f 'sci_gateway/cpp/sci_gallery.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_gallery.cpp
+
 .f.o:
 	$(AM_V_F77)$(F77COMPILE) -c -o $@ $<
 
@@ -3531,6 +3545,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_eye.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_floor.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_frexp.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gsort.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imag.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imult.Plo
@@ -3693,6 +3708,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_eye.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_floor.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_frexp.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gallery.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_gsort.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imag.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscielementary_functions_la-sci_imult.Plo

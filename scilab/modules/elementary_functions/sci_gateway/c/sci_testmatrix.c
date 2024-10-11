@@ -17,6 +17,8 @@
 #include "basic_functions.h"
 #include "Scierror.h"
 #include "api_scilab.h"
+#include "Sciwarning.h"
+#include "localization.h"
 
 #define MAGI_LETTER		'm'
 #define FRK_LETTER		'f'
@@ -42,6 +44,8 @@ int sci_testmatrix(char *fname, void* pvApiCtx)
     int iDim						= 0;
 
     double *pdblRealRet = NULL;
+
+    Sciwarning(_("%s: %s will be permanently removed in Scilab %s.\n"), _("Warning"), "testmatrix", "2026.0.0");
 
     CheckRhs(2, 2);
     CheckLhs(0, 1);
@@ -98,12 +102,15 @@ int sci_testmatrix(char *fname, void* pvApiCtx)
     switch (cMode)
     {
         case FRK_LETTER :
-            franck_matrix(iDim, pdblRealRet);
+            Sciwarning(_("%s: Please use %s instead.\n"), _("Warning"), "frank");
+            frank_matrix(iDim, pdblRealRet);
             break;
         case HILB_LETTER :
-            hilb_matrix(iDim, pdblRealRet);
+            Sciwarning(_("%s: Please use %s instead.\n"), _("Warning"), "invhilb");
+            invhilb_matrix(iDim, pdblRealRet);
             break;
         default : //Magic case and others
+            Sciwarning(_("%s: Please use %s instead.\n"), _("Warning"), "magic");
             magic_matrix(iDim, pdblRealRet);
             break;
     }

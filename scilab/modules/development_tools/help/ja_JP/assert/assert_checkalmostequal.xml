@@ -267,7 +267,7 @@ assert_checkalmostequal ( 1.23456 , 1.23457 , 1.e-5 );
 n = 6;
 // 予測値を設定します.
 expected = ones(n,1);
-A = testmatrix("hilb",n);
+A = invhilb(n);
 // 行列の条件数を計算します : ~10^8
 ceil(log10(cond(A)))
 // これは,理論的に失われる桁数が 8 であることを意味します,
