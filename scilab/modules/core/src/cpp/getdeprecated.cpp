@@ -17,6 +17,7 @@ std::unordered_map<std::wstring, std::wstring> getDeprecated()
     return {
         // Scilab 2025.0.0 => 2026.0.0
         {L"impl", L"dae"},
+        {L"princomp", L"pca"},
         {L"testmatrix", L"magic, invhilb, frank"},
 
         // Scilab 2024.1.0 => 2026.0.0

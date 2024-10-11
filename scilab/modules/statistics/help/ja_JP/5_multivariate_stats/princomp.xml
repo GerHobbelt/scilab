@@ -17,6 +17,7 @@
     <refnamediv>
         <refname>princomp</refname>
         <refpurpose>主成分解析</refpurpose>
+        <refpurpose>This function is obsolete. Please use <link linkend="pca">pca</link> instead.</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>呼び出し手順</title>
@@ -166,6 +167,12 @@ a=rand(100,10,'n');
                 <revdescription><literal>princomp</literal> now returns the percentage of the variance explained by each principal component and
                     the estimated mean of each variable of x.
                 </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Tagged obsolete and will be removed in Scilab 2026.0.0.
+                </revremark>
             </revision>
         </revhistory>
     </refsection>

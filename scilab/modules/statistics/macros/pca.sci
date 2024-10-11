@@ -1,78 +1,213 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2000 - INRIA - Carlos Klimann
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Adeline CARNIS
 //
-// Copyright (C) 2012 - 2016 - Scilab Enterprises
-//
-// This file is hereby licensed under the terms of the GNU GPL v2.0,
-// pursuant to article 5.3.4 of the CeCILL v.2.1.
-// This file was originally licensed under the terms of the CeCILL v2.1,
-// and continues to be available under such terms.
 // For more information, see the COPYING file which you should have received
 // along with this program.
-//
+  
+function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
 
-function [lambda,facpr,comprinc]=pca(x)
-    //
-    //This  function performs  several  computations known  as
-    //"principal component  analysis".
-    //
-    //The  idea  behind this  method  is  to  represent in  an
-    //approximative  manner a  cluster of  n individuals  in a
-    //smaller  dimensional subspace.  In order  to do  that it
-    //projects the cluster onto a subspace.  The choice of the
-    //k-dimensional projection subspace is  made in such a way
-    //that  the distances  in  the projection  have a  minimal
-    //deformation: we are looking for a k-dimensional subspace
-    //such that the squares of the distances in the projection
-    //is  as  big  as  possible  (in  fact  in  a  projection,
-    //distances can only stretch).  In other words, inertia of
-    //the projection  onto the k dimensional  subspace must be
-    //maximal.
-    //
-    //x is a nxp (n  individuals, p variables) real matrix.
-    //
-    //lambda is a px2 numerical matrix. In the first column we
-    //find the  eigenvalues of V,  where V is  the correlation
-    //pxp matrix  and in the  second column are the  ratios of
-    //the   corresponding   eigenvalue   over   the   sum   of
-    //eigenvalues.
-    //
-    //facpr  are  the principal  factors:  eigenvectors of  V.
-    //Each  column is an  eigenvector element  of the  dual of
-    //R^p. Is an orthogonal matrix.
-    //
-    //comprinc  are  the  principal components.   Each  column
-    //(c_i=Xu_i)  of  this  nxn  matrix  is  the  M-orthogonal
-    //projection of individuals onto principal axis.  Each one
-    //of this columns is a linear combination of the variables
-    //x1,  ...,xp   with  maximum  variance   under  condition
-    //u'_iM^(-1)u_i=1.
-    //
-    //Verification: comprinc*facpr=x
-    //
-    //References: Saporta, Gilbert, Probabilites,  Analyse des
-    //Donnees et Statistique, Editions Technip, Paris, 1990.
-    //
-    //author: carlos klimann
-    //
-    //date: 2002-02-05
-    //commentary fixed 2003-19-24 ??
-    // update disable graphics output Allan CORNET 2008
-    // request user
-    // splitted in printcomp (matlab compatibility) and show_pca Serge Steer
-    // 2008
-
-    
-    arguments
-        x
+    if nargin == 0 then
+        error(msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), "pca", 1));
     end
-    
-    if x==[] then
-        lambda=%nan;
-        facpr=%nan;
-        comprinc=%nan;
+
+    if typeof(x) <> "constant" then
+        error(msprintf(_("%s: Wrong type for input argument #%d: A double expected.\n"), "pca", 1));
+    end
+
+    if x == [] then
+        comprinc = [];
+        score = [];
+        lambda = [];
+        score = [];
+        explainedvar = [];
+        mu = %nan;
         return;
     end
-    [facpr,comprinc,lambda]=princomp(wcenter(x,1))
-    lambda(:,2)=lambda(:,1)/sum(lambda(:,1))
+
+    eco = %t;
+    centered = %t;
+    numcomp = size(x, 2);
+    weights = ones(1, size(x, 1));
+    isweights = %f;
+    varweights = [];
+
+    if nargin > 1 then
+        for i = nargin-2:-2:1
+            if type(varargin(i)) <> 10 || (type(varargin(i)) == 10 && ~isscalar(varargin(i))) then
+                break;
+            end
+
+            select varargin(i)
+            case "Centered"
+                centered = varargin(i + 1);
+
+                if typeof(centered) <> "boolean" then
+                    error(msprintf(_("%s: Wrong type for ""%s"" argument: A boolean expected.\n"), "pca", "Centered"));
+                end
+
+                if size(centered, "*") <> 1 then
+                    error(msprintf(_("%s: Wrong size for ""%s"" argument: A scalar expected.\n"), "pca", "Centered"));
+                end
+            case "Economy"
+                eco = varargin(i + 1);
+
+                if typeof(eco) <> "boolean" then
+                    error(msprintf(_("%s: Wrong type for ""%s"" argument: A boolean expected\n"), "pca", "Economy"));
+                end
+
+                if size(eco, "*") <> 1 then
+                    error(msprintf(_("%s: Wrong size for ""%s"" argument: A scalar expected.\n"), "pca", "Economy"));
+                end
+
+            case "NumComponents"
+                numcomp = varargin(i + 1);
+
+                if typeof(numcomp) <> "constant" then
+                    error(msprintf(_("%s: Wrong type for ""%s"" argument: A double expected.\n"), "pca", "NumComponents"));
+                end
+
+                if size(numcomp, "*") <> 1 then
+                    error(msprintf(_("%s: Wrong size for ""%s"" argument: A scalar expected.\n"), "pca", "NumComponents"));
+                end
+
+                if numcomp <> int(numcomp) then
+                    error(msprintf(_("%s: Wrong value for ""%s"" argument: An integer value expected.\n"), "pca", "NumComponents"));
+                end
+
+                if numcomp <= 0 || numcomp > size(x, 2) then
+                    error(msprintf(_("%s: Wrong value for ""%s"" argument: Must be positive and lower than or equal to %d.\n"), "pca", "NumComponents", size(x, 1)));
+                end
+
+            case "Weights"
+                weights = varargin(i + 1);
+
+                if typeof(weights) <> "constant" then
+                    error(msprintf(_("%s: Wrong type for ""%s"" argument: A double expected.\n"), "pca", "Weights"));
+                end
+
+                if (and(size(weights) <> 1) || length(weights) <> size(x, 1)) then
+                    error(msprintf(_("%s: Wrong size for ""%s"" argument: A vector of size %d expected.\n"), "pca", "Weights", size(x, 1)));
+                end
+                if or(weights <= 0) then
+                    error(msprintf(_("%s: Wrong value for ""%s"" argument: A positive value expected.\n"), "pca", "Weights"));
+                end
+
+                weights = weights(:);
+                isweights = %t;
+
+            case "VariableWeights"
+                varweights = varargin(i + 1);
+                typ = typeof(varweights);
+
+                if and(typ <> ["constant", "string"]) then
+                    error(msprintf(_("%s: Wrong type for ""%s"" argument: A double or string expected.\n"), "pca", "VariableWeights"));
+                end
+                if typ == "string" && varweights <> "variance" then
+                    error(msprintf(_("%s: Wrong value for ""%s"" argument: ""%s"" expected.\n"), "pca", "VariableWeights", "variance"));
+                elseif typ == "constant" then
+                    if (and(size(varweights) <> 1) || length(varweights) <> size(x, 2)) then
+                        error(msprintf(_("%s: Wrong size for ""%s"" argument: A vector expected.\n"), "pca", "VariableWeights"));
+                    end
+                    if or(varweights <= 0) then
+                        error(msprintf(_("%s: Wrong value for ""%s"" argument: A positive value expected.\n"), "pca", "VariableWeights"));
+                    end
+                end
+
+            else
+                break,
+            end
+        end
+    end
+        
+    [rowx, colx] = size(x);
+
+    if centered then
+        if isweights then
+            mu = meanf(x, weights * ones(1, colx), 1);
+        else
+            mu = mean(x, 1);
+        end
+        y = x - ones(rowx, 1) * mu;
+        r = rowx - 1;
+    else
+        y = x;
+        mu = zeros(1, colx);
+        r = rowx;
+    end
+
+    if isweights then
+        c = sqrt(weights) * ones(1, colx);
+        y = y .* c;
+    end
+
+    if varweights <> [] then
+        if varweights == "variance" then
+            if isweights then
+                // weighted standard deviation from variance computation
+                // https://stats.stackexchange.com/questions/47325/bias-correction-in-weighted-variance
+                mw = meanf(x, w(:) * ones(1,colx), 1);
+                s = sum((w(:) * ones(1, colx) .* (abs(x - ones(rowx, 1) * mw)) .^2), 1) ./ sum(w);
+                sw = sqrt(s* (sum(w)^2)/(sum(w)^2 - sum(w.^2)));
+                varweights = 1./sw;
+            else
+                varweights = 1./stdev(x, 1);
+            end
+        else
+            varweights = sqrt(varweights);
+        end
+        y = y .* (ones(rowx, 1) * varweights);
+    end
+
+    //compute eigenvectors of  y'*y using svd
+    if eco then
+        [U, lambda, comprinc] = svd(y, "e");
+    else
+        [U, lambda, comprinc] = svd(y);
+    end
+
+    if isweights then
+        U = U ./ c;
+        y = y ./ c;
+    end
+
+    score = y * comprinc;
+    lambda = diag(lambda).^2 / r;
+
+    if varweights <> [] then
+        comprinc = comprinc ./ (varweights' * ones(1, colx));
+    end
+    
+    if r < colx then
+        if eco then
+            comprinc(:,r+1:$)=[];
+            lambda(r+1:$)=[]
+            score(:,r+1:$) = [];
+        else
+            lambda(r+1:$)=0
+            score(:, r+1:$) = 0;
+        end
+    end
+    q=find(lambda<=max(r,colx)*%eps*lambda(1),1)
+    if q==[] then q=size(lambda,"*"),end
+    tsquare = r * sum(U(:,1:q).^2,2)
+
+    if nargout > 4 then
+        // percentage of variance explained by each principal component
+        explainedvar = 100 * lambda / sum(lambda);
+    end
+
+    [tmp, k] = max(abs(comprinc), "r");
+    changesign = sign(diag(comprinc(k,:))');
+    comprinc = changesign.*. ones(colx, 1) .* comprinc;
+    score = changesign.*. ones(rowx, 1) .* score;
+
+    if numcomp < rowx then
+        comprinc = comprinc(:, 1: numcomp);
+        score = score(:, 1:numcomp);
+    end
+
+    if nargout < 4 then
+        warning(msprintf(_("Potential incompatibility with previous versions: the order of first three output arguments have changed. Please see pca documentation for more information.\n"), "pca"));
+    end
 endfunction

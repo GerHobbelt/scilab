@@ -38,7 +38,6 @@ function show_pca(lambda,facpr,N)
         rango=size(lambda,1)
     end
 
-
     rc = (ones(colx,1)* sqrt((lambda(N,1))')) .* facpr(:,N) ;
     ra = [1:rango]';
     if ( rango <= 1 ) then
@@ -63,7 +62,8 @@ function show_pca(lambda,facpr,N)
 
     // Plot the ratio of each eigenvalue over the sum.
     subplot(122)
-    bar(lambda(:,2))
-    plot(ra,cumsum(lambda(:,2)),"r*-")
+    l = lambda(:, 1) / sum(lambda(:, 1))
+    bar(l)
+    plot(ra,cumsum(l),"r*-")
     xtitle(gettext("Eigenvalues"),"Indice","Ratio")
 endfunction
