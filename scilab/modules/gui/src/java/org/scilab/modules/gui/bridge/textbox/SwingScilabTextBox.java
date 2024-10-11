@@ -17,6 +17,7 @@ package org.scilab.modules.gui.bridge.textbox;
 
 import java.awt.Color;
 
+import javax.swing.BorderFactory;
 import javax.swing.JTextArea;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
@@ -48,8 +49,6 @@ public class SwingScilabTextBox extends JTextArea implements SimpleTextBox {
     public SwingScilabTextBox() {
         super();
         setEditable(false);
-        /* Default settings for InfoBar (do not modify) */
-        setRelief(ScilabRelief.RIDGE);
         setOpaque(false);
         setFocusable(false);
     }
