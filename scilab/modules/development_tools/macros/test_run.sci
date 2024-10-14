@@ -723,6 +723,11 @@ function status = test_single(_module, _testPath, _testName)
         status.message = "skipped: Long time duration";
         return;
     end
+    if ~_module.longtime then
+        timeout = "15m"
+    else
+        timeout = "0"
+    end
 
     if ~isempty(grep(sciFile, "<-- TEST WITH GRAPHIC -->")) then
         if or(_module.wanted_mode == "NWNI") | without_gui_build then
@@ -797,6 +802,12 @@ function status = test_single(_module, _testPath, _testName)
 
     if ~isempty(grep(sciFile, "<-- NO CHECK REF -->")) then
         reference = "skip";
+    end
+
+    if ~isempty(grep(sciFile, "<-- SHARED SCIHOME -->")) then
+        scihome = SCIHOME;
+    else
+        scihome = TMPDIR + filesep() + "scihome_" + _testName;
     end
 
     //build real test file
@@ -937,10 +948,7 @@ function status = test_single(_module, _testPath, _testName)
 
     loader_path = pathconvert(fullfile(_module.moduleName, "loader.sce"), %f);
 
-    SCI_ARGS = " -nb -quit "
-    if ~_module.longtime then
-        SCI_ARGS = SCI_ARGS + "--timeout 15m "
-    end
+    SCI_ARGS = msprintf(" -nb -quit -scihome ""%s"" --timeout %s ", scihome, timeout);
 
     // Build final command
     if getos() == "Windows" then
