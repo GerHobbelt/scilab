@@ -1206,21 +1206,38 @@ static int import_handle_compound(hid_t dataset, int parent, int version)
 
 static int import_handle_datatip(hid_t dataset, int parent, int version)
 {
+    int row;
+    int col;
+    double* dblData = nullptr;
+    double dblIndex[2];
+
     int datatip = createGraphicObject(__GO_DATATIP__);
-    //set parent manually, these no real releationship between datatip and parent
+
+
+    //set parent manually, there is no real releationship between datatip and parent
     setGraphicObjectProperty(datatip, __GO_PARENT__, &parent, jni_int, 1);
 
-    //data
-    int index = 0;
-    getHandleInt(dataset, "data_index", &index);
-    double indexes[2];
-    indexes[0] = index;
-    indexes[1] = 0;
+    // data index (integer index and double "ratio")
+    getHandleDoubleVector(dataset, "data_index", &row, &col, &dblData);
+    if (dblData != nullptr)
+    {
+        dblIndex[0]=dblData[0];
+        dblIndex[1]=dblData[1];
+    }
+    else
+    {
+        // legacy 0 "ratio"
+        int index;
+        getHandleInt(dataset, "data_index", &index);        
+        dblIndex[0] = index;
+        dblIndex[1] = 0;
+    }
 
-    setGraphicObjectProperty(datatip, __GO_DATATIP_INDEXES__, indexes, jni_double_vector, 2);
+    setGraphicObjectProperty(datatip, __GO_DATATIP_INDEXES__, dblIndex, jni_double_vector, 2);
 
     //import "standards" properties
     import_handle_generic(dataset, datatip, -1, DatatipHandle::getPropertyList(), true, version);
+
 
     closeList6(dataset);
     return datatip;
@@ -2949,6 +2966,10 @@ static bool export_handle_datatip(hid_t parent, int uid, hid_t xfer_plist_id)
     {
         return false;
     }
+    double *dblIndex = nullptr;
+    int dims[2] = {1,2};
+    getHandleDoubleVectorProperty(uid, __GO_DATATIP_INDEXES__, &dblIndex);
+    writeDoubleMatrix6(parent,"data_index", 2, dims, dblIndex, xfer_plist_id);    
 
     closeList6(parent);
     return true;

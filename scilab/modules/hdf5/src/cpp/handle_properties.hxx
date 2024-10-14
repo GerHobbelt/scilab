@@ -420,7 +420,6 @@ struct DatatipHandle
 
         //SAVE_ONLY, so don't care of reload ordering
         m.emplace_back("type", std::vector<int>({SAVE_ONLY, __GO_TYPE__, jni_int}));
-        m.emplace_back("data_index", std::vector<int>({SAVE_ONLY, __GO_DATATIP_INDEXES__, jni_int}));
 
         //@start
         m.emplace_back("box_mode", std::vector<int>({SAVE_LOAD, __GO_DATATIP_BOX_MODE__, jni_bool}));

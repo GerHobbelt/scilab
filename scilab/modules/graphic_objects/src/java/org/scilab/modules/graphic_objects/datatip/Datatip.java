@@ -504,17 +504,19 @@ public class Datatip extends Text {
     public UpdateStatus setIndexes(Double[] value) {
         if (value[0].intValue() != dataIndex || !value[1].equals(ratio)) {
             dataIndex = value[0].intValue();
-            ratio = new Double(value[1]);
+            ratio = value[1];
             updateText();
-
             return UpdateStatus.Success;
         }
 
         return UpdateStatus.NoChange;
     }
 
-    public Integer getIndexes() {
-        return dataIndex;
+    public Double[] getIndexes() {
+        Double[] value = new Double[2];
+        value[0] = Double.valueOf(dataIndex);
+        value[1] = ratio;
+        return value;
     }
 
     /**
