@@ -545,10 +545,13 @@ public :
     static bool increaseRecursion();
     static void decreaseRecursion();
 private:
+    static bool m_API_mode;
     static bool m_flushStream;
     static bool m_startSwingView;
     static bool m_isatty;
 public:
+    static bool isAPIMode();
+    static void setAPIMode();
     static bool flushStream();
     static void setFlushStream(bool);
     static bool startSwingView();

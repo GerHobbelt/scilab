@@ -30,7 +30,7 @@
 /*--------------------------------------------------------------------------*/
 int main(void)
 {
-    BOOL status; 
+    BOOL status;
 #ifdef _MSC_VER
     status = StartScilab(NULL, NULL, 0);
 #else
@@ -42,12 +42,6 @@ int main(void)
         return 1;
     }
 
-    if (getScilabMode() != SCILAB_API && getScilabMode() != SCILAB_NW)
-    {
-        fprintf(stderr, "BUG 11394 NOT FIXED. (2)\n");
-        return 1;
-    }
-    
     if (SendScilabJob("a = 1"))
     {
         fprintf(stderr, "BUG 11394 NOT FIXED. (3)\n");
@@ -71,7 +65,7 @@ int main(void)
         fprintf(stderr, "BUG 11394 NOT FIXED. (5)\n");
         return 1;
     }
-    
+
     if (SendScilabJob("b = 1"))
     {
         fprintf(stderr, "BUG 11394 NOT FIXED. (6)\n");
