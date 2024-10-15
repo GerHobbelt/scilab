@@ -549,7 +549,8 @@ int set3ddata(void* _pvCtx, int iObjUID, AssignedList * tlist)
     if (getAssignedListNbElement(tlist) == 4)
     {
         getCurrentDoubleMatrixFromList(_pvCtx, tlist, &m3n, &n3n);
-        if (m3n * n3n != m3 * n3)
+        if (m3n * n3n != m3 * n3 && //matrix color
+            ((m3n == 1 || n3n == 1) && m3n * n3n != n3)) //vector color
         {
             Scierror(999, _("Wrong size for %s element: A %d-by-%d matrix or a vector of size %d expected.\n"), "color", m3, n3, n3);
             return SET_PROPERTY_ERROR;
