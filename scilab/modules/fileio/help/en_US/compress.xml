@@ -60,7 +60,7 @@
                             <term>format</term>
                             <listitem>
                                 <para>
-                                    A string with one of the following values: zip, tar, 7zip, tar_ustar, tar_pax_interchange, tar_pax_restricted, tar_gnutar.
+                                    A string with one of the following values: zip, tar, 7zip, tar_ustar, tar_pax_interchange, tar_pax_restricted, tar_gnutar, raw.
                                 </para>
                             </listitem>
                         </varlistentry>
