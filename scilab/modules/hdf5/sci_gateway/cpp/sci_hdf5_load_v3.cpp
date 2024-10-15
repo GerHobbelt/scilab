@@ -761,7 +761,7 @@ static types::InternalType* import_sparse(hid_t dataset)
     int complex = 0;
     std::vector<int> pdims;
     int size = getDimsNode(dataset, &complex, pdims);
-    if (size <= 0)
+    if (size < 0)
     {
         closeList6(dataset);
         return nullptr;
