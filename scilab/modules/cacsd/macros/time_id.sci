@@ -19,6 +19,7 @@ function [h,err]=time_id(n,u,y)
     end
 
     npt=size(y,"*");
+    y = y(:);
     select type(u)
     case 1 then
         u=u(:)

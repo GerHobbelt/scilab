@@ -99,7 +99,7 @@ function  bar(varargin)
             X = 1:size(Y,1)
         end
         X = X(:)
-        if isvector(X) & isvector(Y)
+        if ~isscalar(X) & isvector(X) & isvector(Y)
             Y = Y(:)
         end
     end

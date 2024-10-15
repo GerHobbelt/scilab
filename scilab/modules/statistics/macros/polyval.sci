@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - 3DS - Adeline CARNIS
+// Copyright (C) 2024 - Dassault Systèmes S.E - Adeline CARNIS
 //
 // For more information, see the COPYING file which you should have received
 // along with this program.
@@ -9,7 +9,7 @@ function [y, d] = polyval(p, x, S, mu)
         p {mustBeA(p, ["double", "polynomial"])}
         x {mustBeA(x, "double")}
         S {mustBeA(S, ["double", "struct"])} = []
-        mu (1,2) {mustBeA(mu, "double"), mustBeVector} = [0 1]
+        mu {mustBeA(mu, "double"), mustBeVector} = [0 1]
     end
 
     if nargout == 2 && (nargin < 3 || isempty(S)) then
@@ -45,6 +45,10 @@ function [y, d] = polyval(p, x, S, mu)
     end
 
     if nargin == 4 then
+        if size(mu, "*") == 1 then
+            error(msprintf(_("%s: Wrong type for input argument #%d: a vector expected.\n"), "polyval", 4));
+        end
+
         x = (x - mu(1)) / mu(2);
     end
 

@@ -47,6 +47,10 @@ function [Sk,rk,mu]=h_inf(P,r,mumin,mumax,nmax)
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"h_inf",1))
     end
 
+    if size(r, "*") <> 2 then
+        error(msprintf(gettext("%s: Wrong size for input argument #%d: A vector of size %d expected.\n"), "h_inf", 2, 2));
+    end
+
     r=int(r);
 
     [P2,mu_inf,Uci,Yci,D22]=h_init(P,r,%t)

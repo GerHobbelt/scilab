@@ -76,4 +76,8 @@ function [P, K] = %h_cl2(P, r, K)
         K = tf2ss(K);
     end
 
+    if size(r, "*") <> 2 then
+        error(msprintf(gettext("%s: Wrong size for input argument #%d: A vector of size %d expected.\n"), "h_cl", 2, 2));
+    end
+
 endfunction

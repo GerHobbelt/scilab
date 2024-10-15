@@ -47,6 +47,11 @@ function [gopt]=gamitg(g,r,PREC,options)
     if g.dt<>"c" then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Continuous time system expected.\n"),"gamitg",1))
     end
+
+    if size(r, "*") <> 2 then
+        error(msprintf(gettext("%s: Wrong size for input argument #%d: A vector of size %d expected.\n"), "gamitg", 2, 2));
+    end
+
     //user interface. The default values are:
     //     PREC=1.0e-3;      options='nul';
     //************************************************

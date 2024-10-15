@@ -111,11 +111,11 @@ function contourf(x, y, z, nv, style, strf, leg, rect, nax, fpf)
         rect=[min(x), min(y), max(x), max(y)];
     end
 
-    if ~isvector(x) then
+    if isscalar(x) | ~isvector(x) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contourf", 1));
     end
 
-    if ~isvector(y) then
+    if isscalar(y) | ~isvector(y) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contourf", 2));
     end
 

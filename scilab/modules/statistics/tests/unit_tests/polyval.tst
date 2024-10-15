@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - 3DS - Adeline CARNIS
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Adeline CARNIS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
@@ -62,7 +62,7 @@ assert_checkerror("polyval(1, int8(1))", msg);
 msg = msprintf(_("%s: Wrong type for input argument #%d: a structure expected.\n"), "polyval", 3);
 assert_checkerror("[y, d] = polyval(2, 1, 3)", msg);
 
-msg = msprintf(_("%s: Wrong type for input argument #%d: Must be a vector.\n"), "polyval", 4);
+msg = msprintf(_("%s: Wrong type for input argument #%d: a vector expected.\n"), "polyval", 4);
 assert_checkerror("y = polyval(2,1,[], 1)", msg);
 
 msg = msprintf(_("%s: Wrong type for input argument #%d: Must be in ""double"".\n"), "polyval", 4);

@@ -63,11 +63,11 @@ function contour(x, y, z, nz, theta, alpha, leg, flag, ebox, zlev, fpf)
         error(msprintf(gettext("%s: Wrong type for input argument #%d: Real matrix expected.\n"), "contour", 4));
     end
 
-    if ~isvector(x) then
+    if isscalar(x) | ~isvector(x) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contour", 1));
     end
 
-    if ~isvector(y) then
+    if isscalar(y) | ~isvector(y) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contour", 2));
     end
 

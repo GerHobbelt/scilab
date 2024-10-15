@@ -37,7 +37,7 @@ function rho=correl(x, y, fre)
 
     if fre == [] then
         if cx <> ly then
-            error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same sizes expected"), "correl", 1, 2));
+            error(msprintf(gettext("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"), "correl", 1, 2));
         end
         mx = mean(x);
         my = mean(y);

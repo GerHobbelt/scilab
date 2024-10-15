@@ -779,8 +779,7 @@ int mustBeScalarOrEmpty(types::typed_list& x)
 
 int mustBeVector(types::typed_list& x)
 {
-    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector() && x[0]->getAs<types::GenericType>()->isScalar() == false) ? 0 : 1;
-    //return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
+    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
 }
 
 int mustBeSquare(types::typed_list& x)

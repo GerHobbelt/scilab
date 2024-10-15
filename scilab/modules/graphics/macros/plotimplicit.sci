@@ -48,7 +48,7 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
             //end
             x_grid = db(1:2)
         end
-        if ~isvector(x_grid) then
+        if isscalar(x_grid) | ~isvector(x_grid) then
             error(msprintf(gettext("%s: Argument #%d: Vector expected.\n"), fname, 2));
         end
         if ~isreal(x_grid) then
@@ -71,7 +71,7 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
         if typeof(y_grid)=="implicitlist" & y_grid == :
             y_grid = db(3:4)
         end
-        if ~isvector(y_grid) then
+        if isscalar(y_grid) | ~isvector(y_grid) then
             error(msprintf(gettext("%s: Argument #%d: Vector expected.\n"), fname, 3));
         end
         if ~isreal(y_grid) then

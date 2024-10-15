@@ -260,7 +260,7 @@ endfunction
 
 foo(1:2);
 assert_checkerror("foo([])", [], 999);
-assert_checkerror("foo(1)", [], 999);
+assert_checkerror("foo([1 2; 3 4])", [], 999);
 clear foo;
 
 // mustBeMember
