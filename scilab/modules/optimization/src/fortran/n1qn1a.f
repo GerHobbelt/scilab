@@ -11,7 +11,7 @@ c For more information, see the COPYING file which you should have received
 c along with this program.
 c
       subroutine n1qn1a (simul,n,x,f,g,scale,acc,mode,
-     1     niter,nsim,iprint,lp,h,d,w,xa,ga,xb,gb,izs,rzs,dzs)
+     1     niter,nsim,iprint,lp,h,d,w,xa,ga,xb,gb,izs,rzs,dzs,indic)
 c
 
 *     A (very) few modifs by Bruno (14 March 2005): I have translated some output
@@ -137,7 +137,7 @@ c                   iteration
       indic=1
       call simul(indic,n,x,f,g,izs,rzs,dzs)
 c     error in user function
-      if(indic.eq.0) goto 250
+      if(indic.le.0) goto 250
 c               calcul de la direction de recherche
   140 do 150 i=1,n
   150 d(i)=-ga(i)

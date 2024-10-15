@@ -307,7 +307,7 @@ types::Function::ReturnValue sci_fsolve(types::typed_list &in, int _iRetCount, t
     if (iInfo == -1)
     {
         char* pstrMsg = wide_string_to_UTF8(ConfigVariable::getLastErrorMessage().c_str());
-        Scierror(999, "fsolve: %s\n", pstrMsg);
+        Scierror(999, pstrMsg);
         delete pDblV;
         return types::Function::Error;
     }

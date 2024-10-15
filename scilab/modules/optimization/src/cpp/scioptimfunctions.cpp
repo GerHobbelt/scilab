@@ -26,12 +26,18 @@ void costf(int *ind, int *n, double *x, double *f, double *g, int *ti, float *tr
     OptimizationFunctions* opFunction = NULL;
     opFunction = Optimization::getOptimizationFunctions();
 
-    if (opFunction == NULL)
+    try
     {
-        throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        if (opFunction == NULL)
+        {
+            throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        }
+        opFunction->execCostf(ind, n, x, f, g, ti, tr, td);
     }
-
-    opFunction->execCostf(ind, n, x, f, g, ti, tr, td);
+    catch (const ast::InternalError)
+    {
+        *ind=-1;
+    }
 }
 
 // fsolve
@@ -40,13 +46,12 @@ void fct(int *n, double *x, double *v, int *iflag)
     OptimizationFunctions* opFunction = NULL;
     opFunction = Optimization::getOptimizationFunctions();
 
-    if (opFunction == NULL)
-    {
-        throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
-    }
-
     try
     {
+        if (opFunction == NULL)
+        {
+            throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        }
         opFunction->execFsolveFct(n, x, v, iflag);
     }
     catch (const ast::InternalError&)
@@ -60,13 +65,12 @@ void jac(int *n, double *x, double *v, double *jac, int *ldjac, int *iflag)
     OptimizationFunctions* opFunction = NULL;
     opFunction = Optimization::getOptimizationFunctions();
 
-    if (opFunction == NULL)
-    {
-        throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
-    }
-
     try
     {
+        if (opFunction == NULL)
+        {
+            throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        }
         if (*iflag == 1)
         {
             opFunction->execFsolveFct(n, x, v, iflag);
@@ -88,12 +92,18 @@ void lsqrfct(int *m, int *n, double *x, double *v, int *iflag)
     OptimizationFunctions* opFunction = NULL;
     opFunction = Optimization::getOptimizationFunctions();
 
-    if (opFunction == NULL)
+    try
     {
-        throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        if (opFunction == NULL)
+        {
+            throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        }
+        opFunction->execLsqrsolveFct(m, n, x, v, iflag);
     }
-
-    opFunction->execLsqrsolveFct(m, n, x, v, iflag);
+    catch (const ast::InternalError)
+    {
+        *iflag=-1;
+    }
 }
 
 void lsqrjac(int *m, int *n, double *x, double *v, double *jac, int *ldjac, int *iflag)
@@ -101,17 +111,23 @@ void lsqrjac(int *m, int *n, double *x, double *v, double *jac, int *ldjac, int 
     OptimizationFunctions* opFunction = NULL;
     opFunction = Optimization::getOptimizationFunctions();
 
-    if (opFunction == NULL)
+    try
     {
-        throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        if (opFunction == NULL)
+        {
+            throw ast::InternalError(_("An error occurred while getting OptimizationFunctions object.\n"));
+        }
+        if (*iflag == 1)
+        {
+            opFunction->execLsqrsolveFct(m, n, x, v, iflag);
+        }
+        else
+        {
+            opFunction->execLsqrsolveJac(m, n, x, v, jac, ldjac, iflag);
+        }        
     }
-
-    if (*iflag == 1)
+    catch (const ast::InternalError)
     {
-        opFunction->execLsqrsolveFct(m, n, x, v, iflag);
-    }
-    else
-    {
-        opFunction->execLsqrsolveJac(m, n, x, v, jac, ldjac, iflag);
-    }
+        *iflag=-1;
+    }        
 }

@@ -12,7 +12,7 @@ c along with this program.
 c
       subroutine gcbd(indgc,simul,nomf,n,x,f,g,iprint,io,zero,
      &napmax,itmax,epsf,epsg,epsx,df0,binf,bsup,nfac,
-     &vect,nvect,ivect,nivect,izs,rzs,dzs)
+     &vect,nvect,ivect,nivect,izs,rzs,dzs,indsim)
 c!but
 c     algorithme de minimisation d une fonction reguliere sous
 c     contraintes de borne
@@ -255,6 +255,6 @@ c
      &(nindic),nfac,iprint,io,epsx,epsf,epsg,vect(ndir),df0,
      &vect(ndiag),vect(nx2),izs,rzs,dzs,vect(ny),vect(ns),vect(nz),
      &vect(nys),vect(nzs),nt,ivect(nindex),vect(nd),vect(ng),alg,ialg,
-     &nomf)
+     &nomf,indsim)
       return
       end

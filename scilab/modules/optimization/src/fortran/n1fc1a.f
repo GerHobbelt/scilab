@@ -13,7 +13,7 @@ c
       subroutine n1fc1a(simul,prosca,n,mode,xn,fn,g,df0,eps0,dx,iprint,
      &                  zero,io,ntot,iter,nsim,memax,s,gd,x,sa,gg,al,
      &                  aps,anc,poids,q,jc,ic,r,a,e,rr,xga,y,w1,w2,izs,
-     &                  rzs,dzs)
+     &                  rzs,dzs,indic)
 C
 C minimisation d'une fonction hemiderivable par une methode de faisceau.
 C la direction est obtenue par projection de l'origine
@@ -115,7 +115,7 @@ C
       indic = 1
       call simul(indic,n,xn,f,g,izs,rzs,dzs)
 c     error in user function
-      if(indic.eq.0) goto 990
+      if(indic.le.0) goto 990
 C
 C         calcul de la direction
 C
