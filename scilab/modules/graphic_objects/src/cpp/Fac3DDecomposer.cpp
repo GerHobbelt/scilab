@@ -371,7 +371,7 @@ void Fac3DDecomposer::fillDataColorsTextureCoordinates(float* buffer, int buffer
             }
 
             /* The offset corresponding to the black and white colors must added to the index and the colormap size. */
-            buffer[bufferOffset++] = (float) ((index + colorTextureOffset + 2.0) / (double) (colormapSize + 2));
+            buffer[bufferOffset++] = (float) ((index + colorTextureOffset + 1.0) / (double) (colormapSize + 2));
             buffer[bufferOffset++] = 0;
             buffer[bufferOffset++] = 0;
             buffer[bufferOffset++] = 1.0;
