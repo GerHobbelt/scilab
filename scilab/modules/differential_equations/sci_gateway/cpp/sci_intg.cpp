@@ -22,6 +22,7 @@
 #include "list.hxx"
 #include "callable.hxx"
 #include "differentialequationfunctions.hxx"
+#include "runvisitor.hxx"
 
 extern "C"
 {
@@ -33,6 +34,7 @@ extern "C"
 #include "sciprint.h"
 #include "matrix_division.h"
 #include "vfinite.h"
+#include "common_structure.h"
 }
 
 /*--------------------------------------------------------------------------*/
@@ -45,6 +47,9 @@ types::Function::ReturnValue sci_intg(types::typed_list &in, int _iRetCount, typ
 
     double result = 0;
     double abserr = 0;
+
+    int *ierajf_ierror  = &(C2F(ierajf).iero);    
+    *ierajf_ierror = 0;
 
     int iOne = 1;
 
@@ -125,11 +130,10 @@ types::Function::ReturnValue sci_intg(types::typed_list &in, int _iRetCount, typ
         // check function
         double t = pdA;
         double ret = intg_f(&t);
-        if (std::isnan(ret))
+        if (*ierajf_ierror > 0)
         {
-            Scierror(50, _("%s: Argument #%d: Variable returned by scilab argument function is incorrect.\n"), "intg", 3);
             DifferentialEquation::removeDifferentialEquationFunctions();
-            return types::Function::Error;
+            throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());
         }
     }
     else if (in[2]->isString())
@@ -240,6 +244,10 @@ types::Function::ReturnValue sci_intg(types::typed_list &in, int _iRetCount, typ
         C2F(dqags)(intg_f, &pdA, &pdB, &epsabs, &epsrel,
                    &result, &abserr, &neval, &ier,
                    &limit, &lenw, &last, iwork, dwork);
+        if (*ierajf_ierror > 0)
+        {
+            throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());
+        }
     }
     catch (ast::InternalError &ie)
     {

@@ -22,6 +22,7 @@
 #include "callable.hxx"
 #include "differentialequationfunctions.hxx"
 #include "checkodeerror.hxx"
+#include "runvisitor.hxx"
 
 extern "C"
 {
@@ -32,6 +33,7 @@ extern "C"
 #include "scifunctions.h"
 #include "elem_common.h"
 #include "xerhlt.h"
+#include "common_structure.h"
 }
 
 /*--------------------------------------------------------------------------*/
@@ -166,7 +168,7 @@ types::Function::ReturnValue sci_dassl(types::typed_list &in, int _iRetCount, ty
     }
     else
     {
-        memset(pdYdotData, 0x00, *YSize);
+        memset(pdYdotData, 0x00, *YSize * sizeof(double));
     }
 
     deFunctionsManager.setOdeYRows(pDblX0->getRows());
@@ -664,6 +666,8 @@ types::Function::ReturnValue sci_dassl(types::typed_list &in, int _iRetCount, ty
     int size = pDblX0->getRows();
     int rowsOut = 1 + pDblX0->getRows() * 2;
     int iret = 0;
+    // structures used by dassl
+    int* ierdassl_ierror  = &(C2F(ierdassl).iero);
 
     for (int i = 0; i < pDblT->getSize(); i++)
     {
@@ -687,6 +691,10 @@ types::Function::ReturnValue sci_dassl(types::typed_list &in, int _iRetCount, ty
         try
         {
             C2F(dassl)(dassl_f, YSize, &t0, pdYData, pdYdotData, &t, info, rtol, atol, &idid, rwork, &rworksize, iwork, &iworksize, &rpar, &ipar, dassl_jac);
+            if (*ierdassl_ierror > 0)
+            {
+                throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());                        
+            }
 
             iret = checkError(idid, "%_dassl");
             if (iret == 1) // error

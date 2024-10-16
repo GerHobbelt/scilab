@@ -33,6 +33,7 @@ extern "C"
 #include "sciprint.h"
 #include "scifunctions.h"
 #include "elem_common.h"
+#include "common_structure.h"
 }
 
 /*--------------------------------------------------------------------------*/
@@ -158,7 +159,7 @@ types::Function::ReturnValue sci_daskr(types::typed_list &in, int _iRetCount, ty
     }
     else
     {
-        memset(pdYdotData, 0x00, *YSize);
+        memset(pdYdotData, 0x00, *YSize * sizeof(double));
     }
 
     // t0
@@ -669,10 +670,14 @@ types::Function::ReturnValue sci_daskr(types::typed_list &in, int _iRetCount, ty
                 }
 
                 //  --   subvariable psolJac(info) --
-                dTemp = pList->get(10)->getAs<types::Double>()->get(0);
-                if (dTemp)
+                pDblTemp = pList->get(10)->getAs<types::Double>();
+                if (pDblTemp->getSize() > 0)
                 {
-                    info[14] = 1;
+                    dTemp = pDblTemp->get(0);
+                    if (dTemp)
+                    {
+                        info[14] = 1;
+                    }
                 }
 
                 //  --   subvariable excludeAlgebraic(info) --
@@ -1021,6 +1026,10 @@ types::Function::ReturnValue sci_daskr(types::typed_list &in, int _iRetCount, ty
     int iret = 0;
     int ididtmp = 0;
 
+    // structures used by ddaskr
+    int* ierode_ierror  = &(C2F(ierode).iero);
+    *ierode_ierror  = 0;
+
     for (int i = 0; i < pDblT->getSize(); i++)
     {
         types::Double* pDblOut = new types::Double(rowsOut, 1);
@@ -1051,6 +1060,11 @@ types::Function::ReturnValue sci_daskr(types::typed_list &in, int _iRetCount, ty
                         iwork, &iworksize, rpar, ipar,
                         info[14] == 1 ? (void*)daskr_pjac : (void*)dassl_jac,
                         daskr_psol, daskr_g, &ng, root);
+
+            if (*ierode_ierror > 0)
+            {
+                throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());                        
+            }
 
             // values of idid says the same things that in ddasrt function,
             // except these two values.

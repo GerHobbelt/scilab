@@ -556,6 +556,7 @@ types::Function::ReturnValue sci_impl(types::typed_list &in, int _iRetCount, typ
     double* ls0001d = &(C2F(ls0001).tret);
     int* ls0001i    = &(C2F(ls0001).illin);
     int* eh0001i    = &(C2F(eh0001).mesflg);
+    int* ierode_ierror  = &(C2F(ierode).iero);
 
     //compute itol and set the tolerances rtol and atol.
     double* rtol = NULL;
@@ -712,8 +713,12 @@ types::Function::ReturnValue sci_impl(types::typed_list &in, int _iRetCount, typ
         try
         {
             C2F(lsodi)(impl_f, impl_g, impl_jac, YSize, pdYData, pDblYdot0->get(), &t0, &t, &itol, rtol, atol, &itask, &istate, &iopt, rwork, &rworkSize, iwork, &iworkSize, &jacType);
-
+            
             // check error
+            if (*ierode_ierror > 0)
+            {
+                throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());                        
+            }
             if (istate == 3)
             {
                 sciprint(_("The user-supplied subroutine res signalled lsodi to halt the integration and return (ires=2). Execution of the external function has failed.\n"));

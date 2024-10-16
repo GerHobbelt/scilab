@@ -158,6 +158,7 @@ c
      * res3la(3),rlist(limit),rlist2(52)
 c
       external f
+      common/ierajf/iero
 c
 c            the dimension of rlist2 is determined by the value of
 c            limexp in subroutine dqelg (rlist2 should be of dimension
@@ -237,6 +238,7 @@ c
       oflow = d1mach(2)
       ierro = 0
       call dqk21(f,a,b,result,abserr,defabs,resabs)
+      if(iero.gt.0) return
 c
 c           test on accuracy.
 c
@@ -286,7 +288,9 @@ c
         b2 = blist(maxerr)
         erlast = errmax
         call dqk21(f,a1,b1,area1,error1,resabs,defab1)
+        if (iero.gt.0) return
         call dqk21(f,a2,b2,area2,error2,resabs,defab2)
+        if (iero.gt.0) return
 c
 c           improve previous approximations to integral
 c           and error and test for accuracy.

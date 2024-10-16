@@ -69,8 +69,8 @@ jc=spCompJacobian(fun,sp+grady*gradx);
 [f,val,info,s3]=kinsol(fun,ones(n*n,1),jacobian=sp,method="Picard");
 [f,val,info,s4]=kinsol(fun,ones(n*n,1),jacobian=list(jacColor,spCompJacobian(fun,sp+grady*gradx)));
 
-assert_checktrue(s3.stats.eTime < s1.stats.eTime)
-assert_checktrue(s4.stats.eTime < s1.stats.eTime)
+assert_checktrue(s1.stats.nRhsEvals < s3.stats.nRhsEvals)
+assert_checktrue(s4.stats.nRhsEvals < s1.stats.nRhsEvals)
 
-    
-
+assert_checktrue(s1.stats.nJacEvals < s3.stats.nJacEvals)
+assert_checkequal(s1.stats.nJacEvals, s4.stats.nJacEvals)
