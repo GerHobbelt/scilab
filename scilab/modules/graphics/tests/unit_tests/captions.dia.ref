@@ -19,9 +19,7 @@ xpoly([0 1],0.2+[1 1]/2);
 e2=gce();e2.mark_mode="on";e2.line_mode="off";e2.mark_style=3;
 c=captions([e2,e1],["XXXX";"YYY"]);
 if or(c.text <> ["XXXX";"YYY"]) then bugmes();quit;end
-if or(c.links <> [e2,e1]) then bugmes();quit;end
-c=captions([],[]);
-if c<>[]  then bugmes();quit;end
+if or(c.links <> [e1,e2]) then bugmes();quit;end
 if execstr("captions([e1],[''XXXX'';''YYY''])","errcatch")==0 then bugmes();quit;end
 if execstr("captions([e1,e2],[''XXXX''])","errcatch")==0 then bugmes();quit;end
 if execstr("captions(e1,[])","errcatch")==0 then bugmes();quit;end

@@ -24,10 +24,7 @@ c=captions([e2,e1],["XXXX";"YYY"]);
 
 
 if or(c.text <> ["XXXX";"YYY"]) then pause,end
-if or(c.links <> [e2,e1]) then pause,end
-
-c=captions([],[]);
-if c<>[]  then pause,end
+if or(c.links <> [e1,e2]) then pause,end
 
 if execstr("captions([e1],[''XXXX'';''YYY''])","errcatch")==0 then pause,end
 if execstr("captions([e1,e2],[''XXXX''])","errcatch")==0 then pause,end

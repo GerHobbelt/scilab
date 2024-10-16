@@ -366,7 +366,7 @@ function varargout = %_sodload(%__varnameList__)
             // Get handles from paths
             links=getlinksfrompath(h, %LEG.paths)
             if ~isempty(links) then
-                L = captions(links, %LEG.text)
+                L = %_legend(links($:-1:1), %LEG.text)
                 L.visible         = %LEG.visible
                 L.font_style      = %LEG.font_style
                 L.font_size       = %LEG.font_size

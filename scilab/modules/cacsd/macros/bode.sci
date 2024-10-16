@@ -185,7 +185,7 @@ function bode(varargin)
     // Create legend
     // -------------
     if comments <> [] then
-        c = captions(ephi.children, comments, "lower_caption");
+        c = %_legend(ephi.children, comments, "lower_caption");
         c.background = get(gcf(), "background");
     end
 

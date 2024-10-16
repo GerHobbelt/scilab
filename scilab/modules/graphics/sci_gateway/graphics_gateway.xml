@@ -89,7 +89,7 @@
     <gateway name="sci_rubberbox"       function="rubberbox"        type="0" />
     <gateway name="sci_rotate_axes"     function="rotate_axes"      type="0" />
     <gateway name="sci_is_handle_valid" function="is_handle_valid"  type="0" />
-    <gateway name="sci_Legend"          function="captions"         type="0" />
+    <gateway name="sci_percent_legend"  function="%_legend"         type="0" />
     <gateway name="sci_addcolor"        function="addcolor"         type="0" />
     <gateway name="sci_name2rgb"        function="name2rgb"         type="0" />
     <gateway name="sci_color"           function="color"            type="0" />

@@ -16,7 +16,7 @@
  */
 
 /*------------------------------------------------------------------------*/
-/* file: sci_Legend.c                                                     */
+/* file: sci_percent_legend.c                                                     */
 /* desc : interface for captions routine                                  */
 /*------------------------------------------------------------------------*/
 
@@ -42,7 +42,7 @@
 #define DEF_LEGEND_LOCATION "in_upper_right"
 
 /*--------------------------------------------------------------------------*/
-int sci_Legend(char * fname, void *pvApiCtx)
+int sci_percent_legend(char * fname, void *pvApiCtx)
 {
     SciErr sciErr;
 
@@ -160,7 +160,7 @@ int sci_Legend(char * fname, void *pvApiCtx)
         int iObj;
         int* piObj = &iObj;
 
-        handlesvalue = (unsigned long) ((long long*)(l1))[n - 1 - i];
+        handlesvalue = (unsigned long) ((long long*)(l1))[i];
         iObjUID = getObjectFromHandle(handlesvalue);
 
         if (iObjUID == 0)

@@ -462,7 +462,7 @@ GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_rubberbox.c \
     sci_gateway/c/sci_rotate_axes.c \
     sci_gateway/c/sci_is_handle_valid.c \
-    sci_gateway/c/sci_Legend.c \
+    sci_gateway/c/sci_percent_legend.c \
     sci_gateway/c/sci_light.c \
     sci_gateway/c/sci_color.c \
     sci_gateway/c/sci_name2rgb.c \

@@ -554,7 +554,7 @@
     <ClCompile Include="sci_gateway\c\sci_is_handle_valid.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="sci_gateway\c\sci_Legend.c">
+    <ClCompile Include="sci_gateway\c\sci_percent_legend.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="sci_gateway\c\sci_move.c">
