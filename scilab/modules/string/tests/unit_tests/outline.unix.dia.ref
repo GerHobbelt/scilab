@@ -339,11 +339,11 @@ Hello world
   type = "XML DTD"
   name = "none"
   external ID =  ""
-  system ID =  "SCI\modules\xml\tests\unit_tests\library.dtd"
+  system ID =  "SCI/modules/xml/tests/unit_tests/library.dtd"
   type = "XML DTD"
   name = "none"
   external ID =  ""
-  system ID =  "SCI\modules\xml\tests\unit_tests\library.dtd"
+  system ID =  "SCI/modules/xml/tests/unit_tests/library.dtd"
  ans = (XMLList)
   (1): (XMLElem)
   (1): (XMLElem)
