@@ -445,8 +445,15 @@ public class GraphicController {
     }
 
     private void recursiveDeleteChildren(GraphicObject killMe) {
-        Integer children[] = killMe.getChildren();
+        // remove datatips from polylines: datatips are not children
+        if (killMe.getType() == GraphicObjectProperties.__GO_POLYLINE__) {
+            Integer[] datatips = ((Polyline)killMe).getDatatips();
+            for (Integer datatip : datatips) {
+                deleteObject(datatip);
+            }
+        }
 
+        Integer children[] = killMe.getChildren();
         for (int i = 0 ; i < children.length ; ++i) {
             GraphicObject killMeThisChild = getObjectFromId(children[i]);
             killMeThisChild.setValid(false);
