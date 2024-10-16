@@ -503,9 +503,11 @@ void RunVisitorT<T>::visitprivate(const AssignExp  &e)
                 throw ast::InternalError(os.str(), 999, e.getRightExp().getLocation());
             }
 
+            types::InternalType* pOut = nullptr;
             try
             {
-                if (evaluateFields(pField, fields, pIT) == NULL)
+                pOut = evaluateFields(pField, fields, pIT);
+                if (pOut == NULL)
                 {
                     for (std::list<ExpHistory*>::const_iterator i = fields.begin(), end = fields.end(); i != end; i++)
                     {
@@ -534,12 +536,11 @@ void RunVisitorT<T>::visitprivate(const AssignExp  &e)
             if (e.isVerbose() && ConfigVariable::isPrintOutput())
             {
                 const std::wstring *pwstName = getStructNameFromExp(pField);
-
-                types::InternalType* pPrint = ctx->get(symbol::Symbol(*pwstName));
-                scilabWriteW(printVarEqualTypeDimsInfo(pPrint, *pwstName).c_str());
-                VariableToString(pPrint, pwstName->c_str());
+                scilabWriteW(printVarEqualTypeDimsInfo(pOut, *pwstName).c_str());
+                VariableToString(pOut, pwstName->c_str());
             }
 
+            pOut->killMe();
             clearResult();
             CoverageInstance::stopChrono((void*)&e);
             return;
