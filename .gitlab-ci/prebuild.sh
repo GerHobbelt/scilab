@@ -81,12 +81,12 @@ OPENXLSX_VERSION=0.3.2
 LIBARCHIVE_VERSION=3.7.1
 NLOHMANN_JSON_VERSION=3.11.3
 
-# CppServer and its deps
-CPPSERVER_VERSION=1.0.4.1
-ASIO_VERSION=1.29.0
-CPPCOMMON_VERSION=1.0.4.0
-CPPSERVER_FMT_VERSION=10.2.1
-CPPSERVER_CMAKE_VERSION=1.0.0.0
+# # CppServer and its deps
+# CPPSERVER_VERSION=1.0.4.1
+# ASIO_VERSION=1.29.0
+# CPPCOMMON_VERSION=1.0.4.0
+# CPPSERVER_FMT_VERSION=10.2.1
+# CPPSERVER_CMAKE_VERSION=1.0.0.0
 
 # Variables used by ant to build Java deps in Java 8
 export JAVA_HOME="$BUILDDIR/java/jdk-$JDK_VERSION/"
@@ -120,10 +120,10 @@ make_versions() {
     echo "OPENXLSX_VERSION      = $OPENXLSX_VERSION"
     echo "LIBARCHIVE_VERSION    = $LIBARCHIVE_VERSION"
     echo "NLOHMANN_JSON_VERSION = $NLOHMANN_JSON_VERSION"
-    echo "CPPSERVER_VERSION     = $CPPSERVER_VERSION"
-    echo "ASIO_VERSION          = $ASIO_VERSION"
-    echo "CPPCOMMON_VERSION     = $CPPCOMMON_VERSION"
-    echo "CPPSERVER_FMT_VERSION = $CPPSERVER_FMT_VERSION"
+    # echo "CPPSERVER_VERSION     = $CPPSERVER_VERSION"
+    # echo "ASIO_VERSION          = $ASIO_VERSION"
+    # echo "CPPCOMMON_VERSION     = $CPPCOMMON_VERSION"
+    # echo "CPPSERVER_FMT_VERSION = $CPPSERVER_FMT_VERSION"
 }
 
 ####################
@@ -182,12 +182,12 @@ download_dependencies() {
     # Path in source: single_include/nlohmann/json.hpp
     [ ! -f nlohmann_json-$NLOHMANN_JSON_VERSION.hpp ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp
 
-    # CppServer and its deps
-    [ ! -f cppserver-$CPPSERVER_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserver-$CPPSERVER_VERSION.zip
-    [ ! -f asio-$ASIO_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/asio-$ASIO_VERSION.zip
-    [ ! -f cppcommon-$CPPCOMMON_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppcommon-$CPPCOMMON_VERSION.zip
-    [ ! -f cppserverfmt-$CPPSERVER_FMT_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserverfmt-$CPPSERVER_FMT_VERSION.zip
-    [ ! -f cppservercmake-$CPPSERVER_FMT_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppservercmake-$CPPSERVER_CMAKE_VERSION.zip
+    # # CppServer and its deps
+    # [ ! -f cppserver-$CPPSERVER_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserver-$CPPSERVER_VERSION.zip
+    # [ ! -f asio-$ASIO_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/asio-$ASIO_VERSION.zip
+    # [ ! -f cppcommon-$CPPCOMMON_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppcommon-$CPPCOMMON_VERSION.zip
+    # [ ! -f cppserverfmt-$CPPSERVER_FMT_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserverfmt-$CPPSERVER_FMT_VERSION.zip
+    # [ ! -f cppservercmake-$CPPSERVER_FMT_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppservercmake-$CPPSERVER_CMAKE_VERSION.zip
 
     true;
 }
@@ -216,7 +216,7 @@ make_all() {
     build_openxlsx
     build_libarchive
     build_nlohmann_json
-    build_cppserver
+    # build_cppserver
 }
 
 make_binary_directory() {
@@ -349,17 +349,17 @@ make_binary_directory() {
     rm -f "$LIBTHIRDPARTYDIR"/redist/libncurses.* "$LIBTHIRDPARTYDIR"/redist/libscincurses.*
     cp -d "$INSTALLUSRDIR"/lib/libscincurses.so* "$LIBTHIRDPARTYDIR/redist/"
 
-    # cppserver lib and its deps
-    rm -f "$LIBTHIRDPARTYDIR"/libasio.so*
-    cp -d "$INSTALLUSRDIR"/lib/libasio.so "$LIBTHIRDPARTYDIR/"
-    rm -f "$LIBTHIRDPARTYDIR"/libfmt.so*
-    cp -d "$INSTALLUSRDIR"/lib/libfmt.so "$LIBTHIRDPARTYDIR/"
-    rm -f "$LIBTHIRDPARTYDIR"/libcppserver.so*
-    cp -d "$INSTALLUSRDIR"/lib/libcppserver.so "$LIBTHIRDPARTYDIR/"
-    rm -f "$LIBTHIRDPARTYDIR"/libcppcommon.so*
-    cp -d "$INSTALLUSRDIR"/lib/libcppcommon.so "$LIBTHIRDPARTYDIR/"
-    # cppserver include
-    cp -R "$INSTALLUSRDIR/include/cppserver/" "$INSTALLROOTDIR/include/"
+    # # cppserver lib and its deps
+    # rm -f "$LIBTHIRDPARTYDIR"/libasio.so*
+    # cp -d "$INSTALLUSRDIR"/lib/libasio.so "$LIBTHIRDPARTYDIR/"
+    # rm -f "$LIBTHIRDPARTYDIR"/libfmt.so*
+    # cp -d "$INSTALLUSRDIR"/lib/libfmt.so "$LIBTHIRDPARTYDIR/"
+    # rm -f "$LIBTHIRDPARTYDIR"/libcppserver.so*
+    # cp -d "$INSTALLUSRDIR"/lib/libcppserver.so "$LIBTHIRDPARTYDIR/"
+    # rm -f "$LIBTHIRDPARTYDIR"/libcppcommon.so*
+    # cp -d "$INSTALLUSRDIR"/lib/libcppcommon.so "$LIBTHIRDPARTYDIR/"
+    # # cppserver include
+    # cp -R "$INSTALLUSRDIR/include/cppserver/" "$INSTALLROOTDIR/include/"
 
     # GCC libs could be there but are prefixed with "sci" to avoid clashing
     # system libraries static linked into scilab libraries instead.  This
@@ -1071,73 +1071,73 @@ build_openxlsx() {
     cp -a libOpenXLSX.so "$INSTALLUSRDIR/lib/"
 }
 
-build_cppserver() {
-    cd "$BUILDDIR" || exit 1
+# build_cppserver() {
+#     cd "$BUILDDIR" || exit 1
 
-    INSTALL_DIR=$BUILDDIR/cppserver-$CPPSERVER_VERSION/install_dir
+#     INSTALL_DIR=$BUILDDIR/cppserver-$CPPSERVER_VERSION/install_dir
 
-    rm -rf cppserver
-    unzip -q "$DOWNLOADDIR/cppserver-$CPPSERVER_VERSION.zip"
-    mv CppServer-$CPPSERVER_VERSION cppserver
-    cd cppserver || exit 1
-    # add cmake files
-    unzip -q "$DOWNLOADDIR/cppservercmake-$CPPSERVER_CMAKE_VERSION.zip"
-    mv CppCMakeScripts-$CPPSERVER_CMAKE_VERSION cmake
+#     rm -rf cppserver
+#     unzip -q "$DOWNLOADDIR/cppserver-$CPPSERVER_VERSION.zip"
+#     mv CppServer-$CPPSERVER_VERSION cppserver
+#     cd cppserver || exit 1
+#     # add cmake files
+#     unzip -q "$DOWNLOADDIR/cppservercmake-$CPPSERVER_CMAKE_VERSION.zip"
+#     mv CppCMakeScripts-$CPPSERVER_CMAKE_VERSION cmake
 
-    # add cppserver needed modules
-    cd modules || exit 1
-    unzip -q "$DOWNLOADDIR/asio-$ASIO_VERSION.zip"
-    mv asio-asio-"$(echo $ASIO_VERSION | tr "." "-")" asio
-    unzip -q "$DOWNLOADDIR/cppcommon-$CPPCOMMON_VERSION.zip"
-    mv CppCommon-$CPPCOMMON_VERSION CppCommon
-    cd CppCommon/modules || exit 1
-    unzip -q "$DOWNLOADDIR/cppserverfmt-$CPPSERVER_FMT_VERSION.zip"
-    mv fmt-$CPPSERVER_FMT_VERSION fmt
-    cd ../../../
+#     # add cppserver needed modules
+#     cd modules || exit 1
+#     unzip -q "$DOWNLOADDIR/asio-$ASIO_VERSION.zip"
+#     mv asio-asio-"$(echo $ASIO_VERSION | tr "." "-")" asio
+#     unzip -q "$DOWNLOADDIR/cppcommon-$CPPCOMMON_VERSION.zip"
+#     mv CppCommon-$CPPCOMMON_VERSION CppCommon
+#     cd CppCommon/modules || exit 1
+#     unzip -q "$DOWNLOADDIR/cppserverfmt-$CPPSERVER_FMT_VERSION.zip"
+#     mv fmt-$CPPSERVER_FMT_VERSION fmt
+#     cd ../../../
 
-    # link against our openssl
-    export OPENSSL_ROOT_DIR="$INSTALLUSRDIR"
+#     # link against our openssl
+#     export OPENSSL_ROOT_DIR="$INSTALLUSRDIR"
 
-    ln -s "$BUILDDIR/cppserver/cmake" modules/CppCommon/cmake
+#     ln -s "$BUILDDIR/cppserver/cmake" modules/CppCommon/cmake
 
-    # update cmake files to include only needed sources
-    sed -i '/Catch2/s/^/#/' modules/CMakeLists.txt
-    sed -i '/CppBenchmark/s/^/#/' modules/CMakeLists.txt
-    sed -i '/cpp-optparse/s/^/#/' modules/CMakeLists.txt
-    sed -i '/Catch2/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
-    sed -i '/CppBenchmark/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
-    sed -i '/vld/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
+#     # update cmake files to include only needed sources
+#     sed -i '/Catch2/s/^/#/' modules/CMakeLists.txt
+#     sed -i '/CppBenchmark/s/^/#/' modules/CMakeLists.txt
+#     sed -i '/cpp-optparse/s/^/#/' modules/CMakeLists.txt
+#     sed -i '/Catch2/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
+#     sed -i '/CppBenchmark/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
+#     sed -i '/vld/s/^/#/' modules/CppCommon/modules/CMakeLists.txt
 
-    # generate makefile
-    mkdir -p build
-    cd build || exit 1
-    # DCPPSERVER_MODULE: remove execution of benchmarks and tests from build
-    cmake .. -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
-        -DBUILD_SHARED_LIBS=ON \
-        -DCPPSERVER_MODULE=true \
-        -G "Unix Makefiles"
-    # build cppserver
-    cmake --build . --parallel --config Release
+#     # generate makefile
+#     mkdir -p build
+#     cd build || exit 1
+#     # DCPPSERVER_MODULE: remove execution of benchmarks and tests from build
+#     cmake .. -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
+#         -DBUILD_SHARED_LIBS=ON \
+#         -DCPPSERVER_MODULE=true \
+#         -G "Unix Makefiles"
+#     # build cppserver
+#     cmake --build . --parallel --config Release
 
-    # copy libs
-    cd ../
-    cp -- $(find . -name *.so) "$INSTALLUSRDIR/lib/"
+#     # copy libs
+#     cd ../
+#     cp -- $(find . -name *.so) "$INSTALLUSRDIR/lib/"
 
-    # copy includes
-    rm -rf "$INSTALLUSRDIR/include/cppserver/"
-    mkdir -p "$INSTALLUSRDIR/include/cppserver/cppserver"
-    mkdir -p "$INSTALLUSRDIR/include/cppserver/cppcommon"
-    mkdir -p "$INSTALLUSRDIR/include/cppserver/asio"
-    mkdir -p "$INSTALLUSRDIR/include/cppserver/fmt"
+#     # copy includes
+#     rm -rf "$INSTALLUSRDIR/include/cppserver/"
+#     mkdir -p "$INSTALLUSRDIR/include/cppserver/cppserver"
+#     mkdir -p "$INSTALLUSRDIR/include/cppserver/cppcommon"
+#     mkdir -p "$INSTALLUSRDIR/include/cppserver/asio"
+#     mkdir -p "$INSTALLUSRDIR/include/cppserver/fmt"
 
-    cp -r include/server "$INSTALLUSRDIR/include/cppserver/cppserver"
+#     cp -r include/server "$INSTALLUSRDIR/include/cppserver/cppserver"
 
-    rm modules/asio/asio/include/Makefile.am
-    cp -r modules/asio/asio/include/* "$INSTALLUSRDIR/include/cppserver/asio/"
+#     rm modules/asio/asio/include/Makefile.am
+#     cp -r modules/asio/asio/include/* "$INSTALLUSRDIR/include/cppserver/asio/"
 
-    cp -r modules/CppCommon/include/* "$INSTALLUSRDIR/include/cppserver/cppcommon/"
-    cp -r modules/CppCommon/modules/fmt/include/* "$INSTALLUSRDIR/include/cppserver/fmt/"
-}
+#     cp -r modules/CppCommon/include/* "$INSTALLUSRDIR/include/cppserver/cppcommon/"
+#     cp -r modules/CppCommon/modules/fmt/include/* "$INSTALLUSRDIR/include/cppserver/fmt/"
+# }
 
 #########################
 ##### DEFAULT FLAGS #####

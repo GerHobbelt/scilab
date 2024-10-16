@@ -50,10 +50,6 @@ libsciwebtools_la_CPPFLAGS= \
     -I$(top_srcdir)/modules/dynamic_link/includes \
     -I$(top_srcdir)/modules/api_scilab/includes \
     -I$(top_srcdir)/modules/preferences/includes \
-    -I$(top_srcdir)/usr/include/cppserver/cppserver \
-    -I$(top_srcdir)/usr/include/cppserver/cppcommon \
-    -I$(top_srcdir)/usr/include/cppserver/asio \
-    -I$(top_srcdir)/usr/include/cppserver/fmt \
     $(CURL_CFLAGS) \
     $(XML_FLAGS) \
     $(AM_CPPFLAGS)
@@ -67,7 +63,7 @@ libsciwebtools_algo_la_LDFLAGS = $(CURL_LIBS)
 libsciwebtools_algo_la_SOURCES = $(WEBTOOLS_CPP_SOURCES) $(WEBTOOLS_C_SOURCES)
 
 libsciwebtools_la_SOURCES = $(GATEWAY_CPP_SOURCES) $(GATEWAY_C_SOURCES)
-libsciwebtools_la_LIBADD = libsciwebtools-algo.la -lasio -lfmt -lcppcommon -lcppserver
+libsciwebtools_la_LIBADD = libsciwebtools-algo.la
 
 # For the code check (splint)
 CHECK_SRC= $(libsciwebtools_la_SOURCES)
@@ -91,9 +87,6 @@ libsciwebtools_la_etc_DATA = etc/webtools.quit etc/webtools.start
 #### webtools : include files ####
 libsciwebtools_la_includedir=$(pkgincludedir)
 libsciwebtools_la_include_HEADERS = \
-includes/tcpServer.hxx \
-includes/tcpSession.hxx \
-includes/tcpClient.hxx \
 includes/json.hxx \
 includes/dynlib_webtools.h
 

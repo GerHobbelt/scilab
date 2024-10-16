@@ -24,8 +24,5 @@ Source: libs\nlohmann\include\nlohmann\*.hpp; DestDir: {app}\libs\nlohmann\inclu
 ; libxml2
 Source: libs\libxml2\*.h; DestDir: {app}\libs\libxml2; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 
-; CppServer
-Source: libs\CppServer\*.*; DestDir: {app}\libs\CppServer; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
-
 ; pcre
 Source: libs\pcre\*.*; DestDir: {app}\libs\pcre; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
