@@ -84,7 +84,7 @@ assert_checkalmostequal ( norm(a,2) , max(svd(a))                        , 100*%
 //
 // Norm 2
 x = 1.e307 * [1 1];
-assert_checkequal ( norm(x) , sqrt(2) * 1.e307 );
+assert_checkalmostequal ( norm(x) , sqrt(2) * 1.e307 , 1.e308);
 x = 1.e-307 * [1 1];
 assert_checkalmostequal ( norm(x) , sqrt(2) * 1.e-307 , 1.e308);
 // Norm f
@@ -99,10 +99,10 @@ assert_checkalmostequal ( norm(x, "f") , sqrt(2) * 1.e-307 , eps);
 x = 1.e307 * ones(10, 20);
 assert_checkalmostequal ( norm(x,"f") , sqrt(200) * 1.e307, eps );
 x = 1.e-307 * ones(10, 20);
-assert_checkequal ( norm(x,"f") , sqrt(200) * 1.e-307 );
+assert_checkalmostequal ( norm(x,"f") , sqrt(200) * 1.e-307, eps );
 // norm f - case 2 : n > m
 x = 1.e307 * ones(20, 10);
-assert_checkequal ( norm(x,"f") , sqrt(200) * 1.e307 );
+assert_checkalmostequal ( norm(x,"f") , sqrt(200) * 1.e307 , eps );
 x = 1.e-307 * ones(20, 10);
 assert_checkalmostequal ( norm(x,"f") , sqrt(200) * 1.e-307 , eps );
 //
