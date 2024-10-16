@@ -440,7 +440,7 @@ public class AxesDrawer {
                 appearance.setLineColor(ColorFactory.createColor(colorMap, axes.getHiddenAxisColor()));
                 appearance.setLineWidth(axes.getLineThickness().floatValue());
                 appearance.setLinePattern(HIDDEN_BORDER_PATTERN.asPattern());
-                drawingTools.draw(geometries.getHiddenBoxBorderGeometry(), appearance, AntiAliasing.ON);
+                drawingTools.draw(geometries.getHiddenBoxBorderGeometry(), appearance, AntiAliasing.OFF);
             }
 
             if (boxed != Box.BoxType.HIDDEN_AXES) {
@@ -451,14 +451,14 @@ public class AxesDrawer {
                 appearance.setLineColor(ColorFactory.createColor(colorMap, axes.getLineColor()));
                 appearance.setLineWidth(axes.getLineThickness().floatValue());
                 appearance.setLinePattern(axes.getLine().getLineStyle().asPattern());
-                drawingTools.draw(geometries.getBoxBorderGeometry(), appearance, AntiAliasing.ON);
+                drawingTools.draw(geometries.getBoxBorderGeometry(), appearance, AntiAliasing.OFF);
 
 
                 if (boxed != Box.BoxType.BACK_HALF) {
                     /**
                      * Draw front part of box.
                      */
-                    drawingTools.draw(geometries.getFrontBoxBorderGeometry(), appearance, AntiAliasing.ON);
+                    drawingTools.draw(geometries.getFrontBoxBorderGeometry(), appearance, AntiAliasing.OFF);
                 }
             }
         }
