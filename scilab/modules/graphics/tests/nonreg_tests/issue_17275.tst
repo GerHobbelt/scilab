@@ -18,5 +18,5 @@
 
 plot(1:10);
 for i=[-6:-1 1:5]
-    assert_checkerror(msprintf("legend([],%d)",i), msprintf(_("%s: Wrong type for input argument #%d: handle or string expected\n"), "legend", 1)););
+    assert_checkerror(msprintf("legend([],%d)",i), msprintf(_("%s: Wrong type for input argument #%d: handle or string expected\n"), "legend", 1));
 end
