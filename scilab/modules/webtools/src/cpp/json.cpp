@@ -73,7 +73,7 @@ static std::wstring printType(wchar_t* s)
     std::wstring str = s;
     string_escape(str, L'\\', L'\\');
     string_escape(str, L'\"', L'\"');
-    string_escape(str, L'/' , L'/' );
+    //string_escape(str, L'/' , L'/' );
     string_escape(str, L'\b', L'b' );
     string_escape(str, L'\f', L'f' );
     string_escape(str, L'\n', L'n' );
