@@ -20,4 +20,4 @@ l3 = int8([1,2,3]);
 l4 = uint16([1000,2000,3000]);
 l5 = list(l1,l2,l3);
 l = list(l1,l2,l3,l4,l5);
-common_function(l(1:$))
+assert_checktrue(common_function(l(1:$)));
