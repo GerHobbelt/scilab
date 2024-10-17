@@ -903,7 +903,9 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
             // a(x) = "something" and a does not exist
             // a will be create in insertionCall
         }
-        else if (pITMain->getRef() > 1 && pITMain->isHandle() == false)
+        else if (pITMain->getRef() > 1 &&
+                pITMain->isHandle() == false &&
+                pITMain->isCallable() == false)
         {
             bPutInCtx = true;
             pITMain = pITMain->clone();

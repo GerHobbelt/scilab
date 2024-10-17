@@ -214,23 +214,14 @@ void RunVisitorT<T>::visitprivate(const AssignExp  &e)
                 throw ast::InternalError(os.str(), 999, e.getRightExp().getLocation());
             }
 
-            if (pOut != NULL)
+            if (e.isVerbose() && ConfigVariable::isPrintOutput())
             {
-                if (e.isVerbose() && ConfigVariable::isPrintOutput())
-                {
-                    const std::wstring *pwstName = getStructNameFromExp(pCell);
-                    scilabWriteW(printVarEqualTypeDimsInfo(pOut, *pwstName).c_str());
-                    VariableToString(pOut, pwstName->c_str());
-                }
-            }
-            else
-            {
-                //manage error
-                std::wostringstream os;
-                os << _W("Invalid index.\n");
-                throw ast::InternalError(os.str(), 999, e.getRightExp().getLocation());
+                const std::wstring *pwstName = getStructNameFromExp(pCell);
+                scilabWriteW(printVarEqualTypeDimsInfo(pOut, *pwstName).c_str());
+                VariableToString(pOut, pwstName->c_str());
             }
 
+            pOut->killMe();
             CoverageInstance::stopChrono((void*)&e);
             return;
         }
@@ -392,6 +383,7 @@ void RunVisitorT<T>::visitprivate(const AssignExp  &e)
                 VariableToString(pOut, pwstName->c_str());
             }
 
+            pOut->killMe();
             clearResult();
             CoverageInstance::stopChrono((void*)&e);
 
