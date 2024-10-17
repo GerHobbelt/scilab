@@ -135,7 +135,8 @@ function pal = xcosPalAddBlock(pal, block, pal_block_img, style)
         pal_block_img = fullpath(pathconvert(pal_block_img, %f));
     end
 
-
+    // retrieve the default style from the block instance
+    predefined_style = scs_m.graphics.style;
 
     // now handle style argument
     if ~exists("style", "l") | isempty(style) then
@@ -145,7 +146,7 @@ function pal = xcosPalAddBlock(pal, block, pal_block_img, style)
         if getos() == "Windows" then
             block_img = "/" + block_img;
         end
-        style = "noLabel=1;image=file://" + block_img + ";";
+        style = "noLabel=1;image=file://" + block_img + ";" + predefined_style;
         status = generateBlockImage(scs_m, TMPDIR, imageType="svg", withPort=%f);
         if ~status then
             error(msprintf(gettext("%s: Unable to generate the image ""%s"".\n"), "xcosPalAddBlock", block_img));
@@ -166,14 +167,16 @@ function pal = xcosPalAddBlock(pal, block, pal_block_img, style)
                 end
                 formattedStyle = formattedStyle + ";";
             end
-            style = formattedStyle;
+            style = formattedStyle + ";" + predefined_style;
         elseif typeof(style) == "string" then
             if isfile(style) then
                 // protect drive letter
                 if getos() == "Windows" then
                     style = "/" + style;
                 end
-                style = "shape=label;image=file://" + style + ";";
+                style = strcat(["shape=label"
+                    "image=file://"+style;
+                    predefined_style], ";");
                 //          else
                 //              assume a well formatted string, do nothing
             end
