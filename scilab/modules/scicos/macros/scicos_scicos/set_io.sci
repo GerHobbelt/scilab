@@ -30,9 +30,15 @@ function [model,...
     in_implicit,...
     out_implicit)
     // CHECK
-    if argn(2)<=6 then
-        in_implicit=[]
-    out_implicit=[], end
+    [lhs, rhs] = argn();
+    if rhs <= 4 then
+        clkin = []
+        clkout = []
+    end
+    if rhs <= 6 then
+        in_implicit = []
+        out_implicit = []
+    end
     deff("[str__err]=str__err(err__,"+...
     "str__#)",...
     ["str__err=''ERROR''"
