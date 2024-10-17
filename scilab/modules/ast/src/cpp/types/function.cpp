@@ -367,7 +367,8 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     }
     else
     {
-        for (std::size_t i(0); i != (size_t)_iRetCount && outOrder[i] != -1 && outOrder[i] != 0; ++i)
+        int lhs = std::max(1, _iRetCount);
+        for (std::size_t i(0); i != (size_t)lhs && outOrder[i] != -1 && outOrder[i] != 0; ++i)
         {
             if (outOrder[i] - 1 < gStr.m_iIn)
             {

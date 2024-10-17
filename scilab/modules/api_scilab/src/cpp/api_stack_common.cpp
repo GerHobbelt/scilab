@@ -100,8 +100,8 @@ int* assignOutputVariable(void* _pvCtx, int _iVal)
 
     types::GatewayStruct* pStr = (types::GatewayStruct*)_pvCtx;
 
-    //do nothing but don't crash
-    if (_iVal > *pStr->m_piRetCount || (_iVal - 1) < 0)
+    // do nothing but don't crash
+    if (_iVal - 1 < 0)
     {
         return &api_fake_int;
     }
