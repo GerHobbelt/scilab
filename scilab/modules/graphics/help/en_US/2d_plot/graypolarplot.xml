@@ -184,17 +184,6 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>leg</term>
-                <listitem>
-                    <para>a string. It is used when the first character x of argument
-                        <literal>strf</literal> is 1. <literal>leg</literal> has the form
-                        <literal>"leg1@leg2@...."</literal> where <literal>leg1</literal>,
-                        <literal>leg2</literal>, etc. are respectively the captions of the first
-                        curve, of the second curve, etc. The default is <literal>""</literal>.
-                    </para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term>rect</term>
                 <listitem>
                     <para>This argument is used when the second character y of argument

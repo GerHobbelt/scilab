@@ -12,7 +12,7 @@
 // along with this program.
 
 
-function graypolarplot(theta,rho,z,varargin)
+function graypolarplot(theta, rho, z, strf, rect)
     [lhs,rhs] = argn(0)
     if rhs<=0 then
         rho = 1:0.2:4
@@ -31,20 +31,22 @@ function graypolarplot(theta,rho,z,varargin)
 
     if rhs<3 then
         error(msprintf(gettext("%s: Wrong number of input argument(s): At least %d expected.\n"), "graypolarplot", 3));
+    end    
+
+    if exists("strf","local")==0 then
+        strf = "030";
     end
 
-
-    R = max(rho)
-    nv = size(varargin)
-    if nv>=1
-        strf = varargin(2)
-    else
-        strf = "030"
+    R = max(rho);
+    if exists("rect","local")==0 then
+        rect = [-R -R R R]*1.1;
     end
-    if nv>=2
-        rect = varargin(4)
-    else
-        rect = [-R -R R R]*1.1
+
+    // Now parse optional arguments to be sent to plot2d
+    opts = "";
+    opt_arg_list = ["strf", "rect"]
+    for opt_arg = opt_arg_list
+        opts = opts +","+ opt_arg + "=" + opt_arg
     end
 
     // drawlater
@@ -52,12 +54,13 @@ function graypolarplot(theta,rho,z,varargin)
     immediate_drawing = fig.immediate_drawing;
     fig.immediate_drawing = "off";
 
+    execstr("plot2d(0,0,1"+opts+")")
     axes = gca();
-    axes.data_bounds = [rect(1), rect(2); rect(3), rect(4)];
+    iso = axes.isoview;
     axes.clip_state = "clipgrf";
 
     drawGrayplot(theta,rho,z);
-    isoview()
+    axes.isoview = iso;
 
     axes.box = "off";
     axes.axes_visible = ["off","off","off"];
