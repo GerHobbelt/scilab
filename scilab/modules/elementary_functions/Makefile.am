@@ -341,7 +341,8 @@ GATEWAY_CXX_SOURCES =  \
     sci_gateway/cpp/sci_base2dec.cpp \
     sci_gateway/cpp/sci_dec2base.cpp \
     sci_gateway/cpp/sci_vander.cpp \
-    sci_gateway/cpp/sci_gallery.cpp
+    sci_gateway/cpp/sci_gallery.cpp \
+    sci_gateway/cpp/sci_isempty.cpp
 
 EISPACK_SOURCES = src/fortran/eispack/balbak.f
 

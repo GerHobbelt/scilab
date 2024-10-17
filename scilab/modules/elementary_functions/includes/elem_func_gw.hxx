@@ -102,6 +102,7 @@ CPP_GATEWAY_PROTOTYPE(sci_tril);
 CPP_GATEWAY_PROTOTYPE(sci_triu);
 CPP_GATEWAY_PROTOTYPE(sci_vander);
 CPP_GATEWAY_PROTOTYPE(sci_zeros);
+CPP_GATEWAY_PROTOTYPE(sci_isempty);
 
 
 bool getDimsFromArguments(types::typed_list& in, const std::string& _pstName, int* _iDims, int** _piDims, bool* _alloc);

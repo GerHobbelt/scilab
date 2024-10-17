@@ -11,7 +11,7 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function answ = isempty(m)
+function answ = %_isempty(m)
 
     rhs = argn(2);
     if rhs <> 1 then
@@ -27,11 +27,6 @@ function answ = isempty(m)
     end
 
     select m_type
-    case 1
-        answ = m == [];
-    case 10
-        // matrix of character string
-        answ = ( max(length(m)) == 0 );
 
     case 15
         // list
