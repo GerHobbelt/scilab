@@ -22,6 +22,6 @@
 #ifndef _GET_TICKS_UTILS_H_
 #define _GET_TICKS_UTILS_H_
 
-void* buildTListForTicks(const double* locations, char * labels[], int nbTics);
+void* buildTListForTicks(const double* locations, char * labels[], char * interpreters[], int nbTics);
 
 #endif /* _GET_TICKS_UTILS_H_ */

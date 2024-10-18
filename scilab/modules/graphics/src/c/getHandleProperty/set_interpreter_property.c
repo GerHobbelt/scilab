@@ -5,8 +5,8 @@
  * Copyright (C) 2006 - INRIA - Jean-Baptiste Silvy
  * Copyright (C) 2010 - DIGITEO - Manuel Juliachs
  * Copyright (C) 2011 - DIGITEO - Vincent Couvert
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane Mottelet
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -18,26 +18,28 @@
  */
 
 /*------------------------------------------------------------------------*/
-/* file: get_z_ticks_property.c                                           */
-/* desc : function to retrieve in Scilab the z_ticks field of             */
+/* file: set_text_interpreter.c                                              */
+/* desc : function to modify in Scilab the interpreter field of                  */
 /*        a handle                                                        */
 /*------------------------------------------------------------------------*/
 
-#include "getHandleProperty.h"
+#include "setHandleProperty.h"
+#include "SetProperty.h"
+#include "getPropertyAssignedValue.h"
+#include "SetPropertyStatus.h"
 #include "GetProperty.h"
 #include "Scierror.h"
 #include "localization.h"
-#include "get_ticks_utils.h"
-#include "sci_malloc.h"
-#include "BasicAlgos.h"
-
-#include "getGraphicObjectProperty.h"
-#include "graphicObjectProperties.h"
 
 /*------------------------------------------------------------------------*/
-void* get_z_ticks_property(void* _pvCtx, int iObjUID)
+int set_interpreter_property(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol)
 {
-    return sciGetTicksProperty(_pvCtx, iObjUID, 
-        "z", __GO_Z_AXIS_NUMBER_TICKS__, __GO_Z_AXIS_TICKS_LOCATIONS__, __GO_Z_AXIS_TICKS_LABELS__, __GO_Z_AXIS_TICKS_INTERPRETERS__);
+    if (valueType != sci_strings)
+    {
+        Scierror(999, _("Wrong type for '%s' property: string expected.\n"), "interpreter");
+        return SET_PROPERTY_ERROR;
+    }
+
+    return sciSetInterpreter(iObjUID, (char**)_pvData, nbRow, nbCol);
 }
 /*------------------------------------------------------------------------*/

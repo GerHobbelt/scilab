@@ -115,6 +115,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_auto_position_property.c \
     src/c/getHandleProperty/get_closed_property.c \
     src/c/getHandleProperty/get_text_property.c \
+    src/c/getHandleProperty/get_interpreter_property.c \
     src/c/getHandleProperty/get_margins_property.c \
     src/c/getHandleProperty/get_view_property.c \
     src/c/getHandleProperty/get_data_bounds_property.c \
@@ -146,6 +147,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_labels_font_color_property.c \
     src/c/getHandleProperty/get_surface_color_property.c \
     src/c/getHandleProperty/get_tics_label_property.c \
+    src/c/getHandleProperty/get_tics_interpreters_property.c \
     src/c/getHandleProperty/get_labels_font_style_property.c \
     src/c/getHandleProperty/get_axes_visible_property.c \
     src/c/getHandleProperty/get_cube_scaling_property.c \
@@ -213,6 +215,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_auto_dimensionning_property.c \
     src/c/getHandleProperty/set_text_box_property.c \
     src/c/getHandleProperty/set_text_property.c \
+    src/c/getHandleProperty/set_interpreter_property.c \
     src/c/getHandleProperty/set_mark_mode_property.c \
     src/c/getHandleProperty/set_clip_box_property.c \
     src/c/getHandleProperty/set_z_shift_property.c \
@@ -292,6 +295,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_color_mode_property.c \
     src/c/getHandleProperty/set_data_bounds_property.c \
     src/c/getHandleProperty/set_tics_labels_property.c \
+    src/c/getHandleProperty/set_tics_interpreters_property.c \
     src/c/getHandleProperty/set_data_mapping_property.c \
     src/c/getHandleProperty/set_rotation_angles_property.c \
     src/c/getHandleProperty/set_callback_type_property.c \

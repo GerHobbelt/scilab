@@ -399,6 +399,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="src\c\getHandleProperty\get_text_box_mode_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_text_box_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_text_property.c" />
+    <ClCompile Include="src\c\getHandleProperty\get_interpreter_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_thickness_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_toolbar_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_use_color_material_property.c" />
@@ -440,6 +441,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="src\c\getHandleProperty\get_tics_color_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_tics_direction_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_tics_label_property.c" />
+    <ClCompile Include="src\c\getHandleProperty\get_tics_interpreters_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_tics_segment_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_tics_style_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_tight_limits_property.c" />
@@ -637,10 +639,12 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="src\c\getHandleProperty\set_text_box_mode_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_text_box_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_text_property.c" />
+    <ClCompile Include="src\c\getHandleProperty\set_interpreter_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_thickness_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tics_color_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tics_direction_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tics_labels_property.c" />
+    <ClCompile Include="src\c\getHandleProperty\set_tics_interpreters_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tics_segment_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tics_style_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_tight_limits_property.c" />

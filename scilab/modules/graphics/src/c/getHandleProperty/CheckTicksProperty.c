@@ -1,8 +1,8 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2006 - INRIA - Jean-Baptiste Silvy
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -31,14 +31,21 @@ AssignedList * createTlistForTicks(void* _pvCtx)
     int nbColLoc  = 0;
     int nbRowLab  = 0;
     int nbColLab  = 0;
+    int nbRowInt  = 0;
+    int nbColInt  = 0;
     char** ret;
 
-    tlist = createAssignedList(_pvCtx, 3, 2);
+    tlist = createAssignedList(_pvCtx, 3, 3);
 
     if (tlist == NULL)
     {
-        Scierror(999, _("Tlist could not be created, check ticks location and label vectors.\n"));
-        return NULL;
+        // test legacy ticks (no interpreter field)
+        tlist = createAssignedList(_pvCtx, 3, 2);
+        if (tlist == NULL)
+        {
+            Scierror(999, _("Tlist could not be created, check ticks location and label vectors.\n"));
+            return NULL;            
+        }
     }
 
     if (!isListCurrentElementDoubleMatrix(_pvCtx, tlist))
@@ -80,6 +87,29 @@ AssignedList * createTlistForTicks(void* _pvCtx)
             Scierror(999, _("Ticks location and label vectors must have the same size.\n"));
             destroyAssignedList(tlist);
             return NULL;
+        }
+
+        if (tlist->iNbItem == 4)
+        {
+            if (!isListCurrentElementStringMatrix(_pvCtx, tlist))
+            {
+                Scierror(999, _("%s should be a string vector.\n"), "interpreter");
+                destroyAssignedList(tlist);
+                return NULL;
+            }
+
+            ret = getCurrentStringMatrixFromList(_pvCtx, tlist, &nbRowInt, &nbColInt);
+            if (ret != NULL)
+            {
+                freeAllocatedMatrixOfString(nbRowInt, nbColInt, ret);
+            }
+
+            if (nbRowLoc != nbRowInt || nbColLoc != nbColInt)
+            {
+                Scierror(999, _("Ticks location and interpreter vectors must have the same size.\n"));
+                destroyAssignedList(tlist);
+                return NULL;
+            }
         }
     }
 

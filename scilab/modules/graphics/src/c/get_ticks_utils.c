@@ -4,6 +4,7 @@
  * Copyright (C) 2006 - INRIA - Allan Cornet
  * Copyright (C) 2006 - INRIA - Jean-Baptiste Silvy
  * Copyright (C) 2009 - INRIA - Pierre Lando
+ * Copyright (C) 2024 - UTC - Stéphane Mottelet
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -25,15 +26,16 @@
 #include "get_ticks_utils.h"
 #include "returnPropertyList.h"
 /*--------------------------------------------------------------------------------*/
-void* buildTListForTicks(const double* locations, char * labels[], int nbTics)
+void* buildTListForTicks(const double* locations, char * labels[], char * interpreters[], int nbTics)
 {
-    char * variable_tlist[] = {"ticks", "locations", "labels"};
+    char * variable_tlist[] = {"ticks", "locations", "labels", "interpreters"};
 
-    void* tList = createReturnedList(2, variable_tlist);
+    void* tList = createReturnedList(3, variable_tlist);
 
     if (nbTics == 0)
     {
-        // two empty matrices
+        // theree empty matrices
+        addColVectorToReturnedList(tList, NULL, 0);
         addColVectorToReturnedList(tList, NULL, 0);
         addColVectorToReturnedList(tList, NULL, 0);
     }
@@ -41,6 +43,7 @@ void* buildTListForTicks(const double* locations, char * labels[], int nbTics)
     {
         addColVectorToReturnedList(tList, locations, nbTics);
         addStringColVectorToReturnedList(tList, labels, nbTics);
+        addStringColVectorToReturnedList(tList, interpreters, nbTics);
     }
 
     return tList;

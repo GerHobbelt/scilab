@@ -36,7 +36,11 @@ a.x_ticks = tlist(["ticks", "locations", "labels"], (0:6)', [mathml;"1";"$\sin(x
             関する完全な Unicode　が Scilabグラフィックスで処理されます.
         </para>
         <scilab:image>
-            xtitle('$\big\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}{6}$')
+            str='$\big\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}{6}$';
+            xstring(0.5,0.5,str)
+            gce().font_size=6
+            gce().text_box_mode="centered"
+            gcf().figure_size(2)=200
         </scilab:image>
         <programlisting role="example"><![CDATA[
 xtitle('$\textstyle\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}{6}$')
@@ -96,10 +100,13 @@ xtitle('$\newcommand{\myfrac}[2]{\frac{\mathfrak{#1}}{\mathcal{#2}}}\myfrac{A}{B
             しかし,次回以降は高速化されます.
         </para>
         <scilab:image><![CDATA[
-str="<mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mo></mo><mfenced open=""{"" close=""}"">" + ..
-"<mrow><mfrac><mrow><mfrac><mrow><mi>a</mi></mrow><mrow><mi>b</mi></mrow></mfrac></mrow><mrow><mfrac><mrow>" +  ..
-"<mi>c</mi></mrow><mrow><mi>d</mi></mrow></mfrac></mrow></mfrac></mrow></mfenced></mrow>"
-xtitle(str)
+            str="<mrow><mfrac><mrow><mn>1</mn></mrow><mrow><mn>2</mn></mrow></mfrac><mo></mo><mfenced open=""{"" close=""}"">" + ..
+            "<mrow><mfrac><mrow><mfrac><mrow><mi>a</mi></mrow><mrow><mi>b</mi></mrow></mfrac></mrow><mrow><mfrac><mrow>" +  ..
+            "<mi>c</mi></mrow><mrow><mi>d</mi></mrow></mfrac></mrow></mfrac></mrow></mfenced></mrow>"
+            xstring(0.5,0.5,str)
+            gce().font_size=6
+            gce().text_box_mode="centered"
+            gcf().figure_size(2)=200
 ]]></scilab:image>
         <programlisting role="example"><![CDATA[
 plot3d();

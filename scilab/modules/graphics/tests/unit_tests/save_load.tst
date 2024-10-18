@@ -341,3 +341,59 @@ a = gca();
 e = a.children.children;
 assert_checkequal(e.datatips.data, [0.5, 0.125, 0]);
 delete(f);
+
+// text interpreter
+t=linspace(0,2*%pi,128);
+clf
+text=["$\cos(t)$","and $\sin(t)$","$\sin(2t)$"];
+inter=["auto","latex","none"];
+h=plot(t,[cos(t);sin(t);sin(2*t)]);
+ha=gca();
+// labels
+title(text);
+ha.title.interpreter=inter;
+xlabel(text);
+ha.x_label.interpreter=inter;
+// legend entity
+legend(text)
+hl=gce();
+hl.interpreter=inter;
+// text
+xstring(%pi,0,text);
+ht=gce();
+ht.interpreter=inter;
+// ticks
+ind=[3 7 11]; 
+ha.x_ticks.labels(ind)=text;
+ha.x_ticks.interpreters(ind)=inter
+// axis
+ind=1:2:5;
+hax=drawaxis(x=1:6,y=-0.4,dir='u');
+hax.tics_labels(ind)=text;
+hax.tics_interpreters(ind)=inter;
+// datatip
+function str=mydisplay(h)
+    pt = h.data;
+    str=[msprintf("$x$ is %g",pt(1))
+        msprintf("$y$ is %g",pt(2))]
+endfunction
+hd=datatipCreate(h(1),30);
+hd.interpreter(2)="latex";
+datatipSetDisplay(hd,mydisplay);
+
+// save the figure
+f = gcf();
+save(plotExportFile, "f");
+svgExportFileSave=pathconvert(TMPDIR) + "savePlot.svg";
+xs2svg(f,svgExportFileSave);
+svgHashSave=hash(strcat(mgetl(svgExportFileSave)),"sha256")
+// close figure
+delete(f)
+// reload figure
+load(plotExportFile);
+svgExportFileLoad=pathconvert(TMPDIR) + "loadPlot.svg";
+xs2svg(gcf(),svgExportFileLoad);
+svgHashLoad=hash(strcat(mgetl(svgExportFileLoad)),"sha256")
+// check same hash
+assert_checkequal(svgHashSave,svgHashLoad);
+

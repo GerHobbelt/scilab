@@ -61,6 +61,8 @@ GRAPHICS_IMPEXP void sciGet2dViewPixelCoordinates(int iObjUID, const double user
 
 GRAPHICS_IMPEXP void sciGetViewingArea(int iObjUID, int * xPos, int * yPos, int * width, int * height); /* GET */
 
+GRAPHICS_IMPEXP void* sciGetTicksProperty(void* _pvCtx, int iObjUID, char *stCoord, int iNb, int iLoc, int iLab, int iInt); 
+
 GRAPHICS_IMPEXP void printSetGetErrorMessage(const char * propertyName);
 
 #endif /* __SCI_GET_PROPERTY__ */

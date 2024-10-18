@@ -76,7 +76,8 @@ public class LegendDrawer {
                 GraphicObjectProperties.__GO_FONT_STYLE__,
                 GraphicObjectProperties.__GO_FONT_FRACTIONAL__,
                 GraphicObjectProperties.__GO_TEXT_ARRAY_DIMENSIONS__,
-                GraphicObjectProperties.__GO_TEXT_STRINGS__
+                GraphicObjectProperties.__GO_TEXT_STRINGS__,
+                GraphicObjectProperties.__GO_TEXT_INTERPRETERS__
             ));
 
     /** The height of a bar relative to the height difference between two lines */

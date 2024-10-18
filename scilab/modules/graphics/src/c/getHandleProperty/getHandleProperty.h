@@ -83,6 +83,7 @@ GRAPHICS_IMPEXP void* get_auto_dimensionning_property(void* _pvCtx, int iObjUID)
 GRAPHICS_IMPEXP void* get_alignment_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_text_box_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_text_property(void* _pvCtx, int iObjUID);
+GRAPHICS_IMPEXP void* get_interpreter_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_auto_clear_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_auto_scale_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_auto_stretch_property(void* _pvCtx, int iObjUID);
@@ -122,6 +123,7 @@ GRAPHICS_IMPEXP void* get_format_n_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_xtics_coord_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_ytics_coord_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_tics_labels_property(void* _pvCtx, int iObjUID);
+GRAPHICS_IMPEXP void* get_tics_interpreters_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_box_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_grid_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_grid_thickness_property(void* _pvCtx, int iObjUID);

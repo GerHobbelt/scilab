@@ -16,7 +16,7 @@
  */
 
 /*------------------------------------------------------------------------*/
-/* file: set_tics_labels_property.c                                       */
+/* file: set_interpreters_property.c                                       */
 /* desc : function to modify in Scilab the tics_labels field of           */
 /*        a handle                                                        */
 /*------------------------------------------------------------------------*/
@@ -36,17 +36,20 @@
 #include "graphicObjectProperties.h"
 
 /*------------------------------------------------------------------------*/
-int set_tics_labels_property(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol)
+int set_tics_interpreters_property(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol)
 {
     BOOL status = FALSE;
     int iNbTicksLabels = 0;
     int* piNbTicksLabels = &iNbTicksLabels;
     int iSize = nbRow*nbCol;
+    int ind = -1;
     char** stringVector = NULL;
+    char** interpreters = NULL;
+    char* interpreterNames[4] = {"auto","latex","mathml","none"};
 
     if (valueType != sci_strings)
     {
-        Scierror(999, _("Wrong type for '%s' property: string expected.\n"), "tics_labels");
+        Scierror(999, _("Wrong type for '%s' property: string expected.\n"), "tics_interpreters");
         return SET_PROPERTY_ERROR;
     }
 
@@ -54,24 +57,49 @@ int set_tics_labels_property(void* _pvCtx, int iObjUID, void* _pvData, int value
 
     if (piNbTicksLabels == NULL)
     {
-        Scierror(999, _("'%s' property does not exist for this handle.\n"), "tics_labels");
+        Scierror(999, _("'%s' property does not exist for this handle.\n"), "tics_interpreters");
         return SET_PROPERTY_ERROR;
     }
 
-    if (iNbTicksLabels > iSize)
+    if (iSize != iNbTicksLabels && iSize != 1)
     {
-        Scierror(999, _("Wrong size for '%s' property: At least %d elements expected.\n"), "tics_labels", iNbTicksLabels);
+        Scierror(999, _("Wrong size for '%s' property: At least %d elements expected.\n"), "tics_interpreters", iNbTicksLabels);
         return SET_PROPERTY_ERROR;
     }
 
-    stringVector = createCopyStringMatrixFromStack(_pvData, iSize);
+    interpreters = createCopyStringMatrixFromStack(_pvData, iSize);
+
+    for (int i=0; i<iSize; i++)
+    {
+        ind = -1;
+        for (int j=0; j < 4; j++)
+        {
+            if (strcmp(interpreters[i], interpreterNames[j]) == 0)
+            {
+                ind = j;
+                break;
+            }
+        }
+        if (ind == -1)
+        {
+            break;
+        }
+    }
+    
+    if (ind == -1)
+    {
+        Scierror(999, _("Wrong value for '%s' property: must be in the set {%s,%s,%s,%s}.\n"), "tics_interpreters", "auto","latex","mathml","none");
+        return SET_PROPERTY_ERROR;
+    }
+
+    getGraphicObjectProperty(iObjUID, __GO_TICKS_LABELS__, jni_string_vector, (void **) &stringVector);
 
     /* Check if we should load LaTex / MathML Java libraries */
-    loadTextRenderingAPI(stringVector, NULL, iSize, 0);
+    loadTextRenderingAPI(stringVector, interpreters, iNbTicksLabels, iSize);
 
-    status = setGraphicObjectProperty(iObjUID, __GO_TICKS_LABELS__, stringVector, jni_string_vector, iSize);
+    status = setGraphicObjectProperty(iObjUID, __GO_TICKS_INTERPRETERS__, interpreters, jni_string_vector, iSize);
 
-    destroyStringArray(stringVector, iSize);
+    destroyStringArray(interpreters, iSize);
 
     if (status == TRUE)
     {

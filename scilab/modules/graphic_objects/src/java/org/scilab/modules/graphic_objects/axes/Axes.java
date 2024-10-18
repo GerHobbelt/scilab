@@ -3,8 +3,8 @@
  * Copyright (C) 2010 - DIGITEO - Manuel JULIACHS
  * Copyright (C) 2010 - DIGITEO - Bruno JOFRET
  * Copyright (C) 2013 - 2015 - Scilab Enterprises - Calixte DENIZET
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -70,6 +70,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_ST_FACTORS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_SUBTICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_TICKS_LABELS__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_TICKS_INTERPRETERS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_TICKS_LOCATIONS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_TICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_AXIS_VISIBLE__;
@@ -87,6 +88,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_ST_FACTORS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_SUBTICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_TICKS_LABELS__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_TICKS_INTERPRETERS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_TICKS_LOCATIONS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_TICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Y_AXIS_VISIBLE__;
@@ -106,6 +108,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_ST_FACTORS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_SUBTICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_TICKS_LABELS__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_TICKS_INTERPRETERS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_TICKS_LOCATIONS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_TICKS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_Z_AXIS_VISIBLE__;
@@ -145,11 +148,11 @@ public class Axes extends GraphicObject {
     /** Axes properties names */
     private enum AxesProperty {
         XAXISVISIBLE, XAXISFORMAT, XAXISSTFACTORS, XAXISREVERSE, XAXISGRIDCOLOR, XAXISGRIDTHICKNESS, XAXISGRIDSTYLE, XAXISLABEL, XAXISLOCATION, XAXISLOGFLAG,
-        XAXISTICKS, XAXISAUTOTICKS, XAXISNUMBERTICKS, XAXISTICKSLOCATIONS, XAXISTICKSLABELS, XAXISSUBTICKS,
+        XAXISTICKS, XAXISAUTOTICKS, XAXISNUMBERTICKS, XAXISTICKSLOCATIONS, XAXISTICKSLABELS, XAXISTICKSINTERPRETERS, XAXISSUBTICKS,
         YAXISVISIBLE, YAXISFORMAT, YAXISSTFACTORS, YAXISREVERSE, YAXISGRIDCOLOR, YAXISGRIDTHICKNESS, YAXISGRIDSTYLE, YAXISLABEL, YAXISLOCATION, YAXISLOGFLAG,
-        YAXISTICKS, YAXISAUTOTICKS, YAXISNUMBERTICKS, YAXISTICKSLOCATIONS, YAXISTICKSLABELS, YAXISSUBTICKS,
+        YAXISTICKS, YAXISAUTOTICKS, YAXISNUMBERTICKS, YAXISTICKSLOCATIONS, YAXISTICKSLABELS, YAXISTICKSINTERPRETERS, YAXISSUBTICKS,
         ZAXISVISIBLE, ZAXISFORMAT, ZAXISSTFACTORS, ZAXISREVERSE, ZAXISGRIDCOLOR, ZAXISGRIDTHICKNESS, ZAXISGRIDSTYLE, ZAXISLABEL, ZAXISLOCATION, ZAXISLOGFLAG,
-        ZAXISTICKS, ZAXISAUTOTICKS, ZAXISNUMBERTICKS, ZAXISTICKSLOCATIONS, ZAXISTICKSLABELS, ZAXISSUBTICKS,
+        ZAXISTICKS, ZAXISAUTOTICKS, ZAXISNUMBERTICKS, ZAXISTICKSLOCATIONS, ZAXISTICKSLABELS, ZAXISTICKSINTERPRETERS, ZAXISSUBTICKS,
         AUTOSUBTICKS,
         FONT_STYLE, FONT_SIZE, FONT_COLOR, FONT_FRACTIONAL,
         GRIDPOSITION, TITLE, AUTOCLEAR, FILLED, BACKGROUND,
@@ -348,6 +351,8 @@ public class Axes extends GraphicObject {
                 return AxesProperty.XAXISTICKSLOCATIONS;
             case __GO_X_AXIS_TICKS_LABELS__ :
                 return AxesProperty.XAXISTICKSLABELS;
+            case __GO_X_AXIS_TICKS_INTERPRETERS__ :
+                return AxesProperty.XAXISTICKSINTERPRETERS;
             case __GO_X_AXIS_SUBTICKS__ :
                 return AxesProperty.XAXISSUBTICKS;
             case __GO_Y_AXIS_VISIBLE__ :
@@ -380,6 +385,8 @@ public class Axes extends GraphicObject {
                 return AxesProperty.YAXISTICKSLOCATIONS;
             case __GO_Y_AXIS_TICKS_LABELS__ :
                 return AxesProperty.YAXISTICKSLABELS;
+            case __GO_Y_AXIS_TICKS_INTERPRETERS__ :
+                return AxesProperty.YAXISTICKSINTERPRETERS;
             case __GO_Y_AXIS_SUBTICKS__ :
                 return AxesProperty.YAXISSUBTICKS;
             case __GO_Z_AXIS_VISIBLE__ :
@@ -412,6 +419,8 @@ public class Axes extends GraphicObject {
                 return AxesProperty.ZAXISTICKSLOCATIONS;
             case __GO_Z_AXIS_TICKS_LABELS__ :
                 return AxesProperty.ZAXISTICKSLABELS;
+            case __GO_Z_AXIS_TICKS_INTERPRETERS__ :
+                return AxesProperty.ZAXISTICKSINTERPRETERS;
             case __GO_Z_AXIS_SUBTICKS__ :
                 return AxesProperty.ZAXISSUBTICKS;
             case __GO_AUTO_SUBTICKS__ :
@@ -548,6 +557,8 @@ public class Axes extends GraphicObject {
                     return getXAxisTicksLocations();
                 case XAXISTICKSLABELS:
                     return getXAxisTicksLabels();
+                case XAXISTICKSINTERPRETERS:
+                    return getXAxisTicksInterpreters();
                 case XAXISSUBTICKS:
                     return getXAxisSubticks();
                 case YAXISVISIBLE:
@@ -580,6 +591,8 @@ public class Axes extends GraphicObject {
                     return getYAxisTicksLocations();
                 case YAXISTICKSLABELS:
                     return getYAxisTicksLabels();
+                case YAXISTICKSINTERPRETERS:
+                    return getYAxisTicksInterpreters();
                 case YAXISSUBTICKS:
                     return getYAxisSubticks();
                 case ZAXISVISIBLE:
@@ -612,6 +625,8 @@ public class Axes extends GraphicObject {
                     return getZAxisTicksLocations();
                 case ZAXISTICKSLABELS:
                     return getZAxisTicksLabels();
+                case ZAXISTICKSINTERPRETERS:
+                    return getZAxisTicksInterpreters();
                 case ZAXISSUBTICKS:
                     return getZAxisSubticks();
                 case AUTOSUBTICKS:
@@ -768,6 +783,8 @@ public class Axes extends GraphicObject {
                     return setXAxisTicksLocations((Double[]) value);
                 case XAXISTICKSLABELS:
                     return setXAxisTicksLabels((String[]) value);
+                case XAXISTICKSINTERPRETERS:
+                    return setXAxisTicksInterpreters((String[]) value);
                 case XAXISSUBTICKS:
                     return setXAxisSubticks((Integer) value);
                 case YAXISVISIBLE:
@@ -798,6 +815,8 @@ public class Axes extends GraphicObject {
                     return setYAxisTicksLocations((Double[]) value);
                 case YAXISTICKSLABELS:
                     return setYAxisTicksLabels((String[]) value);
+                case YAXISTICKSINTERPRETERS:
+                    return setYAxisTicksInterpreters((String[]) value);
                 case YAXISSUBTICKS:
                     return setYAxisSubticks((Integer) value);
                 case ZAXISVISIBLE:
@@ -828,6 +847,8 @@ public class Axes extends GraphicObject {
                     return setZAxisTicksLocations((Double[]) value);
                 case ZAXISTICKSLABELS:
                     return setZAxisTicksLabels((String[]) value);
+                case ZAXISTICKSINTERPRETERS:
+                    return setZAxisTicksInterpreters((String[]) value);
                 case ZAXISSUBTICKS:
                     return setZAxisSubticks((Integer) value);
                 case AUTOSUBTICKS:
@@ -1218,8 +1239,22 @@ public class Axes extends GraphicObject {
     /**
      * @param labels the x axis ticks labels to set
      */
-    public UpdateStatus setXAxisTicksLabels(String[] labels) {
-        return axes[0].setTicksLabelsStrings(labels);
+    public UpdateStatus setXAxisTicksLabels(String[] strings) {
+        return axes[0].setTicksLabelsStrings(strings);
+    }
+
+    /**
+     * @param labels the x axis ticks interpreters to set
+     */
+    public UpdateStatus setXAxisTicksInterpreters(String[] interpreters) {
+        return axes[0].setTicksLabelsInterpreters(interpreters);
+    }
+
+    /**
+     * @return the x axis ticks interpreters
+     */
+    public String[] getXAxisTicksInterpreters() {
+        return axes[0].getTicksLabelsInterpreters();
     }
 
     /**
@@ -1469,6 +1504,21 @@ public class Axes extends GraphicObject {
     public String[] getYAxisTicksLabels() {
         return axes[1].getTicksLabelsStrings();
     }
+
+    /**
+     * @param labels the y axis ticks interpreters to set
+     */
+    public UpdateStatus setYAxisTicksInterpreters(String[] interpreters) {
+        return axes[1].setTicksLabelsInterpreters(interpreters);
+    }
+
+    /**
+     * @return the y axis ticks interpreters
+     */
+    public String[] getYAxisTicksInterpreters() {
+        return axes[1].getTicksLabelsInterpreters();
+    }
+
 
     /**
      * @return the y axis ticks labels
@@ -1744,6 +1794,20 @@ public class Axes extends GraphicObject {
      */
     public UpdateStatus setZAxisTicksLabels(String[] labels) {
         return axes[2].setTicksLabelsStrings(labels);
+    }
+
+    /**
+     * @param labels the z axis ticks interpreters to set
+     */
+    public UpdateStatus setZAxisTicksInterpreters(String[] interpreters) {
+        return axes[2].setTicksLabelsInterpreters(interpreters);
+    }
+
+    /**
+     * @return the x axis ticks interpreters
+     */
+    public String[] getZAxisTicksInterpreters() {
+        return axes[2].getTicksLabelsInterpreters();
     }
 
     /**

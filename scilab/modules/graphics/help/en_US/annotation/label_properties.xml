@@ -66,8 +66,16 @@
                         Matrix of texts of the label. So, a label can have multiple rows or/and
                         columns of text. Leading and trailing blanks are trimmed.
                         In their columns, texts are left-justified.
-                        <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>
-                        delimited with "$...$" are supported.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>interpreter: </term>
+                <listitem>
+                    <para>the interpreter to be used to render the strings, given as a matrix
+                        of the same size and dimensions as the <term>text</term> property, with elements
+                        chosen among <literal>"auto"</literal> (the default), <literal>"latex"</literal>, 
+                        <literal>"mathml"</literal>, <literal>"none"</literal>. See <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>.
                     </para>
                 </listitem>
             </varlistentry>

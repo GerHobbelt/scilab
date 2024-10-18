@@ -2,8 +2,8 @@
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2009-2010 - DIGITEO - Pierre Lando
  * Copyright (C) 2012 - Scilab Enterprises - Bruno JOFRET
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -71,12 +71,9 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
      * @param textObject the scilab {@see Text} to draw.
      */
     public TextObjectSpriteDrawer(final ColorMap colorMap, final TextObject textObject) {
-        String[][] stringArray = computeTextData(textObject);
-        int columnNumber = -1;
-        for (String[] stringLine : stringArray) {
-            columnNumber = Math.max(stringLine.length, columnNumber);
-        }
-        int lineNumber = stringArray.length;
+        Integer[] dimensions = textObject.getTextArrayDimensions();
+        int columnNumber = dimensions[1];
+        int lineNumber = dimensions[0];
 
         this.lineHeight = new int[lineNumber];
         this.lineAscent = new float[lineNumber];
@@ -87,8 +84,8 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
         Color textColor = ColorFactory.createColor(colorMap, textObject.getFont().getColor());
         Font font = computeFont(textObject);
 
-        loadDeps(stringArray);
-        fillEntityMatrix(stringArray, fractionalFont, textColor, font);
+        loadDeps(textObject);
+        fillEntityMatrix(textObject, fractionalFont, textColor, font);
 
         this.width  = sum(columnWidth) + HMARGIN * (columnNumber + 1) + 2 * thickness + SPACEWIDTH * (columnNumber - 1);
         this.height = sum(lineHeight)  + VMARGIN * (lineNumber + 1) + 2 * thickness;
@@ -102,12 +99,9 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
      * @param scaleFactor the scale factor to apply.
      */
     public TextObjectSpriteDrawer(final ColorMap colorMap, final TextObject textObject, double scaleFactor) {
-        String[][] stringArray = computeTextData(textObject);
-        int columnNumber = -1;
-        for (String[] stringLine : stringArray) {
-            columnNumber = Math.max(stringLine.length, columnNumber);
-        }
-        int lineNumber = stringArray.length;
+        Integer[] dimensions = textObject.getTextArrayDimensions();
+        int columnNumber = dimensions[1];
+        int lineNumber = dimensions[0];
 
         this.lineHeight = new int[lineNumber];
         this.lineAscent = new float[lineNumber];
@@ -119,8 +113,8 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
         Font font = computeFont(textObject, scaleFactor);
 
         /* Fill the entity matrix */
-        loadDeps(stringArray);
-        fillEntityMatrix(stringArray, fractionalFont, textColor, font);
+        loadDeps(textObject);
+        fillEntityMatrix(textObject, fractionalFont, textColor, font);
 
         this.width  = (int)((double)sum(columnWidth) + scaleFactor * (double)(HMARGIN * (columnNumber + 1)) + 2 * thickness + scaleFactor * (double)(SPACEWIDTH * (columnNumber - 1)));
         this.height = (int)((double)sum(lineHeight)  + scaleFactor * (double)(VMARGIN * (lineNumber + 1)) + 2 * thickness);
@@ -130,19 +124,19 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
      * Load JLaTeXMath or JEuclid if mandatory
      * @param stringArray the text to check
      */
-    protected void loadDeps(String[][] stringArray) {
+    protected void loadDeps(final TextObject textObject) {
         loop: {
-            for (String[] textLine : stringArray) {
-                for (String text : textLine) {
-                    if (text != null) {
-                        if (!latexSet && isLatex(text)) {
-                            latexSet = true;
-                            LoadClassPath.loadOnUse("graphics_latex_textrendering");
-                        } else if (!mathmlSet && isMathML(text)) {
-                            LoadClassPath.loadOnUse("graphics_mathml_textrendering");
-                        } else if (latexSet && mathmlSet) {
-                            break loop;
-                        }
+            String[] textStrings = textObject.getTextStrings();
+            String[] textInterpreters = textObject.getTextInterpreters();            
+            for (int i=0; i<textStrings.length; i++) {
+                if (textStrings[i] != null) {
+                    if (!latexSet && ((isLatex(textStrings[i]) && textInterpreters[i].equals("auto")) || textInterpreters[i].equals("latex")) ) {
+                        latexSet = true;
+                        LoadClassPath.loadOnUse("graphics_latex_textrendering");
+                    } else if (!mathmlSet && ((isMathML(textStrings[i]) && textInterpreters[i].equals("auto")) || textInterpreters[i].equals("mathml")) ) {
+                        LoadClassPath.loadOnUse("graphics_mathml_textrendering");
+                    } else if (latexSet && mathmlSet) {
+                        break loop;
                     }
                 }
             }
@@ -156,28 +150,38 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
      * @param textColor the text color.
      * @param font the font to use.
      */
-    protected void fillEntityMatrix(String[][] stringArray, boolean fractionalFont, Color textColor, Font font) {
-        int line = 0;
-        for (String[] textLine : stringArray) {
-            int column = 0;
-            for (String text : textLine) {
+    protected void fillEntityMatrix(final TextObject textObject, boolean fractionalFont, Color textColor, Font font) {
+        Integer[] dimensions = textObject.getTextArrayDimensions();
+        String[] textStrings = textObject.getTextStrings();
+        String[] textInterpreters = textObject.getTextInterpreters();
+        int columnNumber = dimensions[1];
+        int lineNumber = dimensions[0];
+        for (int line = 0; line < lineNumber; line++ ) {
+            for (int column = 0; column < columnNumber; column++) {
+                String text = textStrings[line + column*lineNumber];
+                String interpreter = textInterpreters[line + column*lineNumber];
+                boolean success = true;
                 if (text != null) {
                     Dimension dimension = null;
                     Icon icon = null;
                     float ascent = 0;
-                    if (isLatex(text)) {
+                    if ((isLatex(text) && interpreter.equals("auto")) || interpreter.equals("latex")) {
                         try {
-                            TeXFormula formula = new TeXFormula(text.substring(1, text.length() - 1));
+                            TeXFormula formula = new TeXFormula(formatLaTeXString(text));
                             formula.setColor(textColor);
                             icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, font.getSize());
                             ascent = ((TeXIcon) icon).getIconHeight() - ((TeXIcon) icon).getIconDepth();
-                        } catch (Exception e) { }
-                    } else if (isMathML(text)) {
+                        } catch (Exception e) { 
+                            success = false;
+                        }
+                    } else if ((isMathML(text) && interpreter.equals("auto")) || interpreter.equals("mathml")) {
                         try {
                             icon = ScilabSpecialTextUtilities.compileMathMLExpression(text, font.getSize(), textColor);
                             ScilabSpecialTextUtilities.SpecialIcon si = (ScilabSpecialTextUtilities.SpecialIcon) icon;
                             ascent = si.getIconHeight() - si.getIconDepth();
-                        } catch (Exception e) { }
+                        } catch (Exception e) {
+                            success = false;
+                        }
                     }
 
                     if (icon != null) {
@@ -187,7 +191,11 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
                         TextEntity textEntity = new TextEntity(text);
                         textEntity.setTextUseFractionalMetrics(fractionalFont);
                         textEntity.setTextAntiAliased(true);
-                        textEntity.setTextColor(textColor);
+                        if (success) {
+                            textEntity.setTextColor(textColor);
+                        } else {
+                            textEntity.setTextColor(new Color(1.0f, 0.f, 0.f));
+                        }
                         textEntity.setFont(font);
                         entities[column][line] = textEntity;
                         dimension = textEntity.getSize();
@@ -201,9 +209,7 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
                         lineHeight[line] = Math.max(lineHeight[line], dimension.height);
                     }
                 }
-                column++;
             }
-            line++;
         }
     }
 
@@ -213,7 +219,28 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
      * @return true if the given string represent a latex entity.
      */
     private boolean isLatex(String string) {
-        return (string.length() >= 2) && string.endsWith("$") && string.startsWith("$");
+        long count = string.chars().filter(ch -> ch == '$').count();
+        return (string.length() >= 2) && (count==2) && string.endsWith("$") && string.startsWith("$");
+    }
+
+
+    /**
+     * Format a mixed LaTeX string
+     * @param string the given string.
+     * @return the formatted string
+     */
+    public String formatLaTeXString(String string) {
+        String fmtString = "";
+        // string is splitted in pure math and text chunks
+        if (isLatex(string))
+        {
+            fmtString = string.substring(1, string.length() - 1);
+        }
+        else
+        {
+            fmtString = "\\text{" + string + "}";
+        }
+        return fmtString;
     }
 
     /**
@@ -332,25 +359,6 @@ public class TextObjectSpriteDrawer implements TextureDrawer {
 
     public int getSpaceWidth() {
         return SPACEWIDTH;
-    }
-
-    /**
-     * Compute and return the matrix of text string from the given {@see Text} object.
-     * @param text the given {@see Text} object.
-     * @return the matrix of text string from the given {@see Text} object.
-     */
-    protected String[][] computeTextData(final TextObject text) {
-        String[] textString = text.getTextStrings();
-        Integer[] dimensions = text.getTextArrayDimensions();
-        String[][] texts = new String[dimensions[0]][dimensions[1]];
-        int i = 0;
-        for (int c = 0; c < dimensions[1]; c++) {
-            for (int l = 0; l < dimensions[0]; l++) {
-                texts[l][c] = textString[i];
-                i++;
-            }
-        }
-        return texts;
     }
 
     /**

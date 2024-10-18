@@ -303,8 +303,8 @@
                             <term>x_ticks, y_ticks, z_ticks: </term>
                             <listitem>
                                 <para>
-                                    Each of these properties is a tlist of type "ticks" with 2 fields named "locations" and "labels":
-                                    <literal>tlist(["ticks", "locations", "labels"], Locations, Labels)</literal> where
+                                    Each of these properties is a tlist of type "ticks" with 3 fields named "locations", "labels" and "interpreters":
+                                    <literal>tlist(["ticks", "locations", "labels", "interperters"], Locations, Labels, Interpreters)</literal> where
                                     <variablelist>
                                         <varlistentry>
                                             <term>Locations</term>
@@ -326,7 +326,7 @@
                                         <varlistentry>
                                             <term>Labels</term>
                                             <listitem>
-                                                is a text vector containing the labels to be displayed
+                                                is a string vector containing the labels to be displayed
                                                 in front of each related graduation. As for Locations
                                                 of ticks, Labels can be addressed with (e.g. along y)
                                                 <literal>Haxes.y_ticks.labels = Labels</literal> or
@@ -340,20 +340,34 @@
                                                 </para>
                                             </listitem>
                                         </varlistentry>
+                                        <varlistentry>
+                                            <term>Interpreters</term>
+                                            <listitem>
+                                                is a string vector containing the interpreters to be used to render the strings.
+                                                 As for Locations of ticks, Interperters can be addressed with (e.g. along y)
+                                                <literal>Haxes.y_ticks.interpreters = Interpreters</literal> or
+                                                <literal>Haxes.y_ticks.interpreters(j) = newInterpretersJ</literal>.
+                                                <para>
+                                                Allowed values: <literal>"auto"</literal> (the default), <literal>"latex"</literal>, 
+                                                <literal>"mathml"</literal>, <literal>"none"</literal>. 
+                                                See <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>.
+                                                </para>
+                                            </listitem>
+                                        </varlistentry>
                                     </variablelist>
                                     <warning>
                                         <itemizedlist>
                                         <listitem>
-                                            For an axis, <literal>Locations</literal> and
-                                            <literal>Labels</literal> vectors must have the same
-                                            number of components.
+                                            For an axis, <literal>Locations</literal>,
+                                            <literal>Labels</literal> and <literal>Interpreters</literal> 
+                                            vectors must have the same number of components.
                                         </listitem>
                                         <listitem>
-                                            When the number of ticks must be changed, their positions
-                                            AND labels must be changed at once, in order to avoid
+                                            When the number of ticks must be changed, their positions, labels and interpreters 
+                                            must be changed at once, in order to avoid
                                             any mismatch: The syntax (e.g. along x)
-                                            <literal>Haxes.x_ticks = tlist(["ticks" "locations", "labels"], newLocations, newLabels)</literal>
-                                            must then be used.
+                                            <literal>Haxes.x_ticks = tlist(["ticks" "locations", "labels", "interpreters"], newLocations, newLabels, newInterpreters)</literal>
+                                            must then be used. If "interpreters" is not specified in the tlist, the "interpreters" field is automatically set to "auto".
                                         </listitem>
                                         <listitem>
                                             Changing by hand the <literal>Locations</literal> or/and
@@ -386,6 +400,18 @@
                                   Each of these properties is a text vector containing the labels
                                   to be displayed in front of ticks on the related x or y or z axis.
                                   <varname>x_ticks.labels</varname> must have the same number of
+                                  components as <varname>x_ticks.locations</varname>.
+                                  See <varname>x_ticks</varname> hereabove for more details.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>x_ticks.interpreters, y_ticks.interpreters, z_ticks.interpreters: </term>
+                            <listitem>
+                                <para>
+                                  Each of these properties is a text vector containing the interpreters 
+                                  to be used to render the strings.
+                                  <varname>x_ticks.interpreters</varname> must have the same number of
                                   components as <varname>x_ticks.locations</varname>.
                                   See <varname>x_ticks</varname> hereabove for more details.
                                 </para>

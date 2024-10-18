@@ -9,8 +9,8 @@
  * Copyright (C) 2010 - Paul Griffiths
  * Copyright (C) 2011 - DIGITEO - Bruno JOFRET
  * Copyright (C) 2012 - Scilab Enterprises - Bruno JOFRET
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -64,6 +64,10 @@
 #include "graphicObjectProperties.h"
 #include "FigureModel.h"
 #include "AxesModel.h"
+
+#include "getPropertyAssignedValue.h"
+#include "CheckTicksProperty.h"
+#include "SetPropertyStatus.h"
 
 /**sciSetLineWidth
  * Sets the line width
@@ -208,9 +212,10 @@ int sciSetText (int iObjUID, char ** text, int nbRow, int nbCol)
 {
     int dimensions[2];
     BOOL status = FALSE;
+    char** interpreters = NULL;
 
     /* Check if we should load LaTex / MathML Java libraries */
-    loadTextRenderingAPI(text, nbRow, nbCol);
+    loadTextRenderingAPI(text, NULL, nbRow*nbCol, 0);
 
     dimensions[0] = nbRow;
     dimensions[1] = nbCol;
@@ -232,6 +237,191 @@ int sciSetText (int iObjUID, char ** text, int nbRow, int nbCol)
     else
     {
         printSetGetErrorMessage("text");
+        return -1;
+    }
+}
+
+BOOL sciIsValidInterpreter(char **userInterpreters, int iSize)
+{
+    char* interpreterNames[4] = {"auto","latex","mathml","none"};
+    int ind = 0;
+
+    if (userInterpreters == NULL)
+    {
+        return TRUE;
+    }
+
+    for (int i=0; i<iSize; i++)
+    {
+        ind = -1;
+        for (int j=0; j < 4; j++)
+        {
+            if (strcmp(userInterpreters[i], interpreterNames[j]) == 0)
+            {
+                ind = j;
+                break;
+            }
+        }
+        if (ind == -1)
+        {
+            break;
+        }
+    }
+    if (ind == -1)
+    {
+        Scierror(999, _("Wrong value for '%s' property: must be in the set {%s,%s,%s,%s}.\n"), "interpreter", 
+            interpreterNames[0], interpreterNames[1], interpreterNames[2], interpreterNames[3]);
+    }
+    return (ind != -1);
+} 
+
+
+int sciSetTicksProperty(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol, 
+    char *stCoord, int iTicksAuto, int iTicksLoc, int iTicksLab, int iTicksInt)
+{
+    BOOL autoTicks = FALSE;
+    BOOL status = FALSE;
+    AssignedList * tlist = NULL;
+    int nbTicsRow = 0;
+    int nbTicsCol = 0;
+    int iSize = 0;
+    double* userGrads = NULL;
+    char** userLabels = NULL;
+    char** userInterpreters = NULL;
+
+    if (valueType != sci_tlist)
+    {
+        Scierror(999, _("Wrong type for '%s%s' property: Typed list expected.\n"), stCoord,"_ticks");
+        return SET_PROPERTY_ERROR;
+    }
+
+    tlist = createTlistForTicks(_pvCtx);
+
+    if (tlist == NULL)
+    {
+        return SET_PROPERTY_ERROR;
+    }
+
+    /* locations */
+    userGrads = createCopyDoubleMatrixFromList(_pvCtx, tlist, &nbTicsRow, &nbTicsCol);
+    iSize = nbTicsRow*nbTicsCol;
+
+    if (userGrads == NULL && nbTicsRow == -1)
+    {
+        Scierror(999, _("%s%s%s: No more memory.\n"), "set_",stCoord,"_ticks_property");
+        destroyAssignedList(tlist);
+        return SET_PROPERTY_ERROR;
+    }
+
+    /* Automatic ticks must be first deactivated in order to set user ticks */
+    autoTicks = FALSE;
+
+    setGraphicObjectProperty(iObjUID, iTicksAuto, &autoTicks, jni_bool, 1);
+
+    status = setGraphicObjectProperty(iObjUID, iTicksLoc, userGrads, jni_double_vector, iSize);
+
+    if (status == FALSE)
+    {
+        Scierror(999, _("'%s%s' property does not exist for this handle.\n"),stCoord,"_ticks");
+        destroyAssignedList(tlist);
+        FREE(userGrads);
+        return SET_PROPERTY_ERROR;
+    }
+
+    /*  labels and interpreters */
+    // Here we check the size of "locations" instead of "labels", but they have the same size.
+    // We need to check the size to not be 0 because an empty matrix is a matrix of double
+    // and 'getCurrentStringMatrixFromList' expect a matrix of string (see bug 5148).
+    // P.Lando
+    if (iSize != 0)
+    {
+        userLabels = getCurrentStringMatrixFromList(_pvCtx, tlist, &nbTicsRow, &nbTicsCol);
+        userInterpreters = getCurrentStringMatrixFromList(_pvCtx, tlist, &nbTicsRow, &nbTicsCol);            
+        
+        if (!sciIsValidInterpreter(userInterpreters,iSize))
+        {
+            if (userGrads != NULL)
+            {
+                FREE(userGrads);
+            }
+            freeAllocatedMatrixOfString(nbTicsRow, nbTicsCol, userLabels);
+            freeAllocatedMatrixOfString(nbTicsRow, nbTicsCol, userInterpreters);                
+            destroyAssignedList(tlist);
+            return SET_PROPERTY_ERROR;
+        }
+        else
+        {
+            /* Check if we should load LaTex / MathML Java libraries */
+            loadTextRenderingAPI(userLabels, userInterpreters, iSize, iSize);
+            setGraphicObjectProperty(iObjUID, iTicksLab, userLabels, jni_string_vector, iSize);
+            if (userInterpreters != NULL)
+            {
+                setGraphicObjectProperty(iObjUID, iTicksInt, userInterpreters, jni_string_vector, iSize);                            
+            }
+        }
+    }
+    else
+    {
+        /* To be implemented */
+#if 0
+        ppSubWin->axes.u_xlabels = NULL;
+#endif
+    }
+
+    if (userGrads != NULL)
+    {
+        FREE(userGrads);
+    }
+    freeAllocatedMatrixOfString(nbTicsRow, nbTicsCol, userLabels);
+    freeAllocatedMatrixOfString(nbTicsRow, nbTicsCol, userInterpreters);
+    destroyAssignedList(tlist);
+
+    return SET_PROPERTY_SUCCEED;
+
+}
+
+/**sciSetInterpreter
+ * Sets the interpreter in TEXT, TITLE or LEGEND
+ * @param char * pobjUID: the pointer to the entity
+ * @param char *interpreter[] : the interpreter as strings which has to be put
+ * @param int nbRow : the number of row of the text matrix
+ * @param int nbCol : the number of col of the text matrix
+ * @return  0 if OK, -1 if not
+ */
+int sciSetInterpreter (int iObjUID, char ** interpreter, int nbRow, int nbCol)
+{
+    int* dimensions = NULL;
+    BOOL status = FALSE;
+    int iSize = nbRow*nbCol;
+    
+    getGraphicObjectProperty(iObjUID, __GO_TEXT_ARRAY_DIMENSIONS__, jni_int_vector, (void **) &dimensions);
+
+    if (dimensions == NULL)
+    {
+        Scierror(999, _("'%s' property does not exist for this handle.\n"), "text");
+        return NULL;
+    }
+
+    if (iSize != 1 && iSize != dimensions[0]*dimensions[1])
+    {
+        Scierror(999, _("Wrong size for '%s' property: should be %d or %d.\n"), "interpreter", 1, dimensions[0]*dimensions[1]);
+        return -1;
+    }
+    
+    if (!sciIsValidInterpreter(interpreter,iSize))
+    {
+        return -1;
+    }
+
+    status = setGraphicObjectProperty(iObjUID, __GO_TEXT_INTERPRETERS__, interpreter, jni_string_vector, iSize);
+
+    if (status == TRUE)
+    {
+        return 0;
+    }
+    else
+    {
+        printSetGetErrorMessage("interpreter");
         return -1;
     }
 }

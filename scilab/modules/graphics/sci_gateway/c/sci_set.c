@@ -396,6 +396,7 @@ int sci_set(char *fname, void *pvApiCtx)
                     if (stricmp(pstProperty, "tics_labels") != 0 && stricmp(pstProperty, "auto_ticks") != 0 && stricmp(pstProperty, "tight_limits") != 0 &&
                             stricmp(pstProperty, "axes_visible") != 0 && stricmp(pstProperty, "axes_reverse") != 0 &&
                             stricmp(pstProperty, "text") != 0 && stricmp(pstProperty, "string") != 0 &&
+                            stricmp(pstProperty, "interpreter") != 0 && stricmp(pstProperty, "tics_interpreters") != 0 &&
                             stricmp(pstProperty, "tooltipstring") != 0 && stricmp(pstProperty, "ticks_format") != 0) /* Added for uicontrols */
                     {
                         if (isScalar(pvApiCtx, piAddr3) == 0)

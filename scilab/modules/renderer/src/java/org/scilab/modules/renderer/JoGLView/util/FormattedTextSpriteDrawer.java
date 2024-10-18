@@ -16,6 +16,7 @@ package org.scilab.modules.renderer.JoGLView.util;
 import org.scilab.forge.jlatexmath.TeXConstants;
 import org.scilab.forge.jlatexmath.TeXFormula;
 import org.scilab.forge.jlatexmath.TeXIcon;
+import org.scilab.forge.scirenderer.shapes.appearance.Color;
 import org.scilab.forge.scirenderer.texture.TextEntity;
 import org.scilab.forge.scirenderer.texture.TextureDrawer;
 import org.scilab.forge.scirenderer.texture.TextureDrawingTools;
@@ -33,25 +34,37 @@ import java.awt.Dimension;
  * @author Pierre Lando
  */
 public class FormattedTextSpriteDrawer implements TextureDrawer {
-    private final TextEntity textEntity;
-    private final Dimension dimension;
-    private final int descent;
-    private final Icon icon;
+    private TextEntity textEntity;
+    private Dimension dimension;
+    private int descent;
+    private Icon icon = null;
 
-    public FormattedTextSpriteDrawer(ColorMap colorMap, String text, Font font) {
+    public FormattedTextSpriteDrawer(ColorMap colorMap, FormattedText formattedText) {
+        String text = formattedText.getText();
+        String interpreter = FormattedText.InterpreterType.enumToString(formattedText.getInterpreterAsEnum());
+        Font font = formattedText.getFont();
+        boolean success = true;
         if (text != null && font != null) {
-            if (isLatex(text)) {
+            if ((isLatex(text) && interpreter.equals("auto")) || interpreter.equals("latex")) {
                 LoadClassPath.loadOnUse("graphics_latex_textrendering");
-                TeXFormula formula = new TeXFormula(text.substring(1, text.length() - 1));
-                formula.setColor(ColorFactory.createColor(colorMap, font.getColor()));
-                icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, FontManager.scilabSizeToAwtSize(font.getSize()));
-                descent = ((TeXIcon) icon).getIconDepth();
-            } else if (isMathML(text)) {
+                try {
+                    TeXFormula formula = new TeXFormula(formatLaTeXString(text));
+                    formula.setColor(ColorFactory.createColor(colorMap, font.getColor()));
+                    icon = formula.createTeXIcon(TeXConstants.STYLE_DISPLAY, FontManager.scilabSizeToAwtSize(font.getSize()));
+                    descent = ((TeXIcon) icon).getIconDepth();                    
+                } catch (Exception e) {
+                    success = false;
+                }
+            } else if ((isMathML(text) && interpreter.equals("auto")) || interpreter.equals("mathml")) {
                 LoadClassPath.loadOnUse("graphics_mathml_textrendering");
-                icon = ScilabSpecialTextUtilities.compileMathMLExpression(text, ((int) FontManager.scilabSizeToAwtSize(font.getSize() + .5)), ColorFactory.createColor(colorMap, font.getColor()));
-                descent = 0;
+                try {
+                    icon = ScilabSpecialTextUtilities.compileMathMLExpression(text, ((int) FontManager.scilabSizeToAwtSize(font.getSize() + .5)), 
+                            ColorFactory.createColor(colorMap, font.getColor()));
+                    descent = 0;
+                } catch (Exception e) {
+                    success = false;                    
+                }
             } else {
-                icon = null;
                 descent = 0;
             }
 
@@ -60,13 +73,15 @@ public class FormattedTextSpriteDrawer implements TextureDrawer {
                 dimension = new Dimension(icon.getIconWidth(), icon.getIconHeight() + descent);
             } else {
                 textEntity = new TextEntity(text);
-
                 textEntity.setFont(FontManager.getSciFontManager().getFontFromIndex(font.getStyle(), font.getSize()));
                 textEntity.setText(text);
-                textEntity.setTextColor(ColorFactory.createColor(colorMap, font.getColor()));
+                if (success) {
+                    textEntity.setTextColor(ColorFactory.createColor(colorMap, font.getColor()));
+                } else {
+                    textEntity.setTextColor(new Color(1.0f, 0.f, 0.f));
+                }
                 textEntity.setTextUseFractionalMetrics(font.getFractional());
                 textEntity.setTextAntiAliased(true);
-
                 dimension = textEntity.getSize();
             }
         } else {
@@ -75,10 +90,6 @@ public class FormattedTextSpriteDrawer implements TextureDrawer {
             dimension = new Dimension();
             descent = 0;
         }
-    }
-
-    public FormattedTextSpriteDrawer(ColorMap colorMap, FormattedText formattedText) {
-        this(colorMap, formattedText != null ? formattedText.getText() : null, formattedText != null ? formattedText.getFont() : null);
     }
 
     @Override
@@ -109,8 +120,29 @@ public class FormattedTextSpriteDrawer implements TextureDrawer {
      * @param string the given string.
      * @return true if the given string represent a latex entity.
      */
-    public static boolean isLatex(String string) {
-        return (string.length() >= 2) && string.endsWith("$") && string.startsWith("$");
+    public boolean isLatex(String string) {
+        long count = string.chars().filter(ch -> ch == '$').count();
+        return (string.length() >= 2) && (count==2) && string.endsWith("$") && string.startsWith("$");
+    }
+
+
+    /**
+     * Format a mixed LaTeX string
+     * @param string the given string.
+     * @return the formatted string
+     */
+    public String formatLaTeXString(String string) {
+        String fmtString = "";
+        // string is splitted in pure math and text chunks
+        if (isLatex(string))
+        {
+            fmtString = string.substring(1, string.length() - 1);
+        }
+        else
+        {
+            fmtString = "\\text{" + string + "}";
+        }
+        return fmtString;
     }
 
     /**

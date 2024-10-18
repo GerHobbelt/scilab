@@ -1,8 +1,8 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010 - DIGITEO - Manuel JULIACHS
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -23,13 +23,63 @@ import org.scilab.modules.graphic_objects.graphicObject.GraphicObject.UpdateStat
  */
 public class FormattedText {
     /** FormattedText properties names */
-    public enum FormattedTextProperty { TEXT, FONT };
+    public enum FormattedTextProperty { TEXT, FONT, INTERPRETER };
 
     /** Text */
     private String text;
 
     /** Font */
     private Font font;
+
+    /** interpreter */
+    public enum InterpreterType {
+        AUTO, LATEX, MATHML, NONE;
+        public static InterpreterType intToEnum(Integer value) {
+            switch (value) {
+                default:
+                case 0:
+                    return AUTO;
+                case 1:
+                    return LATEX;
+                case 2:
+                    return MATHML;
+                case 3:
+                    return NONE;
+            }
+        }
+
+        public static InterpreterType stringToEnum(String value) {
+            if (value.equals("latex")) {
+                return LATEX;
+            }
+
+            if (value.equals("mathml")) {
+                return MATHML;
+            }
+
+            if (value.equals("none")) {
+                return NONE;
+            }
+
+            return AUTO;
+        }
+
+        public static String enumToString(InterpreterType value) {
+            switch (value) {
+                case MATHML:
+                    return "mathml";
+                case LATEX:
+                    return "latex";
+                case NONE:
+                    return "none";
+                default:
+                case AUTO:
+                    return "auto";
+            }
+        }
+    }
+
+    private InterpreterType interpreter = InterpreterType.AUTO;
 
     /** Constructor */
     public FormattedText() {
@@ -89,6 +139,27 @@ public class FormattedText {
      */
     public UpdateStatus setText(String text) {
         this.text = text == null ? "" : text;
+        return UpdateStatus.Success;
+    }
+
+    public Integer getInterpreter() {
+        return interpreter.ordinal();
+    }
+
+    public InterpreterType getInterpreterAsEnum() {
+        return interpreter;
+    }
+
+    public UpdateStatus setInterpreter(Integer value) {
+        return setInterpreter(InterpreterType.intToEnum(value));
+    }
+
+    public UpdateStatus setInterpreter(InterpreterType value) {
+        if (interpreter == value) {
+            return UpdateStatus.NoChange;
+        }
+
+        interpreter = value;
         return UpdateStatus.Success;
     }
 

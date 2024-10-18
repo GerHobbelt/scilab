@@ -65,8 +65,15 @@
                     <para>This field is the character string vector which contains the
                         legends for each annotated objects.
                     </para>
-                    <para>
-                        Starting from Scilab 5.2, it is possible to write <link linkend="math_rendering_features_in_graphic">LaTeX or MathML expression</link>.
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>interpreter: </term>
+                <listitem>
+                    <para>the interpreter to be used to render the strings, given as a matrix
+                        of the same size and dimensions as the <term>text</term> property, with elements
+                        chosen among <literal>"auto"</literal> (the default), <literal>"latex"</literal>, 
+                        <literal>"mathml"</literal>, <literal>"none"</literal>. See <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>
                     </para>
                 </listitem>
             </varlistentry>

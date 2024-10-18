@@ -962,6 +962,36 @@ static int import_handle_axis(hid_t dataset, int parent, int version)
     return axis;
 }
 
+static int import_handle_label(hid_t dataset, int uid, int version)
+{
+    //import "standards" properties
+    //do not create releationship between parent
+    import_handle_generic(dataset, uid, -1, LabelHandle::getPropertyList(), true, version);
+
+    //text
+    std::vector<int> dims(2);
+    char** data = nullptr;
+    hid_t node = getHandleStringVector(dataset, "text", &dims[0], &dims[1], &data);
+
+    setGraphicObjectProperty(uid, __GO_TEXT_ARRAY_DIMENSIONS__, dims.data(), jni_int_vector, 2);
+    setGraphicObjectProperty(uid, __GO_TEXT_STRINGS__, data, jni_string_vector, dims[0] * dims[1]);
+    freeStringMatrix(node, data);
+    delete[] data;
+
+    //interpreter
+    data = nullptr;
+    node = getHandleStringVector(dataset, "interpreter", &dims[0], &dims[1], &data);
+    if (data)
+    {
+        setGraphicObjectProperty(uid, __GO_TEXT_INTERPRETERS__, data, jni_string_vector, dims[0] * dims[1]);
+        freeStringMatrix(node, data);
+        delete[] data;
+    }
+
+    closeList6(dataset);
+    return uid;
+}
+
 static int import_handle_text(hid_t dataset, int parent, int version)
 {
     int t = createGraphicObject(__GO_TEXT__);
@@ -978,6 +1008,17 @@ static int import_handle_text(hid_t dataset, int parent, int version)
     setGraphicObjectProperty(t, __GO_TEXT_STRINGS__, text, jni_string_vector, dims[0] * dims[1]);
     freeStringMatrix(textnode, text);
     delete[] text;
+
+    //interpreter
+    text = nullptr;
+    textnode = getHandleStringVector(dataset, "interpreter", &dims[0], &dims[1], &text);
+    if (text)
+    {
+        setGraphicObjectProperty(t, __GO_TEXT_INTERPRETERS__, text, jni_string_vector, dims[0] * dims[1]);
+        freeStringMatrix(textnode, text);
+        delete[] text;
+    }
+
     closeList6(dataset);
     return t;
 }
@@ -998,6 +1039,17 @@ static int import_handle_legend(hid_t dataset, int parent, int version)
     setGraphicObjectProperty(legend, __GO_TEXT_STRINGS__, text, jni_string_vector, dims[0] * dims[1]);
     freeStringMatrix(textnode, text);
     delete[] text;
+
+    //interpreter
+    text = nullptr;
+    textnode = getHandleStringVector(dataset, "interpreter", &dims[0], &dims[1], &text);
+    if (text)
+    {
+        setGraphicObjectProperty(legend, __GO_TEXT_INTERPRETERS__, text, jni_string_vector, dims[0] * dims[1]);
+        freeStringMatrix(textnode, text);
+        delete[] text;
+    }
+
     //links
 
     //to retore links we need to have the entire hierarchie loaded.
@@ -1238,6 +1290,16 @@ static int import_handle_datatip(hid_t dataset, int parent, int version)
     //import "standards" properties
     import_handle_generic(dataset, datatip, -1, DatatipHandle::getPropertyList(), true, version);
 
+    //interpreter
+    char **text = nullptr;
+    int dims[2];
+    hid_t textnode = getHandleStringVector(dataset, "interpreter", &dims[0], &dims[1], &text);
+    if (text)
+    {
+        setGraphicObjectProperty(datatip, __GO_TEXT_INTERPRETERS__, text, jni_string_vector, dims[0] * dims[1]);
+        freeStringMatrix(textnode, text);
+        delete[] text;
+    }
 
     closeList6(dataset);
     return datatip;
@@ -1616,25 +1678,6 @@ static int import_handle_champ(hid_t dataset, int parent, int version)
 
     closeList6(dataset);
     return champ;
-}
-static int import_handle_label(hid_t dataset, int uid, int version)
-{
-    //import "standards" properties
-    //do not create releationship between parent
-    import_handle_generic(dataset, uid, -1, LabelHandle::getPropertyList(), true, version);
-
-    //text
-    std::vector<int> dims(2);
-    char** data = nullptr;
-    hid_t node = getHandleStringVector(dataset, "text", &dims[0], &dims[1], &data);
-
-    setGraphicObjectProperty(uid, __GO_TEXT_ARRAY_DIMENSIONS__, dims.data(), jni_int_vector, 2);
-    setGraphicObjectProperty(uid, __GO_TEXT_STRINGS__, data, jni_string_vector, dims[0] * dims[1]);
-    freeStringMatrix(node, data);
-    delete[] data;
-
-    closeList6(dataset);
-    return uid;
 }
 
 static int import_handle_axes(hid_t dataset, int parent, int version)
@@ -2694,8 +2737,12 @@ static bool export_handle_text(hid_t parent, int uid, hid_t xfer_plist_id)
     int* dims = nullptr;
     getHandleIntVectorProperty(uid, __GO_TEXT_ARRAY_DIMENSIONS__, &dims);
     char** text;
+    char** interpreter;
     getHandleStringVectorProperty(uid, __GO_TEXT_STRINGS__, &text);
     writeStringMatrix6(parent, "text", 2, dims, text, xfer_plist_id);
+    getHandleStringVectorProperty(uid, __GO_TEXT_INTERPRETERS__, &interpreter);
+    writeStringMatrix6(parent, "interpreter", 2, dims, interpreter, xfer_plist_id);
+
     closeList6(parent);
     return true;
 }
@@ -2778,6 +2825,12 @@ static bool export_handle_legend(hid_t parent, int uid, hid_t xfer_plist_id)
     char** text;
     getHandleStringVectorProperty(uid, __GO_TEXT_STRINGS__, &text);
     writeStringMatrix6(parent, "text", 2, dims, text, xfer_plist_id);
+
+    //interpreters
+    char** interpreters;
+    getHandleStringVectorProperty(uid, __GO_TEXT_INTERPRETERS__, &interpreters);
+    writeStringMatrix6(parent, "interpreter", 2, dims, interpreters, xfer_plist_id);
+
     closeList6(parent);
     return true;
 }
@@ -2966,10 +3019,17 @@ static bool export_handle_datatip(hid_t parent, int uid, hid_t xfer_plist_id)
     {
         return false;
     }
+
     double *dblIndex = nullptr;
     int dims[2] = {1,2};
     getHandleDoubleVectorProperty(uid, __GO_DATATIP_INDEXES__, &dblIndex);
     writeDoubleMatrix6(parent,"data_index", 2, dims, dblIndex, xfer_plist_id);    
+
+    int* dims_interp = nullptr;
+    getHandleIntVectorProperty(uid, __GO_TEXT_ARRAY_DIMENSIONS__, &dims_interp);
+    char** interpreters;
+    getHandleStringVectorProperty(uid, __GO_TEXT_INTERPRETERS__, &interpreters);
+    writeStringMatrix6(parent, "interpreter", 2, dims_interp, interpreters, xfer_plist_id);
 
     closeList6(parent);
     return true;
@@ -3283,15 +3343,19 @@ static bool export_handle_label(hid_t parent, int uid, hid_t xfer_plist_id)
     //text
     int* dimensions = nullptr;
     char** text = nullptr;
+    char** interpreters = nullptr;
 
     getHandleIntVectorProperty(uid, __GO_TEXT_ARRAY_DIMENSIONS__, &dimensions);
     getHandleStringVectorProperty(uid, __GO_TEXT_STRINGS__, &text);
+    getHandleStringVectorProperty(uid, __GO_TEXT_INTERPRETERS__, &interpreters);
 
     std::vector<int> dims = {dimensions[0], dimensions[1]};
     releaseGraphicObjectProperty(__GO_TEXT_ARRAY_DIMENSIONS__, dimensions, jni_int_vector, 2);
 
     writeStringMatrix6(parent, "text", 2, dims.data(), text, xfer_plist_id);
     releaseGraphicObjectProperty(__GO_TEXT_STRINGS__, text, jni_string_vector, dims[0] * dims[1]);
+    writeStringMatrix6(parent, "interpreter", 2, dims.data(), interpreters, xfer_plist_id);
+    releaseGraphicObjectProperty(__GO_TEXT_INTERPRETERS__, interpreters, jni_string_vector, dims[0] * dims[1]);
 
     closeList6(parent);
     return true;

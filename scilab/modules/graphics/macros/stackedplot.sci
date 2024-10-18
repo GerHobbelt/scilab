@@ -404,16 +404,16 @@ function varargout = stackedplot(varargin)
         if var.type == "duration" then
             d = duration(0, 0, zeros(loc), "OutputFormat", fmt);
             d.duration = loc;
-            yticks(3) = string(d);
+            labels = string(d);
         elseif var.type == "datetime" then //datatime
             d = datetime(zeros(loc), 1, 1, "OutputFormat", fmt);
             d.date = floor(loc / (24*60*60));
-            yticks(3) = string(d);
+            labels = string(d);
         else
-            yticks(3) = string(loc)
+            labels = string(loc)
         end
-        yticks(2) = loc;
-        a.y_ticks = yticks;
+
+        a.y_ticks = tlist(["ticks", "locations", "labels"], loc, labels);
 
         if yLabels <> [] then
             if combineMatchingNames then
@@ -451,26 +451,24 @@ function varargout = stackedplot(varargin)
 
     a = f.children(1);
     a.x_label.text = xLabel;
-    xticks = a.x_ticks;
-    l = length(xticks(2))
+
+    l = length(a.x_ticks.locations)
     if l < 10 then
         l = l + 1;
     end
     loc = round(linspace(a.data_bounds(1), a.data_bounds(2), l))'
 
-    xticks(2) = loc;
-
     if isDuration then
         d = duration(0, 0, zeros(loc), "OutputFormat", datatime.format);
         d.duration = loc;
-        xticks(3) = string(d);
+        labels = string(d);
     else
         d = datetime(zeros(loc), 1, 1, "OutputFormat", datatime.format);
         d.date = floor(loc / (24*60*60));
         d.time = modulo(loc, 24*60*60);
-        xticks(3) = string(d);
+        labels = string(d);
     end
-    a.x_ticks = xticks;
+    a.x_ticks = tlist(["ticks", "locations", "labels"], loc, labels);
 
     if titleFigure <> [] then
         title(f.children($), titleFigure)

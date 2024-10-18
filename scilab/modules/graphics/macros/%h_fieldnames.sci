@@ -52,7 +52,6 @@ function fields = %h_fieldnames(h)
                 "clip_box"
                 "user_data"
                 "tag"
-
             ]
         case "Compound"
             fields = [
@@ -135,6 +134,7 @@ function fields = %h_fieldnames(h)
             "children"
             "visible"
             "text"
+            "interpreter"
             "font_style"
             "font_size"
             "font_color"
@@ -316,6 +316,7 @@ function fields = %h_fieldnames(h)
             "children"
             "visible"
             "text"
+            "interpreter"
             "alignment"
             "data"
             "box"
@@ -349,6 +350,7 @@ function fields = %h_fieldnames(h)
             "display_components"
             "display_function"
             "text"
+            "interpreter"
             "font_foreground"
             "font_style"
             "font_size"
@@ -372,6 +374,7 @@ function fields = %h_fieldnames(h)
             "children"
             "visible"
             "text"
+            "interpreter"
             "foreground"
             "font_style"
             "font_size"
@@ -384,6 +387,7 @@ function fields = %h_fieldnames(h)
             "parent"
             "visible"
             "text"
+            "interpreter"
             "font_foreground"
             "foreground"
             "background"
@@ -491,6 +495,7 @@ function fields = %h_fieldnames(h)
             "tics_style"
             "sub_tics"
             "tics_labels"
+            "tics_interpreters"
             "format_n"
             "labels_font_size"
             "labels_font_color"
@@ -535,7 +540,6 @@ function fields = %h_fieldnames(h)
             ]
         case "uicontrol"
             fields=[];
-
             fields($ + 1)="Parent"
             fields($ + 1)="Children"
             fields($ + 1)="Style"
