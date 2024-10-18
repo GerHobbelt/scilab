@@ -102,7 +102,7 @@ static int deserialize_string(void *_pvCtx, int *_piBuffer, int _iBufferSize)
         pstInData += piInLen[i];
     }
 
-    sciErr = createMatrixOfString(_pvCtx, nbInputArgument(_pvCtx) + 1, iRows, iCols, (const char * const *)pstData);
+    sciErr = createMatrixOfString(_pvCtx, nbInputArgument(_pvCtx) + 1, iRows, iCols, pstData);
     for (i = 0; i < iRows * iCols; i++)
     {
         FREE(pstData[i]);

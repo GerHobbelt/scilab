@@ -389,7 +389,6 @@ GRAPHICS_C_SOURCES = \
     src/c/StringBox.c \
     src/c/axesScale.c \
     src/c/TerminateGraphics.c \
-    src/c/periEmpty.c \
     src/c/scitokenize.c \
     src/c/get_ticks_utils.c \
     src/c/getHandleProperty/get_ambient_color_property.c \

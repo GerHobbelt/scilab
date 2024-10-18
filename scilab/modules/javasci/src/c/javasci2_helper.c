@@ -462,10 +462,10 @@ int putLong(char *variableName, long *variable, int nbRow, int nbCol)
     return 0;
 }
 
-unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
+unsigned long long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
 {
     SciErr sciErr;
-    unsigned long *matrixOfLong = NULL;
+    unsigned long long *matrixOfLong = NULL;
 
     sciErr = readNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, NULL);
     if (sciErr.iErr)
@@ -474,10 +474,10 @@ unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
     }
 
     /* Alloc the memory */
-    matrixOfLong = (unsigned long *)malloc(((*nbRow) * (*nbCol)) * sizeof(long));
+    matrixOfLong = (unsigned long long *)malloc(((*nbRow) * (*nbCol)) * sizeof(unsigned long long));
 
     /* Load the matrix */
-    sciErr = readNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, (unsigned long long*) matrixOfLong);
+    sciErr = readNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, matrixOfLong);
     if (sciErr.iErr)
     {
         printError(&sciErr, 0);
@@ -487,11 +487,11 @@ unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
 
 }
 
-int putUnsignedLong(char *variableName, unsigned long *variable, int nbRow, int nbCol)
+int putUnsignedLong(char *variableName, unsigned long long *variable, int nbRow, int nbCol)
 {
     SciErr sciErr;
 
-    sciErr = createNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, (unsigned long long*) variable);
+    sciErr = createNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, variable);
     if (sciErr.iErr)
     {
         printError(&sciErr, 0);
