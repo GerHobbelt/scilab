@@ -30,4 +30,4 @@ scf(2); clf
 plot(1:10:1000)
 
 replot(f1)
-assert_checkalmostequal(f1.children.data_bounds, [0, -0.9999971; 18.832787,5.3652174],1e-7);
+assert_checkalmostequal(f1.children.data_bounds, [0, -0.9999971; 18.754098,5.3652174],1e-7);

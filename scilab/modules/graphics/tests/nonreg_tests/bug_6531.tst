@@ -18,7 +18,7 @@
 
 plot(sin(0:10));e=gce();
 p=e.children(1);
-c=captions(p,'foo');
+c=%_legend(p,'foo');
 c.background //-->-2 ok
 p.foreground=color(200,128,33);
 

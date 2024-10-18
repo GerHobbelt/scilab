@@ -27,6 +27,6 @@ subplot(212);plot(1:10);h2=gce();
 j1=h1.children;
 j2=h2.children;
 
-captions(j2,'two');
-captions(j1,'one');
+%_legend(j2,'two');
+%_legend(j1,'one');
 
