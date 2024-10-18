@@ -355,7 +355,7 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     gStr.m_piRetCount = &_iRetCount;
     gStr.m_pstName = m_stName.data();
     // we should use a stack array of the max size to avoid dynamic alloc.
-    std::vector<int> outOrder(_iRetCount < 1 ? 1 : _iRetCount, -1);
+    std::vector<int> outOrder(MAX_OUTPUT_VARIABLE, 0);
     gStr.m_pOutOrder = outOrder.data();
 
     //call gateway
