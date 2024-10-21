@@ -130,7 +130,7 @@ wchar_t *to_wide_string(const char *_UTFStr)
     }
 
 #ifdef __APPLE__
-    setlocale(LC_ALL, "C.UTF-8");
+    setlocale(LC_ALL, "");
 #endif
     cd_UTF8_to_UTF16 = iconv_open("WCHAR_T", "UTF-8");
 
