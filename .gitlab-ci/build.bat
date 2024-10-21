@@ -75,6 +75,8 @@ devenv Scilab.sln /build "Release|x64" > ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHOR
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 devenv Scilab.sln /build "Release|x64" /project buildhelp > ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
+devenv Scilab.sln /build "Release|x64" /project buildDoc > ..\%LOG_PATH%\log_builddoc_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_doc_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 devenv Scilab.sln /build "Release|x64" /project buildjavadoc > ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 
