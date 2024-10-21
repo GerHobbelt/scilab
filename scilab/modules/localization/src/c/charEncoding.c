@@ -129,6 +129,9 @@ wchar_t *to_wide_string(const char *_UTFStr)
         return NULL;
     }
 
+#ifdef __APPLE__
+    setlocale(LC_ALL, "C.UTF-8");
+#endif
     cd_UTF8_to_UTF16 = iconv_open("WCHAR_T", "UTF-8");
 
     iLeftIn = strlen(_UTFStr);
