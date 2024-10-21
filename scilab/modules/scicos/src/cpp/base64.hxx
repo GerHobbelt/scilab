@@ -21,6 +21,9 @@
 #include <string>
 #include <limits>
 #include <cstdio> // for sprintf
+#ifdef max
+#undef max
+#endif // max
 
 namespace org_scilab_modules_scicos
 {

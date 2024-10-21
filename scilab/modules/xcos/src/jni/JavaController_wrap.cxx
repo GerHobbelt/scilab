@@ -1332,12 +1332,12 @@ SWIGEXPORT jint JNICALL Java_org_scilab_modules_xcos_JavaControllerJNI_port_1fro
 
 SWIGEXPORT jint JNICALL Java_org_scilab_modules_xcos_JavaControllerJNI_property_1from_1port(JNIEnv *jenv, jclass jcls, jint jarg1) {
   jint jresult = 0 ;
-  int arg1 ;
+  enum portKind arg1 ;
   object_properties_t result;
   
   (void)jenv;
   (void)jcls;
-  arg1 = (int)jarg1; 
+  arg1 = (enum portKind)jarg1; 
   result = (object_properties_t)property_from_port(arg1);
   jresult = (jint)result; 
   return jresult;

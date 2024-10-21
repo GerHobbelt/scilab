@@ -16,8 +16,8 @@ public class JavaController extends Controller {
     return JavaControllerJNI.port_from_property(p.ordinal());
   }
 
-  public static ObjectProperties property_from_port(int p) {
-    return ObjectProperties.class.getEnumConstants()[JavaControllerJNI.property_from_port(p)];
+  public static ObjectProperties property_from_port(PortKind p) {
+    return ObjectProperties.class.getEnumConstants()[JavaControllerJNI.property_from_port(p.ordinal())];
   }
 
 

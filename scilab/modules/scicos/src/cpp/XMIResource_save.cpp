@@ -417,7 +417,7 @@ int XMIResource::writeDiagram(xmlTextWriterPtr writer)
      * Diagram values
      */
     std::string strValue;
-    controller.getObjectProperty(root, DIAGRAM, TITLE, strValue);
+    controller.getObjectProperty(root, DIAGRAM, NAME, strValue);
     status = xmlTextWriterWriteAttribute(writer, BAD_CAST("title"), BAD_CAST(strValue.c_str()));
     if (status == -1)
     {

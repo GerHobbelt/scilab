@@ -127,6 +127,11 @@ public:
         model::BaseObject* cloned =  cloneBaseObject(mapped, initial, cloneChildren, clonePorts);
         updateChildrenRelatedPropertiesAfterClone(mapped);
         return cloned;
+    };
+
+    inline Model& getInternalModel()
+    {
+        return m_instance.model;
     }
 #endif /* !defined SWIG */
 
