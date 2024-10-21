@@ -13,12 +13,12 @@
 // This is the demonstration script of Matplot
 // used when calling Matplot without any parameter.
 
-function %_Matplot()
+function varargout = %_Matplot()
     ny = 400;
     nx = 300;
     M = pmodulo((0:(ny-1))'*ones(1:nx) + ones(ny,1)*(0:nx-1),ceil(max(nx,ny)/3));
 
-    Matplot(M)
+    m = Matplot(M)
     isoview()
 
     f = gcf();
@@ -33,5 +33,9 @@ function %_Matplot()
     Xlab = _("For data-scaled axes, please use Matplot1(..)");
     Ylab = _("Axes are scaled with M''s indices");
     xtitle(msprintf(Tlab,ny,nx), Xlab, Ylab);
+
+    if nargout then
+        varargout(1) = m;
+    end
 endfunction
 

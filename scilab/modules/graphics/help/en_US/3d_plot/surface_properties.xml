@@ -563,10 +563,10 @@
         <programlisting role="example"><![CDATA[
 // create a figure and get its handle
 f = scf()
-t=[0:0.3:2*%pi]'; z=sin(t)*cos(t');
-[xx,yy,zz]=genfac3d(t,t,z);
-// draw and get handle on the surface entity 
-hdl = plot3d([xx xx],[yy yy],list([zz zz+4],[4*ones(1,400) 5*ones(1,400)]))
+t = [0:0.3:2*%pi]'; z=sin(t)*cos(t');
+[xx,yy,zz] = genfac3d(t,t,z);
+// draw and get handle on the surface entity
+h = plot3d([xx xx],[yy yy],list([zz zz+4],[4*ones(1,400) 5*ones(1,400)]))
 a = gca(); //get current axes
 a.rotation_angles=[40,70];
 a.grid=[1 1 1];
@@ -607,23 +607,23 @@ e.color_flag= 3; // interpolated shading mode (based on blue default color becau
         subplot(2,2,1);
         nc = 128;
         gcf().color_map = [coolwarm(nc); spectral(nc)];
-        [X,Y]=meshgrid(-1:0.1:1,-1:0.1:1);
-        surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor")
-        gce().color_range = [nc+1 2*nc];
+        [X,Y] = meshgrid(-1:0.1:1,-1:0.1:1);
+        h = surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor")
+        h.color_range = [nc+1 2*nc];
 
         subplot(2,2,2);
-        surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
-        gce().color_range = [1 nc];
+        h = surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+        h.color_range = [1 nc];
 
         subplot(2,2,3);
-        surf(X,Y,X.^2-Y.^2,"facecolor","interp");
-        gce().color_range = [nc+1 2*nc];
-        gce().cdata_bounds = [0 1];
+        h = surf(X,Y,X.^2-Y.^2,"facecolor","interp");
+        h.color_range = [nc+1 2*nc];
+        h.cdata_bounds = [0 1];
 
         subplot(2,2,4);
-        surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
-        gce().color_range = [1 nc];
-        gce().cdata_bounds = [-1 -0.5];
+        h = surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+        h.color_range = [1 nc];
+        h.cdata_bounds = [-1 -0.5];
         ]]></programlisting>
         <scilab:image>
             <![CDATA[
@@ -632,22 +632,22 @@ e.color_flag= 3; // interpolated shading mode (based on blue default color becau
             nc = 128;
             gcf().color_map = [coolwarm(nc); spectral(nc)];
             [X,Y]=meshgrid(-1:0.1:1,-1:0.1:1);
-            surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor");
-            gce().color_range = [nc+1 2*nc];
+            h = surf(X,Y,X.^2-Y.^2,"facecolor","interp","edgecolor");
+            h.color_range = [nc+1 2*nc];
 
             subplot(2,2,2);
-            surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
-            gce().color_range = [1 nc];
+            h = surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+            h.color_range = [1 nc];
 
             subplot(2,2,3);
-            surf(X,Y,X.^2-Y.^2,"facecolor","interp");
-            gce().color_range = [nc+1 2*nc];
-            gce().cdata_bounds = [0 1];
+            h = surf(X,Y,X.^2-Y.^2,"facecolor","interp");
+            h.color_range = [nc+1 2*nc];
+            h.cdata_bounds = [0 1];
 
             subplot(2,2,4);
-            surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
-            gce().color_range = [1 nc];
-            gce().cdata_bounds = [-1 -0.5];
+            h = surf(X,Y,-X.^2-Y.^2,"facecolor","interp");
+            h.color_range = [1 nc];
+            h.cdata_bounds = [-1 -0.5];
             ]]></scilab:image>
         </refsection>
     <refsection role="see also">

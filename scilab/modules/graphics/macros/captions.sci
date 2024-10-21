@@ -20,7 +20,6 @@ function varargout = captions(h,strings,location)
     if size(h,"*") <> size(strings,"*")
         error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Incompatible length.\n"), "captions", 1, 2));
     end
-    
     warnobsolete("legend", "2026.0");
     
     if  argn(1)==1

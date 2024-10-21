@@ -18,13 +18,17 @@
 // used when calling grayplot without any parameter.
 //
 
-function [] = %_grayplot()
+function varargout = %_grayplot()
     t=-%pi:0.05:%pi;
     m=sin(t)'*cos(t);
-    grayplot(t,t,m);
+    g = grayplot(t,t,m);
     f = gcf();
     my_plot_desc  = "grayplot";
     f.figure_name = my_plot_desc;
     xtitle(my_plot_desc," "," "," ");
     f.color_map = hot(128);
+
+    if nargout then
+        varargout(1) = g;
+    end
 endfunction

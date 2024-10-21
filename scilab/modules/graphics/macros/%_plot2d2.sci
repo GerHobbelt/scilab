@@ -18,7 +18,10 @@
 // used when calling plot2d2 without any parameter.
 //
 
-function [] = %_plot2d2()
+function varargout = %_plot2d2()
     x=(0:0.1:2*%pi)';
-    plot2d2(x, [sin(x),sin(2*x),sin(3*x)], style=[1,2,3], rect=[0,-2,2*%pi,2]);
+    e = plot2d2(x, [sin(x),sin(2*x),sin(3*x)], style=[1,2,3], rect=[0,-2,2*%pi,2]);
+    if nargout then
+        varargout(1) = e;
+    end
 endfunction
