@@ -115,7 +115,7 @@ public abstract class AbstractSciCompletionWindow implements CompletionWindow, K
         /* List to display all completion items */
         model = new CompletionItemListModel();
         listUI = new JList(model);
-        listUI.setCellRenderer(new CompletionItemListCellRenderer());
+        listUI.setCellRenderer(new SciCompletionItemListCellRenderer());
         scrollPane = new JScrollPane(listUI, JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED, JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
 
         /* Utility to able the user to resize the window */
