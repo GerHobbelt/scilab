@@ -8,26 +8,16 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-
-load("SCI/modules/atoms/macros/atoms_internals/lib");
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Do not use the autoload system
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
-config_downloadTool = atomsGetConfig("downloadTool");
+// <-- TEST WITH ATOMS -->
 
 // Start config
 // =============================================================================
-ref=struct("useProxy", "False", "downloadTool",config_downloadTool,"autoloadAddAfterInstall","False","Verbose","False");
-assert_checkequal(atomsGetConfig(),ref);
+ref=struct("useProxy", "False","autoloadAddAfterInstall","False","Verbose","False");
+assert_checkequal(atomsGetConfig(), ref);
 
 // CamelCase test
 // =============================================================================
-ref=struct("useProxy", "False", "downloadTool",config_downloadTool,"autoloadAddAfterInstall","False","Verbose","True");
+ref=struct("useProxy", "False","autoloadAddAfterInstall","False","Verbose","True");
 assert_checkequal(string(atomsSetConfig("Verbose","True")),"1");
 assert_checkequal(atomsGetConfig(),ref);
 assert_checkequal(string(atomsSetConfig("verbose","true")),"0");
@@ -54,7 +44,6 @@ ref=struct("useProxy","False",..
 "proxyPassword","scilab",..
 "proxyHost","myproxy",..
 "offline","False",..
-"downloadTool",config_downloadTool,..
 "autoloadAddAfterInstall","False",..
 "autoload","True",..
 "Verbose","True");
@@ -64,12 +53,6 @@ assert_checkequal(string(atomsSetConfig("proxyHost","myproxy")),"1");
 assert_checkequal(string(atomsSetConfig("proxyPort","42")),"1");
 assert_checkequal(string(atomsSetConfig("proxyUser","scilab")),"1");
 assert_checkequal(string(atomsSetConfig("proxyPassword","scilab")),"1");
-assert_checkequal(string(atomsSetConfig("downloadTool",config_downloadTool)),"0");
 assert_checkequal(string(atomsSetConfig("offline","False")),"1");
 assert_checkequal(string(atomsSetConfig("autoload","True")),"1");
 assert_checkequal(atomsGetConfig(),ref);
-
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);

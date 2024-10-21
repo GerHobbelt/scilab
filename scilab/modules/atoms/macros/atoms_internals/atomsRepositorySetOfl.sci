@@ -14,13 +14,13 @@
 
 // Add an URL to the list of repositories, and returns
 
-function atomsRepositorySetOfl(url)
+function atomsRepositorySetOfl(url, update)
 
     // Check number of input arguments
     // =========================================================================
     rhs = argn(2);
-    if rhs <> 1 then
-        error(msprintf(gettext("%s: Wrong number of input argument: %d to %d expected.\n"),"atomsRepositorySetOfl",1));
+    if rhs < 1 || 2 < rhs  then
+        error(msprintf(gettext("%s: Wrong number of input argument: %d to %d expected.\n"),"atomsRepositorySetOfl",1,2));
     end
 
     // Check URLs specified as first input argument
@@ -40,6 +40,20 @@ function atomsRepositorySetOfl(url)
         error(msprintf(gettext("%s: Wrong value for input argument #%d: ''%s'' is not a valid URL.\n"),"atomsRepositorySetOfl",1,url));
     end
 
+    // Check update boolean flag specified as second input argument
+    // =========================================================================
+
+    if rhs < 2 then
+        update = %t;
+    else
+        if type(update) <> 4 then
+            error(msprintf(gettext("%s: Wrong type for input argument #%d: boolean expected.\n"),"atomsRepositorySetOfl",2));
+        end
+        if size(update,"*") <> 1 then
+            error(msprintf(gettext("%s: Wrong size for input argument #%d: boolean expected.\n"),"atomsRepositorySetOfl",2));
+        end
+    end
+
     // Overwrite "repositories" file
     // =========================================================================
     ATOMSALLUSERSWRITEACCESS = atomsAUWriteAccess();
@@ -51,6 +65,7 @@ function atomsRepositorySetOfl(url)
 
     // Update the toolbox list
     // =========================================================================
-    atomsSystemUpdate();
-
+    if update then
+        atomsSystemUpdate();
+    end
 endfunction

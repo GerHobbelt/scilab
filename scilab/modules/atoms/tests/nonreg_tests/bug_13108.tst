@@ -17,11 +17,7 @@
 // <-- Short Description -->
 // The time between two updates can now be configured thanks to atomsSetConfig("updateTime", time)
 
-atomsSaveConfig();
-
 // Set Atoms update time to the default value
 atomsSetConfig("updateTime", "30");
 
 assert_checkequal(strtod(atomsGetConfig("updateTime")), 30);
-
-atomsRestoreConfig(%T);

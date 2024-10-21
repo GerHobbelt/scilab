@@ -8,27 +8,11 @@
 // <-- CLI SHELL MODE -->
 // <-- ENGLISH IMPOSED -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 
-load("SCI/modules/atoms/macros/atoms_internals/lib");
 exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
 
-// We need a clean version
-// =============================================================================
-if ~isempty( atomsGetInstalled() ) then pause, end
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-//force official ATOMS repository
-// Load the 1st scenario : See scene12.test.atoms.scilab.org.txt
-// =============================================================================
 atomsLoadTestScene("scene12");
-
-// Set some parameters for the test
-// =============================================================================
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
 
 // 1st test-case : Just install the toolbox 5
 // =============================================================================
@@ -62,7 +46,3 @@ if or( t5_version() <> ["Toolbox 5 -> version = 1.0"; ..
 "Toolbox 1 -> version = 1.0" ] ) then pause, end
 
 atomsRemove("toolbox_5V6");
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);

@@ -9,7 +9,6 @@
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
 
-load("SCI/modules/atoms/macros/atoms_internals/lib");
 exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
 
 // Load the 1st scenario : See scene10.test.atoms.scilab.org.txt
@@ -76,4 +75,4 @@ if or(atomsInstallList("toolbox_6V6")<>ref) then pause, end
 
 // Restore Original values
 // =============================================================================
-atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"));
+atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"), %f);

@@ -597,6 +597,7 @@ function status = test_single(_module, _testPath, _testName)
     error_output  = "check";
     reference     = "check";
     xcosNeeded    = %F;
+    atomsNeeded   = %F;
 
     //some paths
     if isfield(_module, "output_dir") then
@@ -775,6 +776,10 @@ function status = test_single(_module, _testPath, _testName)
         jvm = %T;
     end
 
+    if ~isempty(grep(sciFile, "<-- TEST WITH ATOMS -->")) then
+        atomsNeeded = %T;
+    end
+
     // Language
     if ~isempty(grep(sciFile, "<-- FRENCH IMPOSED -->")) then
         language = "fr_FR";
@@ -862,6 +867,22 @@ function status = test_single(_module, _testPath, _testName)
         ];
     end
 
+    if atomsNeeded then
+        head = [ head
+        "exec(""SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce"")"
+        ""
+        "// remove previously installed toolboxes"
+        "for tbx=atomsGetInstalled()(:,1)'', atomsRemove(tbx); end"
+        ""
+        "// If previous test did not end properly, restore, else backup config file"
+        "atomsRestoreConfig(%T);"
+        "atomsSaveConfig();"
+        ""
+        "atomsSetConfig(""autoloadAddAfterInstall"",""False"");"
+        "atomsSetConfig(""Verbose"" ,""False"");"
+        ""];
+    end
+
     assert_generror_def = "function assert_generror(errmsg, errnb), printf(''%s\nassert failed on test\n'',errmsg);quit; endfunction";
     if assert then
         head = [ head ;
@@ -904,6 +925,15 @@ function status = test_single(_module, _testPath, _testName)
 
     if graphic then
         tail = [ tail; "close(winsid());sleep(1000);" ];
+    end
+
+    if atomsNeeded then
+        tail = [ tail
+        "if ~isempty( atomsGetInstalled() ) then printf(""atoms test failed, there is installed toolboxes\n""), end;"
+        ""
+        "atomsRestoreConfig(%T);"
+        "atomsRepositorySetOfl(mgetl(SCI+""/modules/atoms/tests/unit_tests/repositories.orig""), %f);"
+        ""]
     end
 
     tail = [ tail; "exit(0);" ; "// <-- FOOTER END -->" ];

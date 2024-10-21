@@ -12,12 +12,9 @@
 //
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 //
 // unit tests for atomsGetInstalledPath()
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
 
 atomsSetConfig("offline","True");
 atomsInstall("SCI/modules/atoms/tests/unit_tests/toolbox_7V6_1.0-1.bin.zip", "user");
@@ -46,7 +43,3 @@ p = atomsGetInstalledPath(["toolbox_7","1.0"]); // version found
 assert_checkequal(p, ref);
 
 atomsRemove("toolbox_7V6","user");
-
-// Restore original configuration
-atomsRestoreConfig(%T);
-
