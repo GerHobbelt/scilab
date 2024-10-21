@@ -29,7 +29,7 @@ curves = gce();
 
 // check all cases
 for loc = legend_positions,
-    captions(curves.children, ["x","x.^2"], loc);
+    legend(curves.children($:-1:1), ["x","x.^2"], loc);
     leg = gce();
     assert_checktrue(leg.legend_location == loc);
 end

@@ -22,7 +22,7 @@
         <title>Description</title>
         <para>The Legend entity is a leaf of the graphics entities
             hierarchy. This entity defines the parameters for legends drawn
-            below <literal>plot2dx</literal> graphs or created by the <link linkend="captions">captions</link> function. For selected line
+            below <literal>plot2dx</literal> graphs or created by the <link linkend="legend">legend</link> function. For selected line
             plotted, the legend shows a sample of the line type, marker
             symbol, and color.
         </para>

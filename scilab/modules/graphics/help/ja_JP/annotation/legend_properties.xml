@@ -42,7 +42,7 @@
 
             描画されるか
 
-            <link linkend="captions">captions</link>関数により作成される
+            <link linkend="legend">legend</link>関数により作成される
 
             凡例のパラメータを定義します.
 
@@ -769,6 +769,3 @@ l.text=["$\sin(x)$";"$\sin(2*x)$";"$\sin(3*x)$"];
 
 
 </refentry>
-
-
-
