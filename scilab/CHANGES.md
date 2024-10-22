@@ -152,6 +152,7 @@ Issue Fixes
 - [#14938](https://gitlab.com/scilab/scilab/-/issues/14938): After datatips were reforged, `SCI/modules/graphics/macros/datatips/` contained useless functions.
 - [#15405](https://gitlab.com/scilab/scilab/-/issues/15405): Accessing H5::CompType in a HDF5 file made Scilab crash.
 - [#15732](https://gitlab.com/scilab/scilab/-/issues/15732): In a `try` block, `continue` was ignored.
+- [#15946](https://gitlab.com/scilab/scilab/-/issues/15946): `./configure` did not detect JARs symbolic links.
 - [#16136](https://gitlab.com/scilab/scilab/-/issues/16136): `sound()` was a duplicate of `playsnd()` and has been removed.
 - [#16897](https://gitlab.com/scilab/scilab/-/issues/16897): Scilab did not build against Lucene 9.4.0.
 - [#16928](https://gitlab.com/scilab/scilab/-/issues/16928): Manually created ticks are not saved.
