@@ -21,9 +21,9 @@ genlib: Processing file: scilab_sum.sci
 Building sources...
    Generate a loader file
    Generate a Makefile
+   ilib_gen_Make: configure : Generate Makefile.
    ilib_gen_Make: Copy compilation files (Makefile*, libtool...) to TMPDIR
    ilib_gen_Make: Copy fsum.f to TMPDIR
-   ilib_gen_Make: configure : Generate Makefile.
    ilib_gen_Make: Modification of the Makefile in TMPDIR.
    Running the Makefile
    Generate a cleaner file
@@ -73,7 +73,6 @@ Building gateway...
    ilib_gen_Make: Copy libskeleton_fortran.h to TMPDIR
    ilib_gen_Make: Copy libskeleton_fortran.hxx to TMPDIR
    ilib_gen_Make: Copy sci_fsum.c to TMPDIR
-   ilib_gen_Make: configure : Generate Makefile.
    ilib_gen_Make: Modification of the Makefile in TMPDIR.
    Running the makefile
    Generate a cleaner file
@@ -109,23 +108,21 @@ Start Toolbox Skeleton
 	Load Java libraries
 	Load help
 	Load demos
-Building the master document:
-	TMPDIR/toolbox_skeleton/help/en_US
 Building the manual file [javaHelp] in TMPDIR/toolbox_skeleton/help/en_US.
 Generate image ./c_multiplybypi_en_US_1.png from Scilab code from file c_multiplybypi.xml
 Generate image ./c_sub_1.png from Scilab code from file c_sub.xml
 Generate image ./c_sub_en_US_2.png from Scilab code from file c_sub.xml
+Building the manual file [inline] in TMPDIR/toolbox_skeleton/inline/en_US.
 Start Toolbox Skeleton
 	Load macros
 	Load gateways
 	Load Java libraries
 	Load help
 	Load demos
-Building the master document:
-	TMPDIR/toolbox_skeleton/help/fr_FR
 Building the manual file [javaHelp] in TMPDIR/toolbox_skeleton/help/fr_FR.
 Generate image ./c_sub_1.png from Scilab code from file c_sub.xml
 Generate image ./c_sub_fr_FR_2.png from Scilab code from file c_sub.xml
+Building the manual file [inline] in TMPDIR/toolbox_skeleton/inline/fr_FR.
 Generating loader.sce...
 Generating unloader.sce...
 Generating cleaner.sce...

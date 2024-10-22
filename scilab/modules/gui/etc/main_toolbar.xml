@@ -52,6 +52,6 @@
     </button>
     <!-- Help -->
     <button icon="help-browser" tooltiptext="Help Browser">
-        <callback instruction="help();" type="10"/>
+        <callback instruction="doc();" type="10"/>
     </button>
 </toolbar>

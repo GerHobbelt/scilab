@@ -136,7 +136,7 @@
     <!-- Help menu -->
     <menu label="&amp;?" enabled="true">
         <submenu label="Scilab &amp;Help" accelerator="F1" icon="help-browser">
-            <callback instruction="help();" type="10"/>
+            <callback instruction="doc();" type="10"/>
         </submenu>
         <separator/>
         <submenu label="Scilab &amp;Demonstrations" icon="x-office-presentation">

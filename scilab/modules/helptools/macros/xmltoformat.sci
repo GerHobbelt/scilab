@@ -376,37 +376,19 @@ function generated_files = xmltoformat(output_format,dirs,titles,directory_langu
 
         nb_dir = size(dirs_c,"*");
 
-        if nb_dir > 1 then
-            mprintf(_("\nBuilding master documents:\n"));
-        elseif nb_dir==1
-            mprintf(_("\nBuilding the master document:\n"));
-        end
-
         for k=1:nb_dir
-            mprintf(_("\t%s\n"),strsubst(dirs_c(k),SCI_long,"SCI"));
-
             this_tree  = contrib_tree(dirs_c(k));
             master_doc = pathconvert(dirs_c(k)+"/master_help.xml",%F);
             this_tree("master_document") = master_doc;
             master_str = x2f_tree_to_master(this_tree);
             mputl(master_str,master_doc);
             contrib_tree(dirs_c(k)) = this_tree;
-
         end
-
     else
 
         nb_dir = size(dirs,"*");
 
-        if nb_dir > 1 then
-            mprintf(_("\nBuilding master documents:\n"));
-        elseif nb_dir==1
-            mprintf(_("\nBuilding the master document:\n"));
-        end
-
         for k=1:nb_dir
-            mprintf(_("\t%s\n"),strsubst(dirs(k),SCI_long,"SCI"));
-
             this_tree  = contrib_tree(dirs(k));
 
             if isfield(this_tree,"master.xml") & this_tree("master.xml") then
@@ -2057,23 +2039,25 @@ function ret = getNodes(node, first, last)
 end
 
 function generate_inline_help(modules_tree)
+
     lang = modules_tree.language;
     xmlfiles = getXMLFiles(modules_tree);
 
+
+    if modules_tree.path == SCI then
+        output_path = fullfile(SCI, "modules", "helptools", "inline", lang);
+    else
+        tbx_path = fullpath(fullfile(modules_tree.path, "..", ".."));
+        output_path = fullfile(tbx_path, "inline", lang);
+    end
+
+    mprintf(_("\nBuilding the manual file [%s] in %s.\n"), "inline", strsubst(output_path, SCI_long, "SCI"));
+
     links = [];
     pages = [];
-    printf("Progress: |")
-    progress = 0;
     xmlCount = size(xmlfiles, 1)
     for k = 1:xmlCount
         x = xmlfiles(k, 1);
-
-        if floor(k / xmlCount * 100) > progress then
-            progress = progress + 1;
-            if modulo(progress, 10) == 0 then
-                printf("-", progress);
-            end
-        end
 
         doc = xmlRead(x(1));
         xp = xmlXPath(doc, "//@xml:id");
@@ -2093,20 +2077,17 @@ function generate_inline_help(modules_tree)
         xmlDelete(doc);
     end
 
-    printf("|\n");
-
     if modules_tree.path == SCI then
         mkdir(fullfile(SCI, "modules", "helptools", "inline"));
         mkdir(fullfile(SCI, "modules", "helptools", "inline", lang));
-        toJSON(links, fullfile(SCI, "modules", "helptools", "inline", lang, "links.json"));
-        toJSON(pages, fullfile(SCI, "modules", "helptools", "inline", lang, "pages.json"));
+        toJSON(links, fullfile(output_path, "links.json"));
+        toJSON(pages, fullfile(output_path, "pages.json"));
     else //toolbox
-        tbx_path = fullpath(fullfile(modules_tree.path, "..", ".."));
         if isdir(tbx_path) then
             mkdir(fullfile(tbx_path, "inline"));
             mkdir(fullfile(tbx_path, "inline", lang));
-            toJSON(links, fullfile(tbx_path, "inline", lang, "links.json"));
-            toJSON(pages, fullfile(tbx_path, "inline", lang, "pages.json"));
+            toJSON(links, fullfile(output_path, "links.json"));
+            toJSON(pages, fullfile(output_path, "pages.json"));
         end
     end
 end
