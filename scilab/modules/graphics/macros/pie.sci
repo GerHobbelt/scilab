@@ -126,16 +126,17 @@ function varargout = pie(varargin)
         xi($+1) = cos(teta_2);
         yi($+1) = sin(teta_2);
 
-        xfpolys(xi,yi)
-        partEntity(i) = unglue(gce())
+        partEntity(i) = xfpolys(xi,yi)
+        unglue(gce())
+
 
         if or(i == iesp) then
             partEntity(i).x_shift = ones(1,size(xi,"*")) * (1/10) * cos((teta_2+teta_1)/2);
             partEntity(i).y_shift = ones(1,size(yi,"*")) * (1/10) * sin((teta_2+teta_1)/2);
             if txt <> []
-                labelEntity(i) = xstring(cos((teta_2+teta_1)/2)*1.2+ei.x_shift(1)-0.1*(cos((teta_2+teta_1)/2)<0),sin((teta_2+teta_1)/2)*1.2+ei.y_shift(1),txt(i));
+                labelEntity(i) = xstring(cos((teta_2+teta_1)/2)*1.2+partEntity(i).x_shift(1)-0.1*(cos((teta_2+teta_1)/2)<0),sin((teta_2+teta_1)/2)*1.2+partEntity(i).y_shift(1),txt(i));
             else
-                labelEntity(i) = xstring(cos((teta_2+teta_1)/2)*1.2+ei.x_shift(1)-0.1*(cos((teta_2+teta_1)/2)<0),sin((teta_2+teta_1)/2)*1.2+ei.y_shift(1),string(round((x(i)/sum(x))*100)) + "%");
+                labelEntity(i) = xstring(cos((teta_2+teta_1)/2)*1.2+partEntity(i).x_shift(1)-0.1*(cos((teta_2+teta_1)/2)<0),sin((teta_2+teta_1)/2)*1.2+partEntity(i).y_shift(1),string(round((x(i)/sum(x))*100)) + "%");
             end
         else
             if txt <> []
