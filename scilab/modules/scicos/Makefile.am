@@ -236,12 +236,15 @@ includes/import.h
 
 #### scicos : cosf files ####
 libsciscicos_la_cosfdir=$(mydatadir)
-nobase_libsciscicos_la_cosf_DATA = palettes/Branching.cosf \
+nobase_libsciscicos_la_cosf_DATA = \
+palettes/Branching.cosf \
 palettes/DemoBlocks.cosf \
 palettes/Events.cosf \
 palettes/Integer.cosf \
 palettes/Linear.cosf \
+palettes/Lookup_Tables.cosf \
 palettes/Matrix.cosf \
+palettes/Modelica.cosf \
 palettes/Non_linear.cosf \
 palettes/OldBlocks.cosf \
 palettes/Others.cosf \

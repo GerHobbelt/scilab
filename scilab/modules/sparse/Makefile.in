@@ -2534,13 +2534,14 @@ install-data-local:
 	for dir in $(TESTS_DIR) $(TESTS_DIREXT) ; do \
 	  if test -d $(srcdir)/$$dir/; then \
 	    $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir && \
-		  for file in `find $(srcdir)/$$dir | sed "s|^$(srcdir)/$$dir||" 2>/dev/null`; do \
+		  find $(srcdir)/$$dir -print0 | sed -z "s|^$(srcdir)/$$dir||" 2>/dev/null | \
+		  while IFS= read -r -d '' file; do \
 		    if test -d "$(srcdir)/$$dir/$$file"; then \
 			  echo $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir/$$file; \
 			  $(mkinstalldirs) "$(DESTDIR)$(pkgmacrosdir)/$$dir/$$file"; \
 		    else \
-		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
-	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
+		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
+	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
 		    fi \
 		  done; \
 	  fi; \

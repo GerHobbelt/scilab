@@ -1310,13 +1310,14 @@ uninstall-am: uninstall-libjavasci2_la_etcDATA \
 @JAVASCI_TRUE@	for dir in $(TESTS_DIR) $(TESTS_DIREXT) ; do \
 @JAVASCI_TRUE@	  if test -d $(srcdir)/$$dir/; then \
 @JAVASCI_TRUE@	    $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir && \
-@JAVASCI_TRUE@		  for file in `find $(srcdir)/$$dir | sed "s|^$(srcdir)/$$dir||" 2>/dev/null`; do \
+@JAVASCI_TRUE@		  find $(srcdir)/$$dir -print0 | sed -z "s|^$(srcdir)/$$dir||" 2>/dev/null | \
+@JAVASCI_TRUE@		  while IFS= read -r -d '' file; do \
 @JAVASCI_TRUE@		    if test -d "$(srcdir)/$$dir/$$file"; then \
 @JAVASCI_TRUE@			  echo $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir/$$file; \
 @JAVASCI_TRUE@			  $(mkinstalldirs) "$(DESTDIR)$(pkgmacrosdir)/$$dir/$$file"; \
 @JAVASCI_TRUE@		    else \
-@JAVASCI_TRUE@		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
-@JAVASCI_TRUE@	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
+@JAVASCI_TRUE@		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
+@JAVASCI_TRUE@	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
 @JAVASCI_TRUE@		    fi \
 @JAVASCI_TRUE@		  done; \
 @JAVASCI_TRUE@	  fi; \

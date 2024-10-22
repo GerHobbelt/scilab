@@ -18,7 +18,7 @@ Xcos trace:   propertyUpdated( 1 , LINK , KIND ) : NO_CHANGES
 subDiag = scicos_diagram( objs=list(link) );
 Xcos info:    objectCreated( 2 , DIAGRAM )
 Xcos trace:   objectReferenced( 2 , DIAGRAM ) : 1
-Xcos trace:   propertyUpdated( 2 , DIAGRAM , TITLE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 2 , DIAGRAM , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , DIAGRAM , PATH ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , DIAGRAM , PROPERTIES ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , DIAGRAM , PROPERTIES ) : NO_CHANGES
@@ -90,7 +90,7 @@ Xcos trace:   objectUnreferenced( 3 , LINK ) : 0
 Xcos trace:   objectReferenced( 2 , DIAGRAM ) : 1
 Xcos trace:   objectUnreferenced( 2 , DIAGRAM ) : 0
 Xcos trace:   objectReferenced( 4 , BLOCK ) : 3
-Xcos debug:   propertyUpdated( 4 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos debug:   propertyUpdated( 4 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 4 , BLOCK , CONTEXT ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 4 , BLOCK ) : 2
 Xcos trace:   objectUnreferenced( 4 , BLOCK ) : 1
@@ -108,7 +108,7 @@ Xcos trace:   propertyUpdated( 4 , BLOCK , INTERFACE_FUNCTION ) : NO_CHANGES
 diag = scicos_diagram();
 Xcos info:    objectCreated( 6 , DIAGRAM )
 Xcos trace:   objectReferenced( 6 , DIAGRAM ) : 1
-Xcos trace:   propertyUpdated( 6 , DIAGRAM , TITLE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 6 , DIAGRAM , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PATH ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PROPERTIES ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PROPERTIES ) : NO_CHANGES
@@ -120,6 +120,8 @@ diag.objs(1) = Super1;
 Xcos info:    objectCreated( 7 , BLOCK )
 Xcos info:    objectCloned( 4 , 7 , BLOCK )
 Xcos trace:   propertyUpdated( 7 , BLOCK , SIM_FUNCTION_API ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , DEBUG_LEVEL ) : NO_CHANGES
+Xcos debug:   propertyUpdated( 7 , BLOCK , NAME ) : SUCCESS
 Xcos debug:   propertyUpdated( 7 , BLOCK , DESCRIPTION ) : SUCCESS
 Xcos trace:   propertyUpdated( 7 , BLOCK , INTERFACE_FUNCTION ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 7 , BLOCK , SIM_FUNCTION_NAME ) : SUCCESS
@@ -134,11 +136,18 @@ Xcos trace:   propertyUpdated( 7 , BLOCK , ODSTATE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , RPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , EQUATIONS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PROPERTIES ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , SIM_DEP_UT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , COLOR ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_NAME ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_UNIT ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_TYPE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_ENCODING ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , BLOCK , PARAMETER_VALUE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , CONTEXT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , PARENT_DIAGRAM ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , INPUTS ) : NO_CHANGES
@@ -291,6 +300,8 @@ Xcos trace:   objectReferenced( 7 , BLOCK ) : 1
 Xcos info:    objectCreated( 10 , BLOCK )
 Xcos info:    objectCloned( 7 , 10 , BLOCK )
 Xcos trace:   propertyUpdated( 10 , BLOCK , SIM_FUNCTION_API ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , DEBUG_LEVEL ) : NO_CHANGES
+Xcos debug:   propertyUpdated( 10 , BLOCK , NAME ) : SUCCESS
 Xcos debug:   propertyUpdated( 10 , BLOCK , DESCRIPTION ) : SUCCESS
 Xcos trace:   propertyUpdated( 10 , BLOCK , INTERFACE_FUNCTION ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 10 , BLOCK , SIM_FUNCTION_NAME ) : SUCCESS
@@ -305,11 +316,18 @@ Xcos trace:   propertyUpdated( 10 , BLOCK , ODSTATE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , RPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , EQUATIONS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PROPERTIES ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , SIM_DEP_UT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , COLOR ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_NAME ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_UNIT ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_TYPE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_ENCODING ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , PARAMETER_VALUE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , CONTEXT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , PARENT_DIAGRAM ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , INPUTS ) : NO_CHANGES
@@ -342,7 +360,7 @@ Xcos trace:   objectUnreferenced( 7 , BLOCK ) : 0
 Xcos trace:   objectReferenced( 6 , DIAGRAM ) : 1
 Xcos trace:   objectUnreferenced( 6 , DIAGRAM ) : 0
 Xcos trace:   objectReferenced( 9 , BLOCK ) : 3
-Xcos debug:   propertyUpdated( 9 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos debug:   propertyUpdated( 9 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 9 , BLOCK , CONTEXT ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 9 , BLOCK ) : 2
 Xcos trace:   objectUnreferenced( 9 , BLOCK ) : 1
@@ -398,7 +416,7 @@ Xcos trace:   objectReferenced( 10 , BLOCK ) : 1
 Xcos trace:   objectUnreferenced( 10 , BLOCK ) : 0
   props: (params tlist) with fields:
       wpar = [600,450,0,0,600,450]
-      title = ["Quat_Conj";""]
+      title = ["Untitled";""]
       tol = []
       tf = []
       context = []
@@ -526,7 +544,7 @@ Xcos trace:   objectReferenced( 11 , LINK ) : 1
 Xcos trace:   objectUnreferenced( 11 , LINK ) : 0
   props: (params tlist) with fields:
       wpar = [600,450,0,0,600,450]
-      title = ["Quat_Conj";""]
+      title = ["Untitled";""]
       tol = []
       tf = []
       context = []

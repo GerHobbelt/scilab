@@ -78,12 +78,12 @@ enum object_properties_t
     ODSTATE,            //!< model::Block::odstate value
     NZCROSS,            //!< model::Block::nzcross value
     NMODE,              //!< model::Block::nmode value
-    PARAMETER_NAME,
-    PARAMETER_DESCRIPTION,
-    PARAMETER_UNIT,
-    PARAMETER_TYPE,
-    PARAMETER_ENCODING,
-    PARAMETER_VALUE,
+    PARAMETER_NAME,     //!< model::Block::m_parameters generic parameter name
+    PARAMETER_DESCRIPTION, //!< model::Block::m_parameters generic parameter description
+    PARAMETER_UNIT,     //!< model::Block::m_parameters generic parameter unit
+    PARAMETER_TYPE,     //!< model::Block::m_parameters generic parameter type
+    PARAMETER_ENCODING, //!< model::Block::m_parameters generic parameter encoding
+    PARAMETER_VALUE,    //!< model::Block::m_parameters generic parameter value
     RPAR,               //!< model::Block::rpar value
     IPAR,               //!< model::Block::ipar value
     OPAR,               //!< model::Block::opar value

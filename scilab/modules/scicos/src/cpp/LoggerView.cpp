@@ -309,6 +309,24 @@ std::ostream& operator<<(std::ostream& os, object_properties_t p)
         case NMODE:
             os << "NMODE";
             break;
+        case PARAMETER_NAME:
+            os << "PARAMETER_NAME";
+            break;
+        case PARAMETER_DESCRIPTION:
+            os << "PARAMETER_DESCRIPTION";
+            break;
+        case PARAMETER_UNIT:
+            os << "PARAMETER_UNIT";
+            break;
+        case PARAMETER_TYPE:
+            os << "PARAMETER_TYPE";
+            break;
+        case PARAMETER_ENCODING:
+            os << "PARAMETER_ENCODING";
+            break;
+        case PARAMETER_VALUE:
+            os << "PARAMETER_VALUE";
+            break;
         case RPAR:
             os << "RPAR";
             break;
@@ -393,6 +411,24 @@ std::ostream& operator<<(std::ostream& os, object_properties_t p)
         case PATH:
             os << "PATH";
             break;
+        case AUTHOR:
+            os << "AUTHOR";
+            break;
+        case FILE_VERSION:
+            os << "FILE_VERSION";
+            break;
+        case COPYRIGHT:
+            os << "COPYRIGHT";
+            break;
+        case LICENSE:
+            os << "LICENSE";
+            break;
+        case GENERATION_TOOL:
+            os << "GENERATION_TOOL";
+            break;
+        case GENERATION_DATE:
+            os << "GENERATION_DATE";
+            break;
         case PROPERTIES:
             os << "PROPERTIES";
             break;
@@ -406,6 +442,7 @@ std::ostream& operator<<(std::ostream& os, object_properties_t p)
             os << "VERSION_NUMBER";
             break;
         default:
+            os << "";
             break;
     }
     return os;
