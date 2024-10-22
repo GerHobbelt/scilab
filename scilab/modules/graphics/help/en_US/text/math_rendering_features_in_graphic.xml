@@ -127,8 +127,8 @@ title('$\mathscr{C}\mbox{ n''est pas }\boldsymbol{\mathcal{C}}$')
         <programlisting role="example"><![CDATA[
 title('$\sideset{_\alpha^\beta}{_\gamma^\delta}\prod$')
 title('$\hat{\accentset{\star}{\hat h}}\undertilde{ABC}$')
-title('$\begin{pmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{pmatrix}\mbox{ or }..
-\begin{bmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{bmatrix}$')
+title('$\begin{pmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{pmatrix}\mbox{ or }' + ...
+'\begin{bmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{bmatrix}$')
 xstring(0.5,0.5,'$\left(\frac{\pi}{\sqrt[3]{2}}\middle|\sqrt{\frac{1+\frac1x}{x}}\right\rangle$')
 title('$\doublecup\ddag\fatbslash\lll\oplus\ovee\circledcirc\circlearrowright$')
 title('$\rotatebox{180}{\boxed{\JLaTeXMath}}\ \reflectbox{\JLaTeXMath}$')

@@ -366,6 +366,7 @@ p2.foreground = 5;  // change the polyline color
 e.thickness = 5; // change the thickness of the two polylines
 
 delete(e(1))
+e(1) = []
 
 move(e,[0,30]) //translate the polyline
 
@@ -374,7 +375,7 @@ a.axes_bounds = [0 0 0.5 0.5];
 subplot(222) //create a new Axes entity
 plot(1:10);
 a1 = f.children(1);  // get its handle
-copy(e.children,a1); // copy the polyline of the first plot in the new Axes
+copy(e, a1); // copy the polyline of the first plot in the new Axes
 a1.data_bounds = [1 0;10 100]; //change the Axes bounds
 
 scf(10); // create a new figure with figure_id=10

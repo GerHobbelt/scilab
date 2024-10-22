@@ -224,7 +224,7 @@
                         coordinates ((<literal>x_user</literal>,
                         <literal>y_user</literal>) or conversely.
                     </para>
-                    <programlisting role="user coordinates"><![CDATA[
+                    <programlisting role="no-scilab-exec"><![CDATA[
 as=get(gcf(),"axes_size");//size of the canvas in pixels
 bnds=get(gca(),"axes_bounds");//bounds of the current axes rectangle in figure size ratio.
 //from legend coordinates to user coordinates

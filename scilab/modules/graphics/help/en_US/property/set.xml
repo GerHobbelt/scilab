@@ -203,7 +203,7 @@ set(a, "box","off", "sub_tics",[7 0]);
 set(p(2), "mark_mode","on", "mark_style",3);
 
 p(3) = plot2d(x-2,x.^2/20);
-set([a p], "foreground",5);
+set([a; p], "foreground",5);
          ]]></programlisting>
         </para>
         <para>

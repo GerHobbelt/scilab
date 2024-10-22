@@ -139,7 +139,7 @@ mathml = "<mrow>" +..
 str=["SCILAB", "can write LaTeX :", "$\frac{abc}{xyz}$"; "or", "MathML :", mathml];
 r2 = xstringl(0.2, 0.4, str, 10, 4);
 xrects([r2(1) r2(2)+r2(4) r2(3) r2(4)]');
-txt xstring(r2(1), r2(2), str);
+txt = xstring(r2(1), r2(2), str);
 txt.font_size = 4;
 txt.font_style = 10;
  ]]>

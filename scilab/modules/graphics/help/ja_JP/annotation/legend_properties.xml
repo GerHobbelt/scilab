@@ -217,7 +217,7 @@
                         ((<literal>x_user</literal>, <literal>y_user</literal>)
                         を変換,またはその逆変換を行う際に以下の命令を使用できます.
                     </para>
-                    <programlisting role="user coordinates"><![CDATA[
+                    <programlisting role="no-scilab-exec"><![CDATA[
 as=get(gcf(),"axes_size");// キャンバスの大きさ(単位:ピクセル)
 bnds=get(gca(),"axes_bounds");// 図の大きさに対して相対的に定義したカレントの軸の境界
 //汎用座標からユーザ座標に

@@ -48,40 +48,40 @@ a.x_ticks = tlist(["ticks", "locations", "labels"], (0:6)', [mathml;"1";"$\sin(x
             gcf().figure_size(2)=200
         </scilab:image>
         <programlisting role="example"><![CDATA[
-xtitle('$\textstyle\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}{6}$')
-xtitle('$\big(\bigg)$')
-xtitle('$\mbox{Vector field for }\ddot{\theta}=\sin\theta$')
-xtitle('$\JLaTeXMath\ \mathfrak{and}\ \mathtt{Scilab}$')
+title('$\textstyle\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}{6}$')
+title('$\big(\bigg)$')
+title('$\mbox{Vector field for }\ddot{\theta}=\sin\theta$')
+title('$\JLaTeXMath\ \mathfrak{and}\ \mathtt{Scilab}$')
 xstring(0.5,0.5,"$\overbrace{привет\ мир} \underbrace{γειά\ κόσμο}$")
      ]]></programlisting>
         <para>
             JLaTeXMath fournit plusieurs polices utilisables avec les commandes <literal>\mathbb</literal>, <literal>\mathscr</literal>, <literal>\mathcal</literal>, <literal>\mathbf</literal>, <literal>\mathit</literal>, <literal>\mathsf</literal>, <literal>\mathtt</literal>, <literal>\mathfrak</literal>, <literal>\mathds</literal>, <literal>\mathrm</literal>, ainsi que leurs versions grasses quand elles existent activables avec la commande <literal>\boldsymbol</literal> :
         </para>
         <programlisting role="example"><![CDATA[
-xtitle('$\mathbb{SCILAB}\ \mathsf{or}\ \boldsymbol{\mathfrak{Scilab}}$')
-xtitle('$\mathscr{C}\mbox{ n''est pas }\boldsymbol{\mathcal{C}}$')
+title('$\mathbb{SCILAB}\ \mathsf{or}\ \boldsymbol{\mathfrak{Scilab}}$')
+title('$\mathscr{C}\mbox{ n''est pas }\boldsymbol{\mathcal{C}}$')
  ]]></programlisting>
         <para>
             Différents packages LaTeX sont disponibles : <replaceable>amsmath</replaceable>, <replaceable>amssymb</replaceable>, <replaceable>stmaryrd</replaceable>, <replaceable>amsxtra</replaceable> et <replaceable>accents</replaceable> ainsi que quelques commandes de <replaceable>graphics</replaceable>. La plupart des commandes de ces packages sont disponibles (il en manque quelques unes d'<replaceable>amsmath</replaceable> en l'occurence).
         </para>
         <programlisting role="example"><![CDATA[
-xtitle('$\sideset{_\alpha^\beta}{_\gamma^\delta}\prod$')
-xtitle('$\hat{\accentset{\star}{\hat h}}\undertilde{ABC}$')
-xtitle('$\begin{pmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{pmatrix}\mbox{ or }..
-\begin{bmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{bmatrix}$')
+title('$\sideset{_\alpha^\beta}{_\gamma^\delta}\prod$')
+title('$\hat{\accentset{\star}{\hat h}}\undertilde{ABC}$')
+title('$\begin{pmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{pmatrix}\mbox{ or }' + ...
+'\begin{bmatrix}\mathfrak{a}&\alpha\\\mathbb{A}&\mathcal{A}\end{bmatrix}$')
 xstring(0.5,0.5,'$\left(\frac{\pi}{\sqrt[3]{2}}\middle|\sqrt{\frac{1+\frac1x}{x}}\right\rangle$')
-xtitle('$\doublecup\ddag\fatbslash\lll\oplus\ovee\circledcirc\circlearrowright$')
-xtitle('$\rotatebox{180}{\boxed{\JLaTeXMath}}\ \reflectbox{\JLaTeXMath}$')
-xtitle('$\scalebox{0.6}{\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}6}$')
-xtitle('$\fcolorbox{black}{Tan}{\JLaTeXMath}$')
-xtitle('$\textcolor{Magenta}{\mathfrak{Scilab}}\mbox{ and }\textcolor{Green}{\mathcal{SCILAB}}$')
+title('$\doublecup\ddag\fatbslash\lll\oplus\ovee\circledcirc\circlearrowright$')
+title('$\rotatebox{180}{\boxed{\JLaTeXMath}}\ \reflectbox{\JLaTeXMath}$')
+title('$\scalebox{0.6}{\sum_{n=1}^{+\infty}\frac1{n^2}=\frac{\pi^2}6}$')
+title('$\fcolorbox{black}{Tan}{\JLaTeXMath}$')
+title('$\textcolor{Magenta}{\mathfrak{Scilab}}\mbox{ and }\textcolor{Green}{\mathcal{SCILAB}}$')
 ]]></programlisting>
 
         <para>Il y a la possibilité de définir de nouvelles commandes ou de nouveaux environnements :</para>
 
         <programlisting role="example"><![CDATA[
-xtitle('$\newcommand{\op}{\left(}\newcommand{\cp}{\right)} \op\frac12\cp$')
-xtitle('$\newcommand{\myfrac}[2]{\frac{\mathfrak{#1}}{\mathcal{#2}}}\myfrac{A}{B}$')
+title('$\newcommand{\op}{\left(}\newcommand{\cp}{\right)} \op\frac12\cp$')
+title('$\newcommand{\myfrac}[2]{\frac{\mathfrak{#1}}{\mathcal{#2}}}\myfrac{A}{B}$')
  ]]></programlisting>
     </refsection>
     <refsection>
