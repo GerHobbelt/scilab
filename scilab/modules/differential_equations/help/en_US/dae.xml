@@ -1168,7 +1168,7 @@ code = ['#include <math.h>'
       ' pd[2] =     - 1.0;'
       ' pd[3] = *cj - (100.0*(1.0 - y[0]*y[0]));}'
       ' '
-      'void gr22(int *neq, double *t, double *y, int *ng, double *groot, double *rpar, int *ipar)'
+      'void gr22(int *neq, double *t, double *y, double *yd, int *ng, double *groot, double *rpar, int *ipar)'
       '{ groot[0] = y[0];}']
 previous_dir = pwd();
 cd TMPDIR;
@@ -1216,7 +1216,7 @@ code = ['#include <math.h>'
       ' pd[2] =     - 1.0;'
       ' pd[3] = *cj - (100.0*(1.0 - y[0]*y[0]));}'
       ' '
-      'void gr22(int *neq, double *t, double *y, int *ng, double *groot, double *rpar, int *ipar)'
+      'void gr22(int *neq, double *t, double *y, double *yd, int *ng, double *groot, double *rpar, int *ipar)'
       '{ groot[0] = y[0];}']
 previous_dir = pwd();
 cd TMPDIR;
