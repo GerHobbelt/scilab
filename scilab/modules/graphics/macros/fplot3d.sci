@@ -25,7 +25,10 @@ function varargout = fplot3d(xr,yr,f,theta,alpha,leg,flag,ebox)
     if rhs <= 0 then   // demo
         deff("[z]=Surf(x,y)","z=sin(x)*cos(y)");
         t = -%pi:0.3:%pi;
-        fplot3d(t,t,Surf,35,45,"X@Y@Z");
+        e = fplot3d(t,t,Surf,35,45,"X@Y@Z");
+        if lhs == 1 then
+            varargout(1) = e;
+        end
         return
     end
 
@@ -49,7 +52,7 @@ function varargout = fplot3d(xr,yr,f,theta,alpha,leg,flag,ebox)
         opts = "," + strcat(opts, ",")
     end
 
-    execstr("e = plot3d(xr,yr,feval(xr,yr,f),"+strcat(opts,",")+")")
+    execstr("e = plot3d(xr,yr,feval(xr,yr,f)"+opts+")")
 
     if lhs == 1
         varargout(1) = e;

@@ -66,7 +66,6 @@ function varargout = graypolarplot(theta,rho,z,strf,rect)
     execstr("plot2d(0,0,1"+opts+")")
     axes = gca();
     iso = axes.isoview;
-    disp(iso)
     axes.clip_state = "clipgrf";
 
     surfaceEntity =  drawGrayplot(theta,rho,z);
