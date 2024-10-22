@@ -678,6 +678,12 @@ exec("SCI/modules/graphics/demos/colormap/colormaps.dem.sce",-1)
                     </itemizedlist>
                 </revdescription>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

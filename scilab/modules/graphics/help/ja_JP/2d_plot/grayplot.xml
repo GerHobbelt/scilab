@@ -133,7 +133,12 @@ grayplot(t,t,m)
                     オプション<function>logflag</function>が導入されました.
                 </revremark>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>
-

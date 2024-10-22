@@ -143,6 +143,12 @@ xarrows([xi;xf],[yi;yf],[zi;zf],0.7, 32*rand(1,N))
                 <revnumber>5.5.0</revnumber>
                 <revremark>矢印を3次元で描画できるようになりました.</revremark>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

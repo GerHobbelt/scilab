@@ -171,6 +171,12 @@ mesh(X,Y,Z);
                     list, or with their "#RRGGBB" hexadecimal codes, or with their colormap indices.
                 </revdescription>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

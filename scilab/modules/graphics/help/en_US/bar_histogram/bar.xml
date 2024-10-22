@@ -258,7 +258,10 @@ bar(x,y,0.2,'green');
                       <listitem>
                         <literal>bar(a, b, ...)</literal> where a and b are scalars is interpreted as <literal>bar(x, y, ...)</literal> and no more as <literal>bar(y, width, ...)</literal>.
                       </listitem>
-                    </itemizedlist>
+                        <listitem>
+                            Function returns the created handle(s).
+                        </listitem>
+                      </itemizedlist>
                 </revdescription>
             </revision>
         </revhistory>

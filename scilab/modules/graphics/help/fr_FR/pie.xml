@@ -116,4 +116,15 @@ pie([3 4 6 2],[0 1 0 0],["part1","part2","part3","part4"]);
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>Historique</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    La fonction renvoie le(s) handle(s) créé(s).
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

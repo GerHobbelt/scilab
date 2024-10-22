@@ -30,7 +30,7 @@
             bar3d(mtx,&lt;opt_args&gt;)
             bar3d(list(mtx,x,y),[theta,alpha,leg,flag,ebox])
             bar3d(list(mtx,x,y),&lt;opt_args&gt;)
-            hdl = bar3d()
+            hdl = bar3d(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -187,6 +187,12 @@ isoview off
                 <revnumber>6.1.0</revnumber>
                 <revdescription>
                     hist3d() renamed in bar3d().
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
                 </revdescription>
             </revision>
         </revhistory>

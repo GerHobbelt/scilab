@@ -22,7 +22,9 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>graypolarplot(theta,rho,z,[strf,rect])</synopsis>
+        <synopsis>graypolarplot(theta,rho,z,[strf,rect])
+            h = graypolarplot(...)
+        </synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -193,6 +195,13 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                    <para>This optional output contains a handle to a Compound entity.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -219,5 +228,16 @@ clf();graypolarplot(theta,rho,z)
             f.color_map= hot(128);
             graypolarplot(theta,rho,z)
         </scilab:image>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
+                </revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

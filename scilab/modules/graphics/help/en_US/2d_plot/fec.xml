@@ -399,7 +399,7 @@ xtitle("fec using the hot colormap, composed by one quadrangle")
             </member>
         </simplelist>
     </refsection>
-    <refsection>
+    <refsection role="history">
         <title>History</title>
         <revhistory>
             <revision>
@@ -408,6 +408,12 @@ xtitle("fec using the hot colormap, composed by one quadrangle")
                     <para>
                         Mapping is not limited on triangles anymore. All types of convex polygons are acceptable.
                     </para>
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
                 </revremark>
             </revision>
         </revhistory>

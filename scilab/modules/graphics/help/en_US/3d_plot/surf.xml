@@ -721,6 +721,12 @@ surf(axfig10,Z,'ydat',[100:109],'marker','d','markerfac','green','markeredg','ye
                     surf(X,Y,fun..) and  surf(X,Y,list(fun, params)) syntaxes added.
                 </revdescription>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

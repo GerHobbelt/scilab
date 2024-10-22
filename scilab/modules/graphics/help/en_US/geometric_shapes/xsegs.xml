@@ -155,4 +155,15 @@ e.arrow_size = 0.4;
         </scilab:image>
 
     </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

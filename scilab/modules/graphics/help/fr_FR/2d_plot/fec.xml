@@ -344,7 +344,7 @@ xtitle("fec using the hot colormap, composed by one quadrangle")
         </simplelist>
     </refsection>
     <refsection>
-        <title>History</title>
+        <title>Historique</title>
         <revhistory>
             <revision>
                 <revnumber>5.5.2</revnumber>
@@ -353,6 +353,12 @@ xtitle("fec using the hot colormap, composed by one quadrangle")
                         Le maillage peut désormais être consitué de polygones convexes.
                     </para>
                 </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    La fonction renvoie le(s) handle(s) créé(s).
+                </revdescription>
             </revision>
         </revhistory>
     </refsection>

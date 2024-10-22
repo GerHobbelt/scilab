@@ -94,4 +94,15 @@ xnumb(x,500*ones(x),[10,20,35],1)
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

@@ -24,7 +24,7 @@
         <title>Seqüência de Chamamento</title>
         <synopsis>fec(x,y,triangles,func,&lt;opt_args&gt;)
             fec(x,y,triangles,func,[strf,leg,rect,nax,zminmax,colminmax,colout,mesh])
-            fec(...)
+            hdl = fec(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -284,5 +284,16 @@ show_window()
                 <link linkend="Sgrayplot">Sgrayplot</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

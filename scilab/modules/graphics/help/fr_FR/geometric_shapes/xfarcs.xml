@@ -88,4 +88,15 @@ xfarcs(arcs,[1,2,3])
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>Historique</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    La fonction renvoie le(s) handle(s) créé(s).
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

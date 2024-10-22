@@ -191,6 +191,12 @@ isoview off
                     hist3d() a été renommé en bar3d().
                 </revdescription>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    La fonction renvoie le(s) handle(s) créé(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

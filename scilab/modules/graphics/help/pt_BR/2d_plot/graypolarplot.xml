@@ -22,7 +22,9 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Seqüência de Chamamento</title>
-        <synopsis>graypolarplot(theta,rho,z,[strf,rect])</synopsis>
+        <synopsis>graypolarplot(theta,rho,z,[strf,rect])
+            h = graypolarplot(...)
+        </synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Parâmetros</title>
@@ -205,6 +207,13 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                    <para>This optional output contains a handle to a Compound entity.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -225,5 +234,16 @@ f=gcf();
 f.color_map= hot(128);
 clf();graypolarplot(theta,rho,z)
  ]]></programlisting>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

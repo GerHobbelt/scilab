@@ -186,6 +186,12 @@ isoview off
                     hist3d() renamed in bar3d().
                 </revdescription>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

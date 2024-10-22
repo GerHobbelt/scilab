@@ -104,4 +104,15 @@ e.polyline_style=3;
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
+                </revremark>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

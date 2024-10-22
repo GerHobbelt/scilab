@@ -46,6 +46,25 @@
                     <para>uma célula ou vetor de strings.</para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>hdl</term>
+                <listitem>
+                    <para>This optional output contains a handle to a <literal>Compound</literal> entity whose children
+                      are:
+                      <itemizedlist>
+                        <listitem>
+                        <literal>h.children(1)</literal>: A <literal>Compound</literal> whose children are the labels of the slices (Text entities)
+                        </listitem>
+                        <listitem>
+                        <literal>h.children(2)</literal>: A <literal>Compound</literal> whose children are the slices (Polyline entities)
+                        </listitem>
+                      </itemizedlist>
+                      Use <literal>h</literal> to modify properties
+                      of a specific or all Text or Polyline entites after they are created. For a list of
+                      properties, see <link linkend="text_properties">text_properties</link> or <link linkend="polyline_properties">polyline_properties</link>.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -93,5 +112,16 @@ pie([3 4 6 2],[0 1 0 0],["parte 1","parte 2","parte 3","parte 4"]);
                 <link linkend="xfpolys">xfpolys</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

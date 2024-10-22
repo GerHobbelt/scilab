@@ -22,6 +22,7 @@
         <title>Syntax</title>
         <synopsis>xfrect(x,y,w,h)
             xfrect(rect) // rect =[x,y,w,h]
+            hdl = xfrect(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -74,5 +75,16 @@ e.background = color("green");
                 <link linkend="xrects">xrects</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

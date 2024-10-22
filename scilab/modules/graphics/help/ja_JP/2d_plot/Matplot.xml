@@ -361,6 +361,12 @@ Matplot(1:nbcol)
                     (<link linkend="Matplot_properties">Matplot_properties</link>参照).
                 </revremark>
             </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

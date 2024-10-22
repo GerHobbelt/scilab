@@ -395,7 +395,7 @@ h.data = h.data($:-1:1) // reverse order
             </member>
         </simplelist>
     </refsection>
-    <refsection>
+    <refsection role="history">
         <title>History</title>
         <revhistory>
             <revision>
@@ -409,6 +409,12 @@ h.data = h.data($:-1:1) // reverse order
                             Property <literal>rect</literal> introduced.
                         </listitem>
                     </itemizedlist>
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
                 </revremark>
             </revision>
         </revhistory>
