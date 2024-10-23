@@ -16,5 +16,5 @@
 // <-- Short Description -->
 // http_xxx() timeout
 
-msg = msprintf(_("%s: CURL execution failed.\nTimeout was reached"),"http_get");
-assert_checkerror("http_get(""https://www.scilab.org"", timeout=0.5)", msg);
+msg = msprintf(_("%s: CURL execution failed.\n%s\n"), "http_get", msprintf(_("Timeout was reached")));
+assert_checkerror("http_get(""https://www.scilab.org"", timeout=0.1)", msg);
