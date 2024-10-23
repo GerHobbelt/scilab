@@ -234,8 +234,9 @@ make_binary_directory() {
         --exclude=demo \
         bwidget-$BWIDGET_VERSION/images bwidget-$BWIDGET_VERSION/lang --wildcards bwidget-$BWIDGET_VERSION/*.tcl
     # fix permissions to fix issue #17231
-    chmod 644 "$(find "$TCL_DIR/BWidget" -type f)"
-    chmod 755 "$(find "$TCL_DIR/BWidget" -type d)"
+    find "$TCL_DIR" -type d -print0 | xargs -0 chmod 755
+    find "$TCL_DIR" -type f -not -name '*.tcl' -print0 | xargs -0 chmod 644
+    find "$TCL_DIR" -type f -name '*.tcl' -print0 | xargs -0 chmod 755
 
     ####################
     ##### INCLUDES #####

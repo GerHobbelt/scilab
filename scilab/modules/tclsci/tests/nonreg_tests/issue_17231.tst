@@ -54,6 +54,8 @@ expected(isdir(all)) = dir_perms;
 expected(isfile(all)) = file_perms;
 
 // custom files
+expected(grep(all, '.tcl')) = "100755";
+
 select getos()
 case "Windows" then
     expected(grep(all, '.bat')) = "100777";
@@ -61,4 +63,8 @@ else
     expected(grep(all, '.so')) = "100755";
 end
 
-assert_checkequal(computed, expected);
+if ~assert_checkequal(computed, expected) then
+    // produce a verbose error message, and exit with bugmes()
+    invalid = computed <> expected;
+    disp("invalid permission on " + all(invalid) + " , computed " + computed(invalid) + " , expected " + expected(invalid))
+pause, end
