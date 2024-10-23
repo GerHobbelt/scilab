@@ -2030,11 +2030,11 @@ function ret = getNodes(node, first, last)
 
         ret = struct("type", node.name, "children", c, "string", []);
         ret = reduceNode(ret);
-    case {"comment" "code" "table" "informaltable" "inlinemediaobject" "note" "revhistory" "screen" "informalequation" "programlisting" "image" "mediaobject", "latex" "bibliomixed" "qandaset" ""}
+    case {"comment" "code" "table" "informaltable" "inlinemediaobject" "note" "revhistory" "screen" "informalequation" "programlisting" "image" "mediaobject", "latex" "bibliomixed" "qandaset" "info" ""}
         ret = [];
     else
         ret = [];
-        error(node.name);
+        warning(sprintf(_("tag ignored: %s"), node.name));
     end
 end
 
@@ -2042,7 +2042,6 @@ function generate_inline_help(modules_tree)
 
     lang = modules_tree.language;
     xmlfiles = getXMLFiles(modules_tree);
-
 
     if modules_tree.path == SCI then
         output_path = fullfile(SCI, "modules", "helptools", "inline", lang);
