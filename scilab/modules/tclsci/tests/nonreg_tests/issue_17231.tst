@@ -5,7 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 // <-- NO CHECK REF -->
-
+//
 // <-- Non-regression test for issue 17231 -->
 //
 // <-- GitLab URL -->
@@ -54,7 +54,12 @@ expected(isdir(all)) = dir_perms;
 expected(isfile(all)) = file_perms;
 
 // custom files
-expected(grep(all, '.tcl')) = "100755";
+select getos()
+case "Windows" then
+    expected(grep(all, '.tcl')) = "100666";
+else
+    expected(grep(all, '.tcl')) = "100755";
+end
 
 select getos()
 case "Windows" then
@@ -63,8 +68,6 @@ else
     expected(grep(all, '.so')) = "100755";
 end
 
-if ~assert_checkequal(computed, expected) then
-    // produce a verbose error message, and exit with bugmes()
-    invalid = computed <> expected;
-    disp("invalid permission on " + all(invalid) + " , computed " + computed(invalid) + " , expected " + expected(invalid))
-pause, end
+invalid = computed <> expected;
+disp("invalid permission on " + all(invalid) + " , computed " + computed(invalid) + " , expected " + expected(invalid));
+assert_checkfalse(invalid)
