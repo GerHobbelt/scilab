@@ -5,6 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- INTERACTIVE TEST -->
 // <-- TEST WITH GRAPHIC -->
 // <-- ENGLISH IMPOSED -->
 // <-- NO CHECK REF -->
