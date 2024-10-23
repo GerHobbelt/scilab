@@ -2030,11 +2030,8 @@ function ret = getNodes(node, first, last)
 
         ret = struct("type", node.name, "children", c, "string", []);
         ret = reduceNode(ret);
-    case {"comment" "code" "table" "informaltable" "inlinemediaobject" "note" "revhistory" "screen" "informalequation" "programlisting" "image" "mediaobject", "latex" "bibliomixed" "qandaset" "info" ""}
-        ret = [];
     else
         ret = [];
-        warning(sprintf(_("tag ignored: %s"), node.name));
     end
 end
 
