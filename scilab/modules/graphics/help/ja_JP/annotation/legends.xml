@@ -242,10 +242,15 @@ legends(['cos(t)';'cos(2*t)';'cos(3*t)'],[-1,2 3], opt=2, font_size=1 )
             </member>
         </simplelist>
     </refsection>
-    <revision>
-        <revnumber>2025.0.0</revnumber>
-        <revdescription>
-            Function returns the created handle(s).
-        </revdescription>
-    </revision>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>
