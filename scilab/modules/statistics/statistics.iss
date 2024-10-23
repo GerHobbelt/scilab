@@ -39,6 +39,8 @@ Source: modules\{#STATISTICS}\macros\buildmacros.sce; DestDir: {app}\modules\{#S
 Source: modules\{#STATISTICS}\macros\buildmacros.bat; DestDir: {app}\modules\{#STATISTICS}\macros; Components: {#COMPN_SCILAB}
 Source: modules\{#STATISTICS}\macros\cleanmacros.bat; DestDir: {app}\modules\{#STATISTICS}\macros; Components: {#COMPN_SCILAB}
 ;
+Source: modules\{#STATISTICS}\demos\*.*; DestDir: {app}\modules\{#STATISTICS}\demos; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+;
 Source: modules\{#STATISTICS}\tests\*.*; DestDir: {app}\modules\{#STATISTICS}\tests; Flags: recursesubdirs; Components: {#COMPN_SCILAB} and {#COMPN_TESTS}
 ;
 ;--------------------------------------------------------------------------------------------------------------
