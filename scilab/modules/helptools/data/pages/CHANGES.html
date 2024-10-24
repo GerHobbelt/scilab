@@ -37,7 +37,7 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 </ul>
 <p>Please report anything we could have missed, on <a href="https://scilab.discourse.group/">Discourse</a> or on <a href="https://gitlab.com/scilab/scilab/-/issues">GitLab</a>.</p>
 <h2>New features</h2>
-<p>For a high-level description of the main new features of this release, please consult the &quot;What's new&quot; page of <a href="modules/helptools/data/pages/homepage-en_US.html">embedded documentation</a> available by simply typing <code>doc</code> in the Scilab console.</p>
+<p>For a high-level description of this release's main new features, please consult the &quot;What's new&quot; page of embedded documentation available by simply typing <code>doc</code> in the Scilab console.</p>
 <h3>New functions</h3>
 <ul>
 <li><code>frank</code>: Computes Frank matrix.</li>
@@ -52,7 +52,7 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 </ul>
 <h3>Features improvements</h3>
 <ul>
-<li><code>-e</code> and <code>-f</code> command-line options can now be used at the same time (and are run is the order they are given to Scilab).</li>
+<li><code>-e</code> and <code>-f</code> command-line options can now be used simultaneously  (and are run in the order they are given to Scilab).</li>
 <li><code>x_dialog</code> and <code>x_mdialog</code> can now be used to enter hidden entries such as passwords.</li>
 </ul>
 <h3>Language changes</h3>
@@ -73,7 +73,7 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><code>&quot;fractional_font&quot;</code> property value is now <code>&quot;on&quot;</code> by default for text handles (is was <code>&quot;off&quot;</code> by default in previous versions).</li>
 <li>Graphics functions now return the handles they created: <code>h = plot()</code>, <code>h = surf()</code>, ... This feature can be used to replace <code>h = gce()</code> in some cases.</li>
 </ul>
-<p>New way to manage rendering (raw text, LaTeX, MathML) of strings in graphics figures with:</p>
+<p>A new way to manage rendering (raw text, LaTeX, MathML) of strings in graphics figures with:</p>
 <ul>
 <li><code>&quot;interpreter&quot;</code> property added for <code>Text</code>, <code>Datatip</code>, <code>Label</code> and <code>Legend</code> handles,</li>
 <li><code>&quot;tics_interpreters&quot;</code> property added for <code>Axis</code> handles,</li>
@@ -82,7 +82,7 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <p>Some GUI (File Browser, Help Browser, ...) have been improved.</p>
 <h3>Performances</h3>
 <ul>
-<li>Some Scilab modules (<code>CACSD</code>, <code>Linear Algebra</code>, ...) have been updated to use the <code>arguments</code> block hence enhancing their performances.</li>
+<li>Some Scilab modules (<code>CACSD</code>, <code>Linear Algebra</code>, ...) have been updated to use the <code>arguments</code> block and enhance their performances.</li>
 <li>Threads management in Scilab kernel has been completely rewritten.</li>
 </ul>
 <h2>Obsolete functions or features</h2>
@@ -108,12 +108,12 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li>Build with libXML2 2.12.7 is now supported (with support for older versions).</li>
 <li>Required version of MATIO updated to 1.5.27.</li>
 <li>Required version of OpenBLAS updated to 0.3.28 (Linux/macOS).</li>
-<li>All Java dependencies of Scilab have been updated to latest version (Java 17).</li>
+<li>All Java dependencies of Scilab have been updated to the latest version (Java 17).</li>
 </ul>
 <h2>Known incompatibilities</h2>
 <ul>
-<li><code>lyap</code> function no more accepts non-square matrices as input.</li>
-<li><code>pca</code>: the order of the first three output arguments have been modified. The old <code>[lambda, comprinc, scores] = pca(x)</code> syntax has been replaced by <code>[comprinc, scores, lambda] = pca(x)</code>. See the history part of <a href="https://help.scilab.org/pca">pca documentation</a> for more information.</li>
+<li><code>lyap</code> function no longer accepts non-square matrices as input.</li>
+<li><code>pca</code>: the order of the first three output arguments has been modified. The old <code>[lambda, comprinc, scores] = pca(x)</code> syntax has been replaced by <code>[comprinc, scores, lambda] = pca(x)</code>. See the history part of <a href="https://help.scilab.org/pca">pca documentation</a> for more information.</li>
 <li><code>show_pca(lambda, facpr, N)</code>: Following the <code>pca</code> function improvements, <code>lambda</code> is now a p-by-1 vector. The ratio of the corresponding eigenvalue over the sum of eigenvalues now is computed in the <code>show_pca</code> function.</li>
 <li><code>isvector</code> function and <code>mustBeVector</code> helper now return <code>%T</code> for scalars (instead of <code>%F</code> in previous versions) to be coherent with <code>isrow</code> and <code>iscolumn</code>.</li>
 <li>Undocumented syntax <code>legend(h1,h2,h3,....,strings)</code> is no more supported.</li>
@@ -145,7 +145,7 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 </li>
 <li>macOS:
 <ul>
-<li>Intel-based Mac running macOS 10.9+ (run) and 10.14+ (compile)</li>
+<li>Intel-based Mac running macOS 10.13+ (run) and 11+ (compile)</li>
 <li>M1-based Mac running macOS 11+ (run, compile).</li>
 </ul>
 </li>
@@ -181,12 +181,12 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17216">#17216</a>: <code>findobj(propertyName, propertyValue, ...)</code> statement did not work as explained in documentation.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17230">#17230</a>: Scilab did not build against HDF5 &gt;= 1.10.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17251">#17251</a>: First example in XML Objects help page was broken.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17252">#17252</a>: <code>uiimport()</code> code export failed when using non-alphanumeric in variable used as time.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17252">#17252</a>: <code>uiimport()</code> code export failed when using a non-alphanumeric in variable used as time.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17253">#17253</a>: <code>uiimport()</code> failed with TAB as delimiter when having some spaces variable names.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17254">#17254</a>: <code>uiimport()</code> failed to import files with multiple header lines.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17257">#17257</a>: Properties of <code>Grayplot</code> and <code>Champ</code> entities could no more be displayed in Scilab console.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17257">#17257</a>: Properties of <code>Grayplot</code> and <code>Champ</code> entities could no more be displayed in the Scilab console.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17259">#17259</a>: Valgrind reported a memleak on <code>string([1 2])</code>.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17260">#17260</a>: <code>uiimport()</code> failed to import .txt file but succeeded with same file renamed in .csv.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17260">#17260</a>: <code>uiimport()</code> failed to import a .txt file but succeeded with the same file renamed in .csv.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17262">#17262</a>: Scilab did not build against libxml2 &gt;= 2.12.7.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17264">#17264</a>: <code>datetime()</code> help page had two history sections.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17267">#17267</a>: Scrollbar was not available for some documentation pages.</li>
@@ -194,21 +194,21 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17269">#17269</a>: Arguments block does not allow to check dimension over input dimensions.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17272">#17272</a>: <code>datetime(&quot;1999-06&quot;,&quot;InputFormat&quot;,&quot;yyyy-MM&quot;)</code> produced an error.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17274">#17274</a>: <code>toJSON()</code> created &quot;/&quot; strings instead of &quot;/&quot;.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17275">#17275</a>: <code>legend()</code> made Scilab crash when an empty value was used as first input argument and <code>5</code> as the second one.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17277">#17277</a>: Setting <code>mxstep</code> in ODEOPTIONS does work with ODE type <code>rkf</code> adn it was not documented.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17275">#17275</a>: <code>legend()</code> made Scilab crash when an empty value was used as the first input argument and <code>5</code> as the second one.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17277">#17277</a>: Setting <code>mxstep</code> in ODEOPTIONS does work with ODE type <code>rkf</code> and it was not documented.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17279">#17279</a>: Extraction of an unknown field from a struct (or library) created inside a function made Scilab crash.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17280">#17280</a>: <code>cvode()</code> could make Scilab crash under Windows because of uncaught exception.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17283">#17283</a>: Outline display was slow for big matrices in <code>struct</code>, <code>tlist</code>, ...</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17283">#17283</a>: Outline display was slow for big matrices in <code>struct</code>, <code>tlist</code>, etc...</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17285">#17285</a>: <code>leastsq()</code> could make Scilab crash in case of error under macOS/arm64.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17287">#17287</a>: SUNDIALS ode solvers failed to extend complex ODEs.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17287">#17287</a>: SUNDIALS ODE solvers failed to extend complex ODEs.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17288">#17288</a>: <code>graypolarplot()</code> failed when called with 4 or 5 input arguments.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17289">#17289</a>: Some fields of user-type objects were not displayed.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17292">#17292</a>: <code>size()</code> did not return any output for vectors of <code>datetime</code>.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17293">#17293</a>: <code>datetime</code> type was not managed in <code>datenum()</code> and <code>datevec()</code>.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17294">#17294</a>: <code>dae(&quot;root2&quot;,...)</code> did not work as documented.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17298">#17298</a>: Documentation of <code>synchronize()</code> now explains how to use lists of timeseries as input argument.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17298">#17298</a>: Documentation of <code>synchronize()</code> now explains how to use lists of timeseries as input arguments.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17300">#17300</a>: <code>captions()</code> input/output order was inconsistent. This function has been set as obsolete.</li>
-<li><a href="https://gitlab.com/scilab/scilab/-/issues/17307">#17307</a>: Ghost <code>Datatip</code> object wass found by <code>get()</code> after deletion of parent figure.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17307">#17307</a>: Ghost <code>Datatip</code> object was found by <code>get()</code> after deletion of parent figure.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17311">#17311</a>: Scilab crashed when running n-pendulum demonstration.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17312">#17312</a>: <code>compress()</code> could not compress a single file without a container.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/17315">#17315</a>: <code>addmenu()</code> documentation example could not be executed.</li>
