@@ -12,7 +12,7 @@
 loadXcosLibs();
 
 // on the standard palette
-xcosPalGenerateAllIcons(["Palettes" "Recently Used Blocks"]);
+xcosPalGenerateAllIcons(["Palettes" "Discontinuities"]);
 
 // on a custom palette
 pal = xcosPal();
@@ -20,4 +20,3 @@ pal = xcosPalAddBlock(pal, "BIGSOM_f", "SCI/modules/xcos/images/palettes/GOTO.pn
 assert_checktrue(xcosPalAdd(pal, "my Summation blocks"));
 
 xcosPalGenerateAllIcons("my Summation blocks");
-

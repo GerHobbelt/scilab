@@ -33,5 +33,5 @@ Info = scicos_simulate(scs_m,list());
   "Analytical Jacobian: enabled  (%Jacobian=%t)"           
   "Parameter embedding mode: enabled (%Modelica_ParEmb=%t)"
   ""                                                       
-  "Generated files path: TMPDIR/"      
+  "Generated files path: TMPDIR/"     
   ""                                                       

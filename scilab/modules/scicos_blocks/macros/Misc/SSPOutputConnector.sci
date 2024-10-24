@@ -50,11 +50,7 @@ function [x, y, typ] = SSPOutputConnector(job,arg1,arg2)
             objs(2).graphics.pout = 3;
 
             model.rpar = do_eval(scicos_diagram(objs=objs),list(),%scicos_context);
-            
-            // propagate type from the porte
-            model.rpar.objs(1).model.in = model.in;
-            model.rpar.objs(1).model.in2 = model.in2;
-            model.rpar.objs(1).model.intyp = model.intyp;
+            model.in = -1;
 
             x.model = model;
             x.graphics = graphics;
@@ -67,6 +63,7 @@ function [x, y, typ] = SSPOutputConnector(job,arg1,arg2)
         // compiled superblock that will update itself as a block
         model.sim="csuper";
         model.ipar = 1;
+        model.in = -1;
         
         // default to a CSCOPE
         objs = list();

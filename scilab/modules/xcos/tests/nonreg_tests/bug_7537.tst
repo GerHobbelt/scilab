@@ -46,6 +46,5 @@ xcosDiagramToScilab(fullfile(TMPDIR, "diagram.xcos"), scs_m);
 loaded = xcosDiagramToScilab(fullfile(TMPDIR, "diagram.xcos"));
 
 // to the XMI format
-xcosDiagramToScilab(fullfile(TMPDIR, "diagram.xmi"), scs_m);
-loaded = xcosDiagramToScilab(fullfile(TMPDIR, "diagram.xmi"));
-
+scicosDiagramToScilab(fullfile(TMPDIR, "diagram.xmi"), scs_m);
+loaded = scicosDiagramToScilab(fullfile(TMPDIR, "diagram.xmi"));

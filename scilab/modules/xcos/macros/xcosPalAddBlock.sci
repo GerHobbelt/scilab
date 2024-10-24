@@ -167,7 +167,7 @@ function pal = xcosPalAddBlock(pal, block, pal_block_img, style)
                 end
                 formattedStyle = formattedStyle + ";";
             end
-            style = formattedStyle + ";" + predefined_style;
+            style = formattedStyle + predefined_style ;
         elseif typeof(style) == "string" then
             if isfile(style) then
                 // protect drive letter

@@ -42,11 +42,7 @@ function [x, y, typ] = SSPInputConnector(job,arg1,arg2)
             objs(1).graphics.peout = 4;
             
             model.rpar = do_eval(scicos_diagram(objs=objs),list(),%scicos_context);
-            
-            // propagate type from the port
-            model.rpar.objs(1).model.out = model.out;
-            model.rpar.objs(1).model.out2 = model.out2;
-            model.rpar.objs(1).model.outtyp = model.outtyp;
+            model.out = -1;
             
             x.model = model;
             x.graphics = graphics;
@@ -58,6 +54,7 @@ function [x, y, typ] = SSPInputConnector(job,arg1,arg2)
         
         model.sim="csuper";
         model.ipar=1;
+        model.out = -1;
         
         // default to a FROMWS_c block
         objs = list();
@@ -70,7 +67,7 @@ function [x, y, typ] = SSPInputConnector(job,arg1,arg2)
         objs(1).graphics.pout = 3;
         
         model.rpar = scicos_diagram(objs=objs)
-        model.in = 1;
+
         x = standard_define([9 5],model,exprs,[]);
         x.graphics.style = ["SSPInputConnector"];
     end
