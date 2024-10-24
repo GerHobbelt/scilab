@@ -28,18 +28,45 @@ extern "C"
 /*--------------------------------------------------------------------------*/
 types::Function::ReturnValue sci_getscilabmode(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
-    int n1 = 0, m1 = 0;
-    char *output = NULL ;
-
     if (in.size() != 0)
     {
         Scierror(999, _("%s: Wrong number of input argument(s): %d expected.\n"), "getscilabmode", 0);
         return types::Function::Error;
     }
 
-    const char* pst = getScilabModeString();
-    types::String* pS = new types::String(pst);
-    out.push_back(pS);
+    switch(_iRetCount)
+    {
+        case 0:
+            break;
+        case 1:
+        {
+            out.push_back(new types::String(getScilabModeString()));
+            break;
+        }
+        case 2:
+        {
+            int mode = getScilabMode();
+
+            // first output argument
+            out.push_back(new types::String(getScilabModeString()));
+
+            // second output argument
+            if (isAPIMode())
+            {
+                out.push_back(new types::String("API"));
+            }
+            else
+            {
+                out.push_back(new types::String("PROGRAM"));
+            }
+
+            break;
+        }
+        default:
+            Scierror(999, _("%s: Wrong number of output argument(s): %d expected.\n"), "getscilabmode", 1);
+            return types::Function::Error;
+
+    }
 
     return types::Function::OK;
 }

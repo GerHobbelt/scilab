@@ -65,7 +65,6 @@
 #include "scicos_internal.h"
 #include "blocks.h"
 #include "core_math.h"
-#include "storeCommand.h"
 #include "syncexec.h"
 #include "realtime.h"
 #include "sci_malloc.h"
@@ -277,7 +276,7 @@ static int grblk(realtype t, N_Vector yy, realtype *gout, void *g_data);
 static void simblklsodar(int * nequations, realtype * tOld, realtype * actual, realtype * res);
 static void grblklsodar(int * nequations, realtype * tOld, realtype * actual, int * ngc, realtype * res);
 static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, realtype *res, int *flag, double *dummy1, int *dummy2);
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *ngc, realtype *res, double *dummy1, int *dummy2);
+static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2);
 static void jacpsol(realtype *res, int *ires, int *nequations, realtype *tOld, realtype *actual, realtype *actualP,
                     realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp,
                     int *iwp, int *ier, double *dummy1, int *dummy2);
@@ -315,7 +314,7 @@ int C2F(scicos)(double *x_in, int *xptr_in, double *z__,
                 int *nevts, int *pointi_in, void **outtbptr_in,
                 int *outtbsz_in, int *outtbtyp_in,
                 outtb_el *outtb_elem_in, int *nelem1, int *nlnk1,
-                void** funptr, int *funtyp_in, int *inpptr_in,
+                voidg* funptr, int *funtyp_in, int *inpptr_in,
                 int *outptr_in, int *inplnk_in, int *outlnk_in,
                 double *rpar, int *rpptr, int *ipar, int *ipptr,
                 void **opar, int *oparsz, int *opartyp, int *opptr,
@@ -545,7 +544,7 @@ int C2F(scicos)(double *x_in, int *xptr_in, double *z__,
     /* 1 : type and pointer on simulation function */
     for (kf = 0; kf < nblk; ++kf)   /*for each block */
     {
-        void* p = funptr[kf];
+        voidg p = funptr[kf];
         C2F(curblk).kfun = kf + 1;
         Blocks[kf].type = funtyp[kf + 1];
         if (Blocks[kf].type == IFTHEL_BLOCK)
@@ -604,7 +603,7 @@ int C2F(scicos)(double *x_in, int *xptr_in, double *z__,
         else
         {
             //linked functions (internal or external)
-            Blocks[kf].funpt = (voidf)p;
+            Blocks[kf].funpt = (voidg) p;
             Blocks[kf].scsptr = NULL;   /* this is done for being able to test if a block
                                         is a scilab block in the debugging phase when
                                         sciblk4 is called */
@@ -1743,15 +1742,6 @@ static void cossim(double *told)
     /*     main loop on time */
     while (*told < *tf)
     {
-        while (ismenu()) //** if the user has done something, do the actions
-        {
-            int ierr2 = 0;
-            int iUnused;
-            GetCommand(&CommandToUnstack, &SeqSync, &iUnused, NONE); //** get to the action
-            CommandLength = (int)strlen(CommandToUnstack);
-            //syncexec(CommandToUnstack, &CommandLength, &ierr2, &one, CommandLength); //** execute it
-            FREE(CommandToUnstack);
-        }
         if (C2F(coshlt).halt != 0)
         {
             if (C2F(coshlt).halt == 2)
@@ -2936,15 +2926,6 @@ static void cossimdaskr(double *told)
     /*     main loop on time */
     while (*told < *tf)
     {
-        while (ismenu()) //** if the user has done something, do the actions
-        {
-            int ierr2 = 0;
-            int iUnused;
-            GetCommand(&CommandToUnstack, &SeqSync, &iUnused, NONE); //** get to the action
-            CommandLength = (int)strlen(CommandToUnstack);
-            //syncexec(CommandToUnstack, &CommandLength, &ierr2, &one, CommandLength); //** execute it
-            FREE(CommandToUnstack);
-        }
         if (C2F(coshlt).halt != 0)
         {
             if (C2F(coshlt).halt == 2)
@@ -3123,16 +3104,6 @@ L30:
                         						do it once in the absence of mode (nmod=0) */
                         /* updating the modes through Flag==9, Phase==1 */
 
-                        /* Serge Steer 29/06/2009 */
-                        while (ismenu()) //** if the user has done something, do the actions
-                        {
-                            int ierr2 = 0;
-                            int iUnused;
-                            GetCommand(&CommandToUnstack, &SeqSync, &iUnused, NONE); //** get to the action
-                            CommandLength = (int)strlen(CommandToUnstack);
-                            //syncexec(CommandToUnstack, &CommandLength, &ierr2, &one, CommandLength); //** execute it
-                            FREE(CommandToUnstack);
-                        }
                         if (C2F(coshlt).halt != 0)
                         {
                             if (C2F(coshlt).halt == 2)
@@ -3474,16 +3445,6 @@ L30:
                             }
                         }
                     }
-                }
-                /* Serge Steer 29/06/2009 */
-                while (ismenu()) //** if the user has done something, do the actions
-                {
-                    int ierr2 = 0;
-                    int iUnused;
-                    GetCommand(&CommandToUnstack, &SeqSync, &iUnused, NONE); //** get to the action
-                    CommandLength = (int)strlen(CommandToUnstack);
-                    //syncexec(CommandToUnstack, &CommandLength, &ierr2, &one, CommandLength); //** execute it
-                    FREE(CommandToUnstack);
                 }
 
                 if (C2F(coshlt).halt != 0)
@@ -4428,7 +4389,7 @@ static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, re
 }/* simblkddaskr */
 /*--------------------------------------------------------------------------*/
 /* grblkddaskr */
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *ngc, realtype *res, double *dummy1, int *dummy2)
+static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2)
 {
     double tx = 0.;
     int jj = 0;
@@ -4437,7 +4398,7 @@ static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, int *
 
     *ierr = 0;
     C2F(ierode).iero = 0;
-    zdoit(&tx, actual, actual, res);
+    zdoit(&tx, actual, actualP, res);
     C2F(ierode).iero = *ierr;
 
     if (*ierr == 0)
@@ -6140,14 +6101,14 @@ static void FREE_blocks()
 } /* FREE_blocks */
 /*--------------------------------------------------------------------------*/
 /* Subroutine funnum2 */
-void* funnum2(char * fname)
+voidg funnum2(char * fname)
 {
     int i = 0;
     while (tabsim[i].name != (char *)NULL)
     {
         if (strcmp(fname, tabsim[i].name) == 0)
         {
-            return (void*)tabsim[i].fonc;
+            return (voidg) tabsim[i].fonc;
         }
         i++;
     }
@@ -7106,16 +7067,6 @@ static int CallKinsol(double *told)
             if (status >= 0)
             {
                 break;
-            }
-            /* Serge Steer 29/06/2009 */
-            while (ismenu()) //** if the user has done something, do the actions
-            {
-                int ierr2 = 0;
-                int iUnused;
-                GetCommand(&CommandToUnstack, &SeqSync, &iUnused, NONE); //** get to the action
-                CommandLength = (int)strlen(CommandToUnstack);
-                //syncexec(CommandToUnstack, &CommandLength, &ierr2, &one, CommandLength); //** execute it
-                FREE(CommandToUnstack);
             }
 
             if (C2F(coshlt).halt != 0)

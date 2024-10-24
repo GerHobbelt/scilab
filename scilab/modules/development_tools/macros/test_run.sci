@@ -134,7 +134,7 @@ function test_run_result = test_run(varargin)
             params.show_error = %t;
 
             // set test_run results file in the xml dir
-            params.output_dir = fileparts(params.exportFile);
+            params.output_dir = fullpath(fileparts(params.exportFile));
         end
     end
 
@@ -441,6 +441,22 @@ function status = test_module(_params)
     testsuite.errors=0 // unexpected errors / exception on execution
     testsuite.failures=0 // when a test failed
 
+    // For the XML export, temporary files will be preserved on specific directory
+    if ~isfield(_params, "output_dir") then
+        // on TMPDIR when unspecified
+        result_path = TMPDIR + filesep();
+    elseif _params.output_dir == "" then
+        // on current directory
+        result_path = pwd() + filesep();
+    else
+        // named after the module
+        [_, d] = fileparts(fullpath(_params.moduleName));
+        result_path = params.output_dir + filesep() + d + filesep();
+    end
+    _params.output_dir = result_path;
+    remove_output_dir_if_empty = ~isdir(_params.output_dir);
+    mkdir(_params.output_dir)
+
     //don't test only return list of tests.
     if _params.reference == "list" then
         for i = 1:test_count
@@ -555,6 +571,10 @@ function status = test_module(_params)
     status.test_count     = test_count;
     status.detailled_failures   = detailled_failures;
     status.testsuite   = testsuite;
+
+    if remove_output_dir_if_empty then
+        rmdir(_params.output_dir);
+    end
 endfunction
 
 function status = test_single(_module, _testPath, _testName)
@@ -577,11 +597,13 @@ function status = test_single(_module, _testPath, _testName)
     error_output  = "check";
     reference     = "check";
     xcosNeeded    = %F;
+    atomsNeeded   = %F;
 
     //some paths
-    result_path = TMPDIR + filesep();
-    if isfield(params, "output_dir") then
-        result_path = params.output_dir;
+    if isfield(_module, "output_dir") then
+        result_path = _module.output_dir;
+    else
+        result_path = TMPDIR + filesep();
     end
 
     tmp_tst     = pathconvert( result_path + _testName + ".tst", %F);
@@ -702,6 +724,11 @@ function status = test_single(_module, _testPath, _testName)
         status.message = "skipped: Long time duration";
         return;
     end
+    if ~_module.longtime then
+        timeout = "15m"
+    else
+        timeout = "0"
+    end
 
     if ~isempty(grep(sciFile, "<-- TEST WITH GRAPHIC -->")) then
         if or(_module.wanted_mode == "NWNI") | without_gui_build then
@@ -749,6 +776,10 @@ function status = test_single(_module, _testPath, _testName)
         jvm = %T;
     end
 
+    if ~isempty(grep(sciFile, "<-- TEST WITH ATOMS -->")) then
+        atomsNeeded = %T;
+    end
+
     // Language
     if ~isempty(grep(sciFile, "<-- FRENCH IMPOSED -->")) then
         language = "fr_FR";
@@ -776,6 +807,12 @@ function status = test_single(_module, _testPath, _testName)
 
     if ~isempty(grep(sciFile, "<-- NO CHECK REF -->")) then
         reference = "skip";
+    end
+
+    if ~isempty(grep(sciFile, "<-- SHARED SCIHOME -->")) then
+        scihome = SCIHOME;
+    else
+        scihome = TMPDIR + filesep() + "scihome_" + _testName;
     end
 
     //build real test file
@@ -830,6 +867,22 @@ function status = test_single(_module, _testPath, _testName)
         ];
     end
 
+    if atomsNeeded then
+        head = [ head
+        "exec(""SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce"")"
+        ""
+        "// remove previously installed toolboxes"
+        "for tbx=atomsGetInstalled()(:,1)'', atomsRemove(tbx); end"
+        ""
+        "// If previous test did not end properly, restore, else backup config file"
+        "atomsRestoreConfig(%T);"
+        "atomsSaveConfig();"
+        ""
+        "atomsSetConfig(""autoloadAddAfterInstall"",""False"");"
+        "atomsSetConfig(""Verbose"" ,""False"");"
+        ""];
+    end
+
     assert_generror_def = "function assert_generror(errmsg, errnb), printf(''%s\nassert failed on test\n'',errmsg);quit; endfunction";
     if assert then
         head = [ head ;
@@ -874,6 +927,15 @@ function status = test_single(_module, _testPath, _testName)
         tail = [ tail; "close(winsid());sleep(1000);" ];
     end
 
+    if atomsNeeded then
+        tail = [ tail
+        "if ~isempty( atomsGetInstalled() ) then printf(""atoms test failed, there is installed toolboxes\n""), end;"
+        ""
+        "atomsRestoreConfig(%T);"
+        "atomsRepositorySetOfl(mgetl(SCI+""/modules/atoms/tests/unit_tests/repositories.orig""), %f);"
+        ""]
+    end
+
     tail = [ tail; "exit(0);" ; "// <-- FOOTER END -->" ];
 
     //Build final test
@@ -916,10 +978,7 @@ function status = test_single(_module, _testPath, _testName)
 
     loader_path = pathconvert(fullfile(_module.moduleName, "loader.sce"), %f);
 
-    SCI_ARGS = " -nb -quit "
-    if ~_module.longtime then
-        SCI_ARGS = SCI_ARGS + "--timeout 15m "
-    end
+    SCI_ARGS = msprintf(" -nb -quit -scihome ""%s"" --timeout %s ", scihome, timeout);
 
     // Build final command
     if getos() == "Windows" then

@@ -142,7 +142,7 @@ function [A, k] = %sp_gsort(A, sortype, sortdir, criteria)
 
     // Vector = special simple case
     // ----------------------------
-    if isvector(A) then
+    if ~isscalar(A) & isvector(A) then // Test about scalar is probably useless as statements below will work for scalars too
         isRow = isrow(A)
         if (isRow & sortype=="lr") | (iscolumn(A) & sortype=="lc")
             k = 1

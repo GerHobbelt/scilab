@@ -47,6 +47,7 @@ int sci_figure(char * fname, void* pvApiCtx)
     int iType = 0;
     int iFig = 0;
     int iRhs = nbInputArgument(pvApiCtx);
+    int iLhs = nbOutputArgument(pvApiCtx);
     int iId = 0;
     int iPos = 0;
     int i = 0;
@@ -66,6 +67,7 @@ int sci_figure(char * fname, void* pvApiCtx)
     BOOL bResize = TRUE;
     int iMenubarType = 1; // Create a 'figure' menubar by default
     int iToolbarType = 1; // Create a 'figure' toolbar by default
+    int iAntiAliasing = 3; // 8x by default
     double dblId = 0;
     BOOL status = FALSE;
 
@@ -75,6 +77,14 @@ int sci_figure(char * fname, void* pvApiCtx)
     //figure(x, "...", ...)
 
     // figure()
+
+
+    if (iLhs > 1)
+    {
+        Scierror(999, _("%s: Wrong number of output arguments: At most %d expected.\n"), fname, 1);
+        return 0;
+    }
+
     if (iRhs == 0) // Auto ID
     {
         iId = getValidDefaultFigureId();
@@ -202,7 +212,8 @@ int sci_figure(char * fname, void* pvApiCtx)
                     stricmp(pstProName, "menubar_visible") != 0 &&
                     stricmp(pstProName, "toolbar_visible") != 0 &&
                     stricmp(pstProName, "resize") != 0 &&
-                    stricmp(pstProName, "infobar_visible") != 0)
+                    stricmp(pstProName, "infobar_visible") != 0 &&
+                    stricmp(pstProName, "anti_aliasing") != 0)
             {
                 freeAllocatedSingleString(pstProName);
                 continue;
@@ -291,6 +302,53 @@ int sci_figure(char * fname, void* pvApiCtx)
                 else
                 {
                     Scierror(999, _("Wrong value for '%s' property: '%s' or '%s' expected."), "menubar", "none", "figure");
+                    freeAllocatedSingleString(pstProName);
+                    freeAllocatedSingleString(pstVal);
+                    return 1;
+                }
+
+                freeAllocatedSingleString(pstVal);
+            }
+            else if (stricmp(pstProName, "anti_aliasing") == 0)
+            {
+                char* pstVal = NULL;
+                if (isStringType(pvApiCtx, piAddrData) == FALSE || isScalar(pvApiCtx, piAddrData) == FALSE)
+                {
+                    Scierror(999, _("%s: Wrong size for input argument #%d: A single string expected.\n"), fname, i + 1);
+                    freeAllocatedSingleString(pstProName);
+                    return 1;
+                }
+
+                if (getAllocatedSingleString(pvApiCtx, piAddrData, &pstVal))
+                {
+                    Scierror(999, _("%s: Wrong size for input argument #%d: A single string expected.\n"), fname, i + 1);
+                    freeAllocatedSingleString(pstProName);
+                    return 1;
+                }
+
+                if (stricmp(pstVal, "off") == 0)
+                {
+                    iAntiAliasing = 0;
+                }
+                else if (stricmp(pstVal, "2x") == 0)
+                {
+                    iAntiAliasing = 1;
+                }
+                else if (stricmp(pstVal, "4x") == 0)
+                {
+                    iAntiAliasing = 2;
+                }
+                else if (stricmp(pstVal, "8x") == 0)
+                {
+                    iAntiAliasing = 3;
+                }
+                else if (stricmp(pstVal, "16x") == 0)
+                {
+                    iAntiAliasing = 4;
+                }
+                else
+                {
+                    Scierror(999, _("Wrong value for '%s' property: Must be in the set {%s}.\n"), "anti_aliasing", "off, 2x, 4x, 8x, 16x");
                     freeAllocatedSingleString(pstProName);
                     freeAllocatedSingleString(pstVal);
                     return 1;
@@ -448,7 +506,7 @@ int sci_figure(char * fname, void* pvApiCtx)
             freeAllocatedSingleString(pstProName);
         }
 
-        iFig = createFigure(bDockable, iMenubarType, iToolbarType, bDefaultAxes, bVisible);
+        iFig = createFigure(bDockable, iMenubarType, iToolbarType, bDefaultAxes, bVisible, iAntiAliasing);
         setGraphicObjectProperty(iFig, __GO_ID__, &iId, jni_int, 1);
         iAxes = setDefaultProperties(iFig, bDefaultAxes);
     }
@@ -639,8 +697,16 @@ int sci_figure(char * fname, void* pvApiCtx)
     setGraphicObjectProperty(iFig, __GO_RESIZE__, (void*)&bResize, jni_bool, 1);
 
     //return new created fig
-    createScalarHandle(pvApiCtx, iRhs + 1, getHandle(iFig));
-    AssignOutputVariable(pvApiCtx, 1) = iRhs + 1;
+    if (iLhs == 1)
+    {
+        createScalarHandle(pvApiCtx, iRhs + 1, getHandle(iFig));
+        AssignOutputVariable(pvApiCtx, 1) = iRhs + 1;
+    }
+    else
+    {
+        AssignOutputVariable(pvApiCtx, 1) = 0;
+    }
+
     ReturnArguments(pvApiCtx);
     return 0;
 }

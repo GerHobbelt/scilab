@@ -129,6 +129,9 @@ wchar_t *to_wide_string(const char *_UTFStr)
         return NULL;
     }
 
+#ifdef __APPLE__
+    setlocale(LC_ALL, "");
+#endif
     cd_UTF8_to_UTF16 = iconv_open("WCHAR_T", "UTF-8");
 
     iLeftIn = strlen(_UTFStr);
@@ -170,7 +173,7 @@ wchar_t *to_wide_string(const char *_UTFStr)
 char *wide_string_to_UTF8(const wchar_t *_wide)
 {
     size_t iCharLen = 0;
-    wchar_t *pwstr = _wide;
+    const wchar_t *pwstr = _wide;
     char* pchar = NULL;
     /* The value of MB_CUR_MAX is the maximum number of bytes
     in a multibyte character for the current locale. */

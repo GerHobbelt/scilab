@@ -141,7 +141,7 @@ types::Function::ReturnValue sci_hdf5_load(types::typed_list &in, int _iRetCount
     }
 
     types::typed_list out1;
-    types::Function::ReturnValue ret = Overload::call(wstFuncName, in, _iRetCount, out1);
+    types::Function::ReturnValue ret = Overload::call(wstFuncName, in, 1, out1);
 
     if (ret != types::Function::OK)
     {

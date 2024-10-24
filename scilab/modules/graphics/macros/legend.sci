@@ -11,10 +11,15 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function c=legend(varargin)
+function varargout=legend(varargin)
 
     if size(varargin)<1 then
         error(msprintf(gettext("%s: Wrong number of input argument(s): At least %d expected.\n"), "legend", 1));
+    end
+
+    if argn(1) > 1 then
+        msg = gettext("%s: Wrong number of output argument(s): at most %d expected.\n")
+        error(msprintf(msg, "legend", 1));
     end
 
     options_names=["in_upper_right";"in_upper_left";"in_lower_left";
@@ -67,19 +72,21 @@ function c=legend(varargin)
         end
     end
 
-    while type(varargin(k0))==9 then //a handle that could be an Axes, Agreg. or Polyline handle.
+    if type(varargin(k0))==9 then //a handle that could be an Axes, Agreg. or Polyline handle.
         tmpH=varargin(k0)
-        if tmpH.type=="Axes" then
-            A = tmpH;
+        if tmpH.type=="Axes" | tmpH.type=="Compound" then
+            H = getvalidchildren(A)($:-1:1);
+        else
+            H = tmpH;
         end
-        tmpH=tmpH($:-1:1);
-        H=[getvalidchildren(tmpH);H];
         k0 = k0+1;
+    elseif type(varargin(k0)) <> 10
+         error(msprintf(_("%s: Wrong type for input argument #%d: handle or string expected\n"), "legend", k0));
     end
 
     if H==[] then
         //walk subtree to get all proper children
-        H=getvalidchildren(A)
+        H = getvalidchildren(A)($:-1:1);
     end
 
     if H==[] then
@@ -118,7 +125,15 @@ function c=legend(varargin)
 
 
     drawlater()
-    c=captions(H,leg)
+
+    c = %_legend(H,leg)
+    if c == [] then
+        if argn(1) == 1
+            varargout(1) = c;
+        end    
+        // return immediately (to avoid to return a struct see issue #17275)
+        return
+    end
     if options_codes(kopt)<0 then
         c.background=f.background
     else
@@ -155,6 +170,9 @@ function c=legend(varargin)
         end
     end
     if vis_on then drawnow(); end       // draw if figure status allows it (otherwise standbye)
+    if argn(1) == 1
+        varargout(1) = c;
+    end    
 endfunction
 
 function h=getvalidchildren(A)

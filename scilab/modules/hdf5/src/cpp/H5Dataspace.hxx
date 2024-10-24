@@ -35,7 +35,7 @@ public:
     virtual std::vector<unsigned int> getDims(const bool b) const;
     virtual std::string getTypeName() const;
 
-    virtual std::string dump(std::map<haddr_t, std::string> & alreadyVisited, const unsigned int indentLevel) const;
+    virtual std::string dump(std::map<std::string, std::string> & alreadyVisited, const unsigned int indentLevel) const;
     virtual std::string toString(const unsigned int indentLevel) const;
     virtual std::string getStringDims() const;
 
@@ -63,7 +63,7 @@ public:
             return 0;
         }
 
-        if (H5Sget_simple_extent_ndims(space) != size)
+        if (H5Sget_simple_extent_ndims(space) != (int) size)
         {
             throw H5Exception(__LINE__, __FILE__, _("Invalid selection rank."));
         }

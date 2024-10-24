@@ -3,8 +3,8 @@
  * Copyright (C) 2004-2006 - INRIA - Fabrice Leray
  * Copyright (C) 2006 - INRIA - Allan Cornet
  * Copyright (C) 2006 - INRIA - Jean-Baptiste Silvy
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -41,6 +41,7 @@ int set_tics_labels_property(void* _pvCtx, int iObjUID, void* _pvData, int value
     BOOL status = FALSE;
     int iNbTicksLabels = 0;
     int* piNbTicksLabels = &iNbTicksLabels;
+    int iSize = nbRow*nbCol;
     char** stringVector = NULL;
 
     if (valueType != sci_strings)
@@ -57,20 +58,20 @@ int set_tics_labels_property(void* _pvCtx, int iObjUID, void* _pvData, int value
         return SET_PROPERTY_ERROR;
     }
 
-    if (iNbTicksLabels > nbRow * nbCol)
+    if (iNbTicksLabels > iSize)
     {
         Scierror(999, _("Wrong size for '%s' property: At least %d elements expected.\n"), "tics_labels", iNbTicksLabels);
         return SET_PROPERTY_ERROR;
     }
 
-    stringVector = createCopyStringMatrixFromStack(_pvData, nbRow * nbCol);
+    stringVector = createCopyStringMatrixFromStack(_pvData, iSize);
 
     /* Check if we should load LaTex / MathML Java libraries */
-    loadTextRenderingAPI(stringVector, nbRow * nbCol, 1);
+    loadTextRenderingAPI(stringVector, NULL, iSize, 0);
 
-    status = setGraphicObjectProperty(iObjUID, __GO_TICKS_LABELS__, stringVector, jni_string_vector, nbRow * nbCol);
+    status = setGraphicObjectProperty(iObjUID, __GO_TICKS_LABELS__, stringVector, jni_string_vector, iSize);
 
-    destroyStringArray(stringVector, nbRow * nbCol);
+    destroyStringArray(stringVector, iSize);
 
     if (status == TRUE)
     {

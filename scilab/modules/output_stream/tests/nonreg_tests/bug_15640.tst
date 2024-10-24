@@ -20,7 +20,7 @@ format("e",25)
 %pi
 nearfloat("succ",0)
 format("v",10)
-X=testmatrix('magi',4)/3;
+X=magic(4)/3;
 X([2 3 4 7 8 12])=%eps*[2 3 4 7 8 12]/8
 X=[1 2;3 4]
 exp(%i*%pi*X)

@@ -299,6 +299,7 @@
             <listitem>
                 <para>
                     &lt;-- NO TRY CATCH --&gt;
+                    The test will not use a try / catch block
                 </para>
             </listitem>
             <listitem>
@@ -333,8 +334,14 @@
             </listitem>
             <listitem>
                 <para>
-                    &lt;-- WINDOWS ONLY --&gt;
-                    If the operating system isn't Windows, the test is skipped.
+                    &lt;-- CLI SHELL MODE --&gt;
+                    This test will be executed with scilab -nwni.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    &lt;-- SHARED SCIHOME --&gt;
+                    If the <link linkend="SCIHOME">SCIHOME</link> directory should be shared with the parent Scilab.
                 </para>
             </listitem>
             <listitem>

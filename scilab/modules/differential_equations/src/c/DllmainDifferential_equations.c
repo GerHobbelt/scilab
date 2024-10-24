@@ -31,16 +31,6 @@
 
 DIFFERENTIAL_EQUATIONS_IMPEXP struct
 {
-    int ierror;
-} C2F(ierdassl);
-
-DIFFERENTIAL_EQUATIONS_IMPEXP struct
-{
-    int iero;
-} C2F(iercol);
-
-DIFFERENTIAL_EQUATIONS_IMPEXP struct
-{
     double rho[7], coef[49];
 } C2F(colloc);
 
@@ -59,10 +49,6 @@ DIFFERENTIAL_EQUATIONS_IMPEXP struct
     char efsub[25], edfsub[25], egsub[25], edgsub[25], eguess[25];
 } C2F(colname);
 
-DIFFERENTIAL_EQUATIONS_IMPEXP struct
-{
-    int iero;
-} C2F(ierajf);
 
 DIFFERENTIAL_EQUATIONS_IMPEXP struct
 {

@@ -1,14 +1,18 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2012 - Michael Baudin
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Adeline CARNIS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- TEST WITH GRAPHIC -->
+// <-- NO CHECK REF -->
+
 // The first example
 a=rand(100,10,"n");
-[lambda,facpr,comprinc] = pca(a);
-show_pca(lambda,facpr);
+[comprinc,facpr,lambda] = pca(a);
+show_pca(lambda,comprinc);
 
 // The second example
 // Source :
@@ -47,7 +51,7 @@ x = [
 400     223     26.8     70.3     13.5     16.2
 400     213     25.8     70.4     12.1     17.5
 ];
-[lambda,facpr,comprinc] = pca(x);
+[comprinc,facpr,lambda] = pca(x);
 scf();
-show_pca(lambda,facpr);
+show_pca(lambda,comprinc);
 

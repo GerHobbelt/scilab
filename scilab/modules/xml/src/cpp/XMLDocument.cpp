@@ -20,6 +20,7 @@
 #include "XMLValidation.hxx"
 #include "XMLValidationRelaxNG.hxx"
 #include "VariableScope.hxx"
+#include <libxml/xmlsave.h>
 
 extern "C"
 {
@@ -238,6 +239,10 @@ const std::string XMLDocument::dumpHTML(bool indent) const
     xmlThrDefIndentTreeOutput(1);
     xmlSaveCtxtPtr ctxt = xmlSaveToBuffer(buffer, 0, options);
     ret = xmlSaveDoc(ctxt, document);
+    if (ret < 0)
+    {
+        return "";
+    }
     xmlSaveFlush(ctxt);
     xmlSaveClose(ctxt);
 
@@ -520,7 +525,11 @@ void XMLDocument::errorFunction(void *ctx, const char *msg, ...)
     errorBuffer.append(str);
 }
 
+#if LIBXML_VERSION >= 21200
+void XMLDocument::errorXPathFunction(void *ctx, const xmlError * error)
+#else
 void XMLDocument::errorXPathFunction(void *ctx, xmlError * error)
+#endif
 {
     errorXPathBuffer.append(error->message);
 }

@@ -25,7 +25,7 @@ assert_checkequal(a.sub_ticks, [1, 1]);
 assert_checkequal(a.font_style, 6);
 assert_checkequal(a.font_size, 1);
 assert_checkequal(a.font_color, -1);
-assert_checkequal(a.fractional_font, "off");
+assert_checkequal(a.fractional_font, "on");
 assert_checkequal(a.isoview, "off");
 assert_checkequal(a.cube_scaling, "off");
 assert_checkequal(a.view, "2d");

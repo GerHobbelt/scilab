@@ -19,7 +19,7 @@ assert_checkequal(f.viewport, [0,0]);
 assert_checkequal(f.figure_name, gettext("Graphic window number %d"));
 assert_checkequal(f.figure_id, 0);
 assert_checkequal(f.pixel_drawing_mode, "copy");
-assert_checkequal(f.anti_aliasing, "off");
+assert_checkequal(f.anti_aliasing, "8x");
 assert_checkequal(f.immediate_drawing, "on");
 assert_checkequal(f.background, -2);
 assert_checkequal(f.visible, "on");

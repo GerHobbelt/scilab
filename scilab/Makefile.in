@@ -276,7 +276,7 @@ am_scilab_bin_OBJECTS =  \
 	$(am__objects_1)
 scilab_bin_OBJECTS = $(am_scilab_bin_OBJECTS)
 am__DEPENDENCIES_1 =
-am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1)
+am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @NEED_JAVA_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
 scilab_bin_DEPENDENCIES = $(top_builddir)/modules/libscilab.la \
 	$(top_builddir)/modules/libscilab-cli.la $(am__DEPENDENCIES_1) \
@@ -591,6 +591,7 @@ CFLAGS = @CFLAGS@
 CHECKSTYLE = @CHECKSTYLE@
 COBERTURA = @COBERTURA@
 COMMONS_BEANUTILS = @COMMONS_BEANUTILS@
+COMMONS_COLLECTIONS = @COMMONS_COLLECTIONS@
 COMMONS_IO = @COMMONS_IO@
 COMMONS_LOGGING = @COMMONS_LOGGING@
 CPP = @CPP@
@@ -630,12 +631,14 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FLEXDOCK = @FLEXDOCK@
 FLIBS = @FLIBS@
-FOP = @FOP@
+FOP_CORE = @FOP_CORE@
+FOP_EVENT = @FOP_EVENT@
+FOP_UTIL = @FOP_UTIL@
 FREEHEP_GRAPHICS2D = @FREEHEP_GRAPHICS2D@
+FREEHEP_GRAPHICSBASE = @FREEHEP_GRAPHICSBASE@
 FREEHEP_GRAPHICSIO = @FREEHEP_GRAPHICSIO@
 FREEHEP_GRAPHICSIO_EMF = @FREEHEP_GRAPHICSIO_EMF@
 FREEHEP_IO = @FREEHEP_IO@
-FREEHEP_UTIL = @FREEHEP_UTIL@
 GENHTML = @GENHTML@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GIWS_BIN = @GIWS_BIN@
@@ -644,12 +647,14 @@ GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GRAPHICS_ENABLE = @GRAPHICS_ENABLE@
 GREP = @GREP@
+GUAVA = @GUAVA@
 GUI_ENABLE = @GUI_ENABLE@
-HAMCREST = @HAMCREST@
 HAVE_CXX17 = @HAVE_CXX17@
 HDF5_CFLAGS = @HDF5_CFLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 HELP_ENABLE = @HELP_ENABLE@
+HTTPCLIENT = @HTTPCLIENT@
+HTTPCORE = @HTTPCORE@
 INKSCAPE = @INKSCAPE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -684,6 +689,8 @@ JEUCLID_CORE = @JEUCLID_CORE@
 JGRAPHX = @JGRAPHX@
 JHALL = @JHALL@
 JLATEXMATH = @JLATEXMATH@
+JLATEXMATH_FONT_CYRILLIC = @JLATEXMATH_FONT_CYRILLIC@
+JLATEXMATH_FONT_GREEK = @JLATEXMATH_FONT_GREEK@
 JLATEXMATH_FOP = @JLATEXMATH_FOP@
 JOGL2 = @JOGL2@
 JROSETTA_API = @JROSETTA_API@
@@ -804,8 +811,6 @@ UMFPACK_CFLAGS = @UMFPACK_CFLAGS@
 UMFPACK_ENABLE = @UMFPACK_ENABLE@
 UMFPACK_LIBS = @UMFPACK_LIBS@
 USE_NLS = @USE_NLS@
-VALGRIND_CFLAGS = @VALGRIND_CFLAGS@
-VALGRIND_LIBS = @VALGRIND_LIBS@
 VERSION = @VERSION@
 WITH_OCAML = @WITH_OCAML@
 WITH_TKSCI = @WITH_TKSCI@
@@ -815,6 +820,7 @@ XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 XMKMF = @XMKMF@
 XMLGRAPHICS_COMMONS = @XMLGRAPHICS_COMMONS@
+XMLRESOLVER = @XMLRESOLVER@
 XML_APIS_EXT = @XML_APIS_EXT@
 XML_CONFIG = @XML_CONFIG@
 XML_FLAGS = @XML_FLAGS@
@@ -929,10 +935,7 @@ scilab_bin_CPPFLAGS = -I$(top_srcdir)/modules/ast/includes/ast/ \
 
 # Localization dep already exists because of the `exportLocaleToSystem' symbol
 # (causing issues on some platform)
-
-# Link against valgrind library as on some systems (eg. Fedora) it should be
-# link on the final binary
-COMMON_LIBS = $(LTLIBINTL) $(VALGRIND_LIBS)
+COMMON_LIBS = $(LTLIBINTL)
 scilab_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \
 	$(am__append_9)
 
@@ -1012,7 +1015,8 @@ DOCMASK = scilab_*_help.jar
 DOCIMAGES = scilab_images.jar
 
 # Path to built files
-PATHTOHELPFILES = modules/helptools/jar/
+PATHTODOCFILES = modules/helptools/jar/
+PATHTOHELPFILES = modules/helptools/inline/
 
 # Path to scirenderer jar
 PATHTOSCIRENDERER = modules/scirenderer/jar/
@@ -2291,6 +2295,40 @@ javadoc-all:
 	-sourcepath $$LISTMODULES \
 	$$LISTPKG
 
+doc-inline-fr_FR:
+	@$(MAKE) $(AM_MAKEFLAGS) doc-inline ALL_LINGUAS_DOC=fr_FR
+
+doc-inline-en_US:
+	@$(MAKE) $(AM_MAKEFLAGS) doc-inline ALL_LINGUAS_DOC=en_US
+
+doc-inline-pt_BR:
+	@$(MAKE) $(AM_MAKEFLAGS) doc-inline ALL_LINGUAS_DOC=pt_BR
+
+doc-inline-ru_RU:
+	@$(MAKE) $(AM_MAKEFLAGS) doc-inline ALL_LINGUAS_DOC=ru_RU
+
+doc-inline-ja_JP:
+	@$(MAKE) $(AM_MAKEFLAGS) doc-inline ALL_LINGUAS_DOC=ja_JP
+
+doc-inline: $(top_builddir)/scilab-bin $(top_builddir)/bin/scilab-cli
+@BUILD_HELP_TRUE@	@if test -x $(top_builddir)/scilab-bin; then \
+@BUILD_HELP_TRUE@		cd $(top_builddir);\
+@BUILD_HELP_TRUE@		for l in $(ALL_LINGUAS_DOC); do \
+@BUILD_HELP_TRUE@			echo "-- Building help ($$l) --"; \
+@BUILD_HELP_TRUE@			COMMAND="try xmltoinline([],[],'$$l');catch disp(lasterror()); exit(-1);end;exit(0);"; \
+@BUILD_HELP_TRUE@			if test "$(MACOSX)" = "1"; then \
+@BUILD_HELP_TRUE@				echo "LANG=$$l.UTF-8 HOME=/tmp $(top_builddir)/bin/scilab-cli -noatomsautoload -nb -l $$l -nouserstartup -e \"$$COMMAND\"";\
+@BUILD_HELP_TRUE@				LANG=$$l.UTF-8 HOME=/tmp $(top_builddir)/bin/scilab-cli -noatomsautoload -nb -l $$l -nouserstartup -e "$$COMMAND" || exit 1;\
+@BUILD_HELP_TRUE@			else \
+@BUILD_HELP_TRUE@				echo "LANG=$$l.UTF-8 LC_ALL=C HOME=/tmp $(top_builddir)/bin/scilab-cli -noatomsautoload -nb -l $$l -nouserstartup -e \"$$COMMAND\"";\
+@BUILD_HELP_TRUE@				LANG=$$l.UTF-8 LC_ALL=C HOME=/tmp $(top_builddir)/bin/scilab-cli -noatomsautoload -nb -l $$l -nouserstartup -e "$$COMMAND" || exit 1;\
+@BUILD_HELP_TRUE@			fi; \
+@BUILD_HELP_TRUE@		done; \
+@BUILD_HELP_TRUE@	else \
+@BUILD_HELP_TRUE@		echo "Cannot find scilab-cli binary"; \
+@BUILD_HELP_TRUE@	fi
+@BUILD_HELP_FALSE@	@echo "Cannot buid help. Add --enable-build-help to the ./configure if you want to build it."
+
 doc-fr_FR:
 	@$(MAKE) $(AM_MAKEFLAGS) doc ALL_LINGUAS_DOC=fr_FR
 
@@ -2318,16 +2356,11 @@ doc: function-list javadoc $(top_builddir)/scilab-bin $(top_builddir)/bin/scilab
 @BUILD_HELP_TRUE@		for l in $(ALL_LINGUAS_DOC); do \
 @BUILD_HELP_TRUE@			echo "-- Building documentation ($$l) --"; \
 @BUILD_HELP_TRUE@			COMMAND="try xmltojar([],[],'$$l');catch disp(lasterror()); exit(-1);end;exit(0);"; \
-@BUILD_HELP_TRUE@			if test "$(MACOSX)" = "1"; then \
-@BUILD_HELP_TRUE@				echo "LANG=$$l.UTF-8 SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e \"$$COMMAND\"";\
-@BUILD_HELP_TRUE@				LANG=$$l.UTF-8 SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e "$$COMMAND" || exit 1;\
-@BUILD_HELP_TRUE@			else \
-@BUILD_HELP_TRUE@				echo "LANG=$$l.UTF-8 LC_ALL=C SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e \"$$COMMAND\"";\
-@BUILD_HELP_TRUE@				LANG=$$l.UTF-8 LC_ALL=C SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e "$$COMMAND" || exit 1;\
-@BUILD_HELP_TRUE@			fi; \
+@BUILD_HELP_TRUE@			echo "LANG=$$l.UTF-8 LC_ALL=C SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e \"$$COMMAND\"";\
+@BUILD_HELP_TRUE@			LANG=$$l.UTF-8 LC_ALL=C.UTF-8 SCI_DISABLE_TK=1 SCI_JAVA_ENABLE_HEADLESS=1 _JAVA_OPTIONS='-Djava.awt.headless=true' HOME=/tmp $(top_builddir)/bin/scilab-adv-cli -noatomsautoload -nb -l $$l -nouserstartup -e "$$COMMAND" || exit 1;\
 @BUILD_HELP_TRUE@		done; \
 @BUILD_HELP_TRUE@	else \
-@BUILD_HELP_TRUE@		echo "Cannot find Scilab-adv-cli binary"; \
+@BUILD_HELP_TRUE@		echo "Cannot find scilab-adv-cli binary"; \
 @BUILD_HELP_TRUE@	fi
 @BUILD_HELP_FALSE@	@echo "Cannot buid help. Add --enable-build-help to the ./configure if you want to build it."
 
@@ -2346,7 +2379,7 @@ doc-web: function-list javadoc $(top_builddir)/scilab-bin $(top_builddir)/bin/sc
 @BUILD_HELP_TRUE@			fi; \
 @BUILD_HELP_TRUE@		done; \
 @BUILD_HELP_TRUE@	else \
-@BUILD_HELP_TRUE@		echo "Cannot find Scilab-adv-cli binary"; \
+@BUILD_HELP_TRUE@		echo "Cannot find scilab-adv-cli binary"; \
 @BUILD_HELP_TRUE@	fi
 @BUILD_HELP_FALSE@	@echo "Cannot buid help. Add --enable-build-help to the ./configure if you want to build it."
 
@@ -2401,9 +2434,20 @@ clean-macros:
 	find $(top_builddir)/modules/*/macros -name "lib" | xargs --no-run-if-empty rm 2> /dev/null
 
 # To ensure previous compatibility
-clean-doc: clean-help
-
 clean-help:
+	-@if test -x $(top_builddir)/scilab-cli-bin; then \
+		COMMAND="try clean_help();catch exit(-1);end;exit(0)"; \
+		for l in $(ALL_LINGUAS_DOC); do \
+			echo "$(top_builddir)/bin/scilab-cli -nb -l $$l -noatomsautoload -nouserstartup -e '$$COMMAND'"; \
+			HOME=/tmp $(top_builddir)/bin/scilab-cli -nb -l $$l -noatomsautoload -nouserstartup -e "$$COMMAND" || exit 1; \
+		done; \
+	else \
+		echo "Cannot find Scilab binary"; \
+	fi; \
+	echo "rmdir $(top_builddir)/modules/helptools/inline/"; \
+	rm -rf $(top_builddir)/modules/helptools/inline/;
+
+clean-doc:
 	-@if test -x $(top_builddir)/scilab-cli-bin; then \
 		COMMAND="try clean_help();catch exit(-1);end;exit(0)"; \
 		for l in $(ALL_LINGUAS_DOC); do \
@@ -2525,14 +2569,26 @@ install-data-local:
 ################ INSTALL DOCUMENTATION #################
 # Starting from Scilab 5, documentation file are provided by Docbook
 # In the Scilab application we are generating a JavaHelp file.
-@BUILD_HELP_TRUE@	@$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES); \
-@BUILD_HELP_TRUE@	echo $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES); \
-@BUILD_HELP_TRUE@	if ls -lLd $(top_builddir)/$(PATHTOHELPFILES)/$(DOCMASK) >/dev/null 2>&1; then \
-@BUILD_HELP_TRUE@		for file in $(top_builddir)/$(PATHTOHELPFILES)/$(DOCMASK) $(top_builddir)/$(PATHTOHELPFILES)/$(DOCIMAGES); do \
-@BUILD_HELP_TRUE@		    echo "$(INSTALL_DATA) $$file $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES)" ; \
-@BUILD_HELP_TRUE@	    	$(INSTALL_DATA) "$$file" $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES) ; \
+# Documentation
+@BUILD_HELP_TRUE@	@$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTODOCFILES); \
+@BUILD_HELP_TRUE@	echo $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTODOCFILES); \
+@BUILD_HELP_TRUE@	if ls -lLd $(top_builddir)/$(PATHTODOCFILES)/$(DOCMASK) >/dev/null 2>&1; then \
+@BUILD_HELP_TRUE@		for file in $(top_builddir)/$(PATHTODOCFILES)/$(DOCMASK) $(top_builddir)/$(PATHTODOCFILES)/$(DOCIMAGES); do \
+@BUILD_HELP_TRUE@		    echo "$(INSTALL_DATA) $$file $(DESTDIR)$(pkgdatadir)/$(PATHTODOCFILES)" ; \
+@BUILD_HELP_TRUE@	    	$(INSTALL_DATA) "$$file" $(DESTDIR)$(pkgdatadir)/$(PATHTODOCFILES) ; \
 @BUILD_HELP_TRUE@		done; \
 @BUILD_HELP_TRUE@	fi
+# Inline help
+@BUILD_HELP_TRUE@	@$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES); \
+@BUILD_HELP_TRUE@	echo $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES); \
+@BUILD_HELP_TRUE@	for lang in $(ALL_LINGUAS); do \
+@BUILD_HELP_TRUE@		if test -d $(top_builddir)/$(PATHTOHELPFILES)/$$lang/; then \
+@BUILD_HELP_TRUE@			echo $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES)/$$lang; \
+@BUILD_HELP_TRUE@			$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES)/$$lang; \
+@BUILD_HELP_TRUE@			echo $(INSTALL_DATA) $(top_builddir)/$(PATHTOHELPFILES)/$$lang/*.* $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES)/$$lang/; \
+@BUILD_HELP_TRUE@			$(INSTALL_DATA) $(top_builddir)/$(PATHTOHELPFILES)/$$lang/*.* $(DESTDIR)$(pkgdatadir)/$(PATHTOHELPFILES)/$$lang/; \
+@BUILD_HELP_TRUE@		fi \
+@BUILD_HELP_TRUE@	done
 @BUILD_HELP_TRUE@	@if test -d $(PATHTOJAVASCIDOC); then \
 @BUILD_HELP_TRUE@	$(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOJAVASCIDOC); \
 @BUILD_HELP_TRUE@	echo $(mkinstalldirs) $(DESTDIR)$(pkgdatadir)/$(PATHTOJAVASCIDOC); \
@@ -2551,7 +2607,7 @@ install-data-local:
 
 .PHONY: macros localization doc strip-debug
 
-.NOTPARALLEL: macros doc
+.NOTPARALLEL: macros doc help
 
 # Construct the LD_LIBRARY_PATH from the variable detected previously
 # Run the unitary test of call_scilab

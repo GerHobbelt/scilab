@@ -52,7 +52,7 @@ int sci_ClipBoard(char *fname, void* pvApiCtx)
     CheckInputArgument(pvApiCtx, 0, 2);
     CheckOutputArgument(pvApiCtx, 0, 1);
 
-    if ( getScilabMode() != SCILAB_NWNI )
+    if (getScilabMode() != SCILAB_NWNI)
     {
         /*--------------------*/
         /* clipboard("paste") */
@@ -260,7 +260,7 @@ int sci_ClipBoard(char *fname, void* pvApiCtx)
                                 }
                             }
 
-                            TextToSendInClipboard = (char*)MALLOC( (SizeofTextToSendInClipboard) * sizeof(char) );
+                            TextToSendInClipboard = (char*)MALLOC( (SizeofTextToSendInClipboard + 1) * sizeof(char) );
                             if (TextToSendInClipboard == NULL)
                             {
                                 freeAllocatedMatrixOfString(m2, n2, Str);

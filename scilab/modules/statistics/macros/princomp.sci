@@ -40,6 +40,8 @@ function [facpr, comprinc, lambda, tsquare, explainedvar, mu]=princomp(x,eco)
         eco {mustBeA(eco, "boolean")} = %f
     end
 
+    warnobsolete("pca", "2026.0.0");
+
     if x==[] then
         facpr=[];
         comprinc=[];

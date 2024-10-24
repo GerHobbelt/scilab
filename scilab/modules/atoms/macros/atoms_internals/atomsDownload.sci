@@ -86,28 +86,8 @@ function atomsDownload(url_in,file_out,md5sum)
     elseif atomsGetConfig("downloadTool") == "httpdownload" & getos() == "Windows" then
         HTTPDOWNLOAD = %T;
     else
-        // Default values according to platform
-        if LINUX | SOLARIS | BSD then
-
-            // Need to detect under Linux platforms
-            [rep, stat, err] = unix_g("curl --version");
-
-            if stat == 0 then
-                CURL = %T;
-                atomsSetConfig("downloadTool", "curl");
-            else
-                [rep, stat, err] = unix_g("wget --version");
-                if stat == 0 then
-                    WGET = %T;
-                    atomsSetConfig("downloadTool", "wget");
-                else
-                    error(msprintf(gettext("%s: Neither Wget or Curl found: Please install one of them\n"), "atomsDownload"));
-                end
-            end
-        elseif MACOSX | getos() == "Windows" then
-            CURL = %T;
-            atomsSetConfig("downloadTool", "curl");
-        end
+        // Default value if not configured
+        HTTP_GET = %T;
     end
 
     // Build the command
@@ -185,21 +165,23 @@ function atomsDownload(url_in,file_out,md5sum)
 
             if HTTP_GET then
                 try
-                    [res,http_status] = http_get(url_in,file_out);
-                    select http_status
-                    case 200 then
+                    [res, http_status] = http_get(url_in,file_out);
+
+                    // RFC 9110 HTTP Semantics
+                    // # 15. Status Codes
+                    // 1xx (Informational): The request was received, continuing process
+                    // 2xx (Successful): The request was successfully received, understood, and accepted
+                    // 3xx (Redirection): Further action needs to be taken in order to complete the request
+                    // 4xx (Client Error): The request contains bad syntax or cannot be fulfilled
+                    // 5xx (Server Error): The server failed to fulfill an apparently valid request
+                    if http_status < 400 then
                         stat = 0;
                     else
                         stat = -1;
+                        err = msprintf(gettext("%s: http_get failed with %d http status code.\n"), "atomsDownload", http_status);
                     end
                 catch
                     err = lasterror();
-                    select err($);
-                    case _("Couldn''t resolve host name") then
-                        stat = -2;
-                    case msprintf(_("%s: Wrong value for input argument #%d: The given path does not exist.\n"),"http_get",2) then
-                        stat = -7;
-                    end
                 end
             elseif getos() == "Windows" & CURL then
                 download_cmd = """" + pathconvert(SCI+"/tools/curl/curl.exe",%F) + """" + proxy_host_arg + proxy_user_arg + timeout_arg + " -s """ + url_in + """ -o """ + file_out + """";

@@ -50,7 +50,7 @@ assert_checktrue(importXcosDiagram("SCI/modules/xcos/demos/ModelicaBlocks/Hydrau
   "Analytical Jacobian: enabled  (%Jacobian=%t)"           
   "Parameter embedding mode: enabled (%Modelica_ParEmb=%t)"
   ""                                                       
-  "Generated files path: TMPDIR/"      
+  "Generated files path: TMPDIR/"     
   ""                                                       
 WARNING: Diagram contains implicit blocks, compiling for implicit Solver.
 assert_checktrue(ok);

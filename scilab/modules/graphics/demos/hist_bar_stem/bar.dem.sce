@@ -66,7 +66,7 @@ function demo_bar()
 
     // Legend drawing
 
-    captions(histo.children($:-1:1), ["Year 2005";"Year 2006";"Year 2007"]);
+    legend(histo.children, ["Year 2005";"Year 2006";"Year 2007"]);
     legs = gce();
     legs.legend_location = "in_upper_left";
 

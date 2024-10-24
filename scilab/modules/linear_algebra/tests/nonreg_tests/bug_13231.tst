@@ -7,6 +7,7 @@
 
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+// <-- LONG TIME EXECUTION -->
 
 // <-- Non-regression test for bug 13231 -->
 //
@@ -19,5 +20,5 @@
 
 n = 2000;
 A = rand(n,n);
-assert_checkequal(execstr("d = spec(A);", "errcatch"), 0);
-assert_checkequal(execstr("[X,D] = spec(A);", "errcatch"), 0);
+d = spec(A);
+[X,D] = spec(A);

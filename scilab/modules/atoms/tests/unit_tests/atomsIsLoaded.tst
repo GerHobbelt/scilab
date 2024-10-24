@@ -8,17 +8,9 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 
-load("SCI/modules/atoms/macros/atoms_internals/lib");
 exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Do not use the autoload system
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
 
 //force official ATOMS repository
 // Load the 1st scenario : See scene12.test.atoms.scilab.org.txt
@@ -57,7 +49,3 @@ if or(atomsIsLoaded(A) <> [%T ; %T ; %T ; %T ; %T ; %F]) then pause, end
 // Remove toolbox_2
 // =============================================================================
 atomsRemove("toolbox_2V6","user");
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);

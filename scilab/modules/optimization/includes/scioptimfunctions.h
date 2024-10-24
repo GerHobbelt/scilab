@@ -21,11 +21,11 @@ typedef void (*costf_t)(int *ind, int *n, double *x, double *f, double *g, int *
 typedef void (*fuclid_t)(int *n, double *x, double *y, double *ps, int *ti, float *tr, double *td);
 typedef void (*ctonb_t)(int *n, double *u, double *v, int *ti, float *tr, double *td);
 typedef void (*ctcab_t)(int *n, double *u, double *v, int *ti, float *tr, double *td);
-extern void C2F(n1qn1)(costf_t, int*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, double*, int*, float*, double*);
-extern void C2F(n1qn3)(costf_t, fuclid_t, ctonb_t, ctcab_t, int*, double*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, double*, int*, int*, float*, double*);
-extern void C2F(n1fc1)(costf_t, fuclid_t, int*, double*, double*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, int*, int*, double*, double*, int*, float*, double*);
-extern void C2F(qnbd)(int*, costf_t, int*, double*, double*, double*, int*, int*, double*, int*, int*, double*, double*, double*, double*, double*, double*, int*, double*, int*, int*, int*, int*, float*, double*);
-extern void C2F(gcbd)(int*, costf_t, char*, int*, double*, double*, double*, int*, int*, double*, int*, int*, double*, double*, double*, double*, double*, double*, int*, double*, int*, int*, int*, int*, float*, double*);
+extern void C2F(n1qn1)(costf_t, int*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, double*, int*, float*, double*, int*);
+extern void C2F(n1qn3)(costf_t, fuclid_t, ctonb_t, ctcab_t, int*, double*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, double*, int*, int*, float*, double*, int*);
+extern void C2F(n1fc1)(costf_t, fuclid_t, int*, double*, double*, double*, double*, double*, double*, double*, int*, int*, int*, int*, int*, int*, int*, double*, double*, int*, float*, double*, int*);
+extern void C2F(qnbd)(int*, costf_t, int*, double*, double*, double*, int*, int*, double*, int*, int*, double*, double*, double*, double*, double*, double*, int*, double*, int*, int*, int*, int*, float*, double*, int*);
+extern void C2F(gcbd)(int*, costf_t, char*, int*, double*, double*, double*, int*, int*, double*, int*, int*, double*, double*, double*, double*, double*, double*, int*, double*, int*, int*, int*, int*, float*, double*, int*);
 OPTIMIZATION_IMPEXP void costf(int *ind, int *n, double *x, double *f, double *g, int *ti, float *tr, double *td);
 OPTIMIZATION_IMPEXP void C2F(fuclid)(int *n, double *x, double *y, double *ps, int *ti, float *tr, double *td);
 OPTIMIZATION_IMPEXP void C2F(ctonb)(int *n, double *u, double *v, int *ti, float *tr, double *td);

@@ -2,7 +2,8 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="testmatrix">
     <refnamediv>
         <refname>testmatrix</refname>
-        <refpurpose>generate special matrices, such as Hilbert, Franck</refpurpose>
+        <refpurpose>generate special matrices, such as Hilbert, Frank</refpurpose>
+        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="magic">magic</link>, <link linkend="invhilb">invhilb</link> or <link linkend="frank">frank</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -50,7 +51,7 @@
             <varlistentry>
                 <term>testmatrix('frk',n)</term>
                 <listitem>
-                    <para>returns the Franck matrix.</para>
+                    <para>returns the Frank matrix.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -71,5 +72,26 @@ testmatrix('frk',10)
 testmatrix('hilb',4)
  ]]></programlisting>
     </refsection>
-
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Tagged obsolete and will be removed in Scilab 2026.0.0.
+                    <itemizedlist>
+                        <listitem>
+                            Use <link linkend="magic">magic</link> function instead of <literal>testmatrix('magi', n)</literal>.
+                        </listitem>
+                        <listitem>
+                            Use <link linkend="invhilb">invhilb</link> function instead of <literal>testmatrix('hilb', n)</literal>. 
+                        </listitem>
+                        <listitem>
+                            Use <link linkend="frank">frank</link> function instead of <literal>testmatrix('frk', n)</literal>.
+                        </listitem>
+                    </itemizedlist>
+                </revremark>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

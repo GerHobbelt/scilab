@@ -9,7 +9,8 @@
 //
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-//
+//<-- NO CHECK ERROR OUTPUT -->
+
 // <-- Short Description -->
 // bin/scilab exit code is incorrect on syntax error.
 

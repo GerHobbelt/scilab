@@ -129,7 +129,6 @@
 
             loglog(w,abs(g));
 
-            legend(leg)
             title("$\LARGE \left|s^2/(s^2+\alpha s+1)\right|\mbox{ for }s=i\omega$")
             xlabel("$\LARGE \omega$") ]]></programlisting>
         <scilab:image>
@@ -174,6 +173,12 @@
                 <revdescription>
                 Function loglog added.
                 </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
+                </revremark>
             </revision>
         </revhistory>
     </refsection>

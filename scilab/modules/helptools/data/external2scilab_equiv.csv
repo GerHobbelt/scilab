@@ -75,7 +75,6 @@ frewind;mseek;
 func2str;macr2tree;
 fwrite;mput;
 fzero;fsolve;
-gallery;testmatrix;
 gammainc;cdfgam;
 get_home_directory;home;// Octave
 getpref;xmlGetValues;
@@ -130,7 +129,6 @@ loglog;plot;
 lookfor;apropos;
 lower;convstr;
 lstat;fileinfo;// Octave
-magic;testmatrix;
 mat2str;sci2exp;
 matlabroot;SCI;
 msgbox;messagebox;

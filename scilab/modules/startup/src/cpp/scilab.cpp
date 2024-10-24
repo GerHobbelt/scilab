@@ -56,6 +56,10 @@ extern "C"
 #include "configvariable.hxx"
 #include "exit_status.hxx"
 #include "scilabWrite.hxx"
+#include "timedvisitor.hxx"
+#include "stepvisitor.hxx"
+#include "runner.hxx"
+#include "parser_private.hxx"
 
 #define INTERACTIVE     -1
 
@@ -77,9 +81,9 @@ static void usage(void)
     std::cerr << "      -args arg1 arg2..: Send directly some arg1 arg2 .. data to the session." << std::endl;
     std::cerr << "                         arg1 arg2 .. values can then be read through sciargs()." << std::endl;
     std::cerr << "      -e Instruction   : Execute the scilab instruction given in Instruction argument." << std::endl;
-    std::cerr << "                         -e and -f arguments are mutually exclusive." << std::endl;
+    std::cerr << "                         -e and -f are executed in argument order." << std::endl;
     std::cerr << "      -f File          : Execute the scilab script given in File argument." << std::endl;
-    std::cerr << "                         -e and -f arguments are mutually exclusive." << std::endl;
+    std::cerr << "                         -e and -f are executed in argument order." << std::endl;
     std::cerr << "      -quit            : Force scilab exit after execution of script from -e or -f argument." << std::endl;
     std::cerr << "                         Flag ignored if it is not used with -e or -f argument and when Scilab is in a pipe." << std::endl;
     std::cerr << "      -l lang          : Change the language of scilab (default : en_US)." << std::endl;
@@ -125,15 +129,17 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
     std::cerr << "-*- Getting Options -*-" << std::endl;
 #endif
 
+    ParserSingleInstance::disableParseTrace();
+
     for (i = 1; i < argc; ++i)
     {
         if (!strcmp("--parse-trace", argv[i]))
         {
-            _pSEI->iParseTrace = 1;
+            ParserSingleInstance::enableParseTrace();
         }
         else if (!strcmp("--pretty-print", argv[i]))
         {
-            _pSEI->iPrintAst = 1;
+            StaticRunner::setPrintAst(true);
         }
         else if (!strcmp("--help", argv[i]))
         {
@@ -142,35 +148,33 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
         }
         else if (!strcmp("--AST-trace", argv[i]))
         {
-            _pSEI->iDumpAst = 1;
+            StaticRunner::setDumpAst(true);
         }
         else if (!strcmp("--no-exec", argv[i]))
         {
-            _pSEI->iExecAst = 0;
+            StaticRunner::setExecAst(false);
         }
         else if (!strcmp("--context-dump", argv[i]))
         {
-            _pSEI->iDumpStack = 1;
+            StaticRunner::setDumpStack(true);
         }
         else if (!strcmp("--timed", argv[i]))
         {
-            _pSEI->iTimed = 1;
             ConfigVariable::setTimed(true);
         }
         else if (!strcmp("--serialize", argv[i]))
         {
-            _pSEI->iSerialize = 1;
             ConfigVariable::setSerialize(true);
         }
         else if (!strcmp("--AST-timed", argv[i]))
         {
             std::cout << "Timed execution" << std::endl;
-            _pSEI->iAstTimed = 1;
+            ConfigVariable::setDefaultVisitor(new ast::TimedVisitor());
         }
         else if (!strcmp("--parse-file", argv[i]))
         {
             i++;
-            if (argc >= i)
+            if (argc > i)
             {
                 _pSEI->pstParseFile = argv[i];
             }
@@ -182,58 +186,30 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
         else if (!strcmp("-version", argv[i]))
         {
             i++;
-            if (argc >= i)
-            {
-                _pSEI->iShowVersion = 1;
-            }
+            _pSEI->iShowVersion = 1;
         }
         else if (!strcmp("-f", argv[i]))
         {
             i++;
-            if (argc >= i)
+            if (argc > i)
             {
                 _pSEI->pstFile = argv[i];
+                _pSEI->iFilePos = i;
             }
         }
         else if (!strcmp("-e", argv[i]))
         {
             i++;
-            if (argc >= i)
+            if (argc > i)
             {
                 _pSEI->pstExec = argv[i];
-            }
-        }
-        else if (!strcmp("-O", argv[i]))
-        {
-            i++;
-            if (argc >= i)
-            {
-                _pSEI->pstExec = argv[i];
-                _pSEI->iCodeAction = 0;
-            }
-        }
-        else if (!strcmp("-X", argv[i]))
-        {
-            i++;
-            if (argc >= i)
-            {
-                _pSEI->pstExec = argv[i];
-                _pSEI->iCodeAction = 1;
-            }
-        }
-        else if (!strcmp("-P", argv[i]))
-        {
-            i++;
-            if (argc >= i)
-            {
-                _pSEI->pstExec = argv[i];
-                _pSEI->iCodeAction = 2;
+                _pSEI->iExecPos = i;
             }
         }
         else if (!strcmp("-l", argv[i]))
         {
             i++;
-            if (argc >= i)
+            if (argc > i)
             {
                 _pSEI->pstLang = argv[i];
             }
@@ -286,7 +262,7 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
         }
         else if (!strcmp("--exec-verbose", argv[i]))
         {
-            _pSEI->iExecVerbose = 1;
+            ConfigVariable::setDefaultVisitor(new ast::StepVisitor());
         }
         else if (!strcmp("-nocolor", argv[i]))
         {
@@ -335,10 +311,6 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
             }
 
         }
-        else if (!strcmp("-keepconsole", argv[i]))
-        {
-            _pSEI->iKeepConsole = 1;
-        }
         else if (!strcmp("--webmode", argv[i]))
         {
             _pSEI->iWebMode = 1;
@@ -346,11 +318,44 @@ static int get_option(const int argc, char *argv[], ScilabEngineInfo* _pSEI)
         else if (!strcmp("-scihome", argv[i]))
         {
             i++;
-            if (argc >= i)
+            if (argc > i)
             {
                 _pSEI->pstSciHome = argv[i];
             }
         }
+#ifdef _MSC_VER
+        else if (!strcmp("-O", argv[i]))
+        {
+            i++;
+            if (argc > i)
+            {
+                _pSEI->pstExec = argv[i];
+                _pSEI->iCodeAction = 0;
+            }
+        }
+        else if (!strcmp("-X", argv[i]))
+        {
+            i++;
+            if (argc > i)
+            {
+                _pSEI->pstExec = argv[i];
+                _pSEI->iCodeAction = 1;
+            }
+        }
+        else if (!strcmp("-P", argv[i]))
+        {
+            i++;
+            if (argc > i)
+            {
+                _pSEI->pstExec = argv[i];
+                _pSEI->iCodeAction = 2;
+            }
+        }
+        else if (!strcmp("-keepconsole", argv[i]))
+        {
+            _pSEI->iKeepConsole = 1;
+        }
+#endif
     }
 
     // ignore -quit if -e or -f are not given
@@ -408,7 +413,6 @@ int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR szCmdLin
 int main(int argc, char *argv[])
 {
 #endif
-    int iRet = 0;
 
 #ifdef ENABLE_MPI
     initScilabMPI();
@@ -492,9 +496,9 @@ int main(int argc, char *argv[])
     /* if file descriptor returned is -2 stdin is not associated with an input stream */
     /* example : echo plot3d | scilex -e */
 
-    if (!isatty(_fileno(stdin)) && (_fileno(stdin) != -2) && getScilabMode() != SCILAB_STD)
+    if (!isatty(_fileno(stdin)) && (_fileno(stdin) != -2) && (getScilabMode() != SCILAB_STD))
 #else
-    if (!isatty(fileno(stdin)) && getScilabMode() != SCILAB_STD)
+    if (!isatty(fileno(stdin)) && (getScilabMode() != SCILAB_STD))
 #endif
     {
         ConfigVariable::setisatty(true);

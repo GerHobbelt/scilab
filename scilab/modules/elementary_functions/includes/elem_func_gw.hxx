@@ -65,6 +65,7 @@ CPP_GATEWAY_PROTOTYPE(sci_expm);
 CPP_GATEWAY_PROTOTYPE(sci_eye);
 CPP_GATEWAY_PROTOTYPE(sci_floor);
 CPP_GATEWAY_PROTOTYPE(sci_frexp);
+CPP_GATEWAY_PROTOTYPE(sci_gallery);
 CPP_GATEWAY_PROTOTYPE(sci_gsort);
 CPP_GATEWAY_PROTOTYPE(sci_imag);
 CPP_GATEWAY_PROTOTYPE(sci_imult);
@@ -99,7 +100,9 @@ CPP_GATEWAY_PROTOTYPE(sci_tan);
 CPP_GATEWAY_PROTOTYPE(sci_tanh);
 CPP_GATEWAY_PROTOTYPE(sci_tril);
 CPP_GATEWAY_PROTOTYPE(sci_triu);
+CPP_GATEWAY_PROTOTYPE(sci_vander);
 CPP_GATEWAY_PROTOTYPE(sci_zeros);
+CPP_GATEWAY_PROTOTYPE(sci_isempty);
 
 
 bool getDimsFromArguments(types::typed_list& in, const std::string& _pstName, int* _iDims, int** _piDims, bool* _alloc);

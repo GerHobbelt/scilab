@@ -323,36 +323,36 @@
     <refsection>
         <title>Exemplos</title>
         <programlisting role="example"><![CDATA[
-//execute este exemplo linha por linha
+//Play this example line per line
 
-//criando figura no modo de entidade. obtendo o manipulador da entidade Figure e exibindo suas propriedades
+// Creates a figure in entity mode, gets its handle, displays its properties
 f = scf()
+a = f.children // the handle on the Axes child
+x = (1:10)';
+e = plot2d(x,[x.^2 x.^1.5])
+// e is a vector of 2 polylines
 
-a = f.children // o manipulador da galho Axes
-x = (1:10)';  plot2d(x,[x.^2 x.^1.5])
-e = a.children // Compound de duas poligonais
+p2 = e(2)  //the last drawn polyline properties
+p2.foreground = 5;  // change the polyline color
+e.thickness = 5; // change the thickness of the two polylines
 
-p1 = e.children(1) //as propriedades das últimas poligonais desenhadas
+delete(e(1))
+e(1) = []
 
-p1.foreground = 5;  // mudando a cor da poligonal
-e.children.thickness = 5; // mudando a espessura das poligonais
-
-delete(e.children(2))
-
-move(e.children,[0,30]) //transladando a poligonal
+move(e,[0,30]) //translate the polyline
 
 a.axes_bounds = [0 0 0.5 0.5];
 
-subplot(222) //criando uma nova entidade Axes
+subplot(222) //create a new Axes entity
 plot(1:10);
-a1 = f.children(1); //obtendo seu manipulador
-copy(e.children,a1); //copiando a poligonal do primeiro esboço nos novos eixos
-a1.data_bounds=[1 0;10 100]; //mudando os limites dos eixos
+a1 = f.children(1);  // get its handle
+copy(e, a1); // copy the polyline of the first plot in the new Axes
+a1.data_bounds = [1 0;10 100]; //change the Axes bounds
 
-scf(10);  // criando uma nova figura com figure_id=10
-plot3d()  // os desenhos são enviados à nova figura com figure_id=10
-scf(f);   // torna a figura anterior a corrente
-plot2d(x,x^3)  //os desenhos são enviados à figura inicial
+scf(10); // create a new figure with figure_id=10
+plot3d() // the drawing are sent to figure 10
+scf(f);  // makes the previous figure the current one
+plot2d(x,x.^3)  //the drawing are sent to the initial figure
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

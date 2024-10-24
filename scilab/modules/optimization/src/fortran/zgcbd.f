@@ -12,7 +12,7 @@ c along with this program.
 c
       subroutine zgcbd(simul,n,binf,bsup,x,f,g,zero,napmax,itmax,indgc
      &  ,ibloc,nfac,iprint,io,epsx,epsf,epsg,dir,df0,diag,x2,
-     &izs,rzs,dzs,y,s,z,ys,zs,nt,index,wk1,wk2,alg,ialg,nomf)
+     &izs,rzs,dzs,y,s,z,ys,zs,nt,index,wk1,wk2,alg,ialg,nomf,indsim)
 c
       implicit double precision (a-h,o-z)
       real rzs(*)

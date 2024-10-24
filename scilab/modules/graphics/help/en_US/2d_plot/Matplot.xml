@@ -25,6 +25,7 @@
         <synopsis>
             Matplot(a, [strf, rect, nax])
             Matplot(a, &lt;opt_args&gt;)
+            h = Matplot(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -311,6 +312,14 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                  <para>This optional output contains a handle to a <literal>Matplot</literal> entity. For a list of
+                      properties, see <link linkend="Matplot_properties">Matplot_properties</link>.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -368,13 +377,19 @@ Matplot(1:nbcol)
             </member>
         </simplelist>
     </refsection>
-    <refsection>
+    <refsection role="history">
         <title>History</title>
         <revhistory>
             <revision>
                 <revnumber>5.5.0</revnumber>
                 <revremark>
                     <literal>data</literal> can now be a matrix (or an hypermatrix) containing RGB, RGBA, ... data (see <link linkend="Matplot_properties">Matplot_properties</link>).
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
                 </revremark>
             </revision>
         </revhistory>

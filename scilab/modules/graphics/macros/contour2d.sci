@@ -40,11 +40,11 @@ function levels = contour2d(x, y, z, nz, style, strf, leg, rect, nax, fpf)
         error(msprintf(gettext("%s: Wrong type for input argument #%d: Real matrix expected.\n"), "contour2d", 4));
     end
 
-    if ~isvector(x) then
+    if isscalar(x) | ~isvector(x) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contour2d", 1));
     end
 
-    if ~isvector(y) then
+    if isscalar(y) | ~isvector(y) then
         error(msprintf(gettext("%s: Wrong size for input argument #%d: Real vector expected.\n"), "contour2d", 2));
     end
 

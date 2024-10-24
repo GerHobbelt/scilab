@@ -77,7 +77,7 @@ GRAPHICS_IMPEXP int sci_matlot1(char *fname, void *pvApiCtx);
 //GRAPHICS_IMPEXP int sci_matplot1(char *fname, void *pvApiCtx);
 GRAPHICS_IMPEXP int sci_matlot(char *fname, void *pvApiCtx);
 //GRAPHICS_IMPEXP int sci_matplot(char *fname, void *pvApiCtx);
-GRAPHICS_IMPEXP int sci_Legend(char *fname, void *pvApiCtx);
+GRAPHICS_IMPEXP int sci_percent_legend(char *fname, void *pvApiCtx);
 GRAPHICS_IMPEXP int sci_is_handle_valid(char *fname, void *pvApiCtx);
 GRAPHICS_IMPEXP int sci_grayplot(char *fname, void *pvApiCtx);
 //GRAPHICS_IMPEXP int sci_glue(char *fname, void *pvApiCtx);

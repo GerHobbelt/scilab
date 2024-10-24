@@ -221,14 +221,16 @@ am__uninstall_files_from_dir = { \
   }
 LTLIBRARIES = $(noinst_LTLIBRARIES) $(pkglib_LTLIBRARIES)
 am__DEPENDENCIES_1 =
-libsciscicos_algo_la_DEPENDENCIES = $(am__DEPENDENCIES_1)
+libsciscicos_algo_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1)
 am__libsciscicos_algo_la_SOURCES_DIST = src/c/noscicos/noscicos.c \
 	src/cpp/il_state.cpp src/cpp/il_sim.cpp src/cpp/var2vec.cpp \
 	src/cpp/vec2var.cpp src/cpp/XMIResource.cpp \
 	src/cpp/XMIResource_load.cpp src/cpp/XMIResource_save.cpp \
-	src/cpp/Controller.cpp src/cpp/controller_helpers.cpp \
-	src/cpp/LoggerView.cpp src/cpp/Model.cpp \
-	src/cpp/Model_getObjectProperties.cpp \
+	src/cpp/SSPResource.cpp src/cpp/SSPResource_load.cpp \
+	src/cpp/SSPResource_save.cpp src/cpp/Controller.cpp \
+	src/cpp/controller_helpers.cpp src/cpp/LoggerView.cpp \
+	src/cpp/Model.cpp src/cpp/Model_getObjectProperties.cpp \
 	src/cpp/Model_setObjectProperties.cpp \
 	src/cpp/view_scilab/Adapters.cpp \
 	src/cpp/view_scilab/AdapterView.cpp \
@@ -258,6 +260,9 @@ am__objects_2 = src/cpp/libsciscicos_algo_la-il_state.lo \
 	src/cpp/libsciscicos_algo_la-XMIResource.lo \
 	src/cpp/libsciscicos_algo_la-XMIResource_load.lo \
 	src/cpp/libsciscicos_algo_la-XMIResource_save.lo \
+	src/cpp/libsciscicos_algo_la-SSPResource.lo \
+	src/cpp/libsciscicos_algo_la-SSPResource_load.lo \
+	src/cpp/libsciscicos_algo_la-SSPResource_save.lo \
 	src/cpp/libsciscicos_algo_la-Controller.lo \
 	src/cpp/libsciscicos_algo_la-controller_helpers.lo \
 	src/cpp/libsciscicos_algo_la-LoggerView.lo \
@@ -624,6 +629,9 @@ am__depfiles_remade =  \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model.Plo \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_getObjectProperties.Plo \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_setObjectProperties.Plo \
+	src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Plo \
+	src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Plo \
+	src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Plo \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource.Plo \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_load.Plo \
 	src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_save.Plo \
@@ -767,6 +775,7 @@ CFLAGS = @CFLAGS@
 CHECKSTYLE = @CHECKSTYLE@
 COBERTURA = @COBERTURA@
 COMMONS_BEANUTILS = @COMMONS_BEANUTILS@
+COMMONS_COLLECTIONS = @COMMONS_COLLECTIONS@
 COMMONS_IO = @COMMONS_IO@
 COMMONS_LOGGING = @COMMONS_LOGGING@
 CPP = @CPP@
@@ -805,12 +814,14 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FLEXDOCK = @FLEXDOCK@
 FLIBS = @FLIBS@
-FOP = @FOP@
+FOP_CORE = @FOP_CORE@
+FOP_EVENT = @FOP_EVENT@
+FOP_UTIL = @FOP_UTIL@
 FREEHEP_GRAPHICS2D = @FREEHEP_GRAPHICS2D@
+FREEHEP_GRAPHICSBASE = @FREEHEP_GRAPHICSBASE@
 FREEHEP_GRAPHICSIO = @FREEHEP_GRAPHICSIO@
 FREEHEP_GRAPHICSIO_EMF = @FREEHEP_GRAPHICSIO_EMF@
 FREEHEP_IO = @FREEHEP_IO@
-FREEHEP_UTIL = @FREEHEP_UTIL@
 GENHTML = @GENHTML@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GIWS_BIN = @GIWS_BIN@
@@ -819,12 +830,14 @@ GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GRAPHICS_ENABLE = @GRAPHICS_ENABLE@
 GREP = @GREP@
+GUAVA = @GUAVA@
 GUI_ENABLE = @GUI_ENABLE@
-HAMCREST = @HAMCREST@
 HAVE_CXX17 = @HAVE_CXX17@
 HDF5_CFLAGS = @HDF5_CFLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 HELP_ENABLE = @HELP_ENABLE@
+HTTPCLIENT = @HTTPCLIENT@
+HTTPCORE = @HTTPCORE@
 INKSCAPE = @INKSCAPE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -859,6 +872,8 @@ JEUCLID_CORE = @JEUCLID_CORE@
 JGRAPHX = @JGRAPHX@
 JHALL = @JHALL@
 JLATEXMATH = @JLATEXMATH@
+JLATEXMATH_FONT_CYRILLIC = @JLATEXMATH_FONT_CYRILLIC@
+JLATEXMATH_FONT_GREEK = @JLATEXMATH_FONT_GREEK@
 JLATEXMATH_FOP = @JLATEXMATH_FOP@
 JOGL2 = @JOGL2@
 JROSETTA_API = @JROSETTA_API@
@@ -979,8 +994,6 @@ UMFPACK_CFLAGS = @UMFPACK_CFLAGS@
 UMFPACK_ENABLE = @UMFPACK_ENABLE@
 UMFPACK_LIBS = @UMFPACK_LIBS@
 USE_NLS = @USE_NLS@
-VALGRIND_CFLAGS = @VALGRIND_CFLAGS@
-VALGRIND_LIBS = @VALGRIND_LIBS@
 VERSION = @VERSION@
 WITH_OCAML = @WITH_OCAML@
 WITH_TKSCI = @WITH_TKSCI@
@@ -990,6 +1003,7 @@ XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 XMKMF = @XMKMF@
 XMLGRAPHICS_COMMONS = @XMLGRAPHICS_COMMONS@
+XMLRESOLVER = @XMLRESOLVER@
 XML_APIS_EXT = @XML_APIS_EXT@
 XML_CONFIG = @XML_CONFIG@
 XML_FLAGS = @XML_FLAGS@
@@ -1072,6 +1086,9 @@ src/cpp/vec2var.cpp \
 src/cpp/XMIResource.cpp \
 src/cpp/XMIResource_load.cpp \
 src/cpp/XMIResource_save.cpp \
+src/cpp/SSPResource.cpp \
+src/cpp/SSPResource_load.cpp \
+src/cpp/SSPResource_save.cpp \
 src/cpp/Controller.cpp \
 src/cpp/controller_helpers.cpp \
 src/cpp/LoggerView.cpp \
@@ -1171,6 +1188,7 @@ libsciscicos_la_LDFLAGS = $(AM_LDFLAGS)
 @XCOS_FALSE@			-I$(top_srcdir)/modules/api_scilab/includes/ \
 @XCOS_FALSE@			-I$(top_srcdir)/modules/scicos/includes/ \
 @XCOS_FALSE@			$(XML_FLAGS) \
+@XCOS_FALSE@			$(LIBARCHIVE_CFLAGS) \
 @XCOS_FALSE@			$(AM_CPPFLAGS)
 
 @XCOS_TRUE@libsciscicos_algo_la_CPPFLAGS = -I$(srcdir)/includes/ \
@@ -1200,6 +1218,7 @@ libsciscicos_la_LDFLAGS = $(AM_LDFLAGS)
 @XCOS_TRUE@			-I$(top_srcdir)/modules/console/includes/ \
 @XCOS_TRUE@			-I$(top_srcdir)/modules/differential_equations/includes/ \
 @XCOS_TRUE@			$(XML_FLAGS) \
+@XCOS_TRUE@			$(LIBARCHIVE_CFLAGS) \
 @XCOS_TRUE@			$(AM_CPPFLAGS)
 
 libsciscicos_cli_la_CPPFLAGS = $(libsciscicos_algo_la_CPPFLAGS)
@@ -1212,7 +1231,8 @@ libsciscicos_la_CPPFLAGS = $(libsciscicos_algo_la_CPPFLAGS)
 @XCOS_TRUE@libsciscicos_la_SOURCES = $(GATEWAY_CXX_SOURCES) $(GATEWAY_C_SOURCES) $(GATEWAY_FORTRAN_SOURCES)
 libsciscicos_algo_la_LIBADD = \
 		$(RT_LIB) \
-		$(LIBXML_LIBS)
+		$(LIBXML_LIBS) \
+		$(LIBARCHIVE_LIBS)
 
 libsciscicos_cli_la_LIBADD = libsciscicos-algo.la $(FLIBS) \
 	$(am__append_2)
@@ -1255,12 +1275,15 @@ includes/import.h
 
 #### scicos : cosf files ####
 libsciscicos_la_cosfdir = $(mydatadir)
-nobase_libsciscicos_la_cosf_DATA = palettes/Branching.cosf \
+nobase_libsciscicos_la_cosf_DATA = \
+palettes/Branching.cosf \
 palettes/DemoBlocks.cosf \
 palettes/Events.cosf \
 palettes/Integer.cosf \
 palettes/Linear.cosf \
+palettes/Lookup_Tables.cosf \
 palettes/Matrix.cosf \
+palettes/Modelica.cosf \
 palettes/Non_linear.cosf \
 palettes/OldBlocks.cosf \
 palettes/Others.cosf \
@@ -1610,6 +1633,12 @@ src/cpp/libsciscicos_algo_la-XMIResource.lo: src/cpp/$(am__dirstamp) \
 src/cpp/libsciscicos_algo_la-XMIResource_load.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libsciscicos_algo_la-XMIResource_save.lo:  \
+	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libsciscicos_algo_la-SSPResource.lo: src/cpp/$(am__dirstamp) \
+	src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libsciscicos_algo_la-SSPResource_load.lo:  \
+	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libsciscicos_algo_la-SSPResource_save.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libsciscicos_algo_la-Controller.lo: src/cpp/$(am__dirstamp) \
 	src/cpp/$(DEPDIR)/$(am__dirstamp)
@@ -2097,6 +2126,9 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_getObjectProperties.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_setObjectProperties.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_load.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_save.Plo@am__quote@ # am--include-marker
@@ -2378,6 +2410,27 @@ src/cpp/libsciscicos_algo_la-XMIResource_save.lo: src/cpp/XMIResource_save.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/XMIResource_save.cpp' object='src/cpp/libsciscicos_algo_la-XMIResource_save.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libsciscicos_algo_la-XMIResource_save.lo `test -f 'src/cpp/XMIResource_save.cpp' || echo '$(srcdir)/'`src/cpp/XMIResource_save.cpp
+
+src/cpp/libsciscicos_algo_la-SSPResource.lo: src/cpp/SSPResource.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libsciscicos_algo_la-SSPResource.lo -MD -MP -MF src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Tpo -c -o src/cpp/libsciscicos_algo_la-SSPResource.lo `test -f 'src/cpp/SSPResource.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Tpo src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/SSPResource.cpp' object='src/cpp/libsciscicos_algo_la-SSPResource.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libsciscicos_algo_la-SSPResource.lo `test -f 'src/cpp/SSPResource.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource.cpp
+
+src/cpp/libsciscicos_algo_la-SSPResource_load.lo: src/cpp/SSPResource_load.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libsciscicos_algo_la-SSPResource_load.lo -MD -MP -MF src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Tpo -c -o src/cpp/libsciscicos_algo_la-SSPResource_load.lo `test -f 'src/cpp/SSPResource_load.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource_load.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Tpo src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/SSPResource_load.cpp' object='src/cpp/libsciscicos_algo_la-SSPResource_load.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libsciscicos_algo_la-SSPResource_load.lo `test -f 'src/cpp/SSPResource_load.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource_load.cpp
+
+src/cpp/libsciscicos_algo_la-SSPResource_save.lo: src/cpp/SSPResource_save.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libsciscicos_algo_la-SSPResource_save.lo -MD -MP -MF src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Tpo -c -o src/cpp/libsciscicos_algo_la-SSPResource_save.lo `test -f 'src/cpp/SSPResource_save.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource_save.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Tpo src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/SSPResource_save.cpp' object='src/cpp/libsciscicos_algo_la-SSPResource_save.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libsciscicos_algo_la-SSPResource_save.lo `test -f 'src/cpp/SSPResource_save.cpp' || echo '$(srcdir)/'`src/cpp/SSPResource_save.cpp
 
 src/cpp/libsciscicos_algo_la-Controller.lo: src/cpp/Controller.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciscicos_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libsciscicos_algo_la-Controller.lo -MD -MP -MF src/cpp/$(DEPDIR)/libsciscicos_algo_la-Controller.Tpo -c -o src/cpp/libsciscicos_algo_la-Controller.lo `test -f 'src/cpp/Controller.cpp' || echo '$(srcdir)/'`src/cpp/Controller.cpp
@@ -3338,6 +3391,9 @@ distclean: distclean-am
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_getObjectProperties.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_setObjectProperties.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_load.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_save.Plo
@@ -3499,6 +3555,9 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_getObjectProperties.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-Model_setObjectProperties.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_load.Plo
+	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-SSPResource_save.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_load.Plo
 	-rm -f src/cpp/$(DEPDIR)/libsciscicos_algo_la-XMIResource_save.Plo
@@ -3723,13 +3782,14 @@ install-data-local:
 	for dir in $(TESTS_DIR) $(TESTS_DIREXT) ; do \
 	  if test -d $(srcdir)/$$dir/; then \
 	    $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir && \
-		  for file in `find $(srcdir)/$$dir | sed "s|^$(srcdir)/$$dir||" 2>/dev/null`; do \
+		  find $(srcdir)/$$dir -print0 | sed -z "s|^$(srcdir)/$$dir||" 2>/dev/null | \
+		  while IFS= read -r -d '' file; do \
 		    if test -d "$(srcdir)/$$dir/$$file"; then \
 			  echo $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir/$$file; \
 			  $(mkinstalldirs) "$(DESTDIR)$(pkgmacrosdir)/$$dir/$$file"; \
 		    else \
-		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
-	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
+		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
+	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
 		    fi \
 		  done; \
 	  fi; \

@@ -22,6 +22,7 @@
         <title>Seqüência de Chamamento</title>
         <synopsis>fchamp(f,t,xr,yr,[arfact,rect,strf])
             fchamp(f,t,xr,yr,&lt;opt_args&gt;)
+            hdl = fchamp(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -94,6 +95,14 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>hdl</term>
+                <listitem>
+                    <para>O argumento de classificação na sequência é reenviado para o identificador do objeto gráfico do tipo <literal>Champ</literal> criado pela função. Ele pode ser usado para
+                    modificador de propriedade (veja <link linkend="champ_properties">champ_properties</link>).
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -139,5 +148,16 @@ fchamp(derpol,0,xf,yf,1,[-2,-2,2,2],"011")
                 <link linkend="polyline_properties">Arrowed polyline</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

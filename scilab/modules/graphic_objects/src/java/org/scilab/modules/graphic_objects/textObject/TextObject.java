@@ -1,8 +1,8 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010-2011 - DIGITEO - Manuel JULIACHS
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -25,6 +25,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_FORMATTED_TEXT__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TEXT_ARRAY_DIMENSIONS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TEXT_STRINGS__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TEXT_INTERPRETERS__;
 
 
 /**
@@ -101,6 +102,8 @@ public abstract class TextObject extends ContouredObject {
                 return TextObjectProperty.TEXT_ARRAY_DIMENSIONS;
             case __GO_TEXT_STRINGS__ :
                 return FormattedText.FormattedTextProperty.TEXT;
+            case __GO_TEXT_INTERPRETERS__ :
+                return FormattedText.FormattedTextProperty.INTERPRETER;
             case __GO_FONT_STYLE__ :
                 return Font.FontProperty.STYLE;
             case __GO_FONT_SIZE__ :
@@ -126,6 +129,8 @@ public abstract class TextObject extends ContouredObject {
             return getTextArrayDimensions();
         } else if (property == FormattedText.FormattedTextProperty.TEXT) {
             return getTextStrings();
+        } else if (property == FormattedText.FormattedTextProperty.INTERPRETER) {
+            return getTextInterpreters();
         } else if (property == Font.FontProperty.STYLE) {
             return getFontStyle();
         } else if (property == Font.FontProperty.SIZE) {
@@ -152,6 +157,8 @@ public abstract class TextObject extends ContouredObject {
             setTextArrayDimensions((Integer[]) value);
         } else if (property == FormattedText.FormattedTextProperty.TEXT) {
             setTextStrings((String[]) value);
+        } else if (property == FormattedText.FormattedTextProperty.INTERPRETER) {
+            setTextInterpreters((String[]) value);
         } else if (property == Font.FontProperty.STYLE) {
             setFontStyle((Integer) value);
         } else if (property == Font.FontProperty.SIZE) {
@@ -251,6 +258,30 @@ public abstract class TextObject extends ContouredObject {
     public UpdateStatus setTextStrings(String[] textStrings) {
         for (int i = 0; i < dimensions[0] * dimensions[1]; i++) {
             text[i].setText(textStrings[i]);
+        }
+        return UpdateStatus.Success;
+    }
+
+    /**
+     * @return the text interpreters
+     */
+    public String[] getTextInterpreters() {
+        String[] textInterpreters = new String[dimensions[0] * dimensions[1]];
+
+        for (int i = 0; i < dimensions[0] * dimensions[1]; i++) {
+            textInterpreters[i] = new String(FormattedText.InterpreterType.enumToString(text[i].getInterpreterAsEnum()));
+        }
+
+        return textInterpreters;
+    }
+
+    /**
+     * @param textInterpreters the text interpreters array to set
+     */
+    public UpdateStatus setTextInterpreters(String[] textInterpreters) {
+        int iSize = textInterpreters.length;
+        for (int i = 0; i < dimensions[0] * dimensions[1]; i++) {
+            text[i].setInterpreter(FormattedText.InterpreterType.stringToEnum(textInterpreters[Math.min(i,iSize-1)]));
         }
         return UpdateStatus.Success;
     }

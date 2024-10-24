@@ -328,7 +328,7 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     GatewayStruct gStr;
     gStr.m_iIn = inSize + optSize;
     gStr.m_iOut = std::max(0, _iRetCount);
-    _iRetCount = std::max(1, _iRetCount);
+    _iRetCount = std::max(0, _iRetCount);
 
     //copy input parameter to prevent calling gateway modifies input data
     typed_list inCopy;
@@ -355,7 +355,7 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     gStr.m_piRetCount = &_iRetCount;
     gStr.m_pstName = m_stName.data();
     // we should use a stack array of the max size to avoid dynamic alloc.
-    std::vector<int> outOrder(_iRetCount < 1 ? 1 : _iRetCount, -1);
+    std::vector<int> outOrder(MAX_OUTPUT_VARIABLE, 0);
     gStr.m_pOutOrder = outOrder.data();
 
     //call gateway
@@ -367,7 +367,8 @@ Function::ReturnValue WrapFunction::call(typed_list &in, optional_list &opt, int
     }
     else
     {
-        for (std::size_t i(0); i != (size_t)_iRetCount && outOrder[i] != -1 && outOrder[i] != 0; ++i)
+        int lhs = std::max(1, _iRetCount);
+        for (std::size_t i(0); i != (size_t)lhs && outOrder[i] != -1 && outOrder[i] != 0; ++i)
         {
             if (outOrder[i] - 1 < gStr.m_iIn)
             {

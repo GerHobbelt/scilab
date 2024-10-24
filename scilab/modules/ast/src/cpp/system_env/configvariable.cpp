@@ -231,7 +231,8 @@ int ConfigVariable::getConsoleLines(void)
 ** \{
 */
 
-int ConfigVariable::m_iScilabMode = 1; //SCILAB_API = 1  Scilab is launch as an API
+// Scilab is launch as an API with the JVM but no GUI (as expected by javasci)
+int ConfigVariable::m_iScilabMode = SCILAB_NW;
 
 void ConfigVariable::setScilabMode(int _iScilabMode)
 {
@@ -1177,7 +1178,7 @@ int ConfigVariable::getFuncprot()
 std::vector<ConfigVariable::WhereEntry> ConfigVariable::m_Where;
 std::vector<ConfigVariable::WhereErrorEntry> ConfigVariable::m_WhereError;
 std::vector<int> ConfigVariable::m_FirstMacroLine;
-void ConfigVariable::where_begin(int _iLineNum, int _iLineLocation, types::Callable* _pCall)
+void ConfigVariable::where_begin(int _iLineNum, types::Callable* _pCall, const Location& _Location)
 {
     const std::wstring* wstrFileName = nullptr;
     types::Callable* pCall = _pCall;
@@ -1193,7 +1194,7 @@ void ConfigVariable::where_begin(int _iLineNum, int _iLineLocation, types::Calla
         wstrFileName = &pM->getFileName();
     }
 
-    m_Where.push_back({_iLineNum, _iLineLocation, symbol::Context::getInstance()->getScopeLevel(), pCall, wstrFileName});
+    m_Where.push_back({_iLineNum, _Location, symbol::Context::getInstance()->getScopeLevel(), pCall, wstrFileName});
 }
 
 void ConfigVariable::where_end()
@@ -1204,6 +1205,11 @@ void ConfigVariable::where_end()
 const std::vector<ConfigVariable::WhereEntry>& ConfigVariable::getWhere()
 {
     return m_Where;
+}
+
+const std::vector<ConfigVariable::WhereErrorEntry>& ConfigVariable::getWhereError()
+{
+    return m_WhereError;
 }
 
 void ConfigVariable::macroFirstLine_begin(int _iLine)
@@ -1337,15 +1343,17 @@ void ConfigVariable::whereErrorToString(std::wostringstream& ostr)
          << std::resetiosflags(std::ios::adjustfield);
 }
 
-void ConfigVariable::fillWhereError(int _iErrorLine)
+void ConfigVariable::fillWhereError(const Location& _Location)
 {
     if (m_WhereError.empty() && m_Where.empty() == false)
     {
-        int iTmp = 0;
-        if (_iErrorLine != 0)
+        Location iTmpLoc = _Location;
+        int iTmpCol = 0;
+        int iTmpLine = 0;
+        if (_Location.first_line != 0)
         {
             // +1 because the first line of the funtionDec "function func()" is the line 1.
-            iTmp = _iErrorLine - getMacroFirstLines() + 1;
+            iTmpLine = _Location.first_line - getMacroFirstLines() + 1;
         }
 
         m_WhereError.reserve(m_Where.size());
@@ -1353,14 +1361,15 @@ void ConfigVariable::fillWhereError(int _iErrorLine)
         {
             if (where->m_file_name != nullptr)
             {
-                m_WhereError.push_back({iTmp, where->m_absolute_line, where->call->getFirstLine(), where->call->getName(), *where->m_file_name});
+                m_WhereError.push_back({iTmpLine, iTmpLoc, where->call->getFirstLine(), where->m_scope_lvl, where->call->getName(), *where->m_file_name});
             }
             else
             {
-                m_WhereError.push_back({iTmp, where->m_absolute_line, where->call->getFirstLine(), where->call->getName(), L""});
+                m_WhereError.push_back({iTmpLine, iTmpLoc, where->call->getFirstLine(), where->m_scope_lvl, where->call->getName(), L""});
             }
 
-            iTmp = where->m_line;
+            iTmpLine = where->m_line;
+            iTmpLoc  = where->m_Location;
         }
 
         // fill lasterror function name and line
@@ -1532,7 +1541,7 @@ int ConfigVariable::isScilabCommand()
 
 //debugger information
 bool ConfigVariable::m_bEnabledebug = false;
-std::unique_ptr<ast::ConstVisitor> ConfigVariable::m_defaultvisitor(nullptr);
+std::unique_ptr<ast::ConstVisitor> ConfigVariable::m_defaultvisitor(new ast::ExecVisitor());
 
 bool ConfigVariable::getEnableDebug()
 {
@@ -1551,10 +1560,6 @@ void ConfigVariable::setDefaultVisitor(ast::ConstVisitor* _default)
 
 ast::ConstVisitor* ConfigVariable::getDefaultVisitor()
 {
-    if (m_defaultvisitor.get() == nullptr)
-    {
-        m_defaultvisitor.reset(new ast::ExecVisitor());
-    }
     return m_defaultvisitor->clone();
 }
 
@@ -1632,17 +1637,41 @@ void ConfigVariable::resetRecursionLevel()
     recursionLevel = 0;
 }
 
-//webmode
-bool ConfigVariable::webMode = true;
-
-bool ConfigVariable::getWebMode()
+// flush all stream (see: mprintf)
+bool ConfigVariable::m_flushStream = true;
+bool ConfigVariable::flushStream()
 {
-    return webMode;
+    return m_flushStream;
 }
 
-void ConfigVariable::setWebMode(bool _mode)
+void ConfigVariable::setFlushStream(bool _mode)
 {
-    webMode = _mode;
+    m_flushStream = _mode;
+}
+
+// Start swing view
+bool ConfigVariable::m_startSwingView = true;
+bool ConfigVariable::startSwingView()
+{
+    return m_startSwingView;
+}
+
+void ConfigVariable::setStartSwingView(bool _mode)
+{
+    m_startSwingView = _mode;
+}
+
+// Scilab has been insantiated as an API (eg. call_scilab or javasci)
+bool ConfigVariable::m_API_mode = false;
+
+bool ConfigVariable::isAPIMode()
+{
+    return m_API_mode;
+}
+
+void ConfigVariable::setAPIMode()
+{
+    m_API_mode = true;
 }
 
 // stdin redirected

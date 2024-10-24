@@ -167,9 +167,6 @@ const char* getScilabModeString(void)
     scilabMode smMode = getScilabMode();
     switch (smMode)
     {
-        case SCILAB_API:
-            return "API";
-            break;
         case SCILAB_STD:
             return "STD";
             break;
@@ -252,7 +249,7 @@ int isDebugInterrupted()
 
 int debuggerManagerExecute(const char* command, int iWaitForIt)
 {
-    return debugger::DebuggerManager::getInstance()->execute(command, iWaitForIt) ? 1 : 0;
+    return debugger::DebuggerManager::getInstance()->executeNow(command, iWaitForIt) ? 1 : 0;
 }
 
 int isExecutionBreak()
@@ -284,7 +281,18 @@ int getPolynomialDisplay()
     return ConfigVariable::getPolynomialDisplay();
 }
 
-int getWebMode()
+int startSwingView()
 {
-    return ConfigVariable::getWebMode() ? 1 : 0;
+    return ConfigVariable::startSwingView() ? 1 : 0;
 }
+
+int isAPIMode()
+{
+    return ConfigVariable::isAPIMode() ? 1 : 0;
+}
+
+void setAPIMode()
+{
+    ConfigVariable::setAPIMode();
+}
+

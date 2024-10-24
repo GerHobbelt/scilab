@@ -133,7 +133,7 @@ public final class PaletteBlockMouseListener implements MouseListener {
             public void callBack() {
                 try {
                     ScilabInterpreterManagement.asynchronousScilabExec(
-                        null, "help", ctrl.getModel().getName());
+                        null, "doc", ctrl.getModel().getName());
                 } catch (InterpreterException e) {
                     e.printStackTrace();
                 }

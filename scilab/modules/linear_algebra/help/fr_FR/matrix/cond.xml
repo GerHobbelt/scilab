@@ -106,7 +106,7 @@
 // Conditionnement d'une matrice non carrée :
 cond([1 0 -1 ; 0 1 -1])
 
-A = testmatrix('hilb',6);
+A = invhilb(6);
 // conditionnement en norme 2
 cond(A)
 cond(A, 2)

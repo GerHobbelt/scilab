@@ -8,17 +8,7 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-
-load("SCI/modules/atoms/macros/atoms_internals/lib");
-exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Do not use the autoload system
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
+// <-- TEST WITH ATOMS -->
 
 // Load the 1st scenario : See scene10.test.atoms.scilab.org.txt
 atomsLoadTestScene("scene10");
@@ -178,9 +168,3 @@ if atomsIsInstalled("toolbox_7V6","user")      then pause, end
 if ~atomsIsInstalled("toolbox_7V6","allusers") then pause, end
 
 atomsRemove("toolbox_7V6","allusers");
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);
-
-atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"));

@@ -61,10 +61,10 @@ H5StringData::~H5StringData()
         H5Tset_size(type, H5T_VARIABLE);
         H5Tset_strpad(type, H5T_STR_NULLTERM);
 
-        herr_t err = H5Dvlen_reclaim(type, space, H5P_DEFAULT, _data);
+        herr_t err = H5Treclaim(type, space, H5P_DEFAULT, _data);
         if (err < 0)
         {
-            throw H5Exception(__LINE__, __FILE__, _("Cannot free the memory associated with String data"));
+            Scierror(999, "%s:%d\t%s\n", __LINE__, __FILE__, _("Cannot free the memory associated with String data"));
         }
 
         H5Tclose(type);
@@ -126,11 +126,11 @@ void H5StringData::toScilab(void * pvApiCtx, const int lhsPosition, int * parent
 
     if (ndims == 0)
     {
-        H5BasicData<char *>::create(pvApiCtx, lhsPosition, 1, 1, _data, parentList, listPosition);
+        H5BasicData<char const*>::create(pvApiCtx, lhsPosition, 1, 1, _data, parentList, listPosition);
     }
     else if (ndims == 1)
     {
-        H5BasicData<char *>::create(pvApiCtx, lhsPosition, 1, (int)*dims, _data, parentList, listPosition);
+        H5BasicData<char const*>::create(pvApiCtx, lhsPosition, 1, (int)*dims, _data, parentList, listPosition);
     }
     else
     {
@@ -140,18 +140,18 @@ void H5StringData::toScilab(void * pvApiCtx, const int lhsPosition, int * parent
             H5DataConverter::C2FHypermatrix(2, dims, 0, _data, newData, flip);
             if (flip)
             {
-                H5BasicData<char *>::create(pvApiCtx, lhsPosition, (int)dims[1], (int)dims[0], newData, parentList, listPosition);
+                H5BasicData<char const*>::create(pvApiCtx, lhsPosition, (int)dims[1], (int)dims[0], newData, parentList, listPosition);
             }
             else
             {
-                H5BasicData<char *>::create(pvApiCtx, lhsPosition, (int)dims[0], (int)dims[1], newData, parentList, listPosition);
+                H5BasicData<char const*>::create(pvApiCtx, lhsPosition, (int)dims[0], (int)dims[1], newData, parentList, listPosition);
             }
         }
         else
         {
             int * list = getHypermatrix(pvApiCtx, lhsPosition, parentList, listPosition, flip);
             H5DataConverter::C2FHypermatrix((int)ndims, dims, totalSize, _data, newData, flip);
-            H5BasicData<char *>::create(pvApiCtx, lhsPosition, (int)totalSize, 1, newData, list, 3);
+            H5BasicData<char const*>::create(pvApiCtx, lhsPosition, (int)totalSize, 1, newData, list, 3);
         }
         delete[] newData;
     }
@@ -162,7 +162,7 @@ void H5StringData::toScilab(void * pvApiCtx, const int lhsPosition, int * parent
     }
 }
 
-std::string H5StringData::dump(std::map<haddr_t, std::string> & alreadyVisited, const unsigned int indentLevel) const
+std::string H5StringData::dump(std::map<std::string, std::string> & alreadyVisited, const unsigned int indentLevel) const
 {
     return H5DataConverter::dump(alreadyVisited, indentLevel, (int)ndims, dims, *this);
 }

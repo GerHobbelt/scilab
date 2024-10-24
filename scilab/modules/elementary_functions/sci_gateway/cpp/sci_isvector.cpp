@@ -49,7 +49,7 @@ types::Function::ReturnValue sci_isvector(types::typed_list &in, int _iRetCount,
     else
     {
         types::GenericType *pIn = in[0]->getAs<types::GenericType>();
-        out.push_back(new types::Bool(pIn->isVector() && pIn->isScalar() == false));
+        out.push_back(new types::Bool(pIn->isVector()));
         return types::Function::OK;
     }
 }

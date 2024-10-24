@@ -22,7 +22,7 @@
         <title>Description</title>
         <para>The Legend entity is a leaf of the graphics entities
             hierarchy. This entity defines the parameters for legends drawn
-            below <literal>plot2dx</literal> graphs or created by the <link linkend="captions">captions</link> function. For selected line
+            below <literal>plot2dx</literal> graphs or created by the <link linkend="legend">legend</link> function. For selected line
             plotted, the legend shows a sample of the line type, marker
             symbol, and color.
         </para>
@@ -65,8 +65,15 @@
                     <para>This field is the character string vector which contains the
                         legends for each annotated objects.
                     </para>
-                    <para>
-                        Starting from Scilab 5.2, it is possible to write <link linkend="math_rendering_features_in_graphic">LaTeX or MathML expression</link>.
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>interpreter: </term>
+                <listitem>
+                    <para>the interpreter to be used to render the strings, given as a matrix
+                        of the same size and dimensions as the <term>text</term> property, with elements
+                        chosen among <literal>"auto"</literal> (the default), <literal>"latex"</literal>, 
+                        <literal>"mathml"</literal>, <literal>"none"</literal>. See <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>
                     </para>
                 </listitem>
             </varlistentry>
@@ -217,7 +224,7 @@
                         coordinates ((<literal>x_user</literal>,
                         <literal>y_user</literal>) or conversely.
                     </para>
-                    <programlisting role="user coordinates"><![CDATA[
+                    <programlisting role="no-scilab-exec"><![CDATA[
 as=get(gcf(),"axes_size");//size of the canvas in pixels
 bnds=get(gca(),"axes_bounds");//bounds of the current axes rectangle in figure size ratio.
 //from legend coordinates to user coordinates

@@ -646,9 +646,7 @@ static types::InternalType* import_struct(hid_t dataset)
         for (int j = 0; j < refcount; ++j)
         {
             hid_t data = H5Rdereference(refs,
-#if H5_VERSION_GE(1,10,0)
                                         H5P_DATASET_ACCESS_DEFAULT,
-#endif
                                         H5R_OBJECT, &vrefs[j]);
 
             if (data < 0)
@@ -763,6 +761,11 @@ static types::InternalType* import_sparse(hid_t dataset)
     int complex = 0;
     std::vector<int> pdims;
     int size = getDimsNode(dataset, &complex, pdims);
+    if (size < 0)
+    {
+        closeList6(dataset);
+        return nullptr;
+    }
 
     //get non zeros count
     int nnz = 0;
@@ -863,6 +866,11 @@ static types::InternalType* import_boolean_sparse(hid_t dataset)
     int complex = 0;
     std::vector<int> pdims;
     int size = getDimsNode(dataset, &complex, pdims);
+    if (size <= 0)
+    {
+        closeList6(dataset);
+        return nullptr;
+    }
 
     //get non zeros count
     int nnz = 0;
@@ -1145,11 +1153,19 @@ static types::InternalType* import_usertype(hid_t dataset)
         return nullptr;
     }
 
-    types::String* s = it->getAs<types::String>();
+    types::String* s = itType->getAs<types::String>();
     wchar_t* type = s->get()[0];
 
     types::InternalType* data = ss->get(L"data");
     if (data == nullptr)
+    {
+        delete it;
+        return nullptr;
+    }
+
+    // ensure the stored type is the same as the actual datatype
+    std::wstring dataShortTypeStr = data->getShortTypeStr();
+    if (dataShortTypeStr != std::wstring(type))
     {
         delete it;
         return nullptr;

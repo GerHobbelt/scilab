@@ -19,5 +19,5 @@
 deff('y=f1(x)','z=x^2'); 
 deff('y=f2(x)','y=x^2'); 
 deff('dy=df(x)','dz=2*x');
-assert_checkerror("fsolve(1,f1)","fsolve: Undefined variable ''y'' in function ''f1''.");
-assert_checkerror("fsolve(1,f2,df)","fsolve: Undefined variable ''dy'' in function ''df''.");
+assert_checkerror("fsolve(1,f1)","Undefined variable ''y'' in function ''f1''.");
+assert_checkerror("fsolve(1,f2,df)","Undefined variable ''dy'' in function ''df''.");

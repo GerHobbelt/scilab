@@ -47,7 +47,7 @@ public final class HelpAction extends DefaultAction {
      * doAction
      */
     public void doAction() {
-        InterpreterManagement.requestScilabExec("help('scinotes')");
+        InterpreterManagement.requestScilabExec("doc('scinotes')");
     }
 
     /**

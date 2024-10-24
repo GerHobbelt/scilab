@@ -9,7 +9,7 @@
 // <-- NO CHECK REF -->
 
 
-a = testmatrix('magi',4);
+a = magic(4);
 a(a>8) = 0;
 as = sparse(a);
 ab = a > 0;

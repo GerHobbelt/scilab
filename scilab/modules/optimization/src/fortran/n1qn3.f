@@ -12,7 +12,7 @@ c along with this program.
 c
       subroutine n1qn3 (simul,prosca,ctonb,ctcab,n,x,f,g,dxmin,df1,
      /                  epsg,iprint,io,mode,niter,nsim,dz,ndz,
-     /                  izs,rzs,dzs)
+     /                  izs,rzs,dzs,indic)
 c
 c     n1qn3, version 1.0, septembre 1988.
 c     Jean Charles Gilbert, Claude Lemarechal, INRIA.
@@ -63,7 +63,7 @@ c----
 c
 c         arguments
 c
-      integer n,iprint,io,mode,niter,nsim,ndz,izs(1)
+      integer n,iprint,io,mode,niter,nsim,ndz,izs(1),indic
       real rzs(1)
       double precision x(1),f,g(1),dxmin,df1,epsg,dz(1),dzs(1)
       external simul,prosca,ctonb,ctcab
@@ -155,7 +155,8 @@ c---- appel du code d"optimisation
 c
       call n1qn3a (simul,prosca,ctonb,ctcab,n,x,f,g,dxmin,df1,epsg,
      /             iprint,io,mode,niter,nsim,m,dz(id),dz(igg),dz(iprec),
-     /             dz(iaux),dz(ialpha),dz(iybar),dz(isbar),izs,rzs,dzs)
+     /             dz(iaux),dz(ialpha),dz(iybar),dz(isbar),izs,rzs,dzs,
+     /             indic)
 c
 c---- impressions finales
 c

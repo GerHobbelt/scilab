@@ -25,6 +25,7 @@
         <synopsis>
             fchamp(f, t, xr, yr, [arfact, rect, strf])
             fchamp(f, t, xr, yr, &lt;opt_args&gt;)
+            h = fchamp(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -106,6 +107,14 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                    <para>This optional output contains a handle to a Champ entity. Use <literal>h</literal> to modify its properties
+                      For a list of properties, see <link linkend="champ_properties">champ_properties</link>.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -180,5 +189,16 @@ fchamp(derpol,0,xf,yf,1,[-2,-2,2,2],"011")
                 <link linkend="polyline_properties">Arrowed polyline</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>
+                    Function returns the created handle(s).
+                </revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

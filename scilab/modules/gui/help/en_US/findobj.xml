@@ -64,8 +64,9 @@
             function returns an empty matrix.
         </para>
         <para>
-            <literal>findobj(propertyName, propertyValue, ...)</literal> returns the handles of objects having the property <literal>propertyName</literal> set to <literal>propertyValue</literal>. 
-            If successive property/vaue pairs are given the handles of objects verifing all conditions are returned, i.e. there is an implicit <literal>"-and"</literal> operator between pairs. 
+            In most cases, <literal>findobj(propertyName, propertyValue, ...)</literal> returns all graphic handles having the property <literal>propertyName</literal> set to <literal>propertyValue</literal>.
+            But, if <literal>propertyName</literal> is <literal>"tag"</literal>, then only one graphic handle will be returned considering tags are unique.
+            If successive property/value pairs are given the graphic handles verifing all conditions are returned, i.e. there is an implicit <literal>"-and"</literal> operator between pairs. 
             Another operator can be explicitely given with <literal>findobj(propertyName, propertyValue, operator, propertyName, propertyValue, ...)</literal>.
         </para>
         <para>The priority of evaluations in a composite condition using operators can be controlled by using a cell argument, e.g. <literal>findobj({propertyName, propertyValue, ...}, operator, ...)</literal>

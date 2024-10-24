@@ -62,7 +62,8 @@ public class DatatipMove {
             GraphicController controller = GraphicController.getController();
             Integer axes = (Integer) controller.getProperty(parentPolyline, __GO_PARENT_AXES__);
             Double[] data = (Double[]) controller.getProperty(datatipUid, __GO_DATATIP_DATA__);
-            int index = (Integer) controller.getProperty(datatipUid, __GO_DATATIP_INDEXES__);
+            Double[] dblIndex =  (Double[]) controller.getProperty(datatipUid, __GO_DATATIP_INDEXES__);
+            int index = dblIndex[0].intValue();
             DatatipCommon.Segment seg = EntityPicker.getSegment(parentPolyline, index);
             double[] datax = (double[]) PolylineData.getDataX(parentPolyline);
             Boolean useInterp = (Boolean) controller.getProperty(datatipUid, __GO_DATATIP_INTERP_MODE__) && CommonHandler.isLineEnabled(parentPolyline);

@@ -333,7 +333,7 @@ result  =
 Name                     Type           Size           Bytes
 result                   constant       1 by 5         56
 
---> result = myInspector.inspect(testmatrix('magi',3))
+--> result = myInspector.inspect(magic(3))
 Inspecting: '[[D@11d13272'
 Class: double[][]
 result  =

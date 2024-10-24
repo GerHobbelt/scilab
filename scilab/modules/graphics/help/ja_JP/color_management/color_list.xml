@@ -5680,8 +5680,8 @@
 plot3d();
 h = gcf();
 h.color_map = jet(16);
-addcolor(name2rgb('grey')/255);
-addcolor(name2rgb('red'));
+addcolor(name2rgb('grey')./255);
+addcolor(name2rgb('red')./255);
 
 rgb2name(240, 255, 255)
  ]]></programlisting>

@@ -6,7 +6,7 @@
 // =============================================================================
 
 // <-- TEST WITH GRAPHIC -->
-// <-- NO CHECK ERROR OUTPUT -->
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 6720 -->
 //
@@ -21,12 +21,12 @@
 
 // The script below should now work.
 
-subplot(211);plot(1:10);h1=gce();
-subplot(212);plot(1:10);h2=gce();
+subplot(211);h1=plot(1:10);
+subplot(212);h2=plot(1:10);
 
 j1=h1.children;
 j2=h2.children;
 
-captions(j2,'two');
-captions(j1,'one');
+%_legend(j2,'two');
+%_legend(j1,'one');
 

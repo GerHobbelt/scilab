@@ -43,6 +43,7 @@
 #include "mlist.hxx"
 #include "tlist.hxx"
 #include "argumentvisitor.hxx"
+#include "macrovarvisitor.hxx"
 
 extern "C"
 {
@@ -106,7 +107,7 @@ std::map<std::wstring, std::function<bool(types::InternalType*)>> typeValidator 
     {L"checkbox", mustBeUIControlStyle<__GO_UI_CHECKBOX__>}, {L"edit", mustBeUIControlStyle<__GO_UI_EDIT__>}, {L"spinner", mustBeUIControlStyle<__GO_UI_SPINNER__>}, 
     {L"frame", mustBeUIControlStyle<__GO_UI_FRAME__>}, {L"image", mustBeUIControlStyle<__GO_UI_IMAGE__>}, {L"listbox", mustBeUIControlStyle<__GO_UI_LISTBOX__>}, 
     {L"popupmenu", mustBeUIControlStyle<__GO_UI_POPUPMENU__>}, {L"pushbutton", mustBeUIControlStyle<__GO_UI_PUSHBUTTON__>}, {L"radiobutton", mustBeUIControlStyle<__GO_UI_RADIOBUTTON__>}, 
-    {L"slider", mustBeUIControlStyle<__GO_UI_SLIDER__>}, {L"table", mustBeUIControlStyle<__GO_UI_TABLE__>}, {L"text", mustBeUIControlStyle<__GO_UI_TEXT__>}, {L"layer", mustBeUIControlStyle<__GO_UI_LAYER__>}, 
+    {L"slider", mustBeUIControlStyle<__GO_UI_SLIDER__>}, {L"text", mustBeUIControlStyle<__GO_UI_TEXT__>}, {L"layer", mustBeUIControlStyle<__GO_UI_LAYER__>}, 
     {L"tab", mustBeUIControlStyle<__GO_UI_TAB__>}
 };
 
@@ -210,11 +211,13 @@ types::InternalType* toDouble(types::InternalType* val, const std::wstring& name
 
             return out;
         }
+        default:
+        {
+            char msg[128];
+            os_sprintf(msg, _("%ls: Unable to convert '%ls' to double.\n"), name.data(), val->getTypeStr().data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
     }
-
-    char msg[128];
-    os_sprintf(msg, _("%ls: Unable to convert '%ls' to double.\n"), name.data(), val->getTypeStr().data());
-    throw ast::InternalError(scilab::UTF8::toWide(msg));
 }
 
 template<class T>
@@ -254,11 +257,13 @@ types::InternalType* toInt(types::InternalType* val, const std::wstring& name)
 
             return out;
         }
+        default:
+        {
+            char msg[128];
+            os_sprintf(msg, _("%ls: Unable to convert '%ls' to int.\n"), name.data(), val->getTypeStr().data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
     }
-
-    char msg[128];
-    os_sprintf(msg, _("%ls: Unable to convert '%ls' to int.\n"), name.data(), val->getTypeStr().data());
-    throw ast::InternalError(scilab::UTF8::toWide(msg));
 }
 
 types::InternalType* toBool(types::InternalType* val, const std::wstring& name)
@@ -289,11 +294,13 @@ types::InternalType* toBool(types::InternalType* val, const std::wstring& name)
 
             return out;
         }
+        default:
+        {
+            char msg[128];
+            os_sprintf(msg, _("%ls: Unable to convert '%ls' to boolean.\n"), name.data(), val->getTypeStr().data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
     }
-
-    char msg[128];
-    os_sprintf(msg, _("%ls: Unable to convert '%ls' to boolean.\n"), name.data(), val->getTypeStr().data());
-    throw ast::InternalError(scilab::UTF8::toWide(msg));
 }
 
 template <class T>
@@ -385,11 +392,13 @@ types::InternalType* toString(types::InternalType* val, const std::wstring& name
             return toStringBool(val->getAs<types::Bool>());
         case types::InternalType::ScilabString:
             return val;
+        default:
+        {
+            char msg[128];
+            os_sprintf(msg, _("%ls: Unable to convert '%ls' to string.\n"), name.data(), val->getTypeStr().data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
     }
-
-    char msg[128];
-    os_sprintf(msg, _("%ls: Unable to convert '%ls' to string.\n"), name.data(), val->getTypeStr().data());
-    throw ast::InternalError(scilab::UTF8::toWide(msg));
 }
 
 std::map<std::wstring, std::function<types::InternalType*(types::InternalType*, const std::wstring& name)>> typeConvertors = {
@@ -770,8 +779,7 @@ int mustBeScalarOrEmpty(types::typed_list& x)
 
 int mustBeVector(types::typed_list& x)
 {
-    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector() && x[0]->getAs<types::GenericType>()->isScalar() == false) ? 0 : 1;
-    //return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
+    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
 }
 
 int mustBeSquare(types::typed_list& x)
@@ -1248,12 +1256,28 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
 
     types::GenericType* g = x->getAs<types::GenericType>();
 
+    types::typed_list in1 = {x};
+    types::typed_list out1;
+    if (Overload::call(L"size", in1, 1, out1) != types::Function::OK)
+    {
+        return nullptr;
+    }
+
+    types::Double* p1 = out1[0]->getAs<types::Double>();
+    std::vector<int> dims1(p1->get(), p1->get() + p1->getSize());
+    p1->killMe();
+
+    if (dims1.size() > dims.size())
+    {
+        return nullptr;
+    }
+
     if (dims.size() == 1 && std::get<1>(dims[0]) == nullptr)
     {
         auto&& d = std::get<0>(dims[0]);
         for (int i = 0; i < d.size(); ++i)
         {
-            if (d[i] == g->getSize())
+            if (d[i] == dims1[0])
             {
                 return x;
             }
@@ -1267,19 +1291,13 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
         return expandvar(x, dims, isStatic);
     }
 
-    if (g->getDims() != dims.size())
-    {
-        return nullptr;
-    }
-
-    int* s = g->getDimsArray();
     bool status = true;
-    for (int i = 0; i < g->getDims(); ++i)
+    for (int i = 0; i < dims.size(); ++i)
     {
         std::vector<int> dim;
         symbol::Variable* v;
         std::tie(dim, v) = dims[i];
-
+        int ref = i < dims1.size() ? dims1[i] : 1;
         bool ok = false;
         if (v != nullptr)
         {
@@ -1290,7 +1308,7 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
 
                 for (int j = 0; j < d->getSize(); ++j)
                 {
-                    if (d->get()[j] == s[i])
+                    if (d->get()[j] == ref)
                     {
                         ok = true;
                         break;
@@ -1302,7 +1320,7 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
         {
             for (int j = 0; j < dim.size(); ++j)
             {
-                if (dim[j] == -1 || dim[j] == s[i])
+                if (dim[j] == -1 || dim[j] == ref)
                 {
                     ok = true;
                     break;
@@ -1312,7 +1330,7 @@ types::InternalType* checksize(types::InternalType* x, const std::vector<std::tu
 
         status &= ok;
 
-        if (ok == false && s[i] == 1)
+        if (ok == false && dims1[i] == 1)
         {
             return transposevar(x, dims);
         }
@@ -1386,8 +1404,107 @@ std::wstring dims2str(const std::vector<std::tuple<std::vector<int>, symbol::Var
 
 namespace types
 {
+Macro::Macro(std::vector<symbol::Variable*>& _inputArgs, ast::SeqExp& _body, const std::wstring& _stModule, std::unordered_map<std::wstring, types::InternalType*> captured) : Callable(),
+    m_inputArgs(&_inputArgs), m_body(_body.clone()), m_isLambda(true), m_outputArgs(nullptr),
+    m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
+    m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
+    m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
+    m_Varargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargout"))),
+    m_captured(captured)
+{
+    setName(L"anonymous");
+    setModule(_stModule);
+    m_pDblArgIn = new Double(1);
+    m_pDblArgIn->IncreaseRef(); // never delete
+    m_pDblArgOut = new Double(1);
+    m_pDblArgOut->IncreaseRef(); // never delete
+
+    m_body->setReturnable();
+    m_stPath = L"";
+
+    updateArguments();
+
+    // check variables/macros in body
+    ast::MacrovarVisitor visit;
+    getBody()->accept(visit);
+
+    for (auto&& c : m_captured)
+    {
+        c.second->IncreaseRef();//protect loaded variable
+    }
+
+    // external variables
+    auto externals = visit.getExternal();
+    for (auto&& e : externals)
+    {
+        symbol::Symbol var = symbol::Symbol(e);
+        if (std::find_if(m_inputArgs->begin(), m_inputArgs->end(), [var](symbol::Variable* v)
+                         { return v->getSymbol() == var; }) != m_inputArgs->end())
+        {
+            // input parameter
+            continue;
+        }
+
+        types::InternalType* pIT = symbol::Context::getInstance()->get(var);
+        if (pIT == nullptr && m_captured.find(e) == m_captured.end())
+        {
+            char msg[128];
+            os_sprintf(msg, _("%s: variable `'%ls\' must exist.\n"), "lambda", e.data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
+
+        if (pIT)
+        {
+            m_captured[e] = pIT->clone();
+            m_captured[e]->IncreaseRef();
+        }
+    }
+
+    // called functions
+    auto called = visit.getCalled();
+    for (auto&& c : called)
+    {
+        symbol::Symbol var = symbol::Symbol(c);
+        if (std::find_if(m_inputArgs->begin(), m_inputArgs->end(), [var](symbol::Variable* v)
+                         { return v->getSymbol() == var; }) != m_inputArgs->end())
+        {
+            // input parameter
+            continue;
+        }
+
+        types::InternalType* pIT = symbol::Context::getInstance()->get(var);
+        if (pIT == nullptr && m_captured.find(c) == m_captured.end())
+        {
+            char msg[128];
+            os_sprintf(msg, _("%s: variable `%ls` must exist.\n"), "lambda", c.data());
+            throw ast::InternalError(scilab::UTF8::toWide(msg));
+        }
+
+        if (pIT)
+        {
+            symbol::Variable* v = symbol::Context::getInstance()->getOrCreate(var);
+            if (v->empty())
+            {
+                types::InternalType* p = symbol::Context::getInstance()->get(var);
+                if (p)
+                {
+                    m_captured[c] = p->clone();
+                    m_captured[c]->IncreaseRef();
+                }
+            }
+            else if (v->top()->m_iLevel > SCOPE_GATEWAY)
+            {
+                // sciprint("level: %ls(%d)\n", c.data(), v->top()->m_iLevel);
+                //  not a original function of Scilab
+                m_captured[c] = pIT->clone();
+                m_captured[c]->IncreaseRef();
+            }
+        }
+    }
+}
+
 Macro::Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _inputArgs, std::vector<symbol::Variable*>& _outputArgs, ast::SeqExp& _body, const std::wstring& _stModule) : Callable(),
-    m_inputArgs(&_inputArgs), m_outputArgs(&_outputArgs), m_body(_body.clone()),
+    m_inputArgs(&_inputArgs), m_outputArgs(&_outputArgs), m_body(_body.clone()), m_isLambda(false),
     m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
     m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
     m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
@@ -1403,7 +1520,11 @@ Macro::Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _input
     m_body->setReturnable();
     m_stPath = L"";
 
+    // Do not enable debug for Macro called when checking arguments (calling sci2exp)
+    bool isDebug = ConfigVariable::getEnableDebug();
+    ConfigVariable::setEnableDebug(false);
     updateArguments();
+    ConfigVariable::setEnableDebug(isDebug);
 }
 
 Macro::~Macro()
@@ -1430,6 +1551,14 @@ Macro::~Macro()
         sub.second->killMe();
     }
 
+    if (isLambda())
+    {
+        for (auto&& c : m_captured)
+        {
+            c.second->DecreaseRef();
+            c.second->killMe();
+        }
+    }
     m_submacro.clear();
 }
 
@@ -1472,30 +1601,37 @@ bool Macro::toString(std::wostringstream& ostr)
     }
 
     ostr.str(L"");
-    ostr << L"[";
 
-    // output arguments [a,b,c] = ....
-    if (m_outputArgs->empty() == false)
+    if (isLambda())
     {
-        std::vector<symbol::Variable*>::iterator OutArg = m_outputArgs->begin();
-        std::vector<symbol::Variable*>::iterator OutArgfter = OutArg;
-        OutArgfter++;
-
-        for (; OutArgfter != m_outputArgs->end(); OutArgfter++)
+        ostr << wcsVarName << L": ";
+    }
+    else
+    {
+        ostr << L"[";
+        // output arguments [a,b,c] = ....
+        if (m_outputArgs->empty() == false)
         {
+            std::vector<symbol::Variable*>::iterator OutArg = m_outputArgs->begin();
+            std::vector<symbol::Variable*>::iterator OutArgfter = OutArg;
+            OutArgfter++;
+
+            for (; OutArgfter != m_outputArgs->end(); OutArgfter++)
+            {
+                ostr << (*OutArg)->getSymbol().getName();
+                ostr << ",";
+                OutArg++;
+            }
+
             ostr << (*OutArg)->getSymbol().getName();
-            ostr << ",";
-            OutArg++;
         }
 
-        ostr << (*OutArg)->getSymbol().getName();
+        ostr << L"]";
+        // function name
+        ostr << L"=" << wcsVarName;
     }
 
-    ostr << L"]";
-
-    // function name
-    ostr << L"=" << wcsVarName << L"(";
-
+    ostr << L"(";
     // input arguments function(a,b,c)
     if (m_inputArgs->empty() == false)
     {
@@ -1600,7 +1736,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         }
 
         pContext->scope_end();
-        ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
+        ConfigVariable::fillWhereError(getBody()->getLocation());
         ConfigVariable::macroFirstLine_end();
         return Callable::Error;
     }
@@ -1623,7 +1759,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         {
             Scierror(999, _("%s: Named argument are not compatible with arguments block.\n"), scilab::UTF8::toUTF8(m_wstName).data());
             pContext->scope_end();
-            ConfigVariable::fillWhereError(getBody()->getLocation().first_line);
+            ConfigVariable::fillWhereError(getBody()->getLocation());
             ConfigVariable::macroFirstLine_end();
             return Callable::Error;
         }
@@ -1808,7 +1944,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         catch (const ast::InternalError& ie)
         {
             pContext->scope_end();
-            ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
             ConfigVariable::macroFirstLine_end();
             //return types::Function::Error;
             throw ie;
@@ -1821,19 +1957,22 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
     // varargout can containt more items than caller need
     // varargout must containt at leat caller needs
 
-    if (m_outputArgs->size() >= 1 && m_outputArgs->back()->getSymbol().getName() == L"varargout")
+    if (isLambda() == false)
     {
-        bVarargout = true;
-        List* pL = new List();
-        pContext->put(m_Varargout, pL);
-    }
+        if (m_outputArgs->size() >= 1 && m_outputArgs->back()->getSymbol().getName() == L"varargout")
+        {
+            bVarargout = true;
+            List* pL = new List();
+            pContext->put(m_Varargout, pL);
+        }
 
-    // iRetCount = 0 is granted to the macro (as argn(0))
-    // when there is no formal output argument
-    // or if varargout is the only formal output argument.
-    if (m_outputArgs->size() - (bVarargout ? 1 : 0) >= 1)
-    {
-        iRetCount = std::max(1, iRetCount);
+        // iRetCount = 0 is granted to the macro (as argn(0))
+        // when there is no formal output argument
+        // or if varargout is the only formal output argument.
+        if (m_outputArgs->size() - (bVarargout ? 1 : 0) >= 1)
+        {
+            iRetCount = std::max(1, iRetCount);
+        }
     }
 
     // common part with or without varargin/varargout
@@ -1865,10 +2004,24 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
         pContext->put(sub.first, sub.second);
     }
 
+    if (isLambda())
+    {
+        //add varargout in new context
+        //List* pL = new List();
+        //pContext->put(m_Varargout, pL);
+
+        for (auto&& c : m_captured)
+        {
+            pContext->put(symbol::Symbol(c.first), c.second);
+        }
+    }
+
     // save current prompt mode
     int oldVal = ConfigVariable::getPromptMode();
     std::wstring iExecFile = ConfigVariable::getExecutedFile();
     std::unique_ptr<ast::ConstVisitor> exec(ConfigVariable::getDefaultVisitor());
+    ((ast::RunVisitor*)exec.get())->setLambda(isLambda());
+
     try
     {
         ConfigVariable::setExecutedFile(m_stPath);
@@ -1889,6 +2042,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                 Sciwarning("WARNING: \"skipArguments\" was called in \"%ls\".\n", func);
             }
         }
+
         ConfigVariable::setExecutedFile(iExecFile);
         cleanCall(pContext, oldVal);
         throw ie;
@@ -1901,72 +2055,31 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
     }
 
     // nb excepted output without varargout
-    int iRet = std::min((int)m_outputArgs->size() - (bVarargout ? 1 : 0), std::max(1, iRetCount));
+    int iRet = iRetCount;
 
-    // normal output management
-    // for (std::list<symbol::Variable*>::iterator i = m_outputArgs->begin(); i != m_outputArgs->end() && _iRetCount; ++i, --_iRetCount)
-    for (auto arg : *m_outputArgs)
+    if (isLambda() == false)
     {
-        iRet--;
-        if (iRet < 0)
-        {
-            break;
-        }
+        iRet = std::min((int)m_outputArgs->size() - (bVarargout ? 1 : 0), std::max(1, iRetCount));
 
-        InternalType* pIT = pContext->get(arg);
-        if (pIT)
+        // normal output management
+        for (auto arg : *m_outputArgs)
         {
-            out.push_back(pIT);
-            pIT->IncreaseRef();
-        }
-        else
-        {
-            const int size = (const int)out.size();
-            for (int j = 0; j < size; ++j)
+            iRet--;
+            if (iRet < 0)
             {
-                out[j]->DecreaseRef();
-                out[j]->killMe();
+                break;
             }
-            out.clear();
-            cleanCall(pContext, oldVal);
 
-            char* pstArgName = wide_string_to_UTF8(arg->getSymbol().getName().c_str());
-            char* pstMacroName = wide_string_to_UTF8(getName().c_str());
-            Scierror(999, _("Undefined variable '%s' in function '%s'.\n"), pstArgName, pstMacroName);
-            FREE(pstArgName);
-            FREE(pstMacroName);
-            return Callable::Error;
-        }
-    }
-
-    // varargout management
-    if (bVarargout)
-    {
-        InternalType* pOut = pContext->get(m_Varargout);
-        if (pOut == NULL)
-        {
-            cleanCall(pContext, oldVal);
-            Scierror(999, _("Invalid index.\n"));
-            return Callable::Error;
-        }
-
-        if (pOut->isList() == false)
-        {
-            cleanCall(pContext, oldVal);
-            char* pstMacroName = wide_string_to_UTF8(getName().c_str());
-            Scierror(999, _("%s: Wrong type for %s: A list expected.\n"), pstMacroName, "Varargout");
-            FREE(pstMacroName);
-            return Callable::Error;
-        }
-
-        List* pVarOut = pOut->getAs<List>();
-        const int size = std::min(pVarOut->getSize(), std::max(1, iRetCount) - (int)out.size());
-        for (int i = 0; i < size; ++i)
-        {
-            InternalType* pIT = pVarOut->get(i);
-            if (pIT->isVoid())
+            InternalType* pIT = pContext->get(arg);
+            if (pIT)
             {
-                for (int j = 0; j < i; ++j)
+                out.push_back(pIT);
+                pIT->IncreaseRef();
+            }
+            else
+            {
+                const int size = (const int)out.size();
+                for (int j = 0; j < size; ++j)
                 {
                     out[j]->DecreaseRef();
                     out[j]->killMe();
@@ -1974,18 +2087,99 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                 out.clear();
                 cleanCall(pContext, oldVal);
 
-                Scierror(999, _("List element number %d is Undefined.\n"), i + 1);
+                char* pstArgName = wide_string_to_UTF8(arg->getSymbol().getName().c_str());
+                char* pstMacroName = wide_string_to_UTF8(getName().c_str());
+                Scierror(999, _("Undefined variable '%s' in function '%s'.\n"), pstArgName, pstMacroName);
+                FREE(pstArgName);
+                FREE(pstMacroName);
+                return Callable::Error;
+            }
+        }
+
+        // varargout management
+        if (bVarargout)
+        {
+            InternalType* pOut = pContext->get(m_Varargout);
+            if (pOut == NULL)
+            {
+                cleanCall(pContext, oldVal);
+                Scierror(999, _("Invalid index.\n"));
                 return Callable::Error;
             }
 
-            pIT->IncreaseRef();
-            out.push_back(pIT);
+            if (pOut->isList() == false)
+            {
+                cleanCall(pContext, oldVal);
+                char* pstMacroName = wide_string_to_UTF8(getName().c_str());
+                Scierror(999, _("%s: Wrong type for %s: A list expected.\n"), pstMacroName, "Varargout");
+                FREE(pstMacroName);
+                return Callable::Error;
+            }
+
+            List* pVarOut = pOut->getAs<List>();
+            const int size = std::min(pVarOut->getSize(), std::max(1, iRetCount) - (int)out.size());
+            for (int i = 0; i < size; ++i)
+            {
+                InternalType* pIT = pVarOut->get(i);
+                if (pIT->isVoid())
+                {
+                    for (int j = 0; j < i; ++j)
+                    {
+                        out[j]->DecreaseRef();
+                        out[j]->killMe();
+                    }
+                    out.clear();
+                    cleanCall(pContext, oldVal);
+
+                    Scierror(999, _("List element number %d is Undefined.\n"), i + 1);
+                    return Callable::Error;
+                }
+
+                pIT->IncreaseRef();
+                out.push_back(pIT);
+            }
+        }
+    }
+    else
+    {
+        InternalType* pOut = pContext->get(m_Varargout);
+        if (pOut == NULL)
+        {
+            types::InternalType* result = ((ast::RunVisitor*)exec.get())->getLambdaResult();
+            if (result)
+            {
+                types::InternalType* p = result;
+                p->IncreaseRef();
+                out.push_back(p);
+                ((ast::RunVisitor*)exec.get())->clearLambdaResult();
+            }
+        }
+        else
+        {
+            if (pOut->isList() == false)
+            {
+                cleanCall(pContext, oldVal);
+                char* pstMacroName = wide_string_to_UTF8(getName().c_str());
+                Scierror(999, _("%s: Wrong type for %s: A list expected.\n"), pstMacroName, "Varargout");
+                FREE(pstMacroName);
+                return Callable::Error;
+            }
+
+            List* pVarOut = pOut->getAs<List>();
+            const int size = std::min(pVarOut->getSize(), iRetCount);
+            for (int i = 0; i < size; ++i)
+            {
+                types::InternalType* p = pVarOut->get(i);
+                p->IncreaseRef();
+                out.push_back(p);
+            }
         }
     }
 
     // close the current scope
     cleanCall(pContext, oldVal);
 
+    //reduce ref of outputs to case of in and out have same symbol
     for (typed_list::iterator i = out.begin(), end = out.end(); i != end; ++i)
     {
         (*i)->DecreaseRef();
@@ -2011,6 +2205,11 @@ int Macro::getNbInputArgument(void)
 
 int Macro::getNbOutputArgument(void)
 {
+    if (isLambda())
+    {
+        return -1;//will be manage later in call()
+    }
+
     if (m_outputArgs->size() >= 1 && m_outputArgs->back()->getSymbol().getName() == L"varargout")
     {
         return -1;
@@ -2041,6 +2240,11 @@ bool Macro::operator==(const InternalType& it)
     std::vector<symbol::Variable*>* pOutput = NULL;
     types::Macro* pRight = const_cast<InternalType&>(it).getAs<types::Macro>();
 
+    if (pRight->isLambda() != isLambda())
+    {
+        return false;
+    }
+
     // check inputs
     pInput = pRight->getInputs();
     if (pInput->size() != m_inputArgs->size())
@@ -2060,22 +2264,25 @@ bool Macro::operator==(const InternalType& it)
         }
     }
 
-    // check outputs
-    pOutput = pRight->getOutputs();
-    if (pOutput->size() != m_outputArgs->size())
+    if (isLambda() == false)
     {
-        return false;
-    }
-
-    itOld = pOutput->begin();
-    itEndOld = pOutput->end();
-    itMacro = m_outputArgs->begin();
-
-    for (; itOld != itEndOld; ++itOld, ++itMacro)
-    {
-        if ((*itOld)->getSymbol() != (*itMacro)->getSymbol())
+        // check outputs
+        pOutput = pRight->getOutputs();
+        if (pOutput->size() != m_outputArgs->size())
         {
             return false;
+        }
+
+        itOld = pOutput->begin();
+        itEndOld = pOutput->end();
+        itMacro = m_outputArgs->begin();
+
+        for (; itOld != itEndOld; ++itOld, ++itMacro)
+        {
+            if ((*itOld)->getSymbol() != (*itMacro)->getSymbol())
+            {
+                return false;
+            }
         }
     }
 
@@ -2109,7 +2316,6 @@ void Macro::updateArguments()
 {
     // build a map of inputs argument name and position
     std::vector<std::wstring> inputNames;
-    int i = 0;
     for (auto&& in : *m_inputArgs)
     {
         inputNames.push_back(in->getSymbol().getName());

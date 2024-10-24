@@ -160,15 +160,16 @@
 if (getscilabmode() == "STD") then
     addmenu('foo');
     foo = 'disp(''hello'')';
+
     addmenu('Hello',['Franck';'Peter'])
     Hello = ['disp(''hello Franck'')';'disp(''hello Peter'')'];
+
     addmenu('Bye',list(0,'French_Bye'));
     French_Bye = 'disp(''Au revoir'')';
-    else
-    mprintf('This example requires to use scilab with GUI mode.\n');
-    end
+
     addmenu(0,'Hello',['Franck';'Peter']);
     Hello_0 = ['disp(''hello Franck'')';'disp(''hello Peter'')'];
+
     //Cで定義したコールバック
     // コールバックコードを作成
     code=[ '#include ""machine.h""'
@@ -190,6 +191,8 @@ if (getscilabmode() == "STD") then
     chdir(current_dir);
     // メニューを追加
     addmenu(0,'foo',['a','b','c'],list(1,'foo'));
+else
+    mprintf('This example requires to use scilab with GUI mode.\n');
 end
         </programlisting>
     </refsection>

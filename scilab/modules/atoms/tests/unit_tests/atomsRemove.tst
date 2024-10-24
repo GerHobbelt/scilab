@@ -8,7 +8,9 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 
+exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
 
 //detect scilab arch
 [version, opts] = getversion();
@@ -17,17 +19,6 @@ if opts(2) == "x64" & getos() == "Windows" then
 else
     arch = "";
 end
-
-load("SCI/modules/atoms/macros/atoms_internals/lib");
-exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Do not use the autoload system
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
 
 // Load the 1st scenario : See scene10.test.atoms.scilab.org.txt
 // =============================================================================
@@ -261,10 +252,3 @@ mkdir(atomsPath("install","allusers")+"archives/");
 
 // no module should be installed
 assert_checktrue(isempty(atomsGetInstalled()));
-
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);
-
-atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"));

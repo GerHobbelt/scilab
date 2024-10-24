@@ -18,6 +18,10 @@
 // used when calling champ without any parameter.
 //
 
-function [] = %_champ()
-    champ(1:10,1:10,rand(10,10),rand(10,10),1.0);
+function varargout = %_champ()
+    e = champ(1:10,1:10,rand(10,10),rand(10,10),1.0);
+
+    if nargout then
+        varargout(1) = e;
+    end
 endfunction

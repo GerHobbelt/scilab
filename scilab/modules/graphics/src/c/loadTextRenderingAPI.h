@@ -21,9 +21,10 @@
  * $ or < which are the two tags for, respectively, latex & MathML
  *
  * @param text  the matrix of string
+ * @param interpreter  the matrix of interpreter strings
  * @param nbRow the number of row
  * @param nbCol  the number of col
  */
-void loadTextRenderingAPI(char** text, int nbRow, int nbCol);
+void loadTextRenderingAPI(char** text, char** interpreter, int nbRow, int nbCol);
 
 #endif /* _LOADTEXTRENDERINGAPI_H_ */

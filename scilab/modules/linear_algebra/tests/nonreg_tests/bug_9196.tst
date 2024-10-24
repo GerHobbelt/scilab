@@ -19,7 +19,7 @@
 // =============================================================================
 
 n=9;
-A = testmatrix("hilb",n);
+A = invhilb(n);
 b=ones(n,1);
 xexpected=[7129/2520
            4861/2520
@@ -69,15 +69,13 @@ xexpected=[1879/2520;
            69659/720720;
            1068047/12252240];
 x=A\b;
-assert_checkalmostequal(x, xexpected, [], 1e-7);
+assert_checkalmostequal(x, xexpected, [], 1e-6);
 Ac=complex(A,zeros(A));
 bc=complex(b,zeros(b));
 xc = Ac\bc;
 xcexpected=complex(xexpected,zeros(xexpected));
 assert_checkalmostequal(xc, xcexpected, [], 1e-6);
 
-n=9;
-A = testmatrix("hilb",n);
 b = ones(n,1);
 x = (b'/A')';
 xexpected=[

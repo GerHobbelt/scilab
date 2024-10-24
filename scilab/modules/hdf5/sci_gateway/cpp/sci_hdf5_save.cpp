@@ -243,7 +243,7 @@ types::Function::ReturnValue sci_hdf5_save(types::typed_list &in, int _iRetCount
     CustomXFER xfer;
 
     // export data
-    for (const auto var : vars)
+    for (const auto& var : vars)
     {
         if (isVarExist(iH5File, var.first.data()))
         {
@@ -434,7 +434,6 @@ static hid_t export_list(hid_t parent, const std::string& name, types::List* dat
 
     //create node with list name
     hid_t dset = openList6(parent, name.data(), type);
-
     for (int i = 0; i < size; ++i)
     {
         if (export_data(dset, std::to_string(i).data(), data->get(i), xfer_plist_id) == -1)
@@ -553,6 +552,12 @@ static hid_t export_struct(hid_t parent, const std::string& name, types::Struct*
             refname += "_" + std::to_string(j);
             //export data in refs group
             hid_t ref = export_data(refs, refname, val, xfer_plist_id);
+            if (ref < 0)
+            {
+                delete fields;
+                FREE(cfield);
+                return -1;
+            }
             //create reference of data
             ret = addItemStruct6(refs, vrefs.data(), j, refname.data());
             if (ret)
@@ -672,7 +677,6 @@ static hid_t export_poly(hid_t parent, const std::string& name, types::Polynom* 
 static hid_t export_sparse(hid_t parent, const std::string& name, types::Sparse* data, hid_t xfer_plist_id)
 {
     int nnz = static_cast<int>(data->nonZeros());
-    int row = data->getRows();
     //create a group with sparse name
     hid_t dset = openList6(parent, name.data(), g_SCILAB_CLASS_SPARSE);
     //store sparse dimensions
@@ -753,7 +757,6 @@ static hid_t export_sparse(hid_t parent, const std::string& name, types::Sparse*
 static hid_t export_boolean_sparse(hid_t parent, const std::string& name, types::SparseBool* data, hid_t xfer_plist_id)
 {
     int nnz = static_cast<int>(data->nbTrue());
-    int row = data->getRows();
     //create a group with sparse name
     hid_t dset = openList6(parent, name.data(), g_SCILAB_CLASS_BSPARSE);
     //store sparse dimensions
@@ -825,6 +828,10 @@ static hid_t export_cell(hid_t parent, const std::string& name, types::Cell* dat
     {
         std::string refname(std::to_string(i));
         hid_t ref = export_data(refs, refname, it[i], xfer_plist_id);
+        if (ref < 0)
+        {
+            return -1;
+        }
     }
 
 
@@ -890,7 +897,7 @@ static hid_t export_macro(hid_t parent, const std::string& name, types::Macro* d
     int dims[2];
 
     //create a group with macro name
-    hid_t dset = openList6(parent, name.data(), g_SCILAB_CLASS_MACRO);
+    hid_t dset = openList6(parent, name.data(), data->isLambda() ? g_SCILAB_CLASS_LAMBDA : g_SCILAB_CLASS_MACRO);
 
     //inputs
     std::vector<char*> inputNames;
@@ -909,21 +916,50 @@ static hid_t export_macro(hid_t parent, const std::string& name, types::Macro* d
         FREE(in);
     }
 
-    //outputs
-    std::vector<char*> outputNames;
-    auto outputs = data->getOutputs();
-    for (auto & output : *outputs)
+    if (data->isLambda())
     {
-        outputNames.push_back(wide_string_to_UTF8(output->getSymbol().getName().data()));
+        hid_t refs = openList6(dset, "__refs__", g_SCILAB_CLASS_LAMBDA);
+        if (refs < 0)
+        {
+            return -1;
+        }
+
+        // catched variable
+        for (auto&& c : data->getCaptured())
+        {
+            char* cfield = wide_string_to_UTF8(c.first.data());
+
+            types::InternalType* val = c.second;
+            // create ref name
+            std::string refname(cfield);
+            FREE(cfield);
+            // export data in refs group
+            hid_t ref = export_data(refs, refname, val, xfer_plist_id);
+        }
+
+        if (closeList6(refs) == -1)
+        {
+            return -1;
+        }
     }
-
-    dims[0] = 1;
-    dims[1] = static_cast<int>(outputNames.size());
-    writeStringMatrix6(dset, "outputs", 2, dims, outputNames.data(), xfer_plist_id);
-
-    for (auto & in : outputNames)
+    else
     {
-        FREE(in);
+        // outputs
+        std::vector<char*> outputNames;
+        auto outputs = data->getOutputs();
+        for (auto& output : *outputs)
+        {
+            outputNames.push_back(wide_string_to_UTF8(output->getSymbol().getName().data()));
+        }
+
+        dims[0] = 1;
+        dims[1] = static_cast<int>(outputNames.size());
+        writeStringMatrix6(dset, "outputs", 2, dims, outputNames.data(), xfer_plist_id);
+
+        for (auto& in : outputNames)
+        {
+            FREE(in);
+        }
     }
 
     //body

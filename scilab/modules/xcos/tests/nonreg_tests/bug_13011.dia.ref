@@ -32,6 +32,6 @@ xcos_simulate(scs_m, 4);
   "Analytical Jacobian: enabled  (%Jacobian=%t)"           
   "Parameter embedding mode: enabled (%Modelica_ParEmb=%t)"
   ""                                                       
-  "Generated files path: TMPDIR/"      
+  "Generated files path: TMPDIR/"     
   ""                                                       
 WARNING: Diagram contains implicit blocks, compiling for implicit Solver.

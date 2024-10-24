@@ -13,7 +13,7 @@
 // https://www.cecill.info/licences/Licence_CeCILL_V2.1-en.txt
 // ===================================================================
 
-function plotimplicit(fun, x_grid, y_grid, varargin)
+function varargout = plotimplicit(fun, x_grid, y_grid, varargin)
 
     fname = "plotimplicit"
     [lhs, rhs] = argn(0);
@@ -25,6 +25,12 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
         plotimplicit("rand() = 0.5", 1:10, 1:10);
         return
     end
+
+    if lhs > 1 then
+        msg = gettext("%s: Wrong number of output argument(s): at most %d expected.\n")
+        error(msprintf(msg, "plotimplicit", 1));
+    end
+
 
     // CHECKING INPUT ARGUMENTS
     // ------------------------
@@ -48,7 +54,7 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
             //end
             x_grid = db(1:2)
         end
-        if ~isvector(x_grid) then
+        if isscalar(x_grid) | ~isvector(x_grid) then
             error(msprintf(gettext("%s: Argument #%d: Vector expected.\n"), fname, 2));
         end
         if ~isreal(x_grid) then
@@ -71,7 +77,7 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
         if typeof(y_grid)=="implicitlist" & y_grid == :
             y_grid = db(3:4)
         end
-        if ~isvector(y_grid) then
+        if isscalar(y_grid) | ~isvector(y_grid) then
             error(msprintf(gettext("%s: Argument #%d: Vector expected.\n"), fname, 3));
         end
         if ~isreal(y_grid) then
@@ -249,8 +255,15 @@ function plotimplicit(fun, x_grid, y_grid, varargin)
     //
     if cnt > 0 then
         set("current_entity", a);
+        if lhs == 1 then
+            varargout(1) = a.children;
+        end
     else
         set("current_entity", ax);
+        if lhs == 1 then
+            varargout(1) = [];
+        end
     end
+
     fig.immediate_drawing = v;
 endfunction

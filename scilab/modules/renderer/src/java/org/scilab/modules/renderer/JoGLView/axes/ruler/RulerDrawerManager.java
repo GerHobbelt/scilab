@@ -109,17 +109,20 @@ class RulerDrawerManager {
             return true;
         }
 
-        if (property == GraphicObjectProperties.__GO_X_AXIS_TICKS_LABELS__) {
+        if (property == GraphicObjectProperties.__GO_X_AXIS_TICKS_LABELS__ ||
+            property == GraphicObjectProperties.__GO_X_AXIS_TICKS_INTERPRETERS__) {
             RulerDrawer[] rulerSpriteManager = rulerSpriteManagerMap.get(id);
             if (rulerSpriteManager != null) {
                 rulerSpriteManager[0].disposeResources();
             }
-        } else if (property == GraphicObjectProperties.__GO_Y_AXIS_TICKS_LABELS__) {
+        } else if (property == GraphicObjectProperties.__GO_Y_AXIS_TICKS_LABELS__ ||
+            property == GraphicObjectProperties.__GO_Y_AXIS_TICKS_INTERPRETERS__) {
             RulerDrawer[] rulerSpriteManager = rulerSpriteManagerMap.get(id);
             if (rulerSpriteManager != null) {
                 rulerSpriteManager[1].disposeResources();
             }
-        } else if (property == GraphicObjectProperties.__GO_Z_AXIS_TICKS_LABELS__) {
+        } else if (property == GraphicObjectProperties.__GO_Z_AXIS_TICKS_LABELS__ ||
+            property == GraphicObjectProperties.__GO_Z_AXIS_TICKS_INTERPRETERS__) {
             RulerDrawer[] rulerSpriteManager = rulerSpriteManagerMap.get(id);
             if (rulerSpriteManager != null) {
                 rulerSpriteManager[2].disposeResources();

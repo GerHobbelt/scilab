@@ -163,7 +163,7 @@ BOOL *getBoolean(char *variableName, int *nbRow, int *nbCol)
     matrixOfBoolean = (BOOL *) malloc(((*nbRow) * (*nbCol)) * sizeof(BOOL));
 
     /* Load the matrix */
-    sciErr = readNamedMatrixOfBoolean(NULL, variableName, nbRow, nbCol, matrixOfBoolean);
+    sciErr = readNamedMatrixOfBoolean(NULL, variableName, nbRow, nbCol, (int *) matrixOfBoolean);
 
     if (sciErr.iErr)
     {
@@ -178,7 +178,7 @@ int putBoolean(char *variableName, BOOL * variable, int nbRow, int nbCol)
 {
     SciErr sciErr;
 
-    sciErr = createNamedMatrixOfBoolean(NULL, variableName, nbRow, nbCol, variable);
+    sciErr = createNamedMatrixOfBoolean(NULL, variableName, nbRow, nbCol, (int*) variable);
     if (sciErr.iErr)
     {
         printError(&sciErr, 0);
@@ -453,7 +453,7 @@ int putLong(char *variableName, long *variable, int nbRow, int nbCol)
 {
     SciErr sciErr;
 
-    sciErr = createNamedMatrixOfInteger64(NULL, variableName, nbRow, nbCol, variable);
+    sciErr = createNamedMatrixOfInteger64(NULL, variableName, nbRow, nbCol, (long long*) variable);
     if (sciErr.iErr)
     {
         printError(&sciErr, 0);
@@ -462,10 +462,10 @@ int putLong(char *variableName, long *variable, int nbRow, int nbCol)
     return 0;
 }
 
-unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
+unsigned long long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
 {
     SciErr sciErr;
-    long *matrixOfLong = NULL;
+    unsigned long long *matrixOfLong = NULL;
 
     sciErr = readNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, NULL);
     if (sciErr.iErr)
@@ -474,7 +474,7 @@ unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
     }
 
     /* Alloc the memory */
-    matrixOfLong = (long *)malloc(((*nbRow) * (*nbCol)) * sizeof(long));
+    matrixOfLong = (unsigned long long *)malloc(((*nbRow) * (*nbCol)) * sizeof(unsigned long long));
 
     /* Load the matrix */
     sciErr = readNamedMatrixOfUnsignedInteger64(NULL, variableName, nbRow, nbCol, matrixOfLong);
@@ -487,7 +487,7 @@ unsigned long *getUnsignedLong(char *variableName, int *nbRow, int *nbCol)
 
 }
 
-int putUnsignedLong(char *variableName, unsigned long *variable, int nbRow, int nbCol)
+int putUnsignedLong(char *variableName, unsigned long long *variable, int nbRow, int nbCol)
 {
     SciErr sciErr;
 

@@ -15,7 +15,7 @@ refMsg = msprintf(_("%s: Wrong number of input arguments: %d to %d expected.\n")
 assert_checkerror("correl()", refMsg);
 
 assert_checkfalse(execstr("correl(1, [1 2])"   ,"errcatch") == 0);
-refMsg = msprintf(_("%s: Wrong type for input argument #%d: Must be a vector.\n"),"correl", 1);
+refMsg = msprintf(_("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"), "correl", 1, 2);
 assert_checkerror("correl(1, [1 2])", refMsg);
 
 assert_checkfalse(execstr("correl(""e"", [1 2])"   ,"errcatch") == 0);
@@ -23,7 +23,7 @@ refMsg = msprintf(_("%s: Wrong type for input argument #%d: Must be in %s.\n"),"
 assert_checkerror("correl(""e"", [1 2])", refMsg);
 
 assert_checkfalse(execstr("correl([1 2], 1)"   ,"errcatch") == 0);
-refMsg = msprintf(_("%s: Wrong type for input argument #%d: Must be a vector.\n"),"correl", 2);
+refMsg = msprintf(_("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"), "correl", 1, 2);
 assert_checkerror("correl([1 2], 1)", refMsg);
 
 assert_checkfalse(execstr("correl([1 2], ""e"")"   ,"errcatch") == 0);
@@ -59,7 +59,7 @@ r = correl([9 7 4 10 3 4 4 3 6], [5 4 6 6 5 3 7 5 10], eye(9,9));
 assert_checkalmostequal(r, 0.0880254, [], 1.e-7);
 
 assert_checkfalse(execstr("correl([1 4 9 7 2], [6 3 0])"   ,"errcatch") == 0);
-refMsg = msprintf(_("%s: Incompatible input arguments #%d and #%d: Same sizes expected"), "correl", 1, 2);
+refMsg = msprintf(_("%s: Incompatible input arguments #%d and #%d: Same sizes expected.\n"), "correl", 1, 2);
 assert_checkerror("correl([1 4 9 7 2], [6 3 0])", refMsg);
 
 r = correl([1 4 9 7 2], [6 3 0], eye(5,3));

@@ -98,7 +98,7 @@ myStyle.image = root_url + iconPath;
 pal = xcosPal();
 pal = xcosPalAddBlock(pal, blockPath, [], myStyle);
 
-expectedResult = ["SUM_f" msprintf("%s/SUM_f.gif", TMPDIR)  msprintf("block;image="+ root_url +"%s;", iconPath)];
+expectedResult = ["SUM_f" msprintf("%s/SUM_f.gif", TMPDIR) msprintf("block;image="+ root_url +"%s;", iconPath)];
 expectedResult = strsubst(expectedResult, "\", "/");
 result = [pal.blockNames(1) pal.icons(1) pal.style(1)];
 result = strsubst(result, "\", "/");
@@ -117,9 +117,8 @@ if or(expectedResult <> result) then pause, end
 pal = xcosPal();
 pal = xcosPalAddBlock(pal, blockPath, iconPath, stylePath);
 
-expectedResult = ["SUM_f" iconPath  msprintf("shape=label;image="+ root_url +"%s;", stylePath)];
+expectedResult = ["SUM_f" iconPath msprintf("shape=label;image="+ root_url +"%s;", stylePath)];
 expectedResult = strsubst(expectedResult, "\", "/");
 result = [pal.blockNames(1) pal.icons(1) pal.style(1)];
 result = strsubst(result, "\", "/");
 if or(expectedResult <> result) then pause, end
-

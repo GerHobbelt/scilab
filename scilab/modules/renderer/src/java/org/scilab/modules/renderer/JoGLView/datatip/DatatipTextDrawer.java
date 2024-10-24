@@ -372,7 +372,9 @@ public class DatatipTextDrawer extends TextManager {
 
     private static int getAutoOrientation(Datatip datatip) {
         final double[] dataX = (double[]) PolylineData.getDataX(datatip.getParent());
-        int index = datatip.getIndexes();
+        Double[] value = datatip.getIndexes();
+        int index = value[0].intValue();
+
         if (index == 0 || index >= dataX.length - 1) {
             return -1;
         }

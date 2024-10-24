@@ -64,6 +64,6 @@ z=flts(uu(instants),Bigsyst);
 plot2d([instants',instants'],..
 [totrack(1,:)',z(1,:)'], axesflag=1);
 curves = gce();
-captions(curves.children,["Signal to track","Computed signal"],"upper_caption");
+legend(curves.children($:-1:1),["Signal to track","Computed signal"],"upper_caption");
 xtitle("tracking");
 messagebox(_("The end"), _("Tracking"), "modal");

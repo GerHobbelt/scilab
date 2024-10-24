@@ -1,8 +1,8 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2009-2012 - DIGITEO - Pierre Lando
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -396,12 +396,9 @@ public class AxisDrawer {
 
         @Override
         public Texture create(double value, DecimalFormat adaptedFormat, TextureManager spriteManager) {
-            String label = getLabel(value);
-            if (label != null) {
-                FormattedText formattedText = new FormattedText();
-                formattedText.setFont(axis.getFont());
-                formattedText.setText(getLabel(value));
-
+            FormattedText formattedText = getLabel(value);
+            if (formattedText != null) {
+                
                 FormattedTextSpriteDrawer textureDrawer = new FormattedTextSpriteDrawer(drawerVisitor.getColorMap(), formattedText);
                 Texture texture = spriteManager.createTexture();
                 texture.setMagnificationFilter(Texture.Filter.LINEAR);
@@ -415,20 +412,26 @@ public class AxisDrawer {
         }
 
         /**
-         * Return the label corresponding to the given value.
-         * @param value the given value.
-         * @return the label corresponding to the given value.
-         */
-        private String getLabel(double value) {
+            * Return the Formatted Text corresponding to the given value.
+            * @param value the given value.
+            * @return the  Formatted Text corresponding to the given value.
+            */
+        private FormattedText getLabel(double value) {
             // 0 <= value <= 1
             // Should find right index through given labels.
-            String[] ticksLabel = axis.getTicksLabels();
-            int index = (int) Math.round(value * (ticksLabel.length - 1));
-            if ((index < 0) || (index > ticksLabel.length) || ticksLabel.length == 0) {
+            String[] ticksLabels = axis.getTicksLabels();
+            int index = (int) Math.round(value * (ticksLabels.length - 1));
+            if ((index < 0) || (index > ticksLabels.length) || ticksLabels.length == 0) {
                 return null;
             } else {
-                return ticksLabel[index];
+                String[] ticksInterpreters = axis.getTicksInterpreters();
+                FormattedText formattedText = new FormattedText();
+                formattedText.setFont(axis.getFont());
+                formattedText.setText(ticksLabels[index]);
+                formattedText.setInterpreter(FormattedText.InterpreterType.stringToEnum(ticksInterpreters[index]));
+                return formattedText;
             }
         }
+
     }
 }

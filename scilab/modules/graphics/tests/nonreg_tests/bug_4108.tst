@@ -5,6 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- INTERACTIVE TEST -->
 // <-- TEST WITH GRAPHIC -->
 // <-- ENGLISH IMPOSED -->
 // <-- NO CHECK REF -->
@@ -29,7 +30,7 @@ curves = gce();
 
 // check all cases
 for loc = legend_positions,
-    captions(curves.children, ["x","x.^2"], loc);
+    legend(curves.children($:-1:1), ["x","x.^2"], loc);
     leg = gce();
     assert_checktrue(leg.legend_location == loc);
 end

@@ -80,10 +80,8 @@ int isEmptyDirectory(char *dirName)
 
 #ifdef __USE_LARGEFILE64
     struct dirent64 *ptr;
-    struct dirent64 *result;
 #else
     struct dirent *ptr;
-    struct dirent *result;
 #endif
     int ret = 1;
 
@@ -93,22 +91,7 @@ int isEmptyDirectory(char *dirName)
         return 0;
     }
 
-#ifdef __USE_LARGEFILE64
-    ptr = MALLOC(sizeof(struct dirent64) + (PATH_MAX + 1));
-#else
-    ptr = MALLOC(sizeof(struct dirent) + (PATH_MAX + 1));
-#endif
-    if (ptr == NULL)
-    {
-        closedir(dir);
-        return 0;
-    }
-
-#ifdef __USE_LARGEFILE64
-    while ((readdir64_r(dir, ptr, &result) == 0) && (result != NULL))
-#else
-    while ((readdir_r(dir, ptr, &result) == 0) && (result != NULL))
-#endif
+    while(ptr = readdir(dir))
     {
         if (!strcmp(ptr->d_name, ".") || !strcmp(ptr->d_name, ".."))
         {
@@ -119,7 +102,6 @@ int isEmptyDirectory(char *dirName)
         break;
     }
 
-    FREE(ptr);
     closedir(dir);
 
     return ret;

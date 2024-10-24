@@ -187,7 +187,7 @@
         </para>
 
         <programlisting role="example"><![CDATA[
-a = testmatrix("hilb",4);
+a = invhilb(4);
 [l,u]=lu(a)
 norm(l*u-a)
  ]]></programlisting>
@@ -209,7 +209,7 @@ norm(l*u-a)
         </para>
 
         <programlisting role="example"><![CDATA[
-a = testmatrix("hilb",4);
+a = invhilb(4);
 [l,u,e]=lu(a)
 norm(l*u-e*a)
  ]]></programlisting>
@@ -299,4 +299,3 @@ norm(P*L*U*Q-a)
     </refsection>
 
 </refentry>
-

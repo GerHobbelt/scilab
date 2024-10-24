@@ -29,10 +29,6 @@ import java.net.URLClassLoader;
 import java.util.Enumeration;
 import java.util.Locale;
 
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
-
 import javax.help.BadIDException;
 import javax.help.DefaultHelpHistoryModel;
 import javax.help.DefaultHelpModel;
@@ -45,10 +41,22 @@ import javax.help.JHelpTOCNavigator;
 import javax.help.SwingHelpUtilities;
 import javax.help.event.HelpModelEvent;
 import javax.help.event.HelpModelListener;
+import javax.help.plaf.basic.BasicHelpUI;
 import javax.help.plaf.basic.BasicSearchNavigatorUI;
 import javax.help.plaf.basic.BasicTOCNavigatorUI;
 import javax.help.search.SearchQuery;
+import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JSplitPane;
+import javax.swing.JTabbedPane;
+import javax.swing.JToolBar;
+import javax.swing.SwingUtilities;
+import javax.swing.plaf.basic.BasicSplitPaneUI;
 
+import org.scilab.modules.commons.gui.FindIconHelper;
 import org.scilab.modules.gui.console.ScilabConsole;
 import org.scilab.modules.gui.helpbrowser.SimpleHelpBrowser;
 import org.scilab.modules.gui.messagebox.MessageBox;
@@ -264,6 +272,44 @@ public class SwingScilabHelpBrowser extends JPanel implements SimpleHelpBrowser,
             Object nav = navigators.nextElement();
             if (nav instanceof JHelpTOCNavigator) {
                 BasicTOCNavigatorUI tocUI = (BasicTOCNavigatorUI) ((JHelpTOCNavigator) nav).getUI();
+
+                BasicHelpUI bhUI = ((BasicHelpUI)jhelp.getUI());
+                /* Change toolbar icons to look like Scilab ones */
+                JToolBar toolbar = null;
+                try {
+                    Field f = BasicHelpUI.class.getDeclaredField("toolbar");
+                    f.setAccessible(true);
+                    toolbar = (JToolBar) f.get(bhUI);
+                    JButton prevbtn = (JButton) toolbar.getComponent(0);
+                    prevbtn.setIcon(new ImageIcon(FindIconHelper.findIcon("go-previous")));
+                    JButton nextbtn = (JButton) toolbar.getComponent(1);
+                    nextbtn.setIcon(new ImageIcon(FindIconHelper.findIcon("go-next")));
+                    JButton printbtn = (JButton) toolbar.getComponent(3);
+                    printbtn.setIcon(new ImageIcon(FindIconHelper.findIcon("document-print")));
+                    JButton printsetupbtn = (JButton) toolbar.getComponent(4);
+                    printsetupbtn.setIcon(new ImageIcon(FindIconHelper.findIcon("printer")));
+                    jhelp.remove(toolbar);
+                } catch (Exception e) { }
+
+                /* Change tabs icons to look like Scilab ones */
+                JTabbedPane tabbedPane = null;
+                try {
+                    Field f = BasicHelpUI.class.getDeclaredField("tabbedPane");
+                    f.setAccessible(true);
+                    tabbedPane = (JTabbedPane) f.get(bhUI);
+                    tabbedPane.setIconAt(0, new ImageIcon(FindIconHelper.findIcon("user-home")));
+                    tabbedPane.setIconAt(1, new ImageIcon(FindIconHelper.findIcon("system-search")));
+                } catch (Exception e) { }
+
+                /* Remove useless borders */
+                JSplitPane splitPane = null;
+                try {
+                    Field f = BasicHelpUI.class.getDeclaredField("splitPane");
+                    f.setAccessible(true);
+                    splitPane = (JSplitPane) f.get(bhUI);
+                    splitPane.setContinuousLayout(true);
+                } catch (Exception e) { }
+
                 JScrollPane scroll = null;
                 try {
                     Field f = BasicTOCNavigatorUI.class.getDeclaredField("sp");
@@ -284,6 +330,21 @@ public class SwingScilabHelpBrowser extends JPanel implements SimpleHelpBrowser,
                 break;
             }
         }
+    }
+
+    /**
+     * Get JHelp Toolbar and remove it from main component
+     * @return the toolbar
+     */
+    public JToolBar getToolbar() {
+        BasicHelpUI bhUI = ((BasicHelpUI)jhelp.getUI());
+        JToolBar toolbar = null;
+        try {
+            Field f = BasicHelpUI.class.getDeclaredField("toolbar");
+            f.setAccessible(true);
+            toolbar = (JToolBar) f.get(bhUI);
+        } catch (Exception e) { }
+        return toolbar;
     }
 
     /**

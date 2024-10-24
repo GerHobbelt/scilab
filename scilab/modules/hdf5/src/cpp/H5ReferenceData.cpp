@@ -39,17 +39,9 @@ const char ** H5ReferenceData::getReferencesName() const
     char * cdata = static_cast<char *>(data) + offset;
     const char ** names = new const char*[totalSize];
 
-    for (int i = 0; i < totalSize; i++)
+    for (hsize_t i = 0; i < totalSize; i++)
     {
         void * ref = &(((void **)cdata)[i]);
-        hid_t obj = H5Rdereference(file,
-    #if H5_VERSION_GE(1,10,0)
-                                   H5P_DATASET_ACCESS_DEFAULT,
-    #endif
-                                   datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
-        H5O_info_t info;
-        H5Oget_info(obj, &info);
-        H5Oclose(obj);
         ssize_t size = H5Rget_name(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref, 0, 0);
         char * name = new char[size + 1];
         H5Rget_name(file, datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref, name, size + 1);
@@ -89,9 +81,7 @@ H5Object & H5ReferenceData::getData(const unsigned int size, const unsigned int 
     file = getFile().getH5Id();
     ref = &(((void **)cdata)[0]);
     obj = H5Rdereference(file,
-#if H5_VERSION_GE(1,10,0)
                          H5P_DATASET_ACCESS_DEFAULT,
-#endif
                          datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
     if (obj < 0)
     {
@@ -104,7 +94,7 @@ H5Object & H5ReferenceData::getData(const unsigned int size, const unsigned int 
     _name = std::string(name);
     delete[] name;
 
-    H5Oget_info(obj, &info);
+    H5Oget_info(obj, &info, H5O_INFO_BASIC);
     switch (info.type)
     {
         case H5O_TYPE_GROUP:
@@ -131,13 +121,11 @@ H5Object ** H5ReferenceData::getReferencesObject() const
     char * cdata = static_cast<char *>(data) + offset;
     H5Object ** objs = new H5Object *[totalSize];
 
-    for (int i = 0; i < totalSize; i++)
+    for (hsize_t i = 0; i < totalSize; i++)
     {
         void * ref = &(((void **)cdata)[i]);
         hid_t obj = H5Rdereference(file,
-    #if H5_VERSION_GE(1,10,0)
                                    H5P_DATASET_ACCESS_DEFAULT,
-    #endif
                                    datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
         objs[i] = &H5Object::getObject(getParent(), obj);
     }
@@ -183,7 +171,7 @@ std::string H5ReferenceData::toString(const unsigned int indentLevel) const
     return os.str();
 }
 
-std::string H5ReferenceData::dump(std::map<haddr_t, std::string> & alreadyVisited, const unsigned int indentLevel) const
+std::string H5ReferenceData::dump(std::map<std::string, std::string> & alreadyVisited, const unsigned int indentLevel) const
 {
     return H5DataConverter::dump(alreadyVisited, indentLevel, (int)ndims, dims, *this);
 }
@@ -194,9 +182,7 @@ void H5ReferenceData::printData(std::ostream & os, const unsigned int pos, const
     void ** ref = &(((void **)cdata)[0]);
     hid_t file = getFile().getH5Id();
     hid_t obj = H5Rdereference(file,
-#if H5_VERSION_GE(1,10,0)
                                H5P_DATASET_ACCESS_DEFAULT,
-#endif
                                datasetReference ? H5R_DATASET_REGION : H5R_OBJECT, ref);
     if (obj < 0)
     {
@@ -215,7 +201,7 @@ void H5ReferenceData::printData(std::ostream & os, const unsigned int pos, const
 
         if (datasetReference == H5R_OBJECT)
         {
-            H5Oget_info(obj, &info);
+            H5Oget_info(obj, &info, H5O_INFO_BASIC);
             H5Oclose(obj);
 
             switch (info.type)
@@ -254,6 +240,10 @@ void H5ReferenceData::printData(std::ostream & os, const unsigned int pos, const
                 const hsize_t N = ndims * npoints;
                 hsize_t * buf = new hsize_t[N];
                 herr_t err =  H5Sget_select_elem_pointlist(space, 0, npoints, buf);
+                if (err < 0)
+                {
+                    os << "H5Sget failed";
+                }
                 for (hssize_t i = 0; i < (hssize_t)N; i += ndims)
                 {
                     os << "(";
@@ -282,6 +272,10 @@ void H5ReferenceData::printData(std::ostream & os, const unsigned int pos, const
                     const hsize_t N = 2 * ndims * nblocks;
                     hsize_t * buf = new hsize_t[N];
                     herr_t err = H5Sget_select_hyper_blocklist(space, 0, nblocks, buf);
+                    if (err < 0)
+                    {
+                        os << "H5Sget failed";
+                    }
                     for (hssize_t i = 0; i < (hssize_t)N; i += 2 * ndims)
                     {
                         os << "(";

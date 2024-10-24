@@ -168,9 +168,6 @@ toeplitz([%s %s^2 %s^3], [%s 1:4])
                 <link linkend="eye">eye</link>
             </member>
             <member>
-                <link linkend="testmatrix">testmatrix</link>
-            </member>
-            <member>
                 <link linkend="levin">levin</link>
             </member>
         </simplelist>

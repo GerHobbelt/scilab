@@ -91,12 +91,12 @@ if hl.line_mode <> "off" then pause,end
 if or(hl.text<>["cos(t)";"cos(2*t)";"cos(3*t)"]) then pause,end
 
 
-hl=legend(C(1),C(2),C(3),['cos(t)';'cos(2*t)';'cos(3*t)']);
+hl=legend(C,['cos(t)';'cos(2*t)';'cos(3*t)']);
 if hl.legend_location <> "in_upper_right" then pause,end
 if or(hl.text<>["cos(t)";"cos(2*t)";"cos(3*t)"]) then pause,end
 
 delete(hl)
-hl=legend(C(1),C(2),C(3),'cos(t)','cos(2*t)','cos(3*t)',2);
+hl=legend(C,'cos(t)','cos(2*t)','cos(3*t)',2);
 if hl.legend_location <> "in_upper_left" then pause,end
 if or(hl.text<>["cos(t)";"cos(2*t)";"cos(3*t)"]) then pause,end
 

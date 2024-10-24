@@ -128,6 +128,11 @@ public:
         updateChildrenRelatedPropertiesAfterClone(mapped);
         return cloned;
     };
+
+    inline Model& getInternalModel()
+    {
+        return m_instance.model;
+    }
 #endif /* !defined SWIG */
 
     /*
@@ -142,7 +147,7 @@ public:
         bool ret = m_instance.model.getObjectProperty(object, p, v);
         unlock(&m_instance.onModelStructuralModification);
         return ret;
-    };
+    }
 
     template<typename K, typename T>
     update_status_t setObjectProperty(K* object, object_properties_t p, T const& v)
@@ -160,7 +165,7 @@ public:
         }
         unlock(&m_instance.onViewsStructuralModification);
         return status;
-    };
+    }
 
     /*
      * SWIG mapped API: getters and setters

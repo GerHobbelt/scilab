@@ -5,7 +5,7 @@
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
-A=testmatrix("magi",5);
+A=magic(5);
 [Q,R,JPVT,RANK,SVAL]=rankqr(A,%eps);
 assert_checkequal(RANK, 5);
 assert_checkequal(JPVT, [3,1,4,2,5]);

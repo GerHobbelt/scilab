@@ -102,7 +102,7 @@
 // Número de condição de uma matriz não quadrada
 cond([1 0 -1 ; 0 1 -1])
 
-A = testmatrix('hilb',6);
+A = invhilb(6);
 // número de condição na norma 2
 cond(A)
 cond(A, 2)

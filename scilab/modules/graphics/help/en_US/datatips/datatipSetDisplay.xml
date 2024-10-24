@@ -63,8 +63,7 @@
         <title>Examples</title><programlisting role="example"><![CDATA[
     x=linspace(-1,1,1000);
     clf()
-    plot(x,sinc(20*x),x,1-x.^2);
-    e=gce();e=e.children;
+    e = plot(x,sinc(20*x),x,1-x.^2);
     d21=datatipCreate(e(2),600);
     d1=datatipCreate(e(1),700);
 
@@ -77,8 +76,7 @@
         <scilab:image>
             x=linspace(-1,1,1000);
             clf()
-            plot(x,sinc(20*x),x,1-x.^2);
-            e=gce();e=e.children;
+            e = plot(x,sinc(20*x),x,1-x.^2);
             d21=datatipCreate(e(2),600);
             d1=datatipCreate(e(1),700);
 
@@ -86,11 +84,15 @@
             pt = h.data;
             str=msprintf('sinc(%-0.2g)=%-0.2g', 20*pt(1),pt(2))
             endfunction
-            datatipSetDisplay(d21,mydisplay)
             datatipSetDisplay(d21,"mydisplay")
         </scilab:image>
         The display function can also be used to place tip text in different locations:
         <programlisting role="example"><![CDATA[
+    x=linspace(-1,1,1000);
+    clf()
+    e = plot(x,sinc(20*x),x,1-x.^2);
+    d21=datatipCreate(e(2),600);
+    d1=datatipCreate(e(1),700);
     function str=infodisplay(h)
         pt = h.data;
         gcf().info_message=msprintf('x=%0.2g,\t 1-x^2=%0.2g', pt(1),pt(2));

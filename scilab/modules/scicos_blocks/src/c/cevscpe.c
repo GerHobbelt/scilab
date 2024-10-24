@@ -241,6 +241,10 @@ static sco_data *getScoData(scicos_block * block)
     int i, j;
 
     int nclk = block->nipar - 6;
+    if (nclk < 0)
+    {
+        return NULL;
+    }
 
     if (sco == NULL)
     {

@@ -14,7 +14,7 @@
 // used when calling Matplot1 without any parameter.
 //
 
-function %_Matplot1()
+function varargout = %_Matplot1()
     nc = 200    // Number of colors
     np = 2      // Number of periods
     nx = 350
@@ -25,7 +25,7 @@ function %_Matplot1()
     R = 1+pmodulo(R,nc);
     xmin = -15, xmax = 40, ymin = -0.03, ymax = 0.01
 
-    Matplot1(R,[xmin ymin xmax ymax]);
+    m = Matplot1(R,[xmin ymin xmax ymax]);
 
     f = gcf();
     my_plot_desc  = _("Classical Matplot1");
@@ -41,5 +41,8 @@ function %_Matplot1()
     Tlab = _("Matplot1(M, [ %g  %g  %g  %g ])  with  size(M)=>(%d,%d)\npixel(i,j) is drawn with color number int(M(i,j))");
     Xlab = _("Axes are scaled with [xmin  ymin  xmax  ymax] specified")
     xtitle(msprintf(Tlab,xmin,ymin,xmax,ymax,nx,ny),Xlab)
+    if nargout then
+        varargout(1) = m;
+    end
 endfunction
 

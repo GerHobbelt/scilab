@@ -107,15 +107,15 @@ public class TicksProperty {
         /**
          * @param labels the labels to set
          */
-        public UpdateStatus setLabels(ArrayList<FormattedText> labels) {
-            UpdateStatus status = this.labels.equals(labels) ? UpdateStatus.NoChange : UpdateStatus.Success;
+        public UpdateStatus setLabels(ArrayList<FormattedText> labelsList) {
+            UpdateStatus status = labels.equals(labelsList) ? UpdateStatus.NoChange : UpdateStatus.Success;
             if (status == UpdateStatus.Success) {
-                if (!this.labels.isEmpty()) {
-                    this.labels.clear();
+                if (!labels.isEmpty()) {
+                    labels.clear();
                 }
 
-                for (int i = 0; i < labels.size(); i++) {
-                    this.labels.add(i, new FormattedText(labels.get(i)));
+                for (int i = 0; i < labelsList.size(); i++) {
+                    labels.add(i, new FormattedText(labelsList.get(i)));
                 }
             }
 
@@ -138,22 +138,38 @@ public class TicksProperty {
         }
 
         /**
+         * @return the labels interpreters
+         */
+        public String[] getLabelsInterpreters() {
+            String[] labelsInterpreters;
+
+            labelsInterpreters = new String[number];
+
+            for (int i = 0; i < number; i++) {
+                labelsInterpreters[i] = new String(FormattedText.InterpreterType.enumToString(labels.get(i).getInterpreterAsEnum()));
+            }
+
+            return labelsInterpreters;
+        }
+
+
+        /**
          * Sets the ticks labels strings
          * Requires the corresponding ticks locations to have previously been set.
          * @param labels the labels to set
          */
-        public UpdateStatus setLabelsStrings(String[] labels) {
-            if (labels.length != number) {
+        public UpdateStatus setLabelsStrings(String[] labelStrings) {
+            if (labelStrings.length != number) {
                 return UpdateStatus.NoChange;
             }
 
-            if (this.labels == null || this.labels.size() != labels.length) {
-                this.labels = new ArrayList<FormattedText>(0);
+            if (labels == null || labels.size() != labelStrings.length) {
+                labels = new ArrayList<FormattedText>(0);
 
                 Font font = new Font(defaultFont);
-                for (int i = 0; i < labels.length; i++) {
-                    FormattedText newText = new FormattedText(labels[i], font);
-                    this.labels.add(newText);
+                for (int i = 0; i < labelStrings.length; i++) {
+                    FormattedText newText = new FormattedText(labelStrings[i], font);
+                    labels.add(newText);
                 }
 
                 return UpdateStatus.Success;
@@ -161,13 +177,34 @@ public class TicksProperty {
 
             UpdateStatus status = UpdateStatus.NoChange;
             for (int i = 0; i < number; i++) {
-                FormattedText ft = this.labels.get(i);
-                if (!ft.getText().equals(labels[i])) {
-                    this.labels.get(i).setText(labels[i]);
+                FormattedText ft = labels.get(i);
+                if (!ft.getText().equals(labelStrings[i])) {
+                    labels.get(i).setText(labelStrings[i]);
                     status = UpdateStatus.Success;
                 }
             }
 
+            return status;
+        }
+
+        /**
+         * Sets the ticks labels interpreters
+         * Requires the corresponding ticks locations to have previously been set.
+         * @param labels the labels to set
+         */
+        public UpdateStatus setLabelsInterpreters(String[] interpreterStrings) {
+            if ((interpreterStrings.length != number && interpreterStrings.length !=1)  ||
+                labels == null || (labels.size() != interpreterStrings.length && interpreterStrings.length != 1)) {
+                return UpdateStatus.NoChange;
+            }
+            UpdateStatus status = UpdateStatus.NoChange;
+            for (int i = 0; i < number; i++) {
+                UpdateStatus st = labels.get(i).setInterpreter(FormattedText.InterpreterType.stringToEnum(interpreterStrings[Math.min(i,interpreterStrings.length-1)]));
+                if (st != UpdateStatus.NoChange)
+                {
+                    status = st;
+                }
+            }
             return status;
         }
 
@@ -488,11 +525,35 @@ public class TicksProperty {
      * Requires the corresponding ticks locations to have previously been set.
      * @param labels the labels to set
      */
-    public UpdateStatus setLabelsStrings(String[] labels) {
+    public UpdateStatus setLabelsStrings(String[] strings) {
         if (auto) {
-            return automaticTicks.setLabelsStrings(labels);
+            return automaticTicks.setLabelsStrings(strings);
         } else {
-            return userTicks.setLabelsStrings(labels);
+            return userTicks.setLabelsStrings(strings);
+        }
+    }
+
+    /**
+     * @return the labels interpreters
+     */
+    public String[] getLabelsInterpreters() {
+        if (auto) {
+            return automaticTicks.getLabelsInterpreters();
+        } else  {
+            return userTicks.getLabelsInterpreters();
+        }
+    }
+
+    /**
+     * Sets the ticks labels interpreters
+     * Requires the corresponding ticks locations to have previously been set.
+     * @param labels the labels to set
+     */
+    public UpdateStatus setLabelsInterpreters(String[] interpreters) {
+        if (auto) {
+            return automaticTicks.setLabelsInterpreters(interpreters);
+        } else {
+            return userTicks.setLabelsInterpreters(interpreters);
         }
     }
 

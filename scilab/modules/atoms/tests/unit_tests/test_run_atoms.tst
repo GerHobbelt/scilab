@@ -8,26 +8,18 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-// <-- NOT FIXED -->
+// <-- TEST WITH ATOMS -->
 
-// We need a clean version
-// ============================================================================
-if ~isempty( atomsGetInstalled() ) then pause, end
+exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
 
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
+// Load the 1st scenario : See scene10.test.atoms.scilab.org.txt
+atomsLoadTestScene("scene10");
 
-atomsInstall("toolbox_1V6");
+atomsInstall("toolbox_2V6");
 
-atomsLoad("toolbox_1V6");
+atomsLoad("toolbox_2V6");
 
 // Do the actual test_run
-test_run("toolbox_1V6", "basic", "short_summary");
+test_run("toolbox_2V6", "t2_function1", "short_summary");
 
-atomsRemove("toolbox_1V6");
-
-// Restore original value
-// ============================================================================
-atomsRestoreConfig(%T);
-
+atomsRemove("toolbox_2V6");

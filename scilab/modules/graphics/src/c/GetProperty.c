@@ -47,6 +47,8 @@
 #include "getGraphicObjectProperty.h"
 #include "FigureModel.h"
 
+#include "get_ticks_utils.h"
+
 /**sciGetNumColors
 * This function gets the number of the color defined in colormap
 */
@@ -723,6 +725,68 @@ void sciGetViewingArea(int iObjUID, int * xPos, int * yPos, int * width, int * h
         Scierror(999, _("Only axes handles have a viewing area."));
     }
 }
+
+void* sciGetTicksProperty(void* _pvCtx, int iObjUID, char *stCoord, int iNb, int iLoc, int iLab, int iInt)
+{
+    int iNbTicks = 0;
+    int *piNbTicks = &iNbTicks;
+    void* tList = NULL;
+    int iView = 0;
+    int* piView = &iView;
+
+    /* retrieve number of ticks */
+    getGraphicObjectProperty(iObjUID, iNb, jni_int, (void **) &piNbTicks);
+
+    if (piNbTicks == NULL)
+    {
+        Scierror(999, _("'%s%s' property does not exist for this handle.\n"),stCoord,"_ticks");
+        return NULL;
+    }
+
+    if (strcmp(stCoord, "z") == 0)
+    {
+        getGraphicObjectProperty(iObjUID, __GO_VIEW__, jni_int, (void**)&piView);
+        if (piView == NULL)
+        {
+            Scierror(999, _("'%s' property does not exist for this handle.\n"), "view");
+            return NULL;
+        }
+    }  
+
+
+    if (iNbTicks == 0 || (strcmp(stCoord, "z") == 0 && iView == 0))
+    {
+        /* return empty matrices */
+        tList = buildTListForTicks(NULL, NULL, NULL, 0);
+    }
+    else
+    {
+        char ** labels;
+        char ** interpreters;
+        double* positions;
+
+        getGraphicObjectProperty(iObjUID, iLoc, jni_double_vector, (void **) &positions);
+        getGraphicObjectProperty(iObjUID, iLab, jni_string_vector, (void **) &labels);
+        getGraphicObjectProperty(iObjUID, iInt, jni_string_vector, (void **) &interpreters);
+
+        if (positions == NULL || labels == NULL)
+        {
+            Scierror(999, _("'%s%s' property does not exist for this handle.\n"),stCoord,"_ticks");
+            return NULL;
+        }
+
+        tList = buildTListForTicks(positions, labels, interpreters, iNbTicks);
+
+        /* free arrays */
+#if 0
+        destroyStringArray(labels, iNbTicks);
+        FREE(positions);
+#endif
+    }
+
+    return tList;
+}
+
 /*----------------------------------------------------------------------------------*/
 /**
 * Print the message "This object has no xxx property." in Scilab.

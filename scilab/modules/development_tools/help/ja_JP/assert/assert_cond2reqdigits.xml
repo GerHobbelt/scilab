@@ -158,6 +158,7 @@ h.children.children.children.thickness=4;
 xt = h.children.x_ticks;
 xt.locations = 10^(0:2:18)';
 xt.labels = ["10^0";"10^2";"10^4";"10^6";"10^8";"10^10";"10^12";"10^14";"10^16";"10^18"];
+xt.interpreters = repmat("auto", size(xt.locations));
 h.children.x_ticks=xt;
 xtitle("Number of required digits","Condition","Required decimal digits");
 // 条件に基づき必要な2進桁数をプロット
@@ -170,6 +171,7 @@ h.children.children.children.thickness=4;
 xt = h.children.x_ticks;
 xt.locations = 10^(0:2:18)';
 xt.labels = ["10^0";"10^2";"10^4";"10^6";"10^8";"10^10";"10^12";"10^14";"10^16";"10^18"];
+xt.interpreters = repmat("auto", size(xt.locations));
 h.children.x_ticks=xt;
 xtitle("Number of required digits","Condition","Required binary digits");
 d = assert_cond2reqdigits ( condition , +10 , 2 );

@@ -45,8 +45,6 @@ types::Function::ReturnValue sci_mfprintf(types::typed_list &in, int _iRetCount,
     BOOL isSTD                      = FALSE;
     BOOL isSTDErr                   = FALSE;
     int iFile                       = -1; //default file : last opened file
-    unsigned int iNumberPercent     = 0;
-    unsigned int iNumberCols        = 0;
     int nbrOfLines                  = 0;
     int ifileMode                   = 0;
     wchar_t* wcsInput               = NULL;
@@ -112,7 +110,7 @@ types::Function::ReturnValue sci_mfprintf(types::typed_list &in, int _iRetCount,
     {
         case 0:
 #ifdef _MSC_VER
-            if ((getScilabMode()  == SCILAB_STD) && (forceSTDERRredirect == TRUE))
+            if ((getScilabMode() == SCILAB_STD) && (forceSTDERRredirect == TRUE))
             {
                 //  Console redirect stderr --> CONOUT$
                 freopen("CONOUT$", "wb", stderr);

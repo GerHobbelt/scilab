@@ -31,10 +31,6 @@ static types::Callable* pCall = nullptr;
 
 int ScilabGateway::deff(char * fname, const int envId, void * pvApiCtx)
 {
-    static int ONE = 1;
-    static int TWO = 2;
-    static int THREE = 3;
-
     SciErr err;
     char ** names[] = {0, 0, 0};
     int ret = 0;
@@ -57,7 +53,7 @@ int ScilabGateway::deff(char * fname, const int envId, void * pvApiCtx)
     if (pCall == nullptr)
     {
         symbol::Context* ctx = symbol::Context::getInstance();
-        types::InternalType* pIT = ctx->get(symbol::Symbol(L"#_deff_wrapper"));
+        types::InternalType* pIT = ctx->get(symbol::Symbol(L"%_deff_wrapper"));
         if (pIT && pIT->isCallable())
         {
             pCall = pIT->getAs<types::Callable>();

@@ -19,6 +19,7 @@
     <refnamediv>
         <refname>help</refname>
         <refpurpose>queries and displays help pages in the Scilab help browser</refpurpose>
+        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="doc">doc</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -217,6 +218,10 @@ help "linear sparse"
                         </listitem>
                     </itemizedlist>
                 </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>Tagged obsolete and will be removed in 2026.0.0.</revremark>
             </revision>
         </revhistory>
     </refsection>

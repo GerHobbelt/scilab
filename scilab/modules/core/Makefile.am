@@ -50,10 +50,10 @@ CORE_CPP_SOURCES = \
     src/cpp/banner.cpp \
     src/cpp/with_module.cpp \
     src/cpp/runner.cpp \
-    src/cpp/tasks.cpp \
     src/cpp/getvariablesname.cpp \
     src/cpp/getmacrosname.cpp \
     src/cpp/getfunctionsname.cpp \
+    src/cpp/getdeprecated.cpp \
     src/cpp/InitScilab.cpp \
     src/cpp/md5_file.cpp \
     src/cpp/parsecommand.cpp \
@@ -139,6 +139,7 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_what.cpp \
 	sci_gateway/cpp/sci_where.cpp \
 	sci_gateway/cpp/sci_who.cpp \
+	sci_gateway/cpp/sci_getdeprecated.cpp \
 	sci_gateway/cpp/sci_with_module.cpp
 
 if ENABLE_DEBUG
@@ -189,6 +190,7 @@ libscicore_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/hdf5/includes/ \
     -I$(top_srcdir)/modules/fftw/includes/ \
     -I$(top_srcdir)/modules/ui_data/includes/ \
+    -I$(top_srcdir)/modules/slint/includes/ \
     $(HDF5_CFLAGS) \
     $(XML_FLAGS) \
     $(AM_CPPFLAGS)
@@ -261,7 +263,13 @@ includes/scisparse.h \
 includes/sci_types.h \
 includes/storeCommand.h \
 includes/timer.hxx \
-includes/version.h
+includes/version.h \
+includes/dynlib_core.h \
+includes/parsecommand.h \
+includes/getfunctionsname.h \
+includes/getmacrosname.h \
+includes/getvariablesname.h \
+includes/commandwords.h
 
 
 if GUI

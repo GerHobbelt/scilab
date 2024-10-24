@@ -152,7 +152,7 @@ jclass instanceClass; // cache class
 /**
 * Get the environment matching to the current thread.
 */
-virtual JNIEnv * getCurrentEnv();
+JNIEnv * getCurrentEnv();
 
 public:
 // Constructor
@@ -213,6 +213,8 @@ static void setMessageBoxTitle(JavaVM * jvm_, int id, char const* title);
 static void setMessageBoxMessage(JavaVM * jvm_, int id, char const* message);
 
 static void setMessageBoxMessage(JavaVM * jvm_, int id, char const* const* message, int messageSize);
+
+static void setMessageBoxPasswordMode(JavaVM* jvm_, int id, int const* isPassword, int isPasswordSize);
 
 static void messageBoxDisplayAndWait(JavaVM * jvm_, int id);
 

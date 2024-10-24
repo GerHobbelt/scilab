@@ -63,6 +63,7 @@ static bool read_struct(hid_t dataset, VarInfo6& info);
 static bool read_cell(hid_t dataset, VarInfo6& info);
 static bool read_handles(hid_t dataset, VarInfo6& info);
 static bool read_macro(hid_t dataset, VarInfo6& info);
+static bool read_lambda(hid_t dataset, VarInfo6& info);
 
 static void generateInfo(VarInfo6& info);
 static int getDimsNode(hid_t dataset, int* complex, std::vector<int>& dims);
@@ -322,8 +323,6 @@ static bool read_short_data(hid_t dataset, VarInfo6& info)
 
 static bool read_data(hid_t dataset, VarInfo6& info)
 {
-    bool bRet = false;
-
     char* ctype = getScilabTypeFromDataSet6(dataset);
     std::string type(ctype);
     FREE(ctype);
@@ -423,6 +422,12 @@ static bool read_data(hid_t dataset, VarInfo6& info)
     {
         info.type = sci_c_function;
         return read_macro(dataset, info);
+    }
+
+    if (type == g_SCILAB_CLASS_LAMBDA)
+    {
+        info.type = sci_c_function;
+        return read_lambda(dataset, info);
     }
 
     Scierror(999, _("%s: Invalid HDF5 Scilab format.\n"), "listvar_in_hdf5");
@@ -542,6 +547,11 @@ static bool read_sparse(hid_t dataset, VarInfo6& info)
     int complex = 0;
     std::vector<int> pdims;
     int size = getDimsNode(dataset, &complex, pdims);
+    if (size <= 0)
+    {
+        closeList6(dataset);
+        return false;
+    }
 
     //get non zeros count
     int nnz = 0;
@@ -565,6 +575,11 @@ static bool read_boolean_sparse(hid_t dataset, VarInfo6& info)
     int complex = 0;
     std::vector<int> pdims;
     int size = getDimsNode(dataset, &complex, pdims);
+    if (size <= 0)
+    {
+        closeList6(dataset);
+        return false;
+    }
 
     //get non zeros count
     int nnz = 0;
@@ -701,10 +716,8 @@ static bool read_struct(hid_t dataset, VarInfo6& info)
 
     //open __refs__ node
     hid_t refs = getDataSetIdFromName(dataset, "__refs__");
-    H5O_info_t oinfo;
     for (int i = 0; i < fieldCount; ++i)
     {
-        H5Oget_info_by_idx(dataset, ".", H5_INDEX_NAME, H5_ITER_NATIVE, i, &oinfo, H5P_DEFAULT);
         ssize_t len = H5Lget_name_by_idx(dataset, ".", H5_INDEX_NAME, H5_ITER_INC, i, 0, 0, H5P_DEFAULT) + 1;
         char* name = (char*)MALLOC(sizeof(char) * len);
         H5Lget_name_by_idx(dataset, ".", H5_INDEX_NAME, H5_ITER_INC, i, name, len, H5P_DEFAULT);
@@ -741,9 +754,7 @@ static bool read_struct(hid_t dataset, VarInfo6& info)
             for (int j = 0; j < refcount; ++j)
             {
                 hid_t data = H5Rdereference(refs,
-#if H5_VERSION_GE(1,10,0)
                                             H5P_DATASET_ACCESS_DEFAULT,
-#endif
                                             H5R_OBJECT, &vrefs[j]);
                 if (data < 0)
                 {
@@ -839,7 +850,15 @@ static bool read_macro(hid_t dataset, VarInfo6& info)
     generateInfo(info);
     return true;
 }
-
+static bool read_lambda(hid_t dataset, VarInfo6& info)
+{
+    info.size = 0;
+    info.dims = 2;
+    info.pdims = {1, 1};
+    closeList6(dataset);
+    generateInfo(info);
+    return true;
+}
 
 static void generateInfo(VarInfo6& info)
 {

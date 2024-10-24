@@ -66,7 +66,7 @@ public class HelpOnKeywordAction extends DefaultAction {
             }
         } catch (BadLocationException e) { }
 
-        InterpreterManagement.requestScilabExec("help('" + selection + "')");
+        InterpreterManagement.requestScilabExec("doc('" + selection + "')");
     }
 
     /**

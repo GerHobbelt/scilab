@@ -4,6 +4,9 @@
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
+
+load("SCI/modules/atoms/macros/atoms_internals/lib")
+
 function atomsLoadTestScene(name)
     select name
     case "scene10"
@@ -43,7 +46,6 @@ endfunction
 
 function filePath = atomsCreateLocalRepositoryFromDescription(descriptionFile, name)
     filePath = "";
-    gzip = findGzip();
     [OSNAME,ARCH,LINUX,MACOSX,SOLARIS,BSD] = atomsGetPlatform();
     
     // Remove/Create repository folder
@@ -61,21 +63,14 @@ function filePath = atomsCreateLocalRepositoryFromDescription(descriptionFile, n
     mputl(desc, tmpDescriptionFile)
     
     // Gzip description file
-    localRepository = TMPDIR + filesep() + name + filesep() + OSNAME + ".gz"
-    [rep, stat ,err] = unix_g(gzip + " -c " + tmpDescriptionFile + " > " + localRepository);
+    localRepository = fullfile(TMPDIR, name , OSNAME + ".gz");
+    if ~isfile(localRepository) then
+        compress(localRepository, tmpDescriptionFile, format="raw", compression="gzip", level=0);
+    end
 
     // TMPDIR is using C:\Users\Me under Linux
     // but we need a valid URI
     filePath = "file://" + strsubst(TMPDIR + filesep() + name, "\", "/")
-endfunction
-
-function gzipCommand = findGzip()
-    [OSNAME,ARCH,LINUX,MACOSX,SOLARIS,BSD] = atomsGetPlatform();
-    if OSNAME == "windows" then
-        gzipCommand = getshortpathname(fullpath(pathconvert(SCI+"/tools/gzip/gzip.exe",%F)));
-    else
-        gzipCommand = "gzip"
-    end 
 endfunction
 
 function atomsRepositoryReset()

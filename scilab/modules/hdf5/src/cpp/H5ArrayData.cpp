@@ -56,7 +56,6 @@ bool H5ArrayData::isArray() const
 H5Object & H5ArrayData::getData(const unsigned int size, const unsigned int * index) const
 {
     unsigned int pos = 0;
-    hsize_t * _dims = 0;
 
     for (unsigned int i = 0; i < size; i++)
     {
@@ -99,7 +98,7 @@ std::string H5ArrayData::toString(const unsigned int indentLevel) const
     return os.str();
 }
 
-std::string H5ArrayData::dump(std::map<haddr_t, std::string> & alreadyVisited, const unsigned int indentLevel) const
+std::string H5ArrayData::dump(std::map<std::string, std::string> & alreadyVisited, const unsigned int indentLevel) const
 {
     return H5DataConverter::dump(alreadyVisited, indentLevel, (int)ndims, dims, *this, false);
 }

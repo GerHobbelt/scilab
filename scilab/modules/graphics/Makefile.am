@@ -115,6 +115,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_auto_position_property.c \
     src/c/getHandleProperty/get_closed_property.c \
     src/c/getHandleProperty/get_text_property.c \
+    src/c/getHandleProperty/get_interpreter_property.c \
     src/c/getHandleProperty/get_margins_property.c \
     src/c/getHandleProperty/get_view_property.c \
     src/c/getHandleProperty/get_data_bounds_property.c \
@@ -146,11 +147,13 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_labels_font_color_property.c \
     src/c/getHandleProperty/get_surface_color_property.c \
     src/c/getHandleProperty/get_tics_label_property.c \
+    src/c/getHandleProperty/get_tics_interpreters_property.c \
     src/c/getHandleProperty/get_labels_font_style_property.c \
     src/c/getHandleProperty/get_axes_visible_property.c \
     src/c/getHandleProperty/get_cube_scaling_property.c \
     src/c/getHandleProperty/get_tics_segment_property.c \
     src/c/getHandleProperty/get_cdata_mapping_property.c \
+    src/c/getHandleProperty/get_cdata_bounds_property.c \
     src/c/getHandleProperty/get_colored_property.c \
     src/c/getHandleProperty/get_triangles_property.c \
     src/c/getHandleProperty/get_viewport_property.c \
@@ -212,6 +215,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_auto_dimensionning_property.c \
     src/c/getHandleProperty/set_text_box_property.c \
     src/c/getHandleProperty/set_text_property.c \
+    src/c/getHandleProperty/set_interpreter_property.c \
     src/c/getHandleProperty/set_mark_mode_property.c \
     src/c/getHandleProperty/set_clip_box_property.c \
     src/c/getHandleProperty/set_z_shift_property.c \
@@ -257,6 +261,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_callback_property.c \
     src/c/getHandleProperty/set_closed_property.c \
     src/c/getHandleProperty/set_cdata_mapping_property.c \
+    src/c/getHandleProperty/set_cdata_bounds_property.c \
     src/c/getHandleProperty/set_y_ticks_property.c \
     src/c/getHandleProperty/set_z_bounds_property.c \
     src/c/getHandleProperty/set_position_property.c \
@@ -290,6 +295,7 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_color_mode_property.c \
     src/c/getHandleProperty/set_data_bounds_property.c \
     src/c/getHandleProperty/set_tics_labels_property.c \
+    src/c/getHandleProperty/set_tics_interpreters_property.c \
     src/c/getHandleProperty/set_data_mapping_property.c \
     src/c/getHandleProperty/set_rotation_angles_property.c \
     src/c/getHandleProperty/set_callback_type_property.c \
@@ -383,7 +389,6 @@ GRAPHICS_C_SOURCES = \
     src/c/StringBox.c \
     src/c/axesScale.c \
     src/c/TerminateGraphics.c \
-    src/c/periEmpty.c \
     src/c/scitokenize.c \
     src/c/get_ticks_utils.c \
     src/c/getHandleProperty/get_ambient_color_property.c \
@@ -460,7 +465,7 @@ GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_rubberbox.c \
     sci_gateway/c/sci_rotate_axes.c \
     sci_gateway/c/sci_is_handle_valid.c \
-    sci_gateway/c/sci_Legend.c \
+    sci_gateway/c/sci_percent_legend.c \
     sci_gateway/c/sci_light.c \
     sci_gateway/c/sci_color.c \
     sci_gateway/c/sci_name2rgb.c \
@@ -595,7 +600,11 @@ pkglib_LTLIBRARIES += libscigraphics.la
 noinst_LTLIBRARIES = libscigraphics-algo.la
 endif
 
-
-
 include $(top_srcdir)/Makefile.incl.am
 
+#### ast : include files ####
+libscigraphics_scilab_la_includedir=$(pkgincludedir)
+libscigraphics_scilab_la_include_HEADERS = \
+includes/getDictionarySetProperties.h \
+includes/getDictionaryGetProperties.h \
+includes/dynlib_graphics.h

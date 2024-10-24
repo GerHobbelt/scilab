@@ -228,13 +228,6 @@ struct AxesHandle
         m.emplace_back("clip_state", std::vector<int>({SAVE_LOAD, __GO_CLIP_STATE__, jni_int}));
         m.emplace_back("clip_box", std::vector<int>({SAVE_LOAD, __GO_CLIP_BOX__, jni_double_vector, -1, -4}));
 
-        m.emplace_back("ticks_locations_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_X_AXIS_NUMBER_TICKS__}));
-        m.emplace_back("ticks_labels_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_X_AXIS_NUMBER_TICKS__}));
-        m.emplace_back("ticks_locations_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_Y_AXIS_NUMBER_TICKS__}));
-        m.emplace_back("ticks_labels_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_Y_AXIS_NUMBER_TICKS__}));
-        m.emplace_back("ticks_locations_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_Z_AXIS_NUMBER_TICKS__}));
-        m.emplace_back("ticks_labels_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_Z_AXIS_NUMBER_TICKS__}));
-
         //@end
 
         //must be set after data_bounds
@@ -245,10 +238,20 @@ struct AxesHandle
         //must be set mark_style
         m.emplace_back("mark_mode", std::vector<int>({SAVE_LOAD, __GO_MARK_MODE__, jni_bool}));
 
-        //must be set after ticks labels
+        //must be set before ticks labels and interpreters
         m.emplace_back("auto_ticks_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_AUTO_TICKS__, jni_bool}));
         m.emplace_back("auto_ticks_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_AUTO_TICKS__, jni_bool}));
         m.emplace_back("auto_ticks_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_AUTO_TICKS__, jni_bool}));
+
+        m.emplace_back("ticks_locations_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_X_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_labels_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_X_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_interpreters_x", std::vector<int>({SAVE_LOAD, __GO_X_AXIS_TICKS_INTERPRETERS__, jni_string_vector, -1, __GO_X_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_locations_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_Y_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_labels_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_Y_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_interpreters_y", std::vector<int>({SAVE_LOAD, __GO_Y_AXIS_TICKS_INTERPRETERS__, jni_string_vector, -1, __GO_Y_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_locations_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_TICKS_LOCATIONS__, jni_double_vector, -1, __GO_Z_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_labels_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_TICKS_LABELS__, jni_string_vector, -1, __GO_Z_AXIS_NUMBER_TICKS__}));
+        m.emplace_back("ticks_interpreters_z", std::vector<int>({SAVE_LOAD, __GO_Z_AXIS_TICKS_INTERPRETERS__, jni_string_vector, -1, __GO_Z_AXIS_NUMBER_TICKS__}));
 
         return m;
     }
@@ -420,7 +423,6 @@ struct DatatipHandle
 
         //SAVE_ONLY, so don't care of reload ordering
         m.emplace_back("type", std::vector<int>({SAVE_ONLY, __GO_TYPE__, jni_int}));
-        m.emplace_back("data_index", std::vector<int>({SAVE_ONLY, __GO_DATATIP_INDEXES__, jni_int}));
 
         //@start
         m.emplace_back("box_mode", std::vector<int>({SAVE_LOAD, __GO_DATATIP_BOX_MODE__, jni_bool}));
@@ -722,6 +724,7 @@ struct AxisHandle
         m.emplace_back("tics_style", std::vector<int>({SAVE_LOAD, __GO_TICKS_STYLE__, jni_int}));
         m.emplace_back("sub_tics", std::vector<int>({SAVE_LOAD, __GO_SUBTICKS__, jni_int}));
         m.emplace_back("tics_labels", std::vector<int>({SAVE_LOAD, __GO_TICKS_LABELS__, jni_string_vector, -1, __GO_NUMBER_TICKS_LABELS__}));
+        m.emplace_back("tics_interpreters", std::vector<int>({SAVE_LOAD, __GO_TICKS_INTERPRETERS__, jni_string_vector, -1, __GO_NUMBER_TICKS_LABELS__}));
         m.emplace_back("labels_font_size", std::vector<int>({SAVE_LOAD, __GO_FONT_SIZE__, jni_double}));
         m.emplace_back("labels_font_color", std::vector<int>({SAVE_LOAD, __GO_FONT_COLOR__, jni_int}));
         m.emplace_back("fractional_font", std::vector<int>({SAVE_LOAD, __GO_FONT_FRACTIONAL__, jni_bool}));
@@ -778,6 +781,7 @@ struct UimenuHandle
         m.emplace_back("callback_type", std::vector<int>({SAVE_LOAD, __GO_CALLBACKTYPE__, jni_int}));
         m.emplace_back("checked", std::vector<int>({SAVE_LOAD, __GO_UI_CHECKED__, jni_bool}));
         m.emplace_back("icon", std::vector<int>({SAVE_LOAD, __GO_UI_ICON__, jni_string}));
+        m.emplace_back("tooltipstring", std::vector<int>({SAVE_LOAD, __GO_UI_TOOLTIPSTRING__, jni_string_vector, -1, __GO_UI_TOOLTIPSTRING_SIZE__}));
 
         //@end
         m.emplace_back("visible", std::vector<int>({SAVE_LOAD, __GO_VISIBLE__, jni_bool}));

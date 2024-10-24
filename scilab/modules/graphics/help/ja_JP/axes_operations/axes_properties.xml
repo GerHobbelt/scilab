@@ -306,18 +306,34 @@
                                                 </para>
                                             </listitem>
                                         </varlistentry>
+                                        <varlistentry>
+                                            <term>Interpreters</term>
+                                            <listitem>
+                                                is a text vector containing the interpreters to be used to render the strings.
+                                                 As for Locations of ticks, Interperters can be addressed with (e.g. along y)
+                                                <literal>Haxes.y_ticks.interpreters = Interpreters</literal> or
+                                                <literal>Haxes.y_ticks.interpreters(j) = newInterpretersJ</literal>.
+                                                <para>
+                                                Allowed values: <literal>"auto"</literal> (the default), <literal>"latex"</literal>, 
+                                                <literal>"mathml"</literal>, <literal>"none"</literal>. 
+                                                See <link linkend="math_rendering_features_in_graphic">LaTeX expressions</link>.
+                                                </para>
+                                            </listitem>
+                                        </varlistentry>
                                     </variablelist>
                                     <warning>
-                                      <itemizedlist>
+                                        <itemizedlist>
                                         <listitem>
-                                            ある軸について, <literal>Locations</literal>及び<literal>Labels</literal>
-                                            ベクトルの要素の数は同じとする必要があります.
+                                            For an axis, <literal>Locations</literal>,
+                                            <literal>Labels</literal> and <literal>Interpreters</literal> 
+                                            vectors must have the same number of components.
                                         </listitem>
                                         <listitem>
-                                            目盛の数が変更となった場合,不整合を回避するために
-                                            各目盛の位置とラベルを同時に変更する必要があります:
-                                            (例えばx軸に関して)構文
-                                            <literal>Haxes.x_ticks = tlist(["ticks" "locations", "labels"], newLocations, newLabels)</literal> を使用します.
+                                            When the number of ticks must be changed, their positions, labels and interpreters 
+                                            must be changed at once, in order to avoid
+                                            any mismatch: The syntax (e.g. along x)
+                                            <literal>Haxes.x_ticks = tlist(["ticks" "locations", "labels", "interpreters"], newLocations, newLabels, newInterpreters)</literal>
+                                            must then be used. If "interpreters" is not specified in the tlist, the "interpreters" field is automatically set to "auto".
                                         </listitem>
                                         <listitem>
                                             Changing by hand the <literal>Locations</literal> or/and
@@ -350,6 +366,18 @@
                                     ラベルを有するテキストベクトルです.
                                     <varname>x_ticks.labels</varname> の要素数は<varname>x_ticks.locations</varname>
                                     と同じにします. 詳細は上記の <varname>x_ticks</varname> を参照ください.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
+                            <term>x_ticks.interpreters, y_ticks.interpreters, z_ticks.interpreters: </term>
+                            <listitem>
+                                <para>
+                                  Each of these properties is a text vector containing the interpreters 
+                                  to be used to render the strings.
+                                  <varname>x_ticks.interpreters</varname> must have the same number of
+                                  components as <varname>x_ticks.locations</varname>.
+                                  See <varname>x_ticks</varname> hereabove for more details.
                                 </para>
                             </listitem>
                         </varlistentry>
@@ -1166,11 +1194,9 @@ da.foreground = 7;
 x=(0:0.1:2*%pi)';
 plot2d(x,[sin(x),sin(2*x),sin(3*x)],style=[1,2,3],rect=[0,-2,2*%pi,2]);
 sda() // デフォルトの軸モデルに戻す
-
 // LaTeX / MathML 目盛の例:
 plot2d();
 a=gca();
-
 mathml = "<mrow><mfrac><mrow><mi>d</mi>  <mi>y</mi></mrow><mrow>  <mi>d</mi>  <mi>x</mi></mrow></mfrac> <mo>=</mo>" + ...
     "<mfrac><mn>1</mn><msup> <mi>y</mi>  <mn>2</mn></msup> </mfrac> </mrow>";
 // LaTeX 式のみ

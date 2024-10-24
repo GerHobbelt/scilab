@@ -278,10 +278,13 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                 if (!pGT->isSparse() && !pGT->isSparseBool())
                 {
                     types::InternalType *pNewSize = AddElementToVariable(NULL, poRow, std::max(pGTResult->getRows(),pGT->getRows()), pGTResult->getCols() + pGT->getCols());
-                    p = AddElementToVariable(pNewSize, pGT, 0, pGTResult->getCols());
-                    if (p != pNewSize)
+                    if(pNewSize)
                     {
-                        pNewSize->killMe();
+                        p = AddElementToVariable(pNewSize, pGT, 0, pGTResult->getCols());
+                        if (p != pNewSize)
+                        {
+                            pNewSize->killMe();
+                        }
                     }
                 }
             

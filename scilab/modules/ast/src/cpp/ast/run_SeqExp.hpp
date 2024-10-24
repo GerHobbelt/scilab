@@ -61,10 +61,6 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
         // interrupt me to execute a prioritary command
         while (isEmptyCommandQueuePrioritary() == 0 && StaticRunner_isInterruptibleCommand() == 1)
         {
-            // Awake the runner thread to create a runner for the prioritary command
-            ThreadManagement::SendAwakeRunnerSignal();
-            ThreadManagement::WaitForRunMeSignal();
-
             StaticRunner_launch();
         }
 
@@ -94,10 +90,6 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
         // interrupt me to execute a prioritary command
         while (isEmptyCommandQueuePrioritary() == 0 && StaticRunner_isInterruptibleCommand() == 1)
         {
-            // Awake the runner thread to create a runner for the prioritary command
-            ThreadManagement::SendAwakeRunnerSignal();
-            ThreadManagement::WaitForRunMeSignal();
-
             StaticRunner_launch();
         }
 
@@ -141,30 +133,12 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
             setExpectedSize(iExpectedSize);
             types::InternalType * pIT = getResult();
 
-            if((*it)->isFunctionDec())
-            {
-                // In case of exec file, set the file name in the Macro to store where it is defined.
-                std::wstring strFile = ConfigVariable::getExecutedFile();
-                const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
-
-                if (strFile != L"" &&  // check if we are executing a script or a macro
-                    lWhereAmI.empty() == false &&
-                    lWhereAmI.back().m_file_name != nullptr && // check the last function execution is a macro
-                    *(lWhereAmI.back().m_file_name) == strFile) // check the last execution is the same macro as the executed one
-                {
-                    types::InternalType* pITMacro = symbol::Context::getInstance()->get((*it)->getAs<FunctionDec>()->getSymbol());
-                    if (pITMacro)
-                    {
-                        types::Macro* pMacro = pITMacro->getAs<types::Macro>();
-                        pMacro->setFileName(strFile);
-                    }
-                }
-            }
-
             if (pIT != NULL)
             {
                 bool bImplicitCall = false;
-                if (pIT->isCallable()) //to manage call without ()
+                // to manage call without ()
+                bool isLambda = (*it)->isFunctionDec() && (*it)->getAs<ast::FunctionDec>()->isLambda();
+                if (pIT->isCallable() && isLambda == false)
                 {
                     types::Callable *pCall = pIT->getAs<types::Callable>();
                     types::typed_list out;
@@ -212,21 +186,24 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
                 }
 
                 //don't output Simplevar and empty result
-                if (getResult() != NULL && (!(*it)->isSimpleVar() || bImplicitCall))
+                if (getResult() != NULL)
                 {
-                    //symbol::Context::getInstance()->put(symbol::Symbol(L"ans"), *execMe.getResult());
-                    types::InternalType* pITAns = getResult();
-                    symbol::Context::getInstance()->put(m_pAns, pITAns);
-                    if ((*it)->isVerbose() && ConfigVariable::isPrintOutput())
+                    setLambdaResult(getResult());
+                    if (!(*it)->isSimpleVar() || bImplicitCall)
                     {
-                        //TODO manage multiple returns
-                        std::wostringstream ostrName;
-                        ostrName << L"ans";
-                        scilabWriteW(printVarEqualTypeDimsInfo(pITAns, L"ans").c_str());
-                        VariableToString(pITAns, ostrName.str().c_str());
+                        //symbol::Context::getInstance()->put(symbol::Symbol(L"ans"), *execMe.getResult());
+                        types::InternalType* pITAns = getResult();
+                        symbol::Context::getInstance()->put(m_pAns, pITAns);
+                        if ((*it)->isVerbose() && ConfigVariable::isPrintOutput())
+                        {
+                            //TODO manage multiple returns
+                            std::wostringstream ostrName;
+                            ostrName << L"ans";
+                            scilabWriteW(printVarEqualTypeDimsInfo(pITAns, L"ans").c_str());
+                            VariableToString(pITAns, ostrName.str().c_str());
+                        }
                     }
                 }
-
                 pIT->killMe();
             }
 
@@ -286,7 +263,7 @@ void RunVisitorT<T>::visitprivate(const SeqExp  &e)
         }
         catch (const InternalError& ie)
         {
-            ConfigVariable::fillWhereError(ie.GetErrorLocation().first_line);
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
             CoverageInstance::stopChrono((void*)&e);
             if (file)
             {

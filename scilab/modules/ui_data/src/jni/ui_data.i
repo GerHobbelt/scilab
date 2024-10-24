@@ -73,7 +73,7 @@ public class";
   }";
 
 
-%javamethodmodifiers putScilabVariable(char * name, char ** lines, int rows, int cols) "
+%javamethodmodifiers putScilabVariable(char * name, const char * const* lines, int rows, int cols) "
     /**
     * Put a scilab variable as an array of strings in C envrionment
     * @param lines array of string

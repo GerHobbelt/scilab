@@ -24,6 +24,9 @@ src/cpp/vec2var.cpp \
 src/cpp/XMIResource.cpp \
 src/cpp/XMIResource_load.cpp \
 src/cpp/XMIResource_save.cpp \
+src/cpp/SSPResource.cpp \
+src/cpp/SSPResource_load.cpp \
+src/cpp/SSPResource_save.cpp \
 src/cpp/Controller.cpp \
 src/cpp/controller_helpers.cpp \
 src/cpp/LoggerView.cpp \
@@ -156,12 +159,14 @@ libsciscicos_algo_la_CPPFLAGS= -I$(srcdir)/includes/ \
 			-I$(top_srcdir)/modules/console/includes/ \
 			-I$(top_srcdir)/modules/differential_equations/includes/ \
 			$(XML_FLAGS) \
+			$(LIBARCHIVE_CFLAGS) \
 			$(AM_CPPFLAGS)
 else
 libsciscicos_algo_la_CPPFLAGS= -I$(top_srcdir)/modules/output_stream/includes/ \
 			-I$(top_srcdir)/modules/api_scilab/includes/ \
 			-I$(top_srcdir)/modules/scicos/includes/ \
 			$(XML_FLAGS) \
+			$(LIBARCHIVE_CFLAGS) \
 			$(AM_CPPFLAGS)
 endif
 libsciscicos_cli_la_CPPFLAGS = $(libsciscicos_algo_la_CPPFLAGS)
@@ -179,7 +184,8 @@ endif
 
 libsciscicos_algo_la_LIBADD =  \
 		$(RT_LIB) \
-		$(LIBXML_LIBS)
+		$(LIBXML_LIBS) \
+		$(LIBARCHIVE_LIBS)
 libsciscicos_cli_la_LIBADD = libsciscicos-algo.la $(FLIBS)
 libsciscicos_la_LIBADD = libsciscicos-algo.la $(FLIBS)
 if XCOS
@@ -230,12 +236,15 @@ includes/import.h
 
 #### scicos : cosf files ####
 libsciscicos_la_cosfdir=$(mydatadir)
-nobase_libsciscicos_la_cosf_DATA = palettes/Branching.cosf \
+nobase_libsciscicos_la_cosf_DATA = \
+palettes/Branching.cosf \
 palettes/DemoBlocks.cosf \
 palettes/Events.cosf \
 palettes/Integer.cosf \
 palettes/Linear.cosf \
+palettes/Lookup_Tables.cosf \
 palettes/Matrix.cosf \
+palettes/Modelica.cosf \
 palettes/Non_linear.cosf \
 palettes/OldBlocks.cosf \
 palettes/Others.cosf \

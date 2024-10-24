@@ -41,14 +41,14 @@ extern "C"
 #include "localization.h"
 #include "Scierror.h"
 #include "Matplot.h"
+#include "CurrentObject.h"
+#include "HandleManagement.h"
 }
 
 /*--------------------------------------------------------------------------*/
 types::Function::ReturnValue sci_matplot1(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
     int m1 = 0, n1 = 0, m2 = 0, n2 = 0;
-    int* piAddr1 = NULL;
-    int* piAddr2 = NULL;
     int plottype = -1;
     int *dims = NULL;
 
@@ -63,6 +63,12 @@ types::Function::ReturnValue sci_matplot1(types::typed_list &in, int _iRetCount,
     else if (in.size() != 2)
     {
         Scierror(999, _("%s: Wrong number of input argument(s): %d expected.\n"), "Matplot1", 2);
+        return types::Function::Error;
+    }
+
+    if (_iRetCount > 1)
+    {
+        Scierror(78, _("%s: Wrong number of output arguments: At most %d expected.\n"), "Matplot", 1);
         return types::Function::Error;
     }
 
@@ -235,6 +241,10 @@ types::Function::ReturnValue sci_matplot1(types::typed_list &in, int _iRetCount,
     /* NG beg */
     Objmatplot1 ((l1), &m1, &n1, (l2), plottype);
 
+    if (_iRetCount == 1)
+    {
+        out.push_back(new types::GraphicHandle(getHandle(getCurrentObject())));
+    }
 
     return types::Function::OK;
 }

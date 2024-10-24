@@ -24,6 +24,7 @@
         <title>Syntax</title>
         <synopsis>fplot3d(xr,yr,f,[theta,alpha,leg,flag,ebox])
             fplot3d(xr,yr,f,&lt;opt_args&gt;)
+            h = fplot3d(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -63,6 +64,14 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                    <para>This optional output contains a handle to a <literal>Plot3d</literal>. Use <literal>h</literal> to modify its properties.
+                     For a list of properties, see <link linkend="surface_properties">surface_properties</link>.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -96,5 +105,16 @@ clf() ;fplot3d(x,y,f,alpha=5,theta=31)
                 <link linkend="plot3d">plot3d</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

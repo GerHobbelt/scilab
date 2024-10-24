@@ -17,10 +17,11 @@
     <refnamediv>
         <refname>captions</refname>
         <refpurpose>draw graph captions</refpurpose>
+        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="legend">legend</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>hl=captions(h, strings [,location])</synopsis>
+        <synopsis>hl = captions(h, strings [,location])</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -28,13 +29,13 @@
             <varlistentry>
                 <term>h</term>
                 <listitem>
-                    <para>vector of handles on polyline entities.</para>
+                    <para>n vector of handles on polyline entities.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>strings</term>
                 <listitem>
-                    <para>n vector of strings, strings(i) is the caption of the ith
+                    <para>n vector of strings, strings(n-i+1) is the caption of the ith
                         polyline
                     </para>
                 </listitem>
@@ -136,7 +137,7 @@
             of the graphic window using the specified strings as labels.
             <literal>captions</literal> prepends labels by a recall of the
             corresponding polylines. The type and properties are recovered from the
-            given handles:
+            given handles, but be warned that unlike <link linkend="legend">legend</link>, the handles given to captions in vector <term>h</term> have to be in reverse order of elements in <term>strings</term>.
         </para>
         <para>
             The <literal>captions</literal> function creates a <link linkend="legend_properties">Legend</link> data structure.
@@ -196,5 +197,14 @@ hl.fill_mode='on';
                 <link linkend="legend_properties">legend_properties</link>
             </member>
         </simplelist>
+        <refsection>
+            <title>History</title>
+            <revhistory>
+                <revision>
+                    <revnumber>2025.0.0</revnumber>
+                    <revremark>Tagged obsolete and will be removed in 2026.0.0.</revremark>
+                </revision>
+            </revhistory>
+        </refsection>
     </refsection>
 </refentry>

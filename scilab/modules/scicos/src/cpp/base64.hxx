@@ -21,6 +21,9 @@
 #include <string>
 #include <limits>
 #include <cstdio> // for sprintf
+#ifdef max
+#undef max
+#endif // max
 
 namespace org_scilab_modules_scicos
 {
@@ -86,7 +89,7 @@ std::string base64::decode<std::string>(const std::string& content)
 
     // inverse table (might be const or constexpr)
     std::array<char, 255> T;
-    T.fill(255);
+    T.fill(-1);
     for (size_t i = 0; i < Base64Alphabet.length(); i++)
     {
         T[Base64Alphabet[i]] = i;
@@ -99,7 +102,7 @@ std::string base64::decode<std::string>(const std::string& content)
     int val_byte = -8;
     for (char c : content)
     {
-        if (T[c] == std::numeric_limits<unsigned char>::max()) // not in the table, stop decoding
+        if (T[c] < 0) // not in the table, stop decoding
         {
             break;
         }

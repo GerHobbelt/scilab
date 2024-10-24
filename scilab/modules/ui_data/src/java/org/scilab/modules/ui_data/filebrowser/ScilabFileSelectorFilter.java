@@ -1,6 +1,7 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2011 - DIGITEO - Calixte DENIZET
+ * Copyright (C) 2024 - Dassault Systèmes S.E. - Vincent COUVERT
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -15,10 +16,12 @@
 
 package org.scilab.modules.ui_data.filebrowser;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.ContainerOrderFocusTraversalPolicy;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusEvent;
@@ -26,21 +29,19 @@ import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
 import java.util.regex.Pattern;
 
-import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JCheckBox;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JTextField;
+import javax.swing.JToggleButton;
 import javax.swing.KeyStroke;
 import javax.swing.border.EmptyBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import javax.swing.text.DefaultEditorKit;
 
-import org.scilab.modules.commons.OS;
 import org.scilab.modules.commons.gui.FindIconHelper;
 import org.scilab.modules.gui.events.callback.CommonCallBack;
 import org.scilab.modules.ui_data.utils.UiDataMessages;
@@ -52,15 +53,12 @@ import org.scilab.modules.ui_data.utils.UiDataMessages;
 @SuppressWarnings(value = { "serial" })
 public class ScilabFileSelectorFilter extends JPanel {
 
-    private static boolean isWindows = (OS.get() == OS.WINDOWS);
     private static final int GAP = 3;
-    private static final Icon VALIDATE = new ImageIcon(FindIconHelper.findIcon("filter"));
 
     private MyJTextField textfield;
     private final SwingScilabTreeTable stt;
-    private JCheckBox caseSensitive;
-    private JCheckBox regexp;
-    private JButton validate;
+    private JToggleButton caseSensitive;
+    private JToggleButton regexp;
 
     /**
      * Default constructor
@@ -78,55 +76,20 @@ public class ScilabFileSelectorFilter extends JPanel {
      */
     private void initPanel() {
         setBorder(new EmptyBorder(0, 0, GAP, 0));
-        setLayout(new GridBagLayout());
+        setLayout(new BorderLayout());
         textfield = new MyJTextField();
         setFocusCycleRoot(true);
         setFocusTraversalPolicy(new ContainerOrderFocusTraversalPolicy());
-
-        validate = new JButton(new CommonCallBack(null) {
-            @Override
-            public void callBack() {
-                stt.setFilter(getPattern());
-            }
-        });
-        validate.setIcon(VALIDATE);
-        validate.setToolTipText(UiDataMessages.RUNFILTER);
-
-        caseSensitive = new JCheckBox(UiDataMessages.CASESENSITIVE, !isWindows);
-        regexp = new JCheckBox(UiDataMessages.REGEXP, false);
 
         GridBagConstraints gbc = new GridBagConstraints();
 
         gbc.gridx = 0;
         gbc.gridy = 0;
-        gbc.gridwidth = 2;
+        gbc.gridwidth = 1;
         gbc.gridheight = 1;
         gbc.weightx = 1;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.anchor = GridBagConstraints.LINE_START;
-        add(textfield, gbc);
-
-        gbc.gridx = 2;
-        gbc.gridwidth = gbc.gridheight = 1;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.VERTICAL;
-        gbc.anchor = GridBagConstraints.LINE_START;
-        add(validate, gbc);
-
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.gridwidth = gbc.gridheight = 1;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.LINE_START;
-        add(caseSensitive, gbc);
-
-        gbc.gridx = 1;
-        gbc.gridwidth = gbc.gridheight = 1;
-        gbc.weightx = 0;
-        gbc.fill = GridBagConstraints.NONE;
-        gbc.anchor = GridBagConstraints.LINE_START;
-        add(regexp, gbc);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        add(textfield, BorderLayout.CENTER);
     }
 
     /**
@@ -169,11 +132,92 @@ public class ScilabFileSelectorFilter extends JPanel {
         return null;
     }
 
+    private class MyJTextField extends JPanel {
+
+        JTextFieldWithPlaceHolder textField;
+        Color defaultFg;
+
+        MyJTextField() {
+            // https://stackoverflow.com/questions/22777780/how-to-add-button-in-text-field
+            super();
+            setLayout(new GridBagLayout());
+
+            textField = new JTextFieldWithPlaceHolder();
+            defaultFg = textField.defaultFg;
+
+            this.setBackground(textField.getBackground());
+            this.setBorder(textField.getBorder());
+            textField.setBorder(null);
+
+            GridBagConstraints gbc = new GridBagConstraints();
+
+            gbc.insets = new Insets(2, 2, 2, 2);
+
+            gbc.gridx = 0;
+            gbc.gridy = 0;
+            gbc.weightx = 1.0;
+            gbc.fill = GridBagConstraints.HORIZONTAL;
+            this.add(textField, gbc);
+
+            // TODO uncomment if using FlatLaf
+            // UIManager.put("ToggleButton.hoverBackground", ((Color)UIManager.get("Button.default.hoverBackground")));
+
+            gbc.weightx = 0.0;
+            gbc.fill = GridBagConstraints.NONE;
+
+            caseSensitive = new JToggleButton(new ImageIcon(FindIconHelper.findIcon("case-sensitive")));
+            caseSensitive.setToolTipText(UiDataMessages.CASESENSITIVE);
+            caseSensitive.setMargin(new Insets(0, 0, 0, 0));
+            gbc.gridx = 1;
+            gbc.gridy = 0;
+            this.add(caseSensitive, gbc);
+
+            regexp = new JToggleButton(new ImageIcon(FindIconHelper.findIcon("regex")));
+            regexp.setToolTipText(UiDataMessages.REGEXP);
+            regexp.setMargin(new Insets(0, 0, 0, 0));
+            gbc.gridx = 2;
+            gbc.gridy = 0;
+            this.add(regexp, gbc);
+
+            JButton clear = new JButton(new CommonCallBack(null) {
+                @Override
+                public void callBack() {
+                    textField.setText("");
+                    stt.setFilter(getPattern());
+                    textField.toggleContents();
+                }
+            });
+            clear.setIcon(new ImageIcon(FindIconHelper.findIcon("clear")));
+            clear.setToolTipText(UiDataMessages.CLEAR);
+            clear.setMargin(new Insets(0, 0, 0, 0));
+            gbc.gridx = 3;
+            gbc.gridy = 0;
+            this.add(clear, gbc);
+
+            JButton filter = new JButton(new CommonCallBack(null) {
+                @Override
+                public void callBack() {
+                    stt.setFilter(getPattern());
+                }
+            });
+            filter.setIcon(new ImageIcon(FindIconHelper.findIcon("filter")));
+            filter.setToolTipText(UiDataMessages.RUNFILTER);
+            filter.setMargin(new Insets(0, 0, 0, 0));
+            gbc.gridx = 4;
+            gbc.gridy = 0;
+            this.add(filter, gbc);
+        }
+
+        String getText() {
+            return textField.getText();
+        }
+    }
+
     /**
      * Inner class to have the possibility to add a default text in the textfield but in this case the textfield is empty !
      * It is a workaround for a GTK bug which avoids me to paint directly in the field.
      */
-    private class MyJTextField extends JTextField implements DocumentListener, FocusListener {
+    private class JTextFieldWithPlaceHolder extends JTextField implements DocumentListener, FocusListener {
 
         boolean isEmpty = true;
         Color defaultFg;
@@ -181,8 +225,7 @@ public class ScilabFileSelectorFilter extends JPanel {
         /**
          * {@inheritDoc}
          */
-        MyJTextField() {
-            super();
+        JTextFieldWithPlaceHolder() {
             defaultFg = getForeground();
             setEditable(true);
             setComponentPopupMenu(createPopup());
@@ -287,7 +330,7 @@ public class ScilabFileSelectorFilter extends JPanel {
             item.addActionListener(new ActionListener() {
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    MyJTextField.this.setText("");
+                    JTextFieldWithPlaceHolder.this.setText("");
                 }
             });
             popup.add(item);

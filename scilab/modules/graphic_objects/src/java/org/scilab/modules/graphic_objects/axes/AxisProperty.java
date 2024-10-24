@@ -447,10 +447,24 @@ public class AxisProperty {
     }
 
     /**
-     * @param labels the labels strings to set
+     * @param strings the labels strings to set
      */
-    public UpdateStatus setTicksLabelsStrings(String[] labels) {
-        return ticks.setLabelsStrings(labels);
+    public UpdateStatus setTicksLabelsStrings(String[] strings) {
+        return ticks.setLabelsStrings(strings);
+    }
+
+    /**
+     * @return the ticks interpreters
+     */
+    public String[] getTicksLabelsInterpreters() {
+        return ticks.getLabelsInterpreters();
+    }
+
+    /**
+     * @param strings the labels interpreters to set
+     */
+    public UpdateStatus setTicksLabelsInterpreters(String[] interpreters) {
+        return ticks.setLabelsInterpreters(interpreters);
     }
 
     /**

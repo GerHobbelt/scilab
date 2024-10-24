@@ -24,7 +24,7 @@
         <title>Descrição</title>
         <para>A entidade Legend é uma folha na hierarquia de entidade gráficas.
             Esta entidade define parâmetros para legendas impressas abaixo de gráficos
-            <literal>plot2dx</literal> ou criadas pela função <link linkend="captions">captions</link>. Para cada linha esboçada, a legenda
+            <literal>plot2dx</literal> ou criadas pela função <link linkend="legend">legend</link>. Para cada linha esboçada, a legenda
             exibe uma amostra do tipo da linha, de sua marca e de sua cor.
         </para>
         <variablelist>

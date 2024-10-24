@@ -28,6 +28,7 @@
             mesh(...,&lt;GlobalProperty&gt;)
             mesh(...,&lt;color&gt;,&lt;GlobalProperty&gt;)
             mesh(&lt;axes_handle&gt;,...)
+            h = mesh(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -83,6 +84,14 @@
                         this optional argument forces the plot to appear inside the
                         selected axes given by <varname>axes_handle</varname> rather than the
                         current axes (see <link linkend="gca">gca</link>).
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>h</term>
+                <listitem>
+                    <para>This optional output contains a handle to the created Fac3d entity. Use <literal>h</literal> to modify its properties
+                      For a list of properties, see <link linkend="surface_properties">surface_properties</link>.
                     </para>
                 </listitem>
             </varlistentry>
@@ -154,6 +163,9 @@ mesh(X,Y,Z);
                 <link linkend="LineSpec">LineSpec</link>
             </member>
             <member>
+                <link linkend="surface_properties">GlobalProperty</link>
+            </member>
+            <member>
                 <link linkend="GlobalProperty">GlobalProperty</link>
             </member>
         </simplelist>
@@ -167,6 +179,12 @@ mesh(X,Y,Z);
                     The "Foreground", "markForeground", and "markBackground" global properties
                     colors can now be specified as named colors chosen in the full predefined colors
                     list, or by their "#RRGGBB" hexadecimal codes, or by their colormap indices.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
                 </revdescription>
             </revision>
         </revhistory>

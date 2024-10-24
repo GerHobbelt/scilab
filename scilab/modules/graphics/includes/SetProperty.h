@@ -45,7 +45,9 @@ GRAPHICS_IMPEXP int sciSetMarkSize (int iObj, int *markSizes, int numMarkSizes);
 
 /* Text Functions */
 GRAPHICS_IMPEXP int sciSetText (int iObj, char ** text, int nbRow, int nbCol) ; /* SET */
-
+GRAPHICS_IMPEXP int sciSetInterpreter (int iObj, char ** text, int nbRow, int nbCol) ; /* SET */
+GRAPHICS_IMPEXP int sciSetTicksProperty(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol, 
+    char *stCoord, int iTicksAuto, int iTicksLoc, int iTicksLab, int iTicksInt);
 /* GMODE */
 GRAPHICS_IMPEXP int sciSetDefaultValues (void); /* SET */
 

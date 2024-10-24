@@ -22,10 +22,6 @@
 #include "sci_malloc.h"
 #include "localization.h"
 /*---------------------------------------------------------------------------*/
-#ifdef VALGRIND_ENABLE
-#include "valgrind.h"
-#endif
-/*---------------------------------------------------------------------------*/
 #ifndef NULL
 #define NULL 0
 #endif
@@ -34,17 +30,6 @@ BOOL FreeDynLibrary(DynLibHandle hInstance)
 {
     if (hInstance)
     {
-
-#ifdef VALGRIND_ENABLE
-        /*
-         * Accordingly to the Valgrind FAQ, using `dlclose` will clear the
-         * symbol table of the loaded library.
-         */
-        if (RUNNING_ON_VALGRIND)
-        {
-            return TRUE;
-        }
-#endif
 
 #if __SANITIZE_ADDRESS__
         // While using AddressSanitizer, closing dl libraries will discard
@@ -76,7 +61,12 @@ DynLibFuncPtr GetDynLibFuncPtr(DynLibHandle hInstance, const char *funcName)
 {
     if (hInstance)
     {
-        return dlsym(hInstance, funcName);
+// ISO C forbids conversion of object pointer to function pointer type
+// will error will be on caller but not on `dlsym()`.
+#pragma GCC diagnostic push
+#pragma GCC diagnostic ignored "-Wpedantic"
+        return (DynLibFuncPtr) dlsym(hInstance, funcName);
+#pragma GCC diagnostic pop
     }
     return NULL;
 }

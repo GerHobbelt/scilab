@@ -346,34 +346,36 @@
     <refsection>
         <title>例</title>
         <programlisting role="example"><![CDATA[
-//この例を行単位で実行してください
+//Play this example line per line
 
-// エンティティモードで図を作成. Figureエンティティのハンドルを取得し,そのプロパティを表示
+// Creates a figure in entity mode, gets its handle, displays its properties
 f = scf()
-a = f.children //Axisの子のハンドル
-x = (1:10)';  plot2d(x,[x.^2 x.^1.5])
-e = a.children // 2つのポリラインからなるCompound
+a = f.children // the handle on the Axes child
+x = (1:10)';
+e = plot2d(x,[x.^2 x.^1.5])
+// e is a vector of 2 polylines
 
-p1 = e.children(1)   // 直近に描画されたポリラインのプロパティ
-p1.foreground = 5;   //  ポリラインの色を変更
-e.children.thickness=5; // 2つのポリラインの幅を変更
+p2 = e(2)  //the last drawn polyline properties
+p2.foreground = 5;  // change the polyline color
+e.thickness = 5; // change the thickness of the two polylines
 
-delete(e.children(2))
+delete(e(1))
+e(1) = []
 
-move(e.children,[0,30]) //ポリラインを変換
+move(e,[0,30]) //translate the polyline
 
-a.axes_bounds=[0 0 0.5 0.5];
+a.axes_bounds = [0 0 0.5 0.5];
 
-subplot(222) //新たにAxesエンティティを作成
+subplot(222) //create a new Axes entity
 plot(1:10);
-a1 = f.children(1); //ハンドルを取得
-copy(e.children,a1); //最初のプロットのポリラインを新しい軸にコピー
-a1.data_bounds = [1 0;10 100]; //軸の範囲を変更
+a1 = f.children(1);  // get its handle
+copy(e, a1); // copy the polyline of the first plot in the new Axes
+a1.data_bounds = [1 0;10 100]; //change the Axes bounds
 
-scf(10); // figure_id=10の新規図を作成
-plot3d() // 描画データは figure 10に送信される
-scf(f);  // 前の図をカレントの図にする
-plot2d(x,x^3)  //描画データは最初の図に送信される
+scf(10); // create a new figure with figure_id=10
+plot3d() // the drawing are sent to figure 10
+scf(f);  // makes the previous figure the current one
+plot2d(x,x.^3)  //the drawing are sent to the initial figure
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

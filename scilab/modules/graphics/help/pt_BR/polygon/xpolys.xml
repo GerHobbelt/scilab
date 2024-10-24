@@ -23,7 +23,8 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Seqüência de Chamamento</title>
-        <synopsis>xpolys(xpols,ypols,[draw])</synopsis>
+        <synopsis>xpolys(xpols,ypols,[draw])
+            hdl = xpolys(...)</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Parâmetros</title>
@@ -38,6 +39,16 @@
                 <term>draw</term>
                 <listitem>
                     <para>vetor de tamanho n</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>hdl</term>
+                <listitem>
+                    <para>Esta saída opcional é um vetor contendo os identificadores de
+                      os objetos Polyline criados. Use <literal>hdl</literal> para modificar propriedades
+                      de um objeto específico ou de todos os objetos polilinha após serem criados. Para uma lista de
+                      propriedades, consulte <link linkend="polyline_properties">polyline_properties</link>.
+                    </para>
                 </listitem>
             </varlistentry>
         </variablelist>
@@ -96,5 +107,16 @@ xpolys(rand(3,5),rand(3,5),[-1,-2,0,1,2])
                 <link linkend="xpoly">xpoly</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

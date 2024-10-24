@@ -12,7 +12,7 @@ c along with this program.
 c
       subroutine qnbd(indqn,simul,n,x,f,g,iprint,io,zero,
      & napmax,itmax,epsf,epsg,epsx,df0,binf,bsup,nfac,
-     & trav,ntrav,itrav,nitrav,izs,rzs,dzs)
+     & trav,ntrav,itrav,nitrav,izs,rzs,dzs,indsim)
 c!but
 c     code de minimisation d une fonction reguliere sous contraintes
 c     de bornes , aux normes modulopt
@@ -35,7 +35,7 @@ c!liste d'appel
 c
 c     subroutine qnbd(indqn,simul,n,x,f,g,iprint,io,zero,
 c    & napmax,itmax,epsf,epsg,epsx,df0,binf,bsup,nfac,
-c    & trav,ntrav,itrav,nitrav,izs,rzs,dzs)
+c    & trav,ntrav,itrav,nitrav,izs,rzs,dzs,indsim)
 c
 c     indqn   indicateur de qnbd                                  es
 c       en entree =1 standard
@@ -176,6 +176,6 @@ c     decoupage du vecteur trav
       call zqnbd(indqn,simul,trav(1),n,binf,bsup,x,f,g,zero,napmax,
      &itmax,itrav,itrav(ni1),nfac,iprint,io,epsx,epsf,epsg,trav(n1),
      &trav(n2),trav(n3),trav(n4),df0,ig,in,irel,izag,iact,
-     &epsrel,ieps1,izs,rzs,dzs)
+     &epsrel,ieps1,izs,rzs,dzs,indsim)
       return
       end

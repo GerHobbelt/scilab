@@ -231,10 +231,12 @@ lib /DEF:"$(ProjectDir)elementary_functions_Import.def" /SUBSYSTEM:WINDOWS /MACH
     <ClCompile Include="..\sci_eye.cpp" />
     <ClCompile Include="..\sci_floor.cpp" />
     <ClCompile Include="..\sci_frexp.cpp" />
+    <ClCompile Include="..\sci_gallery.cpp" />
     <ClCompile Include="..\sci_gsort.cpp" />
     <ClCompile Include="..\sci_imag.cpp" />
     <ClCompile Include="..\sci_imult.cpp" />
     <ClCompile Include="..\sci_int.cpp" />
+    <ClCompile Include="..\sci_isempty.cpp" />
     <ClCompile Include="..\sci_isequal.cpp" />
     <ClCompile Include="..\sci_isreal.cpp" />
     <ClCompile Include="..\sci_kron.cpp" />
@@ -262,6 +264,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_Import.def" /SUBSYSTEM:WINDOWS /MACH
     <ClCompile Include="..\sci_tanh.cpp" />
     <ClCompile Include="..\sci_tril.cpp" />
     <ClCompile Include="..\sci_triu.cpp" />
+    <ClCompile Include="..\sci_vander.cpp" />
     <ClCompile Include="..\sci_zeros.cpp" />
     <ClCompile Include="..\sci_real.cpp" />
     <ClCompile Include="..\sci_issquare.cpp" />

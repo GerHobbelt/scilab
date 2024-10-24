@@ -1,8 +1,8 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010-2011 - DIGITEO - Manuel JULIACHS
- *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
+ * Copyright (C) 2024 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -33,6 +33,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_COLOR__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_DIRECTION__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_LABELS__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_INTERPRETERS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_SEGMENT__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_TICKS_STYLE__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_X_NUMBER_TICKS__;
@@ -47,7 +48,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 public class Axis extends ClippableContouredObject {
     /** Axis properties */
     private enum AxisProperty { TICKSDIRECTION, XNUMBERTICKS, YNUMBERTICKS, XTICKSCOORDS, YTICKSCOORDS, TICKSCOLOR, TICKSSEGMENT, TICKSSTYLE,
-                                SUBTICKS, NUMBERTICKSLABELS, TICKSLABELS, FORMATN, FONT
+                                SUBTICKS, NUMBERTICKSLABELS, TICKSLABELS, TICKSINTERPRETERS, FORMATN, FONT
                               };
 
     /** Default number of ticks */
@@ -80,6 +81,9 @@ public class Axis extends ClippableContouredObject {
     /** Ticks labels list */
     private ArrayList <String> ticksLabels;
 
+    /** Ticks interpreters list */
+    private ArrayList <String> ticksInterpreters;
+
     /** Label format */
     private String formatn;
 
@@ -95,6 +99,7 @@ public class Axis extends ClippableContouredObject {
         ticksColor = 0;
         ticksSegment = false;
         ticksLabels = new ArrayList<String>(DEFAULT_NUMBER_OF_TICKS);
+        ticksInterpreters = new ArrayList<String>(DEFAULT_NUMBER_OF_TICKS);
         formatn = new String("");
         font = new Font();
     }
@@ -133,6 +138,8 @@ public class Axis extends ClippableContouredObject {
                 return AxisProperty.NUMBERTICKSLABELS;
             case __GO_TICKS_LABELS__ :
                 return AxisProperty.TICKSLABELS;
+            case __GO_TICKS_INTERPRETERS__ :
+                return AxisProperty.TICKSINTERPRETERS;
             case __GO_FORMATN__ :
                 return AxisProperty.FORMATN;
             case __GO_FONT__ :
@@ -178,6 +185,8 @@ public class Axis extends ClippableContouredObject {
             return getNumberTicksLabels();
         } else if (property == AxisProperty.TICKSLABELS) {
             return getTicksLabels();
+        } else if (property == AxisProperty.TICKSINTERPRETERS) {
+            return getTicksInterpreters();
         } else if (property == AxisProperty.FORMATN) {
             return getFormatn();
         } else if (property == AxisProperty.FONT) {
@@ -218,6 +227,8 @@ public class Axis extends ClippableContouredObject {
             setSubticks((Integer) value);
         } else if (property == AxisProperty.TICKSLABELS) {
             setTicksLabels((String[]) value);
+        } else if (property == AxisProperty.TICKSINTERPRETERS) {
+            setTicksInterpreters((String[]) value);
         } else if (property == AxisProperty.FORMATN) {
             setFormatn((String) value);
         } else if (property == AxisProperty.FONT) {
@@ -405,10 +416,12 @@ public class Axis extends ClippableContouredObject {
     public UpdateStatus setTicksLabels(String[] ticksLabels) {
         if (!this.ticksLabels.isEmpty()) {
             this.ticksLabels.clear();
+            this.ticksInterpreters.clear();
         }
 
         for (int i = 0; i < ticksLabels.length; i++) {
             this.ticksLabels.add(new String(ticksLabels[i]));
+            this.ticksInterpreters.add(new String("auto"));
         }
         return UpdateStatus.Success;
     }
@@ -419,13 +432,64 @@ public class Axis extends ClippableContouredObject {
     public UpdateStatus setTicksLabelsAsArrayList(ArrayList<String> ticksLabels) {
         if (!this.ticksLabels.isEmpty()) {
             this.ticksLabels.clear();
+            this.ticksInterpreters.clear();
         }
 
         for (int i = 0; i < ticksLabels.size(); i++) {
             this.ticksLabels.add(new String(ticksLabels.get(i)));
+            this.ticksInterpreters.add(new String("auto"));
         }
         return UpdateStatus.Success;
     }
+
+    /**
+     * @return the ticks interpreters
+     */
+    public String[] getTicksInterpreters() {
+        String[] interpreters = new String[ticksInterpreters.size()];
+
+        for (int i = 0; i < ticksInterpreters.size(); i++) {
+            interpreters[i] = new String(ticksInterpreters.get(i));
+        }
+
+        return interpreters;
+    }
+
+    /**
+     * @return the ticks interpreters
+     */
+    public ArrayList<String> getTicksInterpretersAsArrayList() {
+        return ticksInterpreters;
+    }
+
+    /**
+     * @param interpreters the ticksLabels to set
+     */
+    public UpdateStatus setTicksInterpreters(String[] interpreters) {
+        if (!this.ticksInterpreters.isEmpty()) {
+            this.ticksInterpreters.clear();
+        }
+
+        for (int i = 0; i < this.ticksLabels.size(); i++) {
+            this.ticksInterpreters.add(new String(interpreters[Math.min(i,interpreters.length-1)]));
+        }
+        return UpdateStatus.Success;
+    }
+
+    /**
+     * @param ticksLabels the ticksLabels to set
+     */
+    public UpdateStatus setTicksInterpretersAsArrayList(ArrayList<String> ticksInterpreters) {
+        if (!this.ticksInterpreters.isEmpty()) {
+            this.ticksInterpreters.clear();
+        }
+
+        for (int i = 0; i < this.ticksLabels.size(); i++) {
+            this.ticksInterpreters.add(new String(ticksInterpreters.get(Math.min(i,ticksInterpreters.size()-1))));
+        }
+        return UpdateStatus.Success;
+    }
+
 
     /**
      * @return the ticksSegment

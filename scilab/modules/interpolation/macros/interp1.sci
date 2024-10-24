@@ -46,7 +46,7 @@ function yi = interp1(varargin)
         if type(x)<>1 | ~isreal(x) then
             msg = _("%s: Argument #%d: Real numbers expected.\n")
             error(msprintf(msg,"interp1",1))
-        elseif ~isvector(x)
+        elseif isscalar(x) | ~isvector(x)
             msg = _("%s: Argument #%d: Vector expected.\n")
             error(msprintf(msg, "interp1", 1))
         elseif or(isnan(x)) then
@@ -62,7 +62,7 @@ function yi = interp1(varargin)
         else                    // interp1(, y, xi,..)
             y = varargin(2)
         end
-        if isvector(y) then
+        if ~isscalar(y) & isvector(y) then
             x = 1:size(y,"*")
             y = y(:)
         else

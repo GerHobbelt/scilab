@@ -5,7 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 // <-- NO CHECK REF -->
-
+//
 // <-- Non-regression test for issue 17231 -->
 //
 // <-- GitLab URL -->
@@ -56,9 +56,18 @@ expected(isfile(all)) = file_perms;
 // custom files
 select getos()
 case "Windows" then
+    expected(grep(all, '.tcl')) = "100666";
+else
+    expected(grep(all, '.tcl')) = "100755";
+end
+
+select getos()
+case "Windows" then
     expected(grep(all, '.bat')) = "100777";
 else
     expected(grep(all, '.so')) = "100755";
 end
 
-assert_checkequal(computed, expected);
+invalid = computed <> expected;
+disp("invalid permission on " + all(invalid) + " , computed " + computed(invalid) + " , expected " + expected(invalid));
+assert_checkfalse(invalid)

@@ -234,15 +234,16 @@ am__v_lt_0 = --silent
 am__v_lt_1 = 
 @MAINTAINER_MODE_FALSE@am_libscifileio_algo_la_rpath =
 @MAINTAINER_MODE_TRUE@am_libscifileio_algo_la_rpath =
-libscifileio_la_DEPENDENCIES = libscifileio-algo.la
+am__DEPENDENCIES_1 =
+libscifileio_la_DEPENDENCIES = $(am__DEPENDENCIES_1) \
+	libscifileio-algo.la
 am__objects_3 = sci_gateway/c/libscifileio_la-sci_fprintfMat.lo \
 	sci_gateway/c/libscifileio_la-sci_fscanfMat.lo \
 	sci_gateway/c/libscifileio_la-sci_chdir.lo \
 	sci_gateway/c/libscifileio_la-sci_pwd.lo \
 	sci_gateway/c/libscifileio_la-sci_copyfile.lo \
 	sci_gateway/c/libscifileio_la-sci_tempname.lo \
-	sci_gateway/c/libscifileio_la-sci_movefile.lo \
-	sci_gateway/c/libscifileio_la-sci_getURL.lo
+	sci_gateway/c/libscifileio_la-sci_movefile.lo
 am__objects_4 = sci_gateway/cpp/libscifileio_la-fileio_gw.lo \
 	sci_gateway/cpp/libscifileio_la-sci_mopen.lo \
 	sci_gateway/cpp/libscifileio_la-sci_mclose.lo \
@@ -313,7 +314,6 @@ am__depfiles_remade =  \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_copyfile.Plo \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fprintfMat.Plo \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fscanfMat.Plo \
-	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Plo \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_movefile.Plo \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_pwd.Plo \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo \
@@ -504,6 +504,7 @@ CFLAGS = @CFLAGS@
 CHECKSTYLE = @CHECKSTYLE@
 COBERTURA = @COBERTURA@
 COMMONS_BEANUTILS = @COMMONS_BEANUTILS@
+COMMONS_COLLECTIONS = @COMMONS_COLLECTIONS@
 COMMONS_IO = @COMMONS_IO@
 COMMONS_LOGGING = @COMMONS_LOGGING@
 CPP = @CPP@
@@ -542,12 +543,14 @@ FGREP = @FGREP@
 FILECMD = @FILECMD@
 FLEXDOCK = @FLEXDOCK@
 FLIBS = @FLIBS@
-FOP = @FOP@
+FOP_CORE = @FOP_CORE@
+FOP_EVENT = @FOP_EVENT@
+FOP_UTIL = @FOP_UTIL@
 FREEHEP_GRAPHICS2D = @FREEHEP_GRAPHICS2D@
+FREEHEP_GRAPHICSBASE = @FREEHEP_GRAPHICSBASE@
 FREEHEP_GRAPHICSIO = @FREEHEP_GRAPHICSIO@
 FREEHEP_GRAPHICSIO_EMF = @FREEHEP_GRAPHICSIO_EMF@
 FREEHEP_IO = @FREEHEP_IO@
-FREEHEP_UTIL = @FREEHEP_UTIL@
 GENHTML = @GENHTML@
 GETTEXT_MACRO_VERSION = @GETTEXT_MACRO_VERSION@
 GIWS_BIN = @GIWS_BIN@
@@ -556,12 +559,14 @@ GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GRAPHICS_ENABLE = @GRAPHICS_ENABLE@
 GREP = @GREP@
+GUAVA = @GUAVA@
 GUI_ENABLE = @GUI_ENABLE@
-HAMCREST = @HAMCREST@
 HAVE_CXX17 = @HAVE_CXX17@
 HDF5_CFLAGS = @HDF5_CFLAGS@
 HDF5_LIBS = @HDF5_LIBS@
 HELP_ENABLE = @HELP_ENABLE@
+HTTPCLIENT = @HTTPCLIENT@
+HTTPCORE = @HTTPCORE@
 INKSCAPE = @INKSCAPE@
 INSTALL = @INSTALL@
 INSTALL_DATA = @INSTALL_DATA@
@@ -596,6 +601,8 @@ JEUCLID_CORE = @JEUCLID_CORE@
 JGRAPHX = @JGRAPHX@
 JHALL = @JHALL@
 JLATEXMATH = @JLATEXMATH@
+JLATEXMATH_FONT_CYRILLIC = @JLATEXMATH_FONT_CYRILLIC@
+JLATEXMATH_FONT_GREEK = @JLATEXMATH_FONT_GREEK@
 JLATEXMATH_FOP = @JLATEXMATH_FOP@
 JOGL2 = @JOGL2@
 JROSETTA_API = @JROSETTA_API@
@@ -716,8 +723,6 @@ UMFPACK_CFLAGS = @UMFPACK_CFLAGS@
 UMFPACK_ENABLE = @UMFPACK_ENABLE@
 UMFPACK_LIBS = @UMFPACK_LIBS@
 USE_NLS = @USE_NLS@
-VALGRIND_CFLAGS = @VALGRIND_CFLAGS@
-VALGRIND_LIBS = @VALGRIND_LIBS@
 VERSION = @VERSION@
 WITH_OCAML = @WITH_OCAML@
 WITH_TKSCI = @WITH_TKSCI@
@@ -727,6 +732,7 @@ XGETTEXT_015 = @XGETTEXT_015@
 XGETTEXT_EXTRA_OPTIONS = @XGETTEXT_EXTRA_OPTIONS@
 XMKMF = @XMKMF@
 XMLGRAPHICS_COMMONS = @XMLGRAPHICS_COMMONS@
+XMLRESOLVER = @XMLRESOLVER@
 XML_APIS_EXT = @XML_APIS_EXT@
 XML_CONFIG = @XML_CONFIG@
 XML_FLAGS = @XML_FLAGS@
@@ -834,8 +840,7 @@ GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_pwd.c \
     sci_gateway/c/sci_copyfile.c \
     sci_gateway/c/sci_tempname.c \
-    sci_gateway/c/sci_movefile.c \
-	sci_gateway/c/sci_getURL.c
+    sci_gateway/c/sci_movefile.c
 
 GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/fileio_gw.cpp \
@@ -927,6 +932,7 @@ libscifileio_la_CPPFLAGS = \
 	$(HDF5_CFLAGS) \
 	$(XML_FLAGS) \
 	$(LIBARCHIVE_CFLAGS) \
+	$(CURL_CFLAGS) \
 	$(AM_CPPFLAGS)
 
 @MAINTAINER_MODE_TRUE@pkglib_LTLIBRARIES = libscifileio.la
@@ -942,7 +948,7 @@ CHECK_SRC = $(FILEIO_C_SOURCES) $(FILEIO_CPP_SOURCES) $(GATEWAY_C_SOURCES) $(GAT
 INCLUDE_FLAGS = $(libscifileio_la_CPPFLAGS)
 
 # pb of order $(top_builddir)/modules/console/libsciconsole.la
-libscifileio_la_LIBADD = libscifileio-algo.la
+libscifileio_la_LIBADD = $(CURL_LIBS) libscifileio-algo.la
 
 #### Target ######
 modulename = fileio
@@ -957,8 +963,14 @@ libscifileio_la_etc_DATA = etc/fileio.quit etc/fileio.start
 
 #### fileio : include files ####
 libscifileio_la_includedir = $(pkgincludedir)
-libscifileio_la_include_HEADERS = includes/getFullFilename.h \
-includes/dynlib_fileio.h
+libscifileio_la_include_HEADERS = \
+includes/getFullFilename.h \
+includes/dynlib_fileio.h \
+includes/FileExist.h \
+includes/expandPathVariable.h \
+includes/scicurdir.h \
+includes/isdir.h \
+includes/fullpath.h
 
 
 # Where all the Scilab stuff is installed (macros, help, ...)
@@ -1255,9 +1267,6 @@ sci_gateway/c/libscifileio_la-sci_tempname.lo:  \
 sci_gateway/c/libscifileio_la-sci_movefile.lo:  \
 	sci_gateway/c/$(am__dirstamp) \
 	sci_gateway/c/$(DEPDIR)/$(am__dirstamp)
-sci_gateway/c/libscifileio_la-sci_getURL.lo:  \
-	sci_gateway/c/$(am__dirstamp) \
-	sci_gateway/c/$(DEPDIR)/$(am__dirstamp)
 sci_gateway/cpp/$(am__dirstamp):
 	@$(MKDIR_P) sci_gateway/cpp
 	@: > sci_gateway/cpp/$(am__dirstamp)
@@ -1412,7 +1421,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_copyfile.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fprintfMat.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fscanfMat.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_movefile.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_pwd.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo@am__quote@ # am--include-marker
@@ -1797,13 +1805,6 @@ sci_gateway/c/libscifileio_la-sci_movefile.lo: sci_gateway/c/sci_movefile.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='sci_gateway/c/sci_movefile.c' object='sci_gateway/c/libscifileio_la-sci_movefile.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sci_gateway/c/libscifileio_la-sci_movefile.lo `test -f 'sci_gateway/c/sci_movefile.c' || echo '$(srcdir)/'`sci_gateway/c/sci_movefile.c
-
-sci_gateway/c/libscifileio_la-sci_getURL.lo: sci_gateway/c/sci_getURL.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT sci_gateway/c/libscifileio_la-sci_getURL.lo -MD -MP -MF sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Tpo -c -o sci_gateway/c/libscifileio_la-sci_getURL.lo `test -f 'sci_gateway/c/sci_getURL.c' || echo '$(srcdir)/'`sci_gateway/c/sci_getURL.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Tpo sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='sci_gateway/c/sci_getURL.c' object='sci_gateway/c/libscifileio_la-sci_getURL.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o sci_gateway/c/libscifileio_la-sci_getURL.lo `test -f 'sci_gateway/c/sci_getURL.c' || echo '$(srcdir)/'`sci_gateway/c/sci_getURL.c
 
 .cpp.o:
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)depbase=`echo $@ | sed 's|[^/]*$$|$(DEPDIR)/&|;s|\.o$$||'`;\
@@ -2476,7 +2477,6 @@ distclean: distclean-am
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_copyfile.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fprintfMat.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fscanfMat.Plo
-	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_movefile.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_pwd.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo
@@ -2623,7 +2623,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_copyfile.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fprintfMat.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_fscanfMat.Plo
-	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_getURL.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_movefile.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_pwd.Plo
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo
@@ -2907,13 +2906,14 @@ install-data-local:
 	for dir in $(TESTS_DIR) $(TESTS_DIREXT) ; do \
 	  if test -d $(srcdir)/$$dir/; then \
 	    $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir && \
-		  for file in `find $(srcdir)/$$dir | sed "s|^$(srcdir)/$$dir||" 2>/dev/null`; do \
+		  find $(srcdir)/$$dir -print0 | sed -z "s|^$(srcdir)/$$dir||" 2>/dev/null | \
+		  while IFS= read -r -d '' file; do \
 		    if test -d "$(srcdir)/$$dir/$$file"; then \
 			  echo $(mkinstalldirs) $(DESTDIR)$(pkgmacrosdir)/$$dir/$$file; \
 			  $(mkinstalldirs) "$(DESTDIR)$(pkgmacrosdir)/$$dir/$$file"; \
 		    else \
-		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
-	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/`dirname $$dir/$$file`" ; \
+		      echo "$(INSTALL_DATA) $(srcdir)/$$dir/$$file $(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
+	    	  $(INSTALL_DATA) "$(srcdir)/$$dir/$$file" "$(DESTDIR)$(pkgmacrosdir)/$$(dirname "$$dir/$$file")" ; \
 		    fi \
 		  done; \
 	  fi; \

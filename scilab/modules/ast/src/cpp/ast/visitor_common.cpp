@@ -850,6 +850,7 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
     std::list<ExpHistory*> workFields;
 
     bool bPutInCtx = false;
+    bool bDecreaseMain = false;
     types::InternalType* pITMain = NULL;
 
     try
@@ -902,7 +903,9 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
             // a(x) = "something" and a does not exist
             // a will be create in insertionCall
         }
-        else if (pITMain->getRef() > 1 && pITMain->isHandle() == false)
+        else if (pITMain->getRef() > 1 &&
+                pITMain->isHandle() == false &&
+                pITMain->isCallable() == false)
         {
             bPutInCtx = true;
             pITMain = pITMain->clone();
@@ -1569,6 +1572,16 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
                     throw ast::InternalError(err, 999, pEH->getExp()->getLocation());
                 }
 
+                if(evalFields.size() == 1)
+                {
+                    // gcf().prop = value
+                    // In case where out[0] is an handle, replace the callable (ie: gcf(), figure()) by the handle.
+                    // This is used to print the handle properties instead of the function after the insertion.
+                    pITMain = out[0];
+                    pITMain->IncreaseRef();
+                    bDecreaseMain = true;
+                }
+
                 pEH->setCurrent(out[0]);
                 pEH->setArgs(NULL);
                 pEH->resetReinsertion();
@@ -1749,6 +1762,11 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
         {
             pITMain->DecreaseRef();
             ctx->put(spMainExp->getStack(), pITMain);
+        }
+
+        if(bDecreaseMain)
+        {
+            pITMain->DecreaseRef();
         }
 
         if (!evalFields.empty())
@@ -2607,8 +2625,10 @@ std::wstring printTypeDimsInfo(types::InternalType *pIT)
         {
             types::String* pStr = out[0]->getAs<types::String>();
             ostr << pStr->get(0);
+            pStr->killMe();
         }
-    }    
+    }
+
     return ostr.str();
 }
 

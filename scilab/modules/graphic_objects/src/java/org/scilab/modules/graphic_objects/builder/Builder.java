@@ -317,7 +317,7 @@ public final class Builder {
         }
     }
 
-    public final static int createFigure(boolean dockable, int menubarType, int toolbarType, boolean defaultAxes, boolean visible) {
+    public final static int createFigure(boolean dockable, int menubarType, int toolbarType, boolean defaultAxes, boolean visible, int antialiasing) {
         GraphicController controller = GraphicController.getController();
         Integer figModel = GraphicModel.getFigureModel().getIdentifier();
         Integer figId = controller.cloneObject(figModel, false);
@@ -327,6 +327,7 @@ public final class Builder {
         figure.setToolbar(toolbarType);
         figure.setVisible(visible);
         figure.setDefaultAxes(defaultAxes);
+        figure.setAntialiasing(antialiasing);
 
         controller.objectCreated(figId);
 
@@ -734,13 +735,12 @@ public final class Builder {
         leg.setTextStrings(text);
 
         /*
-         * Links are ordered from most recent to least recent, as their
-         * referred-to Polylines in the latter's parent Compound object.
+         * Links are ordered in the same order as handles
          */
 
         ArrayList<Integer> links = new ArrayList<Integer>();
-        for (int i = count - 1; i >= 0; i--) {
-            links.add(count - i - 1, handles[i]);
+        for (int i = 0; i < count; i++) {
+            links.add(handles[i]);
         }
 
         leg.setLinks(links);

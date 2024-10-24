@@ -43,8 +43,7 @@ GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_pwd.c \
     sci_gateway/c/sci_copyfile.c \
     sci_gateway/c/sci_tempname.c \
-    sci_gateway/c/sci_movefile.c \
-	sci_gateway/c/sci_getURL.c
+    sci_gateway/c/sci_movefile.c
 
 GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/fileio_gw.cpp \
@@ -136,6 +135,7 @@ libscifileio_la_CPPFLAGS = \
 	$(HDF5_CFLAGS) \
 	$(XML_FLAGS) \
 	$(LIBARCHIVE_CFLAGS) \
+	$(CURL_CFLAGS) \
 	$(AM_CPPFLAGS)
 
 if MAINTAINER_MODE
@@ -158,7 +158,7 @@ CHECK_SRC= $(FILEIO_C_SOURCES) $(FILEIO_CPP_SOURCES) $(GATEWAY_C_SOURCES) $(GATE
 INCLUDE_FLAGS = $(libscifileio_la_CPPFLAGS)
 
 # pb of order $(top_builddir)/modules/console/libsciconsole.la
-libscifileio_la_LIBADD = libscifileio-algo.la
+libscifileio_la_LIBADD = $(CURL_LIBS) libscifileio-algo.la
 
 #### Target ######
 modulename=fileio
@@ -175,7 +175,14 @@ libscifileio_la_etc_DATA = etc/fileio.quit etc/fileio.start
 
 #### fileio : include files ####
 libscifileio_la_includedir=$(pkgincludedir)
-libscifileio_la_include_HEADERS = includes/getFullFilename.h \
-includes/dynlib_fileio.h
+libscifileio_la_include_HEADERS = \
+includes/getFullFilename.h \
+includes/dynlib_fileio.h \
+includes/FileExist.h \
+includes/expandPathVariable.h \
+includes/scicurdir.h \
+includes/isdir.h \
+includes/fullpath.h
+
 
 include $(top_srcdir)/Makefile.incl.am

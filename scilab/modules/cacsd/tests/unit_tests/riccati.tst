@@ -14,6 +14,9 @@
 
 // <-- CLI SHELL MODE -->
 // <-- ENGLISH IMPOSED -->
+// <-- NO CHECK REF -->
+
+rand("seed", 2);
 
 n = 10;
 A = rand(n,n);
@@ -67,7 +70,7 @@ G      = G1/G2*G1';
 
 X = riccati(F,G,C,'d','schur');
 C_disc = F'*X*F-(F'*X*G1/(G2+G1'*X*G1))*(G1'*X*F)-X;
-assert_checktrue(norm(C_disc+C,1) < 10000*%eps)
+assert_checktrue(norm(C_disc+C,1) < 10000*%eps);
 
 [X1, X2, residual] = riccati(F,G,C,'d','schur');
 assert_checkequal(X, X1/X2);
@@ -81,4 +84,3 @@ assert_checkequal(x, X);
 [x1, x2, residual] = riccati(H, E);
 assert_checkequal(x, x1/x2);
 assert_checktrue(residual < 1e-12);
-

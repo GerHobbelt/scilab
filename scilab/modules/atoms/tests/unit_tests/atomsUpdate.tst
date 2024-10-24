@@ -8,23 +8,9 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 
-load("SCI/modules/atoms/macros/atoms_internals/lib");
 exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// We need a clean version
-// =============================================================================
-if ~isempty( atomsGetInstalled() ) then pause, end
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Do not use the autoload system
-// =============================================================================
-atomsSetConfig("autoloadAddAfterInstall","False");
-atomsSetConfig("Verbose" ,"False");
-
 
 // 1st test-case : Just install the toolbox 5
 // =============================================================================
@@ -276,12 +262,3 @@ if atomsGetInstalledStatus(["toolbox_1V6" "1.0-1"],"user")<>"A" then pause, end
 
 // Remove the module
 atomsRemove("toolbox_5V6","user");
-
-// no module should be installed
-if ~isempty( atomsGetInstalled() ) then pause, end
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);
-
-atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"));

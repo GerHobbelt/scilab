@@ -28,10 +28,9 @@ function demo_scilab_colormaps()
     a=gca();
     a.axes_visible = ["off", "on", "off"];
     a.auto_ticks = "off";
-    y_ticks = a.y_ticks;
-    y_ticks.locations = (1:size(colormapList, '*'))'
-    y_ticks.labels = colormapList($:-1:1)';
-    a.y_ticks = y_ticks;
+    locations = (1:size(colormapList, '*'))'
+    labels = colormapList($:-1:1)';
+    a.y_ticks = tlist(["ticks" "locations" "labels"], locations, labels);
     a.sub_ticks = [0 0]
 endfunction
 

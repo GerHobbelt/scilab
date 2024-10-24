@@ -517,7 +517,7 @@ public class SwingScilabConsole extends SciConsole implements SimpleConsole {
     public void helpOnTheKeyword() {
         String keyword = getSelectedText();
         /* Double the quote/double quote in order to avoid
-         * and error with the call of help()
+         * and error with the call of doc()
          */
         keyword = keyword.replaceAll("'", "''");
         keyword = keyword.replaceAll("\"", "\"\"");
@@ -527,7 +527,7 @@ public class SwingScilabConsole extends SciConsole implements SimpleConsole {
          * Last time I check, we needed some information
          * provided by the Scilab native engine
          */
-        InterpreterManagement.requestScilabExec("help('" + keyword + "')");
+        InterpreterManagement.requestScilabExec("doc('" + keyword + "')");
     }
 
     /**

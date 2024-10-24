@@ -21,6 +21,7 @@
     <refsynopsisdiv>
         <title>Seqüência de Chamamento</title>
         <synopsis>legends(strings,style,&lt;opt_args&gt;)
+            hdl = legends(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -133,6 +134,14 @@
                     </variablelist>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>hdl</term>
+                <listitem>
+                    <para>O argumento de classificação na sequência é reenviado para o identificador do objeto gráfico do tipo <literal>Legend</literal> criado pela função. Ele pode ser usado para
+                    modificador de propriedade (veja <link linkend="legend_properties">legend_properties</link>).
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -205,5 +214,16 @@ legends(['cos(t)';'cos(2*t)';'cos(3*t)'],[-1,2 3], opt=2, font_size=1 )
                 <link linkend="legend">legend</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

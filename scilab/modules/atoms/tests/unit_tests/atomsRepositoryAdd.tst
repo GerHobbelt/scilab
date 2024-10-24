@@ -9,12 +9,7 @@
 // <-- ENGLISH IMPOSED -->
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-
-load("SCI/modules/atoms/macros/atoms_internals/lib");
-exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// Backup config file
-atomsSaveConfig(%T);
+// <-- TEST WITH ATOMS -->
 
 // Override official repository for test purpose
 rep = atomsCreateLocalRepositoryFromDescription(SCI+"/modules/atoms/tests/unit_tests/sample.DESCRIPTION", "sample");
@@ -44,7 +39,3 @@ if isempty([ atomsRepositoryList("user") ; atomsRepositoryList("allusers")]) the
 
     if ~isempty([ atomsRepositoryList("user") ; atomsRepositoryList("allusers")]) then pause, end
 end
-
-// Restore Config
-atomsRestoreConfig(%T);
-atomsRepositorySetOfl(mgetl(SCI+"/modules/atoms/tests/unit_tests/repositories.orig"));

@@ -9,6 +9,7 @@
 // <-- CLI SHELL MODE -->
 // <-- LINUX ONLY -->
 // <-- NO CHECK REF -->
+// <-- INTERACTIVE TEST -->
 //
 // <-- Non-regression test for bug 13674 -->
 //

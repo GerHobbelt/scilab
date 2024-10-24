@@ -79,7 +79,6 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
     int iSim        = 0; // 1 : c function || 2 : macro
     int iAlgo       = 1; // 1 : qn || 2 : gc || 10 : nd
     int iMem        = 0;
-    int iGetArgs    = 0;
     int iIndSim     = 0;
     int iIndOpt     = 0;
     int iSaveI      = 0;
@@ -88,7 +87,6 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
     int iMode       = 1;
     int iWorkSize   = 0;
     int iWorkSizeI  = 0;
-    int iNitv       = 0;
     int io          = 0; // not used in scilab 6 and more
     int iPrint        = 0;
     int iZero       = 0;
@@ -407,7 +405,7 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
         }
 
         // alloc g output data
-        pdblG = new double[iSizeX0];
+        pdblG = new double[iSizeX0] { 0. };
 
         iPos++;
 
@@ -645,7 +643,6 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
                 }
                 else if (iIndSim < 0)
                 {
-                    Scierror(134, _("%s: Problem with initial constants in simul.\n"), "optim");
                     throw ast::ScilabException();
                 }
 
@@ -676,7 +673,6 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
                 }
                 else if (iIndSim < 0)
                 {
-                    Scierror(134, _("%s: Problem with initial constants in simul.\n"), "optim");
                     throw ast::ScilabException();
                 }
             }
@@ -745,7 +741,7 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
             iArret = 1;
         }
 
-        if (iContr == 1 && (iAlgo == 2 || iAlgo == 10) ||
+        if ((iContr == 1 && (iAlgo == 2 || iAlgo == 10)) ||
                 (iContr == 2 && iAlgo == 1 && pdblWork) ||
                 (iArret == 1))
         {
@@ -759,7 +755,6 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
             }
             else if (iIndSim < 0)
             {
-                Scierror(134, _("%s: Problem with initial constants in simul.\n"), "optim");
                 throw ast::ScilabException();
             }
 
@@ -782,11 +777,17 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
 
             int iItmax1   = iItMax;
             int iNap1     = iNap;
+            int iIndSim   = 0;
             double dEpsg1 = dEpsg;
 
             C2F(n1qn1)(costf, &iSizeX0, pdblX0, &dF, pdblG,
                        pdblVar, &dEpsg, &iMode, &iItMax, &iNap, &iPrint, &io, pdblWork,
-                       piIzs, pfRzs, pdblDzs);
+                       piIzs, pfRzs, pdblDzs, &iIndSim);
+
+            if (iIndSim < 0)
+            {
+                throw ast::ScilabException();
+            }
 
             dEpsg = sqrt(dEpsg);
 
@@ -852,10 +853,17 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
 
             iIndSim = 4;
             costf(&iIndSim, &iSizeX0, pDblX0->get(), &dF, pdblG, piIzs, pfRzs, pdblDzs);
+            if (iIndSim < 0)
+            {
+                throw ast::ScilabException();
+            }
             C2F(n1qn3)( costf, C2F(fuclid), C2F(ctonb), C2F(ctcab), &iSizeX0, pdblX0,
                         &dF, pdblG, &dxmin, &df0, &dEpsg, &iPrint, &io, &iMode, &iItMax,
-                        &iNap, pdblWork, &iWorkSize, piIzs, pfRzs, pdblDzs);
-
+                        &iNap, pdblWork, &iWorkSize, piIzs, pfRzs, pdblDzs, &iIndSim);
+            if (iIndSim < 0)
+            {
+                throw ast::ScilabException();
+            }                        
             switch (iMode)
             {
                 case 0 :
@@ -915,8 +923,11 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
             C2F(n1fc1)(costf, C2F(fuclid), &iSizeX0, pdblX0, &dF, pdblG,
                        pdblEpsx, &df0, &dEpsf, &dTol, &iPrint, &io, &iMode,
                        &iItMax, &iNap, &iMem, piWork, pdblWork, pdblWork2,
-                       piIzs, pfRzs, pdblDzs);
-
+                       piIzs, pfRzs, pdblDzs, &iIndSim);
+            if (iIndSim < 0)
+            {
+                throw ast::ScilabException();
+            }
             switch (iMode)
             {
                 case 0 :
@@ -959,7 +970,11 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
             iIndOpt = 1 + pDblWork ? 1 : 0;
             C2F(qnbd)(&iIndOpt, costf, &iSizeX0, pdblX0, &dF, pdblG, &iPrint, &io, &dTol, &iNap,
                       &iItMax, &dEpsf, &dEpsg, pdblEpsx, &df0, pdblBinf, pdblBsub,
-                      &iNfac, pdblWork, &iWorkSize, piWork, &iWorkSizeI, piIzs, pfRzs, pdblDzs);
+                      &iNfac, pdblWork, &iWorkSize, piWork, &iWorkSizeI, piIzs, pfRzs, pdblDzs, &iIndSim);
+            if (iIndSim < 0)
+            {
+              throw ast::ScilabException();
+            }
 
             if (checkOptimError(iArret, iIndOpt, iPrint, dEpsg))
             {
@@ -991,8 +1006,12 @@ types::Function::ReturnValue sci_optim(types::typed_list &in, types::optional_li
             C2F(gcbd)(&iIndOpt, costf, C2F(optim).nomsub, &iSizeX0, pdblX0, &dF, pdblG,
                       &iPrint, &io, &dTol, &iNap, &iItMax, &dEpsf, &dEpsg, pdblEpsx, &df0,
                       pdblBinf, pdblBsub, &iNfac, pdblWork, &iWorkSize, piWork, &iWorkSizeI,
-                      piIzs, pfRzs, pdblDzs);
+                      piIzs, pfRzs, pdblDzs, &iIndSim);
 
+            if (iIndSim < 0)
+            {
+                 throw ast::ScilabException();
+            }
             if (checkOptimError(iArret, iIndOpt, iPrint, dEpsg))
             {
                 throw ast::ScilabException();

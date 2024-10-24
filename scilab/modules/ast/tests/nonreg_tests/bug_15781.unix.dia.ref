@@ -12,10 +12,8 @@
 //
 // <-- Short Description -->
 // display of complex matrix is ugly.
-n=4
- n = 
-   4.
-a=testmatrix("magic",4);
+n=4;
+a=magic(n);
 for f = ["v","e"]
     format(f)
     x=complex(cos(a),sin(a));
@@ -93,7 +91,7 @@ end
   -0.5493061 - 1.5707963i
    0.        - 1.5707963i
    0.5493061 - 1.5707963i
-   Inf       + Nani      
+   Nan       + Nani      
    0.804719  + 3.1415927i
    0.5493061 + 3.1415927i
          column 1 to 2
@@ -164,7 +162,7 @@ end
   -5.493D-01 - 1.571D+00i
    0.000D+00 - 1.571D+00i
    5.493D-01 - 1.571D+00i
-   Inf       + Nani      
+   Nan       + Nani      
    8.047D-01 + 3.142D+00i
    5.493D-01 + 3.142D+00i
 format("v")

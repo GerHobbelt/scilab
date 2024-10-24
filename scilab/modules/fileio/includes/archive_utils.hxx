@@ -40,7 +40,8 @@ static std::map<std::wstring, int> format = {
     {L"tar_pax_restricted", ARCHIVE_FORMAT_TAR_PAX_RESTRICTED},
     {L"tar_gnutar", ARCHIVE_FORMAT_TAR_GNUTAR},
     {L"zip", ARCHIVE_FORMAT_ZIP},
-    {L"7zip", ARCHIVE_FORMAT_7ZIP}
+    {L"7zip", ARCHIVE_FORMAT_7ZIP},
+    {L"raw", ARCHIVE_FORMAT_RAW}
     // {L"empty", ARCHIVE_FORMAT_EMPTY},
     // {L"base_mask", ARCHIVE_FORMAT_BASE_MASK},
     // {L"cpio", ARCHIVE_FORMAT_CPIO},
@@ -60,7 +61,6 @@ static std::map<std::wstring, int> format = {
     // {L"ar_gnu", ARCHIVE_FORMAT_AR_GNU},
     // {L"ar_bsd", ARCHIVE_FORMAT_AR_BSD},
     // {L"mtree", ARCHIVE_FORMAT_MTREE},
-    // {L"raw", ARCHIVE_FORMAT_RAW},
     // {L"xar", ARCHIVE_FORMAT_XAR},
     // {L"lha", ARCHIVE_FORMAT_LHA},
     // {L"cab", ARCHIVE_FORMAT_CAB},

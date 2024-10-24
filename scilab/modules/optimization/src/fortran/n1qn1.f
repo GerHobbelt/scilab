@@ -11,7 +11,8 @@ c For more information, see the COPYING file which you should have received
 c along with this program.
 c
       subroutine n1qn1 (simul,n,x,f,g,var,eps,
-     1     mode,niter,nsim,iprint,lp,zm,izs,rzs,dzs)
+     1     mode,niter,nsim,iprint,lp,zm,izs,rzs,dzs,
+     1    indic)
 c
 c!but
 c     minimisation d une fonction reguliere sans contraintes
@@ -103,7 +104,7 @@ c!
       ngb=nxb+n
       call n1qn1a (simul,n,x,f,g,var,eps,mode,
      1 niter,nsim,iprint,lp,zm,zm(nd),zm(nw),zm(nxa),zm(nga),
-     2 zm(nxb),zm(ngb),izs,rzs,dzs)
+     2 zm(nxb),zm(ngb),izs,rzs,dzs,indic)
       if (iprint.gt.0) then
        write(bufstr,753) sqrt(eps)
        call basout(io ,lp ,bufstr(1:lnblnk(bufstr)))

@@ -58,6 +58,7 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"eye", &sci_eye, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"floor", &sci_floor, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"frexp", &sci_frexp, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_gallery", &sci_gallery, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"gsort", &sci_gsort, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"imag", &sci_imag, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"imult", &sci_imult, MODULE_NAME));
@@ -102,14 +103,14 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"atanh", &sci_atanh, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"isvector", &sci_isvector, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"issquare", &sci_issquare, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"vander", &sci_vander, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"isempty", &sci_isempty, MODULE_NAME));
     return 1;
 }
 
 
 bool getDimsFromArguments(types::typed_list& in, const std::string& _pstName, int* _iDims, int** _piDims, bool* _alloc)
 {
-    types::Double* pOut = 0;
-
     *_alloc = false;
     *_iDims = 0;
     *_piDims = NULL;

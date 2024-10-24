@@ -47,12 +47,12 @@ ScilabJavaEnvironment * ScilabJavaEnvironment::instance = 0;
 bool ScilabJavaEnvironment::usable = true;
 
 ScilabJavaEnvironment::ScilabJavaEnvironment() :
-    helper(*new JavaOptionsHelper()),
-    gwOptions(*new ScilabGatewayOptions()),
-    wrapper(*new ScilabJavaEnvironmentWrapper(helper)),
     traceEnabled(false),
     isInit(false),
-    scilabStream(*new ScilabStream()) { }
+    scilabStream(*new ScilabStream()),
+    helper(*new JavaOptionsHelper()),
+    gwOptions(*new ScilabGatewayOptions()),
+    wrapper(*new ScilabJavaEnvironmentWrapper(helper)) { }
 
 ScilabJavaEnvironment::~ScilabJavaEnvironment()
 {
@@ -64,6 +64,7 @@ ScilabJavaEnvironment::~ScilabJavaEnvironment()
 
 int ScilabJavaEnvironment::start()
 {
+    // corner case in javasci: NWNI mode can be set
     if (getScilabMode() == SCILAB_NWNI)
     {
         throw ScilabJavaException(__LINE__, __FILE__, "'Java from Scilab' module is disabled in -nwni mode");

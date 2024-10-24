@@ -8,26 +8,12 @@
 // <-- CLI SHELL MODE -->
 // <-- ENGLISH IMPOSED -->
 // <-- NO CHECK REF -->
+// <-- TEST WITH ATOMS -->
 
-load("SCI/modules/atoms/macros/atoms_internals/lib");
 exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce");
-
-// If previous test did not end properly, restore, else backup config file
-atomsRestoreConfig(%T);
-atomsSaveConfig();
-
-// Force config
-atomsSetConfig("autoloadAddAfterInstall", "False");
-atomsSetConfig("Verbose", "False");
-atomsSetConfig("offLine", "False");
-atomsRepositoryReset();
 
 // Load the 1st scenario : See scene10.test.atoms.scilab.org.txt
 // =============================================================================
 atomsLoadTestScene("scene10");
 
 atomsList();
-
-// Restore original values
-// =============================================================================
-atomsRestoreConfig(%T);

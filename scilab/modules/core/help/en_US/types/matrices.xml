@@ -70,9 +70,6 @@ E=['A11','A12';'A21','A22']
             <member>
                 <link linkend="hypermatrices">hypermatrices</link>
             </member>
-            <member>
-                <link linkend="testmatrix">testmatrix</link>
-            </member>
         </simplelist>
     </refsection>
 </refentry>

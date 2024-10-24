@@ -14,8 +14,9 @@
  */
 #include "basic_functions.h"
 #include <string.h>
+#include "stdio.h"
 
-void franck_matrix(int _iSize, double *_pData)
+void frank_matrix(int _iSize, double *_pData)
 {
     int iIndex1		= 0;
     int iIndex2		= 0;
@@ -40,7 +41,7 @@ void franck_matrix(int _iSize, double *_pData)
     }
 }
 
-void hilb_matrix(int _iSize, double *_pData)
+void invhilb_matrix(int _iSize, double *_pData)
 {
     int iIndex1		= 0;
     int iIndex2		= 0;
@@ -65,6 +66,22 @@ void hilb_matrix(int _iSize, double *_pData)
             dblTemp = -((_iSize - iIndex2) * dblTemp * (_iSize + iIndex2)) / pow(iIndex2, 2);
             _pData[iIndex1 * _iSize + iIndex2] = dblTemp / (iIndex1 + iIndex2 + 1);
             _pData[iIndex2 * _iSize + iIndex1] = _pData[iIndex1 * _iSize + iIndex2];
+        }
+    }
+}
+
+void hilb_matrix(int _iSize, double *_pData)
+{
+    int iIndex1		= 0;
+    int iIndex2		= 0;
+    double dblTemp	= 1;
+
+    memset(_pData, 0x00, sizeof(double) * _iSize * _iSize);
+    for (iIndex1 = 0; iIndex1 < _iSize; iIndex1++)
+    {
+        for (iIndex2 = 0; iIndex2 < _iSize; iIndex2++)
+        {
+            _pData[iIndex1 * _iSize + iIndex2] = (dblTemp / (iIndex1 + iIndex2 + 1));
         }
     }
 }

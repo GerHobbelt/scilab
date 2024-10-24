@@ -13,9 +13,9 @@
 // <-- Short Description -->
 // display of complex matrix is ugly.
 
-n=4
+n=4;
 
-a=testmatrix("magic",4);
+a=magic(n);
 
 for f = ["v","e"]
     format(f)

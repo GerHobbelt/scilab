@@ -31,11 +31,10 @@ extern "C"
 #include "Scierror.h"
 #include "scifunctions.h"
 #include "elem_common.h"
-#include "configvariable_interface.h"
 #include "sciprint.h"
-#include "common_structure.h"
 #include "sci_malloc.h"
 #include "sciprint.h"
+#include "common_structure.h"
 }
 /*--------------------------------------------------------------------------*/
 
@@ -616,6 +615,7 @@ types::Function::ReturnValue sci_ode(types::typed_list &in, int _iRetCount, type
     double* lsr001d = &(C2F(lsr001).rownr3[0]);
     int* lsr001i    = &(C2F(lsr001).lg0);
     int* eh0001i    = &(C2F(eh0001).mesflg);
+    int* ierode_ierror  = &(C2F(ierode).iero);
 
     // get %ODEOPTIONS
     types::InternalType* pIT = symbol::Context::getInstance()->get(symbol::Symbol(L"%ODEOPTIONS"));
@@ -1328,6 +1328,11 @@ types::Function::ReturnValue sci_ode(types::typed_list &in, int _iRetCount, type
                         strMeth = "lsoda";
                         C2F(lsoda)(ode_f, YSize, pdYData, &t0, &t, &itol, rtol, atol, &itask, &istate, &iopt, rwork, &rworkSize, iwork, &iworkSize, bFuncJac ? ode_jac : NULL, &jt);
                     }
+                }
+
+                if (*ierode_ierror > 0)
+                {
+                    throw ast::InternalError(ConfigVariable::getLastErrorMessage().c_str());                        
                 }
 
                 // check error

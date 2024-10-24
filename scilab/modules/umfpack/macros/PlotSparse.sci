@@ -89,7 +89,7 @@ function [] = PlotSparse(A, style)
     ca.tight_limits="on";
 
     // information about nnz
-    captions(e1, "nnz = " + string(nnz(A)), "lower_caption");
+    legend(e1, "nnz = " + string(nnz(A)), "lower_caption");
 
     drawnow()
 

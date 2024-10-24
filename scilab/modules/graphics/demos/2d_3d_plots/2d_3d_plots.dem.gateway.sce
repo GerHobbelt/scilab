@@ -29,7 +29,8 @@ subdemolist = [
 "contour (3d) 2" , "contour_3d_2.dem.sce"    ; ..
 "contour (3d) 3" , "contour_3d_3.dem.sce"    ; ..
 "contour (3d) 4" , "contour_3d_4.dem.sce"    ; ..
-"subplot"        , "subplot.dem.sce"         ;
+"subplot"        , "subplot.dem.sce"         ; ..
+"surf"           , "surf.dem.sce"            ;
 ];
 
 subdemolist(:,2) = demopath + subdemolist(:,2);

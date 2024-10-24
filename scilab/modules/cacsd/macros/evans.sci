@@ -226,7 +226,7 @@ function evans(n,d,kmax)
         E.children(k).display_function = "formatEvansTip";
         E.children(k).display_function_data = kk;
     end
-    c = captions(lhandle,legs($:-1:1),"lower_caption")
+    c = %_legend(lhandle,legs($:-1:1),"lower_caption")
     c.background = a.background;
 
     a.data_bounds = data_bounds;

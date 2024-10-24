@@ -5,6 +5,8 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- NO CHECK REF -->
+
 // <-- Non-regression test for bug 5330 -->
 //
 // <-- GitLab URL -->
@@ -13,5 +15,6 @@
 // <-- Short Description -->
 // "help toto tata" returns a error
 
-ierr = execstr('help toto tata','errcatch');
-if ierr <> 0 then pause,end
+ierr = execstr('doc toto tata','errcatch');
+assert_checkequal(ierr, 0);
+

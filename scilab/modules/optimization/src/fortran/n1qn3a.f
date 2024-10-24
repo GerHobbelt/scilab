@@ -12,7 +12,7 @@ c along with this program.
 c
       subroutine n1qn3a (simul,prosca,ctonb,ctcab,n,x,f,g,dxmin,df1,
      /                   epsg,iprint,io,mode,niter,nsim,m,d,gg,diag,aux,
-     /                   alpha,ybar,sbar,izs,rzs,dzs)
+     /                   alpha,ybar,sbar,izs,rzs,dzs,indic)
 c----
 c
 c     Code d'optimisation proprement dit.
@@ -21,7 +21,7 @@ c----
 c
 c         arguments
 c
-      integer n,iprint,io,mode,niter,nsim,m,izs(1)
+      integer n,iprint,io,mode,niter,nsim,m,izs(1),indic
       real rzs(1)
       double precision x(n),f,g(n),dxmin,df1,epsg,d(n),gg(n),diag(n),
      /    aux(n),alpha(m),ybar(n,m),sbar(n,m),dzs(1)
@@ -29,7 +29,7 @@ c
 c
 c         variables locales
 c
-      integer i,iter,moderl,isim,jmin,jmax,indic
+      integer i,iter,moderl,isim,jmin,jmax
       double precision r1,t,tmin,tmax,gnorm,eps1,ff,preco,precos,ys,den,
      /    dk,dk1,ps,ps2,hp0
       character bufstr*(4096)
@@ -103,7 +103,7 @@ c
               indic=1
               call simul (indic,n,x,f,g,izs,rzs,dzs)
 c             error in user function
-              if(indic.eq.0) goto 1000
+              if(indic.le.0) goto 1000
           endif
       endif
       if (iprint.ge.4) then

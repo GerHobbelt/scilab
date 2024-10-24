@@ -307,6 +307,12 @@
             </listitem>
             <listitem>
                 <para>
+                    &lt;-- SHARED SCIHOME --&gt;
+                    Lorsque le répertoire <link linkend="SCIHOME">SCIHOME</link> est partagé par le Scilab appelant.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
                     &lt;-- WINDOWS ONLY --&gt;
                     Ignore le test sur tout autre système d'exploitation que Windows.
                 </para>

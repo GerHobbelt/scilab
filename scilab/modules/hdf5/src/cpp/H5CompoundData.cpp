@@ -32,8 +32,7 @@ H5CompoundData::H5CompoundData(H5Object & _parent, const hsize_t _totalSize, con
         char * mname = H5Tget_member_name(compoundType, i);
         std::string name(mname);
 
-        //free crash: it will be fix with hdf5 libs >= 1.8.16 with new function h5free_memory
-        //h5free_memory(mname);
+        H5free_memory(mname);
 
         size_t offs = H5Tget_member_offset(compoundType, i);
         FieldInfo * info = 0;
@@ -160,7 +159,7 @@ std::string H5CompoundData::toString(const unsigned int indentLevel) const
     return os.str();
 }
 
-std::string H5CompoundData::dump(std::map<haddr_t, std::string> & alreadyVisited, const unsigned int indentLevel) const
+std::string H5CompoundData::dump(std::map<std::string, std::string> & alreadyVisited, const unsigned int indentLevel) const
 {
     return H5DataConverter::dump(alreadyVisited, indentLevel, (int)ndims, dims, *this, false);
 }

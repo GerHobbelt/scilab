@@ -42,10 +42,10 @@ ref_file = SCI+'/modules/fileio/tests/unit_tests/text.txt';
   file3rt = mopen(SCI+'/modules/fileio/tests/unit_tests/text.txt', 'rt');
   file3wt = mopen(TMPDIR + '/textcopy.txt', 'wt');
 
-  mseek (0, file3rt, 'end');
-  sizefile3rt = mtell(file3rt);
+  // Use fileinfo for text file
+  // See: https://stackoverflow.com/questions/55673446/fseek-only-working-with-fread-call-after-rather-than-read
+  sizefile3rt = fileinfo(SCI+'/modules/fileio/tests/unit_tests/text.txt')(1);
   
-  mseek (0, file3rt, 'set');
   for i = 0:sizefile3rt,
     mputstr(mgetstr(1,  file3rt),file3wt);
   end

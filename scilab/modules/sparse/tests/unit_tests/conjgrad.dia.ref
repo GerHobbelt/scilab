@@ -63,7 +63,7 @@ assert_checkequal ( flag , 0 );
 assert_checktrue ( err <= %eps );
 assert_checkequal ( iter , 0 );
 // Try a hard case where preconditionning is necessary
-// This is the Hilbert 5x5 matrix : A = 1/(testmatrix("hilb",5))
+// This is the Hilbert 5x5 matrix : A = hilbm(5);
 A4 = [
 1.                          0.5000000000000001110223    0.3333333333333334258519    0.2500000000000000555112    0.2000000000000000666134
 0.4999999999999982236432    0.3333333333333319825620    0.2499999999999988897770    0.1999999999999990951682    0.1666666666666659080143
@@ -164,7 +164,7 @@ assert_checkequal ( flag , 0 );
 assert_checktrue ( err <= %eps );
 assert_checkequal ( iter , 0 );
 // Try a hard case where preconditionning is necessary
-// This is the Hilbert 5x5 matrix : A = 1/(testmatrix("hilb",5))
+// This is the Hilbert 5x5 matrix : A = hilbm(5);
 M = A4;
 [xcomputed, flag, err, iter, res] = conjgrad(A4, b4, "cgs", %M=M, tol=%eps, maxIter=3);
 assert_checkalmostequal ( xcomputed , expected, 1.e8*%eps );
@@ -242,7 +242,7 @@ assert_checkequal ( flag , 0 );
 assert_checktrue ( err <= %eps );
 assert_checkequal ( iter , 0 );
 // Try a hard case where preconditionning is necessary
-// This is the Hilbert 5x5 matrix : A = 1/(testmatrix("hilb",5))
+// This is the Hilbert 5x5 matrix : A = hilbm(5);
 M = A4;
 [xcomputed, flag, err, iter, res] = conjgrad(A4, b4, "bicg", %M=M, tol=%eps, maxIter=3);
 assert_checkalmostequal ( xcomputed , expected, 1.e8*%eps );
@@ -310,7 +310,7 @@ assert_checkequal ( flag , 0 );
 assert_checktrue ( err <= %eps );
 assert_checkequal ( iter , 0 );
 // Try a hard case where preconditionning is necessary
-// This is the Hilbert 5x5 matrix : A = 1/(testmatrix("hilb",5))
+// This is the Hilbert 5x5 matrix : A = hilbm(5);
 M = A4;
 [xcomputed, flag, err, iter, res] = conjgrad(A4, b4, "bicgstab", %M=M, tol=%eps, maxIter=3);
 assert_checkalmostequal ( xcomputed , expected, 1.e8*%eps );

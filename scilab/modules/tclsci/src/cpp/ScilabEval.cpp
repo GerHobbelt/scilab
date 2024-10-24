@@ -16,6 +16,7 @@
 #include "configvariable.hxx"
 #include "threadmanagement.hxx"
 #include "runner.hxx"
+#include "scilabexception.hxx"
 
 extern "C"
 {
@@ -31,13 +32,11 @@ extern "C"
 /*--------------------------------------------------------------------------*/
 int TCL_EvalScilabCmd(ClientData clientData, Tcl_Interp * theinterp, int objc, CONST char ** argv)
 {
-    int ierr = 0;
     int isInterruptible = 1;
     char *pstCommand = NULL;
 
     if (argv[1] != (char *)0)
     {
-        int ind = 0;
         pstCommand = os_strdup(argv[1]);
         if (pstCommand == NULL)
         {
@@ -62,9 +61,6 @@ int TCL_EvalScilabCmd(ClientData clientData, Tcl_Interp * theinterp, int objc, C
             // execute all commands before return to scilab prompt
             while (isEmptyCommandQueue() == false)
             {
-                // Wake up Runner waiting for my execution ends
-                ThreadManagement::SendAwakeRunnerSignal();
-                ThreadManagement::WaitForRunMeSignal();
                 try
                 {
                     StaticRunner_launch();
@@ -81,7 +77,6 @@ int TCL_EvalScilabCmd(ClientData clientData, Tcl_Interp * theinterp, int objc, C
         }
         else if ( (argv[2] != (char *)0) && (strncmp(argv[2], "sync", 4) == 0) )
         {
-            command_origin_t iCmdOrigin = NONE;
             isInterruptible = ( (argv[3] != (char *)0) && (strncmp(argv[3], "seq", 3) == 0) ) ? 0 : 1;
             StoreCommandWithFlags(pstCommand, 1/*is prioritary*/, isInterruptible, TCLSCI/*command origin*/);
         }

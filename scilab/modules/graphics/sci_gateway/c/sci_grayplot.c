@@ -28,6 +28,8 @@
 #include "sciCall.h"
 #include "localization.h"
 #include "Scierror.h"
+#include "HandleManagement.h"
+#include "CurrentObject.h"
 
 /*--------------------------------------------------------------------------*/
 int sci_grayplot(char *fname, void *pvApiCtx)
@@ -71,6 +73,8 @@ int sci_grayplot(char *fname, void *pvApiCtx)
         return 0;
     }
     CheckInputArgument(pvApiCtx, 3, 7);
+    CheckOutputArgument(pvApiCtx, 0, 1);
+
 
     if (getOptionals(pvApiCtx, fname, opts) == 0)
     {
@@ -237,7 +241,21 @@ int sci_grayplot(char *fname, void *pvApiCtx)
     {
         freeAllocatedSingleString(strf);
     }
-    AssignOutputVariable(pvApiCtx, 1) = 0;
+    if (nbOutputArgument(pvApiCtx) == 1)
+    {
+        if (createScalarHandle(pvApiCtx, nbInputArgument(pvApiCtx) + 1, getHandle(getCurrentObject())))
+        {
+            printError(&sciErr, 0);
+            Scierror(999, _("%s: Memory allocation error.\n"), fname);
+            return 1;
+        }
+        AssignOutputVariable(pvApiCtx, 1) = nbInputArgument(pvApiCtx) + 1;
+    }
+    else
+    {
+        AssignOutputVariable(pvApiCtx, 1) = 0;
+    }
+
     ReturnArguments(pvApiCtx);
     return 0;
 }

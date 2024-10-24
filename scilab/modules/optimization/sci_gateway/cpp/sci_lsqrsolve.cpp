@@ -20,6 +20,7 @@
 #include "string.hxx"
 #include "list.hxx"
 #include "optimizationfunctions.hxx"
+#include "configvariable.hxx"
 
 extern "C"
 {
@@ -40,7 +41,6 @@ types::Function::ReturnValue sci_lsqrsolve(types::typed_list &in, int _iRetCount
     double* pdblDiag = NULL;
 
     int iSizeX      = 0;
-    int iWorkSize   = 0;
     int iInfo       = 0;
     int iM          = 0;
     int iPos        = 0;
@@ -368,27 +368,25 @@ types::Function::ReturnValue sci_lsqrsolve(types::typed_list &in, int _iRetCount
     pDblV = new types::Double(iM, 1);
 
     char const* pstrFunc = "fct";
-    try
+    if (bJac)
     {
-        if (bJac)
-        {
-            pstrFunc = "jac";
-            C2F(lmder)( lsqrjac, &iM, &iSizeX, pDblX->get(), pDblV->get(), pdblJac, &iM, &dFtol,
-                        &dXtol, &dGtol, &iMaxfev, pdblDiag, &iMode, &dFactor, &iNprint, &iInfo,
-                        &iNfev, &iNjev, piPvt, pDblQtf, pdblWork1, pdblWork2, pdblWork3, pdblWork4);
-        }
-        else
-        {
-            C2F(lmdif)( lsqrfct, &iM, &iSizeX, pDblX->get(), pDblV->get(), &dFtol, &dXtol, &dGtol,
-                        &iMaxfev, &dEpsfcn, pdblDiag, &iMode, &dFactor, &iNprint, &iInfo, &iNfev,
-                        pdblJac, &iM, piPvt, pDblQtf, pdblWork1, pdblWork2, pdblWork3, pdblWork4);
-        }
+        pstrFunc = "jac";
+        C2F(lmder)( lsqrjac, &iM, &iSizeX, pDblX->get(), pDblV->get(), pdblJac, &iM, &dFtol,
+                    &dXtol, &dGtol, &iMaxfev, pdblDiag, &iMode, &dFactor, &iNprint, &iInfo,
+                    &iNfev, &iNjev, piPvt, pDblQtf, pdblWork1, pdblWork2, pdblWork3, pdblWork4);
     }
-    catch (const ast::InternalError &e)
+    else
     {
-        char* pstrMsg = wide_string_to_UTF8(e.GetErrorMessage().c_str());
-        sciprint(_("%s: exception caught in '%s' subroutine.\n"), "lsqrsolve", pstrFunc);
+        C2F(lmdif)( lsqrfct, &iM, &iSizeX, pDblX->get(), pDblV->get(), &dFtol, &dXtol, &dGtol,
+                    &iMaxfev, &dEpsfcn, pdblDiag, &iMode, &dFactor, &iNprint, &iInfo, &iNfev,
+                    pdblJac, &iM, piPvt, pDblQtf, pdblWork1, pdblWork2, pdblWork3, pdblWork4);
+    }
+    /* If error has been catched in fct or jac */
+    if (iInfo == -1)
+    {
+        char* pstrMsg = wide_string_to_UTF8(ConfigVariable::getLastErrorMessage().c_str());
         Scierror(999, pstrMsg);
+
         FREE(pstrMsg);
         delete pDblX;
         delete[] piPvt;

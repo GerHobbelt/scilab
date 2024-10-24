@@ -16,6 +16,7 @@
 #include <vector>
 #include "api_scilab.h"
 #include "configvariable.hxx"
+#include "function.hxx"
 
 extern "C"
 {
@@ -53,8 +54,8 @@ static const char fname[] = "call";
 
 int sci_call(scilabEnv env, int nin, scilabVar* in, int nopt, scilabOpt opt, int nout, scilabVar* out)
 {
-    std::vector<Parameter> params(30);
-    std::vector<int> output_order(nout);
+    std::vector<Parameter> params(MAX_OUTPUT_VARIABLE);
+    std::vector<int> output_order(MAX_OUTPUT_VARIABLE, 0);
     wchar_t* interf = NULL;
     if (nin < 1)
     {

@@ -23,6 +23,7 @@
         <synopsis>barh(y)
             barh(x,y)
             barh([h],x,y [,width [,color [,style]]])
+            hdl = barh(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -72,6 +73,17 @@
                     <para>string, 'grouped' ou 'stacked' (padrão: 'grouped').</para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>hdl</term>
+                <listitem>
+                    <para>Esta saída opcional é um vetor contendo os identificadores de
+                      os objetos Polyline criados. Use <literal>hdl</literal> para modificar propriedades
+                      de um objeto específico ou de todos os objetos polilinha após serem criados. Para uma lista de
+                      propriedades, consulte <link linkend="polyline_properties">polyline_properties</link>.
+                    </para>
+                </listitem>
+            </varlistentry>
+
         </variablelist>
     </refsection>
     <refsection>
@@ -156,5 +168,16 @@ barh(x,y,0.2,'green');
                 <link linkend="polyline_properties">polyline_properties</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Histórico</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revdescription>
+                    Function returns the created handle(s).
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

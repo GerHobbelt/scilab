@@ -159,7 +159,6 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
     if (in[0]->isString() && in[0]->getAs<types::String>()->isScalar())
     {
         //1st argument is a path, parse file and execute it
-        int iParsePathLen = 0;
         types::String* pS = in[0]->getAs<types::String>();
 
         pwstFile = expandPathVariableW(pS->get(0));
@@ -188,7 +187,7 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
         ThreadManagement::LockParser();
         parser.parseFile(pwstTemp, L"exec");
         FREE(pwstTemp);
-        if (parser.getExitStatus() !=  Parser::Succeded)
+        if (parser.getExitStatus() != Parser::Succeded)
         {
             closeFile(file, iID, wstFile, pExp);
             if (bErrCatch)
@@ -285,9 +284,9 @@ types::Function::ReturnValue sci_exec(types::typed_list &in, int _iRetCount, typ
         // update where to set the name of the executed macro instead of "exec"
         ConfigVariable::WhereEntry lastWhere = ConfigVariable::getWhere().back();
         int iLine = lastWhere.m_line;
-        int iAbsLine = lastWhere.m_absolute_line;
+        Location loc = lastWhere.m_Location;
         ConfigVariable::where_end();
-        ConfigVariable::where_begin(iLine, iAbsLine, pMacro);
+        ConfigVariable::where_begin(iLine, pMacro, loc);
     }
     else
     {
