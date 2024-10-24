@@ -16,6 +16,11 @@
 // <-- Short Description -->
 // strange gray ramp in histogram with histplot()
 
+// Disable anti-aliasing to avoid minor differences in rendering linked to numerical precision
+// f1.data_bounds = [1,4.847D-27;2,1.5] vs f2.data_bounds = [1,0;2,1.5]
+old_aa = gdf().anti_aliasing;
+gdf().anti_aliasing = "off";
+
 f1 = scf();
 
 histplot(3,1:2);
@@ -45,3 +50,4 @@ res1  =  getmd5(fullfile(TMPDIR,"bug_15657_1.png"));
 res2  =  getmd5(fullfile(TMPDIR,"bug_15657_2.png"));
 assert_checkequal(res1,res2);
 
+gdf().anti_aliasing = old_aa;
