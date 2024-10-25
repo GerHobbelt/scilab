@@ -46,7 +46,7 @@ variables:
     value: "${CI_REGISTRY_IMAGE}/windows-builder"
     description: "Docker image to build Scilab on Windows"
   DOCKER_TAG:
-    value: "2025.0.0"
+    value: "branch-2025.1"
     description: "Docker tag to publish image on"
   SCILAB_COMMON_PATH:
     value: "${CI_PROJECT_DIR}\\..\\..\\..\\..\\scilab"

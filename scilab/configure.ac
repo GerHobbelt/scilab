@@ -44,7 +44,7 @@ fi
 
 # Change version here, other files will be updated at the end of configure
 SCILAB_VERSION_MAJOR=2025
-SCILAB_VERSION_MINOR=0
+SCILAB_VERSION_MINOR=1
 SCILAB_VERSION_MAINTENANCE=0
 AC_SUBST(SCILAB_VERSION_MAJOR)
 AC_SUBST(SCILAB_VERSION_MINOR)
@@ -2726,7 +2726,7 @@ if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
             -e "s|DEFAULT_SCI_VERSION_MESSAGE L\".*\"|DEFAULT_SCI_VERSION_MESSAGE L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
             ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.{in,vc}
     # put the correct text in DOCKER_TAG
-    sed -i -e "s|value: \"$DETECTED_VERSION\"|value: \"$SCILAB_BINARY_VERSION\"" ${SCI_SRCDIR}/../.gitlab-ci.yml
+    sed -i -e "s|value: \"branch-[0-9\.]*\"|value: \"branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" ${SCI_SRCDIR}/../.gitlab-ci.yml
     # update some help pages
     sed -i -e "s|scilab-[[0-9]]\+\(\.[[0-9]]\+\)\+|scilab-$SCILAB_BINARY_VERSION|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
     # update rc files
