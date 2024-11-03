@@ -1,16 +1,20 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2009 - DIGITEO - Vincent COUVERT
+// Copyright (C) 2024 - 3DS - Adeline CARNIS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
+//
 // <-- CLI SHELL MODE -->
-// <-- Non-regression test for bug 4759 -->
+// <-- NO CHECK REF -->
+//
+// <-- Non-regression test for issue 17272 -->
 //
 // <-- GitLab URL -->
-// https://gitlab.com/scilab/scilab/-/issues/4759
+// https://gitlab.com/scilab/scilab/-/issues/17272
 //
 // <-- Short Description -->
-// We should provide a better error message in nlev when called with no input argument
-execstr("nlev","errcatch");
-if lasterror()<>msprintf(gettext("%s: Wrong number of input arguments: %d or %d expected.\n"),"nlev",2,3) then bugmes();quit;end
+// datetime("1999-06", "InputFormat", "yyyy-MM") returned an error
+
+d = datetime("1999-06", "InputFormat", "yyyy-MM");
+assert_checkequal(string(d), "1999-06-01");
