@@ -1,7 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2010 - INRIA - Serge Steer <serge.steer@inria.fr>
-//
-// Copyright (C) 2012 - 2016 - Scilab Enterprises
+// Copyright (C) 2024 - UTC - Stéphane MOTTELET
 //
 // This file is hereby licensed under the terms of the GNU GPL v2.0,
 // pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -9,8 +7,11 @@
 // and continues to be available under such terms.
 // For more information, see the COPYING file which you should have received
 // along with this program.
-function datatipGUIEventHandler(win,x,y,ibut)
-    if ibut==-1000 then
-        clearglobal datatipGUIHandles datatipGUICurve datatipGUIwin
-    end
+
+function s = %XMLNs_fieldnames(b)
+    s = [
+    "href"
+    "prefix"
+    "_id"
+    ]
 endfunction
