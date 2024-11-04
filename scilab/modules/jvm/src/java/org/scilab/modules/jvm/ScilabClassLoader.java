@@ -13,8 +13,10 @@
 
 package org.scilab.modules.jvm;
 
+import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Paths;
 
 public class ScilabClassLoader extends URLClassLoader {
 
@@ -44,4 +46,16 @@ public class ScilabClassLoader extends URLClassLoader {
 	public Class loadClass(String name) throws ClassNotFoundException {
 		return super.loadClass(name);
 	}
+
+    /**
+     * Called by the JVM to support dynamic additions to the class path.
+     * Needed when debugging Javasci applications using Eclipse for example.
+     */
+    final void appendToClassPathForInstrumentation(String jar) {
+        try {
+            super.addURL(Paths.get(jar).toUri().toURL());
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        }
+    }
 }
