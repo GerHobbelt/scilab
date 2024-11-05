@@ -17,8 +17,8 @@
 // <-- Short Description -->
 // Wrong atoms default repository
 
-defaultRepo = atomsRepositoryList();
-v = getversion("scilab");
+defaultRepo = atomsRepositoryList()
+v = getversion("scilab")
 
 goodRepo = sprintf("https://atoms.scilab.org/%d.%d/TOOLBOXES/64", v(1), v(2));
 

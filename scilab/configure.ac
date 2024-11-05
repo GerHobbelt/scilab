@@ -2683,8 +2683,8 @@ if test ! -f modules/core/src/cpp/banner.cpp; then
    AC_MSG_ERROR([Could not find the Scilab banner file.])
 fi
 
-CURRENT_YEAR=`date "+%Y"`
-DETECTED_YEAR=`grep "Copyright (c) 2022-" ${SCI_SRCDIR}/modules/core/src/cpp/banner.cpp|sed -e "s/.*Copyright (c) 2022-\([[0-9]]*\).*/\1/g"`
+CURRENT_YEAR=$(date "+%Y")
+DETECTED_YEAR=$(grep "Copyright (c) 2022-" ${SCI_SRCDIR}/modules/core/src/cpp/banner.cpp|sed -e "s/.*Copyright (c) 2022-\([[0-9]]*\).*/\1/g")
 
 if test "$CURRENT_YEAR" != "$DETECTED_YEAR"; then
     sed -i -e "s| 2022-$DETECTED_YEAR | 2022-$CURRENT_YEAR |g" ${SCI_SRCDIR}/modules/core/src/cpp/banner.cpp ${SCI_SRCDIR}/modules/windows_tools/src/c/scilab_windows/console.c
@@ -2713,20 +2713,23 @@ fi
 if test ! -f ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg; then
     AC_MSG_ERROR([Could not find aboutscilab.svg file.])
 fi
-DETECTED_VERSION=`grep -m 1 ">Scilab" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg|sed -e "s/.*>Scilab //g"|sed -e "s/<.*//g"`
+DETECTED_VERSION=$(grep -m 1 ">Scilab" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg|sed -e "s/.*>Scilab //g"|sed -e "s/<.*//g")
 if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
     # alert the user
     AC_MSG_WARN([Migrating from version $DETECTED_VERSION to $SCILAB_BINARY_VERSION])
     AC_PATH_PROG(INKSCAPE, inkscape)
     # put the version into Version.incl
     echo "SCIVERSION=scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR" >$SCI_SRCDIR/Version.incl
-    # put the correct text in version.h
-    sed -i  -e "s|SCI_VERSION_STRING \".*\"|SCI_VERSION_STRING \"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
+    # put the correct text in version.h version.h.in version.h.vc
+    sed -i  -e "s|SCI_VERSION_MAJOR [[0-9]]\+|SCI_VERSION_MAJOR $SCILAB_VERSION_MAJOR|" \
+            -e "s|SCI_VERSION_MINOR [[0-9]]\+|SCI_VERSION_MINOR $SCILAB_VERSION_MINOR|" \
+            -e "s|SCI_VERSION_MAINTENANCE [[0-9]]\+|SCI_VERSION_MAINTENANCE $SCILAB_VERSION_MAINTENANCE|" \
+            -e "s|SCI_VERSION_STRING \".*\"|SCI_VERSION_STRING \"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
             -e "s|SCI_VERSION_WIDE_STRING L\".*\"|SCI_VERSION_WIDE_STRING L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
             -e "s|DEFAULT_SCI_VERSION_MESSAGE L\".*\"|DEFAULT_SCI_VERSION_MESSAGE L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
-            ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.{in,vc}
+            ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.in ${SCI_SRCDIR}/modules/core/includes/version.h.vc
     # put the correct text in DOCKER_TAG
-    sed -i -e "s|value: \"branch-[0-9\.]*\"|value: \"branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" ${SCI_SRCDIR}/../.gitlab-ci.yml
+    sed -i -e "s|value: \"branch-[[0-9\.]]\+\"|value: \"branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" ${SCI_SRCDIR}/../.gitlab-ci.yml
     # update some help pages
     sed -i -e "s|scilab-[[0-9]]\+\(\.[[0-9]]\+\)\+|scilab-$SCILAB_BINARY_VERSION|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
     # update rc files
