@@ -125,12 +125,14 @@
     </refsection>
     <refsection role="example">
         <title>Examples</title>
+        <para>Some examples use <link linkend="lambda">lambda</link> functions.</para>
         <para>
             <emphasis role="bold">example 1 - p = polyfit(x, y, n)</emphasis>
         </para>
         <para>
             <programlisting role="example"><![CDATA[
                 x = 1:5;
+                // Use lambda function
                 y = #(x) -> (-2*x.^4 + x.^3 - 5 * x.^2 + 6 *x -2);
                 p = polyfit(x, y(x), 3)
                 
@@ -146,8 +148,11 @@
         </para>
         <para>
             <programlisting role="example"><![CDATA[
+                function r = y(x)
+                    r = -2*x.^4 + x.^3 - 5 * x.^2 + 6 *x -2;
+                endfunction
+
                 x = 1:5;
-                y = #(x) -> (-2*x.^4 + x.^3 - 5 * x.^2 + 6 *x -2);
                 p = polyfit(x, y(x), %s^3)
                 
                 xx = linspace(1, 5, 100);
@@ -163,6 +168,7 @@
         <para>
             <programlisting role="example"><![CDATA[
                 x = 0:10;
+                // Use lambda function
                 y = #(x) -> (x.^3 - 3*x + 2);
 
                 [p, S, mu] = polyfit(x, y(x), 2)
