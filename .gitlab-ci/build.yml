@@ -144,10 +144,5 @@ linux:
           - debian:11
           - debian:12
   rules:
-    - changes:
-        paths:
-          - scilab/configure
-          - scilab/Makefile.in
-          - scilab/modules/Makefile.in
-          - scilab/modules/*/Makefile.in
+    - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Building Scilab/
       allow_failure: true
