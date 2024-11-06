@@ -56,13 +56,13 @@
             are powers of the <literal>x</literal> vector.
         </para>
         <para>
-            The Vandermonde matrix is a matrix defined by <latex>v(i,j) = x(i)^(j)</latex>, i.e 
+            The Vandermonde matrix is a matrix defined by <latex>v(i,j) = x(i)^{(j-1)}</latex>, i.e 
         </para>
         <para>
-            <latex>v = \begin{bmatrix} x_1^0 \ \ x_1^1 \ \ x_0^2 \ \ ... \ \ x_0^n 
-                \\ x_2^0 \ \ x_2^1 \ \ x_2^2 \ \ ... \ \ x_2^n 
+            <latex>v = \begin{bmatrix} x_1^0 \ \ x_1^1 \ \ x_1^2 \ \ ... \ \ x_1^{n-1} 
+                \\ x_2^0 \ \ x_2^1 \ \ x_2^2 \ \ ... \ \ x_2^{n-1}
                 \\ ... \ \ ... \ \ ... \ \ ... \ \ ...
-                \\ x_m^0 \ \ x_m^1 \ \ x_m^2 \ \ ... \ \ x_m^n  \end{bmatrix}
+                \\ x_m^0 \ \ x_m^1 \ \ x_m^2 \ \ ... \ \ x_m^{n-1}  \end{bmatrix}
             </latex>.
         </para>
         <para>
