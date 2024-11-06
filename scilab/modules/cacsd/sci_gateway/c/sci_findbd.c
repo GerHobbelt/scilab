@@ -430,7 +430,7 @@ int sci_findbd(char *fname, void* pvApiCtx)
     }
 
     // U(txm)
-    if ((iTASK == 1 && iCUSE == 2) || (iCUSE == 1 && iRhs > iIP))
+    if ((iTASK == 1 && iCUSE == 2) || (iCUSE == 1 && iRhs >= iIP))
     {
         int* piAddr = NULL;
         int iRows = 0;
