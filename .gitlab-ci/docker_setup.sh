@@ -15,7 +15,8 @@ where:
     -b, --builder DOCKER_LINUX_BUILDER    build the DOCKER_LINUX_BUILDER image, like CI_REGISTRY_IMAGE/linux-builder
     -p, --prebuild DOCKER_LINUX_PREBUILD  build the DOCKER_LINUX_PREBUILD image, like CI_REGISTRY_IMAGE/linux-prebuild
     -t, --testers                         build the CI_REGISTRY_IMAGE/{fedora, ubuntu, debian} images
-    
+    -r, --retag                           create a new tag with existing images
+
 Example to push images for mr325:
  docker login registry.gitlab.com/scilab/scilab
  .gitlab-ci/$(basename "$0") --registry registry.gitlab.com/scilab/scilab --builder registry.gitlab.com/scilab/scilab/linux-builder mr325
@@ -28,6 +29,7 @@ DOCKER_LINUX_BUILDER=""
 DOCKER_LINUX_PREBUILD=""
 DOCKER_TAG=""
 TESTERS=""
+CI_COMMIT_TAG=""
 while :
 do
   case "$1" in
@@ -65,6 +67,15 @@ do
     -t | --testers)
       TESTERS=testers
       shift 1
+      ;;
+    -r | --retag)
+      if [ $# -ne 0 ]; then
+        if test "$2" = -*; then
+          >&2 echo "Error: $1 expect a value"
+        fi
+        CI_COMMIT_TAG="$2"
+      fi
+      shift 2
       ;;
     --) # End of all options
       shift
@@ -122,6 +133,46 @@ if test -n "${TESTERS}"; then
   docker push "${CI_REGISTRY_IMAGE}/fedora-39:${DOCKER_TAG}"
   docker push "${CI_REGISTRY_IMAGE}/fedora-40:${DOCKER_TAG}"
   docker push "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}"
+fi
+
+if test -n "${CI_COMMIT_TAG}"; then
+  if test ! -n "${CI_REGISTRY_IMAGE}"; then
+    >&2 echo "Error: --registry argument is not set"
+    exit 1
+  fi
+
+  echo "Pulling images"
+  docker pull "${CI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/linux-prebuild:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/ubuntu-20.04:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/ubuntu-23.10:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/fedora-39:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/fedora-40:${DOCKER_TAG}"
+  docker pull "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}"
+
+  echo "Create tag from :${DOCKER_TAG} to :${CI_COMMIT_TAG} in registry ${CI_REGISTRY_IMAGE}"
+  docker image tag "${CI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/linux-builder:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/linux-prebuild:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/linux-prebuild:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/ubuntu-20.04:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/ubuntu-20.04:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/ubuntu-23.10:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/ubuntu-23.10:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/fedora-39:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/fedora-39:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/fedora-40:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/fedora-40:${CI_COMMIT_TAG}"
+  docker image tag "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/debian-12:${CI_COMMIT_TAG}"
+
+  echo "Pusing images"
+  docker push "${CI_REGISTRY_IMAGE}/linux-builder:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/linux-prebuild:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/ubuntu-20.04:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/ubuntu-23.10:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/fedora-39:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/fedora-40:${CI_COMMIT_TAG}"
+  docker push "${CI_REGISTRY_IMAGE}/debian-12:${CI_COMMIT_TAG}"
 fi
 
 exit 0
