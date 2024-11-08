@@ -18,6 +18,7 @@ builder_linux:
     - .gitlab-ci/docker_setup.sh --builder "${DOCKER_LINUX_BUILDER}" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
   rules:
+    - if: $BUILD_DOCKER_IMAGES
     # do not rebuild on contributor's fork
     - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
       when: never
@@ -46,6 +47,7 @@ prebuild_linux:
     - .gitlab-ci/docker_setup.sh --prebuild "${DOCKER_LINUX_PREBUILD}" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
   rules:
+    - if: $BUILD_DOCKER_IMAGES
     # do not rebuild on contributor's fork
     - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
       when: never
@@ -64,6 +66,7 @@ tester_linux:
     - .gitlab-ci/docker_setup.sh --testers --registry "${CI_REGISTRY_IMAGE}" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
   rules:
+    - if: $BUILD_DOCKER_IMAGES
     # do not rebuild on contributor's fork
     - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
       when: never
