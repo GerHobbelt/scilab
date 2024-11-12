@@ -9,6 +9,7 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 // <-- CLI SHELL MODE -->
+// <-- NO ASSERT FAILURE -->
 // <-- ENGLISH IMPOSED -->
 function flag = MY_assert_equal ( computed , expected )
   if computed==expected then

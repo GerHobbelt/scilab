@@ -451,6 +451,7 @@ function status = test_module(_params)
     else
         // named after the module
         [_, d] = fileparts(fullpath(_params.moduleName));
+        d = strsubst(d, "|", filesep()); // Manage case of subdirectory such as "development_tools|assert"
         result_path = params.output_dir + filesep() + d + filesep();
     end
     _params.output_dir = result_path;

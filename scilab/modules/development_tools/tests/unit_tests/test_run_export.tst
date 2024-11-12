@@ -23,14 +23,14 @@ assert_checktrue(xmlElem.root.children.size == 2);
 
 assert_checkequal(xmlElem.root.children(1).name, "testsuite");
 assert_checktrue(evstr(xmlElem.root.children(1).attributes.tests) > 0);
-assert_checkequal(xmlElem.root.children(1).children.size, evstr(xmlElem.root.children(1).attributes.tests));
+assert_checkequal(size(find(xmlElem.root.children(1).children.name == "testcase"), "*"), evstr(xmlElem.root.children(1).attributes.tests));
 
 assert_checkequal(xmlElem.root.children(1).children(1).name, "testcase");
 assert_checktrue(length(xmlElem.root.children(1).children(1).attributes.name) > 0);
 
 assert_checkequal(xmlElem.root.children(2).name, "testsuite");
 assert_checktrue(evstr(xmlElem.root.children(2).attributes.tests) > 0);
-assert_checkequal(xmlElem.root.children(2).children.size, evstr(xmlElem.root.children(2).attributes.tests));
+assert_checkequal(size(find(xmlElem.root.children(2).children.name == "testcase"), "*"), evstr(xmlElem.root.children(2).attributes.tests));
 
 assert_checkequal(xmlElem.root.children(2).children(1).name, "testcase");
 assert_checktrue(length(xmlElem.root.children(2).children(1).attributes.name) > 0);
