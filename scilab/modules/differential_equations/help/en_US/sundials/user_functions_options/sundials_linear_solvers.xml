@@ -121,12 +121,10 @@
                         gcf().color_map = parula(128);
                         subplot(1,2,1)
                         title("Species 1")
-                        Sgrayplot(x,y,squeeze(C(1,:,:)),zminmax=[0 51146186])
-                        h1 = gce().children;
+                        h1 = Sgrayplot(x,y,squeeze(C(1,:,:)),zminmax=[0 51146186])
                         colorbar;
                         subplot(1,2,2)
-                        Sgrayplot(x,y,squeeze(C(2,:,:)),zminmax=[0 1.074D+12])
-                        h2 = gce().children;
+                        h2 = Sgrayplot(x,y,squeeze(C(2,:,:)),zminmax=[0 1.074D+12])
                         colorbar;
                         title("Species 2")
                     elseif flag == "step"
