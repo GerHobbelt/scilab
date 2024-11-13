@@ -271,10 +271,12 @@ function out = %_rowvarfun(fname, t, groupingVariables, opts, varargin)
                     execstr("tmp"+string(k) +" = [tmp" + string(k) + "; a" + string(k)+ "]");
                 end
                 if m == 1 then
+                    [ma1, na1] = size(a1);
+                    o = ones(ma1, na1);
                     for k = 1:size(val)
-                        newval(k) = [newval(k); val(k)(i)(ones(a1))];
+                        newval(k) = [newval(k); val(k)(i)(o)];
                     end
-                    newcount = [newcount; count(i)(ones(a1))]
+                    newcount = [newcount; count(i)(o)]
                 end
             end
 

@@ -122,3 +122,15 @@ T = readtable(fullfile(SCI, "modules", "spreadsheet", "tests", "unit_tests","met
 R = rowfun(f, T, "InputVariables", ["MAX_TEMPERATURE_C", "MIN_TEMPERATURE_C"], "OutputVariableNames", "res");
 assert_checkequal(R.Properties.VariableNames, "res");
 assert_checkequal(R.res, T.MAX_TEMPERATURE_C - T.MIN_TEMPERATURE_C);
+
+M = rand(6,1);
+d = hours(M);
+t = table([0;1;2] .*. [1;1], d, M, "VariableNames", ["id", "execTimeDuration", "execTimeDouble"]);
+
+r = rowfun(mean, t, "InputVariables", "execTimeDouble", "GroupingVariables", "id");
+expected = table([0;1;2], [2;2;2], [mean(M(1:2)); mean(M(3:4)); mean(M(5:6))], "VariableNames", ["id", "GroupCount", "Var1"]);
+assert_checkequal(r, expected);
+
+r = rowfun(mean, t, "InputVariables", "execTimeDuration", "GroupingVariables", "id")
+expected = table([0;1;2], [2;2;2], [mean(d(1:2)); mean(d(3:4)); mean(d(5:6))], "VariableNames", ["id", "GroupCount", "Var1"]);
+assert_checkequal(r, expected);
