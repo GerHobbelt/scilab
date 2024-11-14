@@ -165,7 +165,7 @@ includes/stringToDouble.h \
 includes/stristr.h \
 includes/strsubst.h
 
-
+TESTS_DIREXT= tests/memory_leak/
 
 include $(top_srcdir)/Makefile.incl.am
 
