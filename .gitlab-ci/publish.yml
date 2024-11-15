@@ -38,6 +38,7 @@ archive_test_results:
     - echo "${SCI_VERSION_STRING} ${CI_COMMIT_TIMESTAMP} ${CI_COMMIT_SHORT_SHA};tests;errors;failures" >${SCI_VERSION_STRING}/archive_test_results.csv
     - awk 'BEGIN{FS="\""; OFS=";"} /\<testsuite /{print $2,$6,$8,$10; }' ${SCI_VERSION_STRING}/*/*.xml |sort -t\; >>${SCI_VERSION_STRING}/archive_test_results.csv
     - while IFS=";" read name tests errors failures ; do printf "%-40s%10s%10s%10s\n" "$name" "$tests" "$errors" "$failures"; done <${SCI_VERSION_STRING}/archive_test_results.csv
+  allow_failure: true
   artifacts:
     paths:
       - "${SCI_VERSION_STRING}/archive_test_results.csv"
