@@ -69,11 +69,11 @@
     dydmu = imag(yc)/h;
     y = real(yc);
     subplot(1,2,1)
-    title("$$y(t)$$")
+    title("$y(t)$")
     plot(t,y)
     subplot(1,2,2)
     plot(t,dydmu)
-    title("$$\frac{\partial y}{\partial \mu}(t,y)$$")
+    title("$\frac{\partial y}{\partial \mu}(t,y)$")
     ]]></programlisting>
     <scilab:image>
         function dydt = vdp(t,y,mu)
@@ -87,11 +87,11 @@
         dydmu = imag(yc)/h;
         y = real(yc);
         subplot(1,2,1)
-        title("$$y(t)$$")
+        title("$y(t)$")
         plot(t,y)
         subplot(1,2,2)
         plot(t,dydmu)
-        title("$$\frac{\partial y}{\partial \mu}$$")
+        title("$\frac{\partial y}{\partial \mu}$")
         gcf().axes_size(2)=300  
         gcf().axes_size(1)=800  
     </scilab:image>
