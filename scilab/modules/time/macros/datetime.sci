@@ -70,15 +70,22 @@ function out = datetime(varargin)
         tmp = csvTextScan(t, " ");
         
         if size(tmp, "c") > 3 then
-            // hours, minutes and seconds
-            if size(tmp, "c") == 6 & (or(tmp(:, 4) > 24) | or(tmp(:, 5) > 59) | or(tmp(:,6) > 59)) then
-                error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 24], minutes in [0, 59] and seconds in [0, 59].\n"), "datetime"))
-            elseif size(tmp, "c") == 5 & (or(tmp(:, 4) > 24) | or(tmp(:, 5) > 59)) then
+            select size(tmp, "c")
+            case 6
+                // hours, minutes and seconds
+                if (or(tmp(:, 4) > 23) | or(tmp(:, 5) > 59) | or(tmp(:,6) > 60)) then
+                    error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 23], minutes in [0, 59] and seconds in [0, 59].\n"), "datetime"))
+                end
+            case 5 
                 // hours and minutes only
-                error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 24] and minutes in [0, 59].\n"), "datetime"));
-            elseif or(tmp(:, 4) > 24) then
+                if (or(tmp(:, 4) > 23) | or(tmp(:, 5) > 59)) then
+                    error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 23] and minutes in [0, 59].\n"), "datetime"));
+                end
+            else
                 // hours only
-                error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 24].\n"), "datetime"));
+                if or(tmp(:, 4) > 23) then
+                    error(msprintf(_("%s: Unable to convert the time: hours must be in [0, 23].\n"), "datetime"));
+                end
             end
         end
 
