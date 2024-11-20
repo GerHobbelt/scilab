@@ -42,8 +42,13 @@ function out = %duration_string(dura)
             end
         else
             hasMS = %f;
+            nbSstr = "%s.%03d";
+            nbS = 1;
             if grep(form, "/\.S+$/", "r") then
                 hasMS = %t;
+                nbS = length(strindex(form, "S"));
+                nbSstr = "%s.%0" + string(nbS) + "d";
+                nbS = 10^(nbS-3);
             end
 
             form = strsubst(form, "/\.S+$/", "", "r");
@@ -80,7 +85,7 @@ function out = %duration_string(dura)
                     end
 
                     if hasMS && form <> "hh:mm" then
-                        out(r, c) = sprintf("%s.%03d", out(r, c), modulo(d(r, c), 1000));
+                        out(r, c) = sprintf(nbSstr, out(r, c), modulo(d(r, c), 1000) * nbS);
                     end
                 end
             end

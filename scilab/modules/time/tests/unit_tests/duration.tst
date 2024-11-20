@@ -228,6 +228,14 @@ checkstring(duration("70:50.300", "InputFormat", "mm:ss.SSS", "OutputFormat", "h
 checkstring(duration(["2:15.300" "65:23.456"], "InputFormat", "mm:ss.SSS", "OutputFormat", "hh:mm:ss.SSS"), ["00:02:15.300", "01:05:23.456"]);
 checkstring(duration(["2:15.300"; "65:23.456"], "InputFormat", "mm:ss.SSS", "OutputFormat", "hh:mm:ss.SSS"), ["00:02:15.300"; "01:05:23.456"]);
 
+checkstring(duration(0, 0, 24.2986574, "OutputFormat", "mm:ss.SSSSS"), "00:24.29865");
+checkstring(duration(0, 0, 24.2986574, "OutputFormat", "mm:ss.SS"), "00:24.29");
+checkstring(duration(0, 0, 24.2986574, "OutputFormat", "hh:mm:ss.SSSSSSSSS"), "00:00:24.298657400");
+
+checkstring(duration(0, 0, [24.2986574; 10.26], "OutputFormat", "mm:ss.SSSSS"), ["00:24.29865"; "00:10.26000"]);
+checkstring(duration(0, 0, [24.2986574; 10.26], "OutputFormat", "mm:ss.SS"), ["00:24.29"; "00:10.26"]);
+checkstring(duration(0, 0, [24.2986574; 10.26], "OutputFormat", "hh:mm:ss.SSSSSSSSS"), ["00:00:24.298657400"; "00:00:10.260000000"]);
+
 d = duration("01:01:01");
 d.format = "h";
 checkstring(d, "1.017 h");
