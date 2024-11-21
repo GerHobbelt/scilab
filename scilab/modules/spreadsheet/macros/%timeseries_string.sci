@@ -10,11 +10,14 @@
 // along with this program.
 
 function out = %timeseries_string(ts)
-    out = [];
+    [m,n] = size(ts);
+    out = emptystr(m, n+1);
 
-    for c = 1:size(ts.vars, "*")
-        for r = 1:size(ts.vars(1).data, 1)
-            out(r,c) = string(ts.vars(c).data(r));
-        end
+    for c = 1:n+1
+        d = ts.vars(c).data;
+        if type(d) <> 10 then
+            d = string(d);
+        end;
+        out(:, c) = d;
     end
 endfunction

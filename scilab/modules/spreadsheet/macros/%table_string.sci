@@ -10,11 +10,14 @@
 // along with this program.
 
 function out = %table_string(t)
-    out = [];
+    [m,n] = size(t);
+    out = emptystr(m, n);
 
-    for c = 1:size(t.vars, "*")
-        for r = 1:size(t.vars(1).data, 1)
-            out(r,c) = string(t.vars(c).data(r));
-        end
+    for c = 1:n
+        d = t.vars(c).data;
+        if type(d) <> 10 then
+            d = string(d);
+        end;
+        out(:, c) = d;
     end
 endfunction
