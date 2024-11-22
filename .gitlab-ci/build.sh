@@ -23,39 +23,60 @@ LOG_PATH=$SCI_VERSION_STRING
 [ ! -d "$LOG_PATH" ] && mkdir "$LOG_PATH"
 
 # checkout pre-requirements
+OVERRIDE_THIRDPARTY=1
 echo -e "\e[0Ksection_start:$(date +%s):prerequirements[collapsed=true]\r\e[0KGetting prerequirements"
 if [ -f "prerequirements-${SCI_VERSION_STRING}.bin.${ARCH}.tar.xz" ]; then
 	# custom build for this commit or tag
 	mv -f "prerequirements-${SCI_VERSION_STRING}.bin.${ARCH}.tar.xz" "prereq.tar.xz"
+	OVERRIDE_THIRDPARTY=0
 elif [ -f "prerequirements-scilab-branch-${BRANCH}.bin.${ARCH}.tar.xz" ]; then
 	# custom build for this branch
 	cp -a "prerequirements-scilab-branch-${BRANCH}.bin.${ARCH}.tar.xz" "prereq.tar.xz"
+	OVERRIDE_THIRDPARTY=0
 else
 	# download prebuild for the MR branch
-	curl -k -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}.bin.${ARCH}.tar.xz"
-	if ! xz -qt "prereq.tar.xz"; then
+	curl -Lk -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}.bin.${ARCH}.tar.xz"
+	OVERRIDE_THIRDPARTY=$(xz -qt "prereq.tar.xz" &>/dev/null && echo 0 || echo "$?")
+	if [ "$OVERRIDE_THIRDPARTY" -ne 0 ]; then
 		# download prebuild for the target branch
-		curl -k -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${BRANCH}.bin.${ARCH}.tar.xz"
+		curl -Lk -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${BRANCH}.bin.${ARCH}.tar.xz"
+		OVERRIDE_THIRDPARTY=$(xz -qt "prereq.tar.xz" &>/dev/null && echo 0 || echo "$?")
 	fi
-	if ! xz -qt "prereq.tar.xz"; then
+	if [ "$OVERRIDE_THIRDPARTY" -ne 0 ]; then
 		# fallback to the default branch
-		curl -k -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${CI_DEFAULT_BRANCH}.bin.${ARCH}.tar.xz"
+		curl -Lk -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-${CI_DEFAULT_BRANCH}.bin.${ARCH}.tar.xz"
+		OVERRIDE_THIRDPARTY=$(xz -qt "prereq.tar.xz" &>/dev/null && echo 0 || echo "$?")
+	fi
+	if [ "$OVERRIDE_THIRDPARTY" -ne 0 ]; then
+		# fallback to the default branch main
+		curl -Lk -o "prereq.tar.xz" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-main.bin.${ARCH}.tar.xz"
+		OVERRIDE_THIRDPARTY=$(xz -qt "prereq.tar.xz" &>/dev/null && echo 0 || echo "$?")
 	fi
 fi
 # cleanup and extract
 git clean -fxd scilab/java scilab/lib scilab/thirdparty scilab/usr scilab/modules/tclsci/tcl
 rm -f scilab/svn-info.txt scilab/version.txt
-tar -xvf prereq.tar.xz -C scilab >"${LOG_PATH}/build_prereq_${CI_COMMIT_SHORT_SHA}.log"
+tar -xvf prereq.tar.xz -C scilab >"${LOG_PATH}/build_prereq_${CI_COMMIT_SHORT_SHA}.log" || exit 1
 # display svn revision
 cat scilab/svn-info.txt || cat scilab/version.txt || exit 1
 echo -e "\e[0Ksection_end:$(date +%s):prerequirements\r\e[0K"
 
 # patch thirdparty JARs on WIP Merge-Request
-curl -k -o "thirdparty.zip" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}.zip"
-if unzip -qt "thirdparty.zip"; then
-	rm -rf scilab/thirdparty/
-	mkdir scilab/thirdparty/
-	unzip -o thirdparty.zip -d scilab/thirdparty/
+if [ "$OVERRIDE_THIRDPARTY" -ne 0 ]; then
+	curl -Lk -o "thirdparty.zip" "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-${CI_MERGE_REQUEST_SOURCE_BRANCH_NAME}.zip"
+	WITHOUT_CUSTOM_THIRDPARTY=$(unzip -qt "thirdparty.zip" &>/dev/null && echo 0 || echo "$?")
+	if [ "$WITHOUT_CUSTOM_THIRDPARTY" -ne 0 ]; then
+		curl -Lk -o thirdparty.zip "https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-${BRANCH}.zip"
+		WITHOUT_CUSTOM_THIRDPARTY=$(unzip -qt "thirdparty.zip" &>/dev/null && echo 0 || echo "$?")
+	fi
+	if unzip -qt "thirdparty.zip"; then
+		rm -rf scilab/thirdparty/
+		mkdir scilab/thirdparty/
+		unzip -o thirdparty.zip -d scilab/thirdparty/ || exit 1
+	else
+		echo "OVERRIDE_THIRDPARTY=$OVERRIDE_THIRDPARTY but failed to extract"
+		exit 1
+	fi
 fi
 
 # patch version numbers

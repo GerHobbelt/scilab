@@ -10,7 +10,7 @@
 index_gitlab_pages:
   stage: publish
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   variables:
     GIT_STRATEGY: none
   script:
@@ -31,7 +31,7 @@ index_gitlab_pages:
 archive_test_results:
   stage: publish
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   variables:
     GIT_STRATEGY: none
   script:

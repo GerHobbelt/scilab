@@ -68,7 +68,7 @@ windows_build_release:
 # build scilab using a linux runner
 .linux_build:
   stage: build
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   tags: [x86_64-linux-gnu, docker, scilab, build]
   before_script:
     - echo -e "\e[0Ksection_start:$(date +%s):cleanup\r\e[0KCleaning $CI_PROJECT_DIR"
@@ -145,4 +145,13 @@ linux:
           - debian:12
   rules:
     - if: $CI_PIPELINE_SOURCE == "merge_request_event" && $CI_MERGE_REQUEST_LABELS =~ /Building Scilab/
+      allow_failure: true
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        paths:
+          - scilab/configure
+          - scilab/Makefile.in
+          - scilab/modules/Makefile.in
+          - scilab/modules/*/Makefile.in
+        compare_to: $CI_DEFAULT_BRANCH
       allow_failure: true

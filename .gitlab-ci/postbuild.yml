@@ -50,7 +50,7 @@ build_doxygen:
 build_help_web:
   stage: postbuild
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   dependencies: []
   script:
     - cd scilab
@@ -66,7 +66,7 @@ build_help_web:
 publish_help_jar:
   stage: postbuild
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   variables:
     GIT_STRATEGY: none
   needs:
@@ -97,7 +97,7 @@ publish_help_jar:
 .linux_startup:
   stage: postbuild
   tags: [x86_64-linux-gnu, docker, scilab]
-  image: ${CI_REGISTRY_IMAGE}/$DISTRO:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/$DISTRO:${DOCKER_TAG}
   script:
     - tar -xJf "${SCI_VERSION_STRING}.bin.${ARCH}.tar.xz" -C $HOME
     - cd $HOME

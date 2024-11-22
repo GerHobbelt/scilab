@@ -9,7 +9,7 @@
 
 # define x86_64-linux-gnu env variables
 linux_set_env:
-  image: ${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}
   stage: prebuild
   tags: [x86_64-linux-gnu, docker, scilab]
   variables:
@@ -70,7 +70,7 @@ windows_set_env:
 
 # rebuild linux dependencies
 linux_build_prereq:
-  image: ${DOCKER_LINUX_PREBUILD}:${DOCKER_TAG}
+  image: ${SCI_REGISTRY_IMAGE}/linux-prebuild:${DOCKER_TAG}
   stage: prebuild
   tags: [x86_64-linux-gnu, docker, scilab, build]
   needs:
@@ -90,12 +90,16 @@ linux_build_prereq:
     - if: $CI_COMMIT_TAG
       when: never
     # rebuild on demand
-    - changes:
-        paths:
-          - .gitlab-ci/prebuild.yml
-          - .gitlab-ci/prebuild.sh
-          - .gitlab-ci/Dockerfile.linux
-          - .gitlab-ci/Dockerfile.linux.prebuild
+    - changes: &PREBUILD_LINUX_CHANGED
+        - .gitlab-ci/prebuild.yml
+        - .gitlab-ci/prebuild.sh
+        - .gitlab-ci/Dockerfile.linux
+        - .gitlab-ci/Dockerfile.linux.prebuild
+    # rebuild on a dedicated branch without MR
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        paths: *PREBUILD_LINUX_CHANGED
+        compare_to: ${CI_DEFAULT_BRANCH}
 
 # update windows dependencies
 windows_build_prereq:
@@ -108,6 +112,7 @@ windows_build_prereq:
   artifacts:
     paths:
       - prerequirements-${SCI_VERSION_STRING}-windows_x64.zip
+      - $SCI_VERSION_STRING
     when: always
   rules:
     # do not rebuild on scheduled
@@ -117,7 +122,11 @@ windows_build_prereq:
     - if: $CI_COMMIT_TAG
       when: never
     # rebuild on demand
-    - changes:
-        paths:
-          - .gitlab-ci/prebuild.yml
-          - .gitlab-ci/prebuild.bat
+    - changes: &PREBUILD_WINDOWS_CHANGED
+        - .gitlab-ci/prebuild.yml
+        - .gitlab-ci/prebuild.bat
+    # rebuild on a dedicated branch without MR
+    - if: $CI_PIPELINE_SOURCE == "push"
+      changes:
+        paths: *PREBUILD_WINDOWS_CHANGED
+        compare_to: ${CI_DEFAULT_BRANCH}

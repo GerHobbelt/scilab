@@ -18,34 +18,52 @@ if not exist %LOG_PATH% mkdir %LOG_PATH%
 REM checkout pre-requirements
 REM Try with custom build for this commit or tag
 move /Y prerequirements-%SCI_VERSION_STRING%-windows_x64.zip prereq.zip
+set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
 IF %ERRORLEVEL% NEQ 0 (
     REM failed, use the MR branch one
-    curl.exe -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%-windows_x64.zip
+    curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%-windows_x64.zip
     unzip.exe -qt prereq.zip
+    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
 )
 IF %ERRORLEVEL% NEQ 0 (
     REM failed, use the MR branch one
-    curl.exe -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%BRANCH%-windows_x64.zip
+    curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%BRANCH%-windows_x64.zip
     unzip.exe -qt prereq.zip
+    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
 )
 IF %ERRORLEVEL% NEQ 0 (
     REM fallback to the default branch
-    curl.exe -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_DEFAULT_BRANCH%-windows_x64.zip
+    curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_DEFAULT_BRANCH%-windows_x64.zip
     unzip.exe -qt prereq.zip
+    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
+)
+IF %ERRORLEVEL% NEQ 0 (
+    REM fallback to the main branch
+    curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-main-windows_x64.zip
+    unzip.exe -qt prereq.zip
+    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
 )
 unzip -o prereq.zip -d scilab > %LOG_PATH%\build_prereq_%CI_COMMIT_SHORT_SHA%.log
+IF %ERRORLEVEL% NEQ 0 exit 1
 
 REM display svn revision
 type scilab\svn-info.txt
 IF %ERRORLEVEL% NEQ 0 exit 1
 
-REM patch thirdparty JARs on WIP Merge-Request
-curl.exe -k -o thirdparty.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%.zip
-unzip.exe -qt thirdparty.zip
-IF %ERRORLEVEL% EQU 0 (
-    rd /s /q scilab\thirdparty\
-    mkdir scilab\thirdparty\
-    unzip.exe -o thirdparty.zip -d scilab\thirdparty\
+REM patch thirdparty JARs on WIP Merge-Request or branch
+if %OVERRIDE_THIRDPARTY% NEQ 0 (
+    curl.exe -Lk -o thirdparty.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%.zip
+    unzip.exe -qt thirdparty.zip
+    IF %ERRORLEVEL% NEQ 0 (
+        curl.exe -Lk -o thirdparty.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-%BRANCH%.zip
+        unzip.exe -qt thirdparty.zip
+    )
+    REM extract thirdparty on success
+    IF %ERRORLEVEL% EQU 0 (
+        rd /s /q scilab\thirdparty\
+        mkdir scilab\thirdparty\
+        unzip.exe -o thirdparty.zip -d scilab\thirdparty\
+    )
 )
 
 REM Define environment variables if not defined
@@ -75,7 +93,7 @@ devenv Scilab.sln /build "Release|x64" > ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHOR
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_sln_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 devenv Scilab.sln /build "Release|x64" /project buildhelp > ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_help_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
-devenv Scilab.sln /build "Release|x64" /project buildDoc > ..\%LOG_PATH%\log_builddoc_%CI_COMMIT_SHORT_SHA%.log
+devenv Scilab.sln /build "Release|x64" /project buildDoc > ..\%LOG_PATH%\build_doc_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_doc_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
 devenv Scilab.sln /build "Release|x64" /project buildjavadoc > ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 tail --lines=20 ..\%LOG_PATH%\build_javadoc_%CI_COMMIT_SHORT_SHA%.log 1>&2 & exit 1
