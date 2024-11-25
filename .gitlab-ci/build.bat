@@ -16,32 +16,37 @@ set LOG_PATH=%SCI_VERSION_STRING%
 if not exist %LOG_PATH% mkdir %LOG_PATH%
 
 REM checkout pre-requirements
-REM Try with custom build for this commit or tag
+DEL /q prereq.zip
+set OVERRIDE_THIRDPARTY=0
+
+REM custom build for this commit or tag
 move /Y prerequirements-%SCI_VERSION_STRING%-windows_x64.zip prereq.zip
-set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
-IF %ERRORLEVEL% NEQ 0 (
-    REM failed, use the MR branch one
+IF NOT EXIST prereq.zip (
+    REM custom build for this branch
+    copy -a "prerequirements-scilab-branch-${BRANCH}.bin.${ARCH}.tar.xz" "prereq.tar.xz"
+)
+IF NOT EXIST prereq.zip (
+    REM download prebuild for the MR branch
     curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%-windows_x64.zip
-    unzip.exe -qt prereq.zip
-    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
+    unzip.exe -qt prereq.zip || DEL /q prereq.zip
 )
-IF %ERRORLEVEL% NEQ 0 (
-    REM failed, use the MR branch one
+IF NOT EXIST prereq.zip (
+    REM download prebuild for the target branch
     curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%BRANCH%-windows_x64.zip
-    unzip.exe -qt prereq.zip
-    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
+    unzip.exe -qt prereq.zip || DEL /q prereq.zip
+    set OVERRIDE_THIRDPARTY=1
 )
-IF %ERRORLEVEL% NEQ 0 (
+IF NOT EXIST prereq.zip (
     REM fallback to the default branch
     curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-%CI_DEFAULT_BRANCH%-windows_x64.zip
-    unzip.exe -qt prereq.zip
-    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
+    unzip.exe -qt prereq.zip || DEL /q prereq.zip
+    set OVERRIDE_THIRDPARTY=1
 )
-IF %ERRORLEVEL% NEQ 0 (
+IF NOT EXIST prereq.zip (
     REM fallback to the main branch
     curl.exe -Lk -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-branch-main-windows_x64.zip
-    unzip.exe -qt prereq.zip
-    set OVERRIDE_THIRDPARTY=%ERRORLEVEL%
+    unzip.exe -qt prereq.zip || DEL /q prereq.zip
+    set OVERRIDE_THIRDPARTY=1
 )
 unzip -o prereq.zip -d scilab > %LOG_PATH%\build_prereq_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 exit 1
@@ -50,20 +55,15 @@ REM display svn revision
 type scilab\svn-info.txt
 IF %ERRORLEVEL% NEQ 0 exit 1
 
-REM patch thirdparty JARs on WIP Merge-Request or branch
+REM patch thirdparty JARs on WIP Merge-Request
 if %OVERRIDE_THIRDPARTY% NEQ 0 (
     curl.exe -Lk -o thirdparty.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-%CI_MERGE_REQUEST_SOURCE_BRANCH_NAME%.zip
-    unzip.exe -qt thirdparty.zip
-    IF %ERRORLEVEL% NEQ 0 (
-        curl.exe -Lk -o thirdparty.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/thirdparty-scilab-branch-%BRANCH%.zip
-        unzip.exe -qt thirdparty.zip
-    )
-    REM extract thirdparty on success
-    IF %ERRORLEVEL% EQU 0 (
-        rd /s /q scilab\thirdparty\
-        mkdir scilab\thirdparty\
-        unzip.exe -o thirdparty.zip -d scilab\thirdparty\
-    )
+    unzip.exe -qt thirdparty.zip || DEL /q thirdparty.zip
+)
+IF EXIST thirdparty.zip (
+    rd /s /q scilab\thirdparty\
+    mkdir scilab\thirdparty\
+    unzip.exe -o thirdparty.zip -d scilab\thirdparty\
 )
 
 REM Define environment variables if not defined
