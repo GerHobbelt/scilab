@@ -21,6 +21,7 @@ import java.awt.Color;
 import java.awt.MouseInfo;
 
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 import javax.swing.event.PopupMenuEvent;
@@ -57,6 +58,8 @@ public class SwingScilabContextMenu extends JPopupMenu implements SwingViewObjec
     private boolean checkedState;
 
     private Border defaultBorder = null;
+    
+    private PopupMenuListener listener;
 
     /**
      * Constructor
@@ -64,7 +67,7 @@ public class SwingScilabContextMenu extends JPopupMenu implements SwingViewObjec
     public SwingScilabContextMenu() {
         super();
         setInvoker(this);
-        addPopupMenuListener(new PopupMenuListener() {
+        listener = new PopupMenuListener() {
             public void popupMenuWillBecomeVisible(PopupMenuEvent arg0) {
             }
 
@@ -83,7 +86,8 @@ public class SwingScilabContextMenu extends JPopupMenu implements SwingViewObjec
                     }
                 }
             }
-        });
+        };
+        addPopupMenuListener(listener);
     }
 
     /**
@@ -251,6 +255,12 @@ public class SwingScilabContextMenu extends JPopupMenu implements SwingViewObjec
      */
     public void destroy() {
         getParent().remove(this);
+        if (SwingUtilities.isEventDispatchThread() == false) {
+            // When this component is deleted by Scilab and not by Java itself
+            // We hide the menu after removing the listener to avoid double delete of objects in the model
+            removePopupMenuListener(listener);
+            setVisible(false); // Make menu invisible and let Java do its work
+        }
     }
 
     /**
