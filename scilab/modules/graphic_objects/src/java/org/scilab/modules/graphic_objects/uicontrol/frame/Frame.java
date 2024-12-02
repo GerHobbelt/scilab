@@ -55,6 +55,11 @@ public class Frame extends Uicontrol implements AxesContainer {
     }
 
     public Integer getAntialiasing() {
+        Figure figure = (Figure) GraphicModel.getModel().getObjectFromId(getParentFigure());
+        if (figure != null) {
+            return figure.getAntialiasing();
+        }
+
         return 0;
     }
 
@@ -63,6 +68,7 @@ public class Frame extends Uicontrol implements AxesContainer {
         if (figure != null) {
             return figure.getBackground();
         }
+
         return -2;
     }
 
