@@ -50,6 +50,6 @@ function y = fcninput(fcnname, x)
   y = feval(x,fcnname)
 endfunction
 
-fcninput(plip,1:10)
+assert_checkalmostequal(fcninput(plip,1:10), ((1:10).^2 - 5.*(1:10) + 2));
 
-fcninput(plop,1:10)
+assert_checkalmostequal(fcninput(plop,1:10), (2*(1:10)-1));

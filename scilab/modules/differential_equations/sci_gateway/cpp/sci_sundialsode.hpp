@@ -83,6 +83,12 @@ types::Function::ReturnValue sci_sundialsode(types::typed_list &in, types::optio
             throw ast::InternalError(errorMsg);            
         }
     }
+    else if (in.size() != manager->getMaxNargin())
+    {
+        sprintf(errorMsg, _("%s: Wrong number of input argument(s): %d expected.\n"), manager->getSolverName().c_str(), manager->getMaxNargin());        
+        delete manager;
+        throw ast::InternalError(errorMsg);
+    }
 
     try
     {
