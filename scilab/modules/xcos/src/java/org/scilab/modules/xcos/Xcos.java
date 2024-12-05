@@ -19,6 +19,7 @@
 package org.scilab.modules.xcos;
 
 import java.awt.Component;
+import java.awt.GraphicsEnvironment;
 import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
@@ -487,7 +488,7 @@ public final class Xcos {
         /*
          * Create a visible window before loading
          */
-        if (openThePalette) {
+        if (openThePalette && !GraphicsEnvironment.isHeadless()) {
             PaletteManager.setVisible(true);
         }
         if (XcosTab.get(diag) == null) {

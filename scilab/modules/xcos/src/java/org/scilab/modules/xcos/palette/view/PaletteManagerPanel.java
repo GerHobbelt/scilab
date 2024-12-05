@@ -467,7 +467,6 @@ public class PaletteManagerPanel extends JSplitPane {
      * Implement custom mouse handling for the zoom
      */
     private static final class CustomMouseWheelListener implements MouseWheelListener {
-        private static final int ACCELERATOR_KEY = Toolkit.getDefaultToolkit().getMenuShortcutKeyMask();
         private JScrollBar verticalScrollBar;
 
         /**
@@ -497,7 +496,8 @@ public class PaletteManagerPanel extends JSplitPane {
                 return;
             }
 
-            if (e.getModifiers() == ACCELERATOR_KEY) {
+            int ctrl_down = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
+            if ((e.getModifiersEx() | ctrl_down) == ctrl_down) {
                 if (e.getWheelRotation() < 0) {
                     PaletteManagerView.get().getPanel().zoomIn();
                 } else if (e.getWheelRotation() > 0) {

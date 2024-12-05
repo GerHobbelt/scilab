@@ -149,15 +149,6 @@ public final class Palette {
      */
     @ScilabExported(module = XCOS, filename = PALETTE_GIWS_XML)
     public static void loadPal(final String name, final String[] category) throws JavasciException {
-        /*
-         * If the env. is headless only perform fake loading to assert data
-         * integrity.
-         */
-        if (GraphicsEnvironment.isHeadless()) {
-            LOG.warning("Headless environment detected, only perform sanity check");
-            loadPalHeadless(name);
-            return;
-        }
 
         /*
          * Import the palette
@@ -232,21 +223,6 @@ public final class Palette {
             }
 
             throw new RuntimeException(firstMessage, e);
-        }
-    }
-
-    private static final void loadPalHeadless(final String name) throws JavasciException {
-        try {
-            final ScilabTList data = (ScilabTList) Scilab.getInCurrentScilabSession(name);
-
-            // style check
-            new StyleElement().decode(data, new mxStylesheet());
-
-            // palette data check
-            new PreLoadedElement().decode(data, new PreLoaded.Dynamic());
-
-        } catch (ScicosFormatException e) {
-            throw new RuntimeException(e);
         }
     }
 

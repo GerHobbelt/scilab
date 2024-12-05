@@ -16,7 +16,7 @@ xcosPalGenerateAllIcons(["Palettes" "Discontinuities"]);
 
 // on a custom palette
 pal = xcosPal();
-pal = xcosPalAddBlock(pal, "BIGSOM_f", "SCI/modules/xcos/images/palettes/GOTO.png", "SCI/modules/xcos/images/palettes/GOTO.png");
+pal = xcosPalAddBlock(pal, "BIGSOM_f", fullpath("SCI/modules/xcos/images/palettes/GOTO.png"), fullpath("SCI/modules/xcos/images/palettes/GOTO.png"));
 assert_checktrue(xcosPalAdd(pal, "my Summation blocks"));
 
 xcosPalGenerateAllIcons("my Summation blocks");
