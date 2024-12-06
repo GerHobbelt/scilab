@@ -6,6 +6,7 @@
 // =============================================================================
 //
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 // <-- Non-regression test for bug 12948 -->
 //
 // <-- GitLab URL -->
@@ -15,5 +16,5 @@
 // When host is not found, getURL provokes a Crash To Desktop
 
 instr = "http_get(''https://www.scilab-dummy.org'', ''scilab_homepage.html'');";
-errMsg = msprintf(_("%s: CURL execution failed.\n%s\n"), "http_get", "Couldn''t resolve host name");
+errMsg = msprintf(_("%s: CURL execution failed.\n%s\n"), "http_get", "Could not resolve hostname");
 assert_checkerror(instr, errMsg);

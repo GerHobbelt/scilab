@@ -61,7 +61,7 @@ JRE_VERSION=17.0.7_7
 ANT_VERSION=1.10.5
 OPENBLAS_VERSION=0.3.28
 ARPACK_VERSION=3.9.1
-CURL_VERSION=7.64.1
+CURL_VERSION=8.10.1
 EIGEN_VERSION=3.3.2
 FFTW_VERSION=3.3.3
 HDF5_VERSION=1.14.4
@@ -830,6 +830,7 @@ build_curl() {
         --with-ssl="$INSTALLUSRDIR" --without-nss \
         --with-zlib="$INSTALLUSRDIR" \
 	    --disable-ldap \
+        --without-libpsl \
         --prefix= \
         CFLAGS="-O2 -g"
     make "-j$(nproc)"
@@ -843,12 +844,12 @@ build_curl() {
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 
     # Rename libcurl to libscicurl
-    cp "$INSTALL_DIR/lib/libcurl.so.4.5.0" "$INSTALLUSRDIR/lib/libscicurl.so.4.5.0"
+    cp "$INSTALL_DIR/lib/libcurl.so.4.8.0" "$INSTALLUSRDIR/lib/libscicurl.so.4.8.0"
     cd "$INSTALLUSRDIR/lib" || exit 1
-    ln -sf "libscicurl.so.4.5.0" libcurl.so
-    ln -sf "libscicurl.so.4.5.0" libscicurl.so.4
+    ln -sf "libscicurl.so.4.8.0" libcurl.so
+    ln -sf "libscicurl.so.4.8.0" libscicurl.so.4
     ln -sf libscicurl.so.4 libscicurl.so
-    patchelf --set-soname libscicurl.so.4 "libscicurl.so.4.5.0"
+    patchelf --set-soname libscicurl.so.4 "libscicurl.so.4.8.0"
 }
 
 build_libarchive() {

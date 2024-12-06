@@ -6,6 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 // <-- ENGLISH IMPOSED -->
 
 // <-- Non-regression test for bug 12950 -->
@@ -21,7 +22,7 @@ atomsSaveConfig(%T);
 atomsSetConfig("useProxy", "True");
 atomsSetConfig("proxyHost", "123aa");
 
-errMsg = msprintf(_("%s: CURL execution failed.\n%s\n"), "http_get", "Couldn''t resolve proxy name");
+errMsg = msprintf(_("%s: CURL execution failed.\n%s\n"), "http_get", "Could not resolve proxy name");
 try
     http_get("https://www.scilab.org", fullfile(TMPDIR,"scilab_homepage.html"));
 catch
