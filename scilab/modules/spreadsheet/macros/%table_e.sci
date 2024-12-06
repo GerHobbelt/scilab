@@ -10,8 +10,6 @@
 // along with this program.
 
 function out = %table_e(varargin)
-    //disp("%table_e")
-    //disp(varargin)
     out = [];
 
     if nargin == 2 then
@@ -30,7 +28,6 @@ function out = %table_e(varargin)
                 out = t.props.rowNames;
             else
                 [tmp, idx] = members(i, t.props.variableNames);
-                // disp(idx)
                 if or(idx <> 0) then
                     for i = idx
                         if out <> [] && typeof(out) <> typeof(t.vars(i).data) then
@@ -42,7 +39,8 @@ function out = %table_e(varargin)
                     error(msprintf(_("A valid variable name expected.\n")));
                 end
             end
-        elseif type(varargin(1)) == 1 | type(varargin(1)) == 129 | type(varargin(1)) == 2 then
+        elseif or(type(varargin(1)) == [1 2 4 129]) then
+            // double, polynom ($), boolean, implicist list (1:1:$)
             t = varargin($);
             out = t(varargin(1), :);
         end
@@ -66,11 +64,9 @@ function out = %table_e(varargin)
             end
             i = k
         case "ce"
-            //disp("cell")
             rowNames = t.props.rowNames;
             tmp = [];
             for c = 1:size(i, "*")
-                //disp(i{c})
                 [xxx, k] = members(i{c}, rowNames);
                 if and(k == 0) then
                     error(msprintf(_("A valid row name expected.\n")));
@@ -109,11 +105,9 @@ function out = %table_e(varargin)
         for c = 1:size(out.vars, "*")
             out.vars(c).data = out.vars(c).data(i);
         end
-        //disp(i,j)
         
         //update props
         for f = fieldnames(out.props)'
-            //disp(f)
             if f == "userdata" then
                 out.props(f) = [];
                 continue;

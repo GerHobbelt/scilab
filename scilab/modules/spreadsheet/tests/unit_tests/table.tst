@@ -278,3 +278,6 @@ assert_checkequal(string(T), ["1" "3" "%i*2"; "2" "%i" "4"]);
 
 msg = msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), "table", 1);
 assert_checkerror("table()", msg);
+
+t = table(["A"; "B"; "C"], [1; 2; 3], "VariableNames", ["Key", "Value"]);
+assert_checkequal(t(t.Key == "A"), table("A", 1, "VariableNames", ["Key", "Value"]));
