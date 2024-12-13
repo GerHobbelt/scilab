@@ -35,6 +35,7 @@ import org.scilab.modules.graph.actions.CopyAction;
 import org.scilab.modules.graph.actions.CutAction;
 import org.scilab.modules.graph.actions.DeleteAction;
 import org.scilab.modules.graph.actions.base.DefaultAction;
+import org.scilab.modules.graph.utils.StyleMap;
 import org.scilab.modules.gui.bridge.contextmenu.SwingScilabContextMenu;
 import org.scilab.modules.gui.contextmenu.ContextMenu;
 import org.scilab.modules.gui.contextmenu.ScilabContextMenu;
@@ -391,7 +392,9 @@ public class BasicBlock extends XcosCell implements Serializable {
      * @param modifiedBlock a block copy containing the new style
      */
     protected void updateStyle(JavaController controller, XcosDiagram parent, BasicBlock modifiedBlock) {
-        parent.getModel().setStyle(this, modifiedBlock.getStyle());
+        StyleMap previousStyle = new StyleMap(getStyle());
+        previousStyle.putAll(modifiedBlock.getStyle());
+        parent.getModel().setStyle(this, style.toString());
     }
 
     /**
