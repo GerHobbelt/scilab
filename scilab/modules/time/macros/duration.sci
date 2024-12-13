@@ -174,51 +174,56 @@ function out = duration(varargin)
                 dura(i) = vals * cumTime;
             end
         else
-            data = input1;
+            data = input1(:);
             infmt = inputFormat;
             hasMS = grep(infmt, "/\.S+$/", "r");
-            d = emptystr(size(data, "*"), 5);
-            for i = 1:size(data, "*")
-                [_a, _b, _c, d(i,:)] = regexp(data(i), "/([0-9]+:)?([0-9]+:)?([0-9]{1,2}):([0-9]{2})(\.[0-9]+)?/");
-                if length(strindex(data(i), ":")) <> length(strindex(infmt, ":")) then
-                    error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
-                end
+
+            if hasMS then
+                data = strsubst(data, ".", ":");
             end
+
+            d = csvTextScan(data, ":");
 
             if d == [] then
                 error(msprintf(gettext("%s: Wrong value for input argument #%d.\n"), fname, 1));
             end
 
-            vals = strtod(d);
+            if size(d, 2) <> size(csvTextScan(strsubst(infmt, ".", ":"), ":"), 2) then
+                error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
+            end            
+
+            vals = zeros(size(d, 1), 5);
 
             if hasMS then
-                %isNaN = isnan(vals(:,5))
+                %isNaN = isnan(d(:,$))
                 if or(%isNaN) then
                     vals(%isNaN, 5) = 0;
                 end
-                vals(:, 5) = vals(:, 5) * 1000;
-            else
-                vals(:, 5) = 0;
+                vals(:, 5) = d(:, $);
+                d(:, $) = [];
             end
 
             select strsubst(infmt, "/\.S+$/", "", "r")
             case "dd:hh:mm:ss"
+                if size(d, 2) <> 4 then
+                    error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
+                end
+                vals(:, 1:4) = d;
             case "hh:mm:ss"
-                %isNaN = isnan(vals(:, 2))
-                if or(%isNaN) then
-                    vals(%isNaN, 2) = vals(%isNaN, 1);
+                if size(d, 2) <> 3 then
+                    error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
                 end
-
-                vals(:, 1) = 0;
+                vals(:, 2:4) = d;
             case "hh:mm"
-                %isNaN = isnan(vals(:, 2))
-                if or(%isNaN) then
-                    vals(%isNaN, :) = [zeros(%isNaN) vals(%isNaN, 3) vals(%isNaN, 4) zeros(%isNaN) zeros(%isNaN)];
+                if size(d, 2) <> 2 then
+                    error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
                 end
-                vals(~%isNaN, :) = [zeros(~%isNaN) vals(~%isNaN, 2) vals(~%isNaN, 3) zeros(~%isNaN) zeros(~%isNaN)];
-            case "mm:ss"
-                vals(:, 1) = 0;
-                vals(:, 2) = 0;
+                vals(:, 2:3) = d;
+            case "mm:ss" 
+                if size(d, 2) <> 2 then
+                    error(msprintf(gettext("%s: Wrong format for input argument #%d: Not use ""%s"".\n"), fname, 1, infmt));
+                end
+                vals(:, 3:4) = d;
             end
 
             dura = vals * cumTime;
