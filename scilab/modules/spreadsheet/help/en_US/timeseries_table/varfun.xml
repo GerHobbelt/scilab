@@ -25,7 +25,8 @@
             <varlistentry>
                 <term>f</term>
                 <listitem>
-                    <para>function to apply with prototype: y = f(x)</para>
+                    <para>function to apply with prototype: <literal>y = f(x)</literal></para>
+                    <para><literal>f</literal> must take one input argument</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -40,14 +41,14 @@
                 <term>Name, Value</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'GroupingVariables', Value: variable names or variable indices</emphasis>: 
+                        Name: <emphasis role="bold">'GroupingVariables'</emphasis>, Value: <emphasis role="bold">variable names or variable indices</emphasis>: 
                         variables values are used to create unique groups.
                     </para>
                     <para/>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'InputVariables', Value: variable names or variable indices</emphasis>: the 
+                        Name: <emphasis role="bold">'InputVariables'</emphasis>, Value: <emphasis role="bold">variable names or variable indices</emphasis>: the 
                         function will be apply only on this specified variables.
                     </para>
                     <para/>
@@ -149,6 +150,18 @@
 
             v = varfun(sum, ts(:, "x1"))
         ]]>
+        </programlisting>
+        <programlisting role="example"><![CDATA[
+            timestamp = hours([0.352500; 0.352700; 0.352900; 0.353100; 0.353300; 0.353500; 0.353700; 0.353900]);
+            x1 = [1:8]';
+            x2 = ["Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"];
+            msg = ["A   0   0   0"; "A A   0   0   0"; "A A A  0   0   0"; "A A A A   0   0   0"; "A A A A A   0   0   0"; ...
+            "A A A A A A  0   0   0"; "A A A A A A A  0   0   0"; "A A A A A A A A  0   0   0"];
+            ts = timeseries(timestamp, x1, x2, msg, "VariableNames", ["timestamp", "x1", "x2", "message"]);
+
+            f = #(x) -> (strsubst(x, " ", ""));
+            v = varfun(f, ts, "InputVariables", "message");
+            ]]>
         </programlisting>
         </para>
         <para><emphasis role="bold">v = varfun(f, t, "GroupingVariables", ["Var1", ...])</emphasis></para>

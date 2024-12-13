@@ -42,8 +42,16 @@ function out = varfun(varargin)
         error(msprintf(_("%s: Wrong type for input argument #%d: function expected.\n"), fname, 1));
     end
 
+    if typeof(method) == "function" then
+        vars = macrovar(method);
+        if size(vars(1), "*") <> 1 then
+            error(msprintf(_("%s: Wrong prototype for input argument #%d: One input argument expected.\n"), fname, 1));
+        end
+    end
+
     t = varargin(2);
-    if ~istable(t) & ~istimeseries(t) then
+    is_ts = istimeseries(t);
+    if ~istable(t) & ~is_ts then
         error(msprintf(_("%s: Wrong type for input argument #%d: table or timeseries expected.\n"), fname, 2));
     end
 
@@ -59,9 +67,13 @@ function out = varfun(varargin)
     else
         // without groupvars
         // varfun(func, A) or varfun(func, A, "InputVariables", varnames)
+        index = 1;
+        if is_ts then
+            index = 2;
+        end
         
         out = t;
-        for i = 1:size(t.vars, "*")
+        for i = index:size(t.vars, "*")
             data = out.vars(i).data;
             if isdatetime(data) then
                 newdt = data;
@@ -76,9 +88,9 @@ function out = varfun(varargin)
                 out.vars(i).data = method(data);
             end
         end
-        if istimeseries(t) then
+        if is_ts then
             out.props.variableNames(2:$) = "fun_" + varnames(2:$);
-            out.vars(1).data = t.vars(1).data(1:length(out.vars(1).data));
+            out.vars(1).data = t.vars(1).data(1:size(out.vars(2).data, "*"));
         else
             out.props.variableNames = "fun_" + varnames;
         end

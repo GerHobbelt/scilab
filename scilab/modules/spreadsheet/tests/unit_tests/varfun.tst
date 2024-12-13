@@ -49,8 +49,6 @@ expected = ["a" "2" "1" "-2"; "b" "2" "0" "-6"; "c" "1" "-0.5" "-3.5"];
 assert_checkequal(V.Properties.VariableNames, ["Var1", "GroupCount", "fun_Var2", "fun_Var3"]);
 assert_checkequal(string(V), expected);
 
-
-
 timestamp = hours([1 3 2 2 3])';
 A = timeseries(timestamp, x1, x2, "VariableNames", ["hours", "x1", "x2"]);
 V = varfun(sum, A);
@@ -62,6 +60,16 @@ V = varfun(sum, A, "GroupingVariables", "hours");
 expected = [string(hours(1:3))' string([1;2;2]), string([-0.5;-2; 3]), string([-2.5; -6; -3])];
 assert_checkequal(V.Properties.VariableNames, ["hours", "GroupCount", "fun_x1", "fun_x2"]);
 assert_checkequal(string(V), expected);
+
+timestamp = hours([0.352500; 0.352700; 0.352900; 0.353100; 0.353300; 0.353500; 0.353700; 0.353900]);
+x1 = [1:8]';
+x2 = ["Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"; "Rx"];
+msg = ["A   0   0   0"; "A A   0   0   0"; "A A A  0   0   0"; "A A A A   0   0   0"; "A A A A A   0   0   0"; ...
+"A A A A A A  0   0   0"; "A A A A A A A  0   0   0"; "A A A A A A A A  0   0   0"];
+ts = timeseries(timestamp, x1, x2, msg, "VariableNames", ["timestamp", "x1", "x2", "message"]);
+
+f = #(x) -> (strsubst(x, " ", ""));
+v = varfun(f, ts, "InputVariables", "message");
 
 
 // -----------------------------------------------------------------------------
@@ -83,3 +91,14 @@ expected = ["météo correcte" "7" "23" "17.714286" "12.371429"; ...
             "météo idéale" "10" "26.7" "17.8" "14.2"];
 assert_checkequal(V.Properties.VariableNames, ["OPINION" "GroupCount", "fun_MAX_TEMPERATURE_C", "fun_MIN_TEMPERATURE_C", "fun_SUNHOUR"]);
 assert_checkequal(string(V), expected);
+
+
+// checkerror
+t = table(x1, x2, "VariableNames", ["x1", "x2"]);
+
+function y = f2(x1, x2)
+    y = x1 + x2;
+endfunction
+
+msg = msprintf(_("%s: Wrong prototype for input argument #%d: One input argument expected.\n"), "varfun", 1);
+assert_checkerror("varfun(f2, t, ""InputVariables"", [""x1"", ""x2""])", msg);
