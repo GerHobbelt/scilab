@@ -205,7 +205,7 @@ function out = %generic_i_timeseries(varargin)
                 return
             end
 
-            j = find(j);
+            j = find(j) + 1;
         case "polynomial"
             j = coeff(j) * (c ^ [0:degree(j)]');
         case "implicitlist"
