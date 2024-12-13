@@ -10,12 +10,18 @@
 // along with this program.
 
 function out = %timeseries_f_timeseries(ts1, ts2)
-    if or(ts1.props.variableNames <> ts2.props.variableNames) then
+    varNames_ts1 = ts1.props.variableNames;
+    if or(varNames_ts1 <> ts2.props.variableNames) then
         error(msprintf(_("%s: %s properties must contains the same names.\n"), "%timeseries_f_timeseries", "VariableNames"));
     end
 
     out = ts1;
     for c = 1:size(ts1.vars, "*")
+        d1 = ts1.vars(c).data;
+        d2 = ts2.vars(c).data;
+        if typeof(d1) <> typeof(d2) then
+            error(msprintf(_("%s: Impossible to concatenate ""%s"" column: Same types expected but got ""%s"" and ""%s""."), "%timeseries_f_timeseries", varNames_ts1(c), typeof(d1), typeof(d2)));
+        end
         out.vars(c).data = [ts1.vars(c).data;ts2.vars(c).data];
     end
 

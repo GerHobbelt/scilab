@@ -36,6 +36,11 @@ function out = %table_f_table(tb1, tb2)
 
     out = tb1;
     for c = 1:size(tb1.vars, "*")
+        d1 = tb1.vars(c).data;
+        d2 = tb2.vars(c).data;
+        if typeof(d1) <> typeof(d2) then
+            error(msprintf(_("%s: Impossible to concatenate ""%s"" column: Same types expected but got ""%s"" and ""%s""."), fname, varNames_tb1(c), typeof(d1), typeof(d2)));
+        end
         out.vars(c).data = [tb1.vars(c).data; tb2.vars(c).data];
     end
  
