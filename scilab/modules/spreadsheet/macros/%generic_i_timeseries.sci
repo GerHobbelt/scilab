@@ -98,7 +98,7 @@ function out = %generic_i_timeseries(varargin)
 
                 s = size(out.vars(i).data)
                 if isscalar(val) then
-                    val = val * ones(s(1), s(2));
+                    val = repmat(val, s(1), s(2));
                 end
 
                 out.vars(i).data = val;

@@ -18,8 +18,12 @@ function out = %timeseries_6(varargin)
         out = props;
     else
         ts = varargin($);
-        idx = find(ts.props.variableNames == varargin(1));
-        out = ts.vars(idx).data;
+        if typeof(varargin(1)) == "string" then
+            idx = find(ts.props.variableNames == varargin(1));
+            out = ts.vars(idx).data;
+        else
+            out = ts(varargin(1), varargin(2));
+        end   
     end
 
 endfunction
