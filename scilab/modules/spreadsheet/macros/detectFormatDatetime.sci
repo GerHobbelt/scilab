@@ -145,12 +145,9 @@ function [fmt, typ] = detectFormatDatetime(txt)
     end
 
     if fmt == "" then
-        if and(isnum(str)) then
+        typ="string";
+        if and(isnum(txt)) then
             typ = "double";
-        // elseif ...  %T %f ? true false ? 0 1 ?
-        //     typ = "boolean";
-        else
-            typ = "string";
         end
     end
 endfunction
