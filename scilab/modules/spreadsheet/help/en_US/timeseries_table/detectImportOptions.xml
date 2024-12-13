@@ -26,7 +26,6 @@
                 <term>filename</term>
                 <listitem>
                     <para>path or name of file to read</para>
-                    <para>format accepted: .txt, .dat and .csv</para>
                     <para/>
                 </listitem>
             </varlistentry>

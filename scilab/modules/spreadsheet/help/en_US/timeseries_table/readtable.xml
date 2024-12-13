@@ -29,7 +29,6 @@
                 <term>filename</term>
                 <listitem>
                     <para>path or name of file to read</para>
-                    <para>format accepted: .txt, .dat and .csv</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -44,14 +43,14 @@
                 <term>Name, Value</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'VariableNames', Value: vector of strings</emphasis>: extracts from the file only the data 
+                        Name: <emphasis role="bold">'VariableNames'</emphasis>, Value: <emphasis role="bold">vector of strings</emphasis>: extracts from the file only the data 
                         corresponding to the entered variable names.
                     </para>
                     <para/>
                 </listitem>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'ReadRowNames', Value: boolean (default value: %f)</emphasis>: 
+                        Name: <emphasis role="bold">'ReadRowNames'</emphasis>, Value: <emphasis role="bold">boolean (default value: %f)</emphasis>: 
                         the first column of the file will be stored in the RowNames property of the table t.
                     </para>
                     <para/>

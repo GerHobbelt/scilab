@@ -26,14 +26,7 @@ function opts = detectImportOptions(filename, varargin)
 
     if isscalar(filename) then
         if isfile(filename) then
-            // get extension from the filename
-            extension = fileext(filename);
-            // .txt, .dat or .csv for delimited text files
-            if or(convstr(extension) == [".txt", ".dat", ".csv"]) then
-                f = mgetl(filename);
-            else
-                return
-            end
+            f = mgetl(filename);
         else
             f = filename;
         end
