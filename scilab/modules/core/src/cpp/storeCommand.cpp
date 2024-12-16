@@ -243,9 +243,9 @@ int isEmptyCommandQueue(void)
 
 int isEmptyCommandQueuePrioritary(void)
 {
-    ThreadManagement::LockStoreCommand();
+    //ThreadManagement::LockStoreCommand();
     bool isEmpty = commandQueuePrioritary.empty();
-    ThreadManagement::UnlockStoreCommand();
+    //ThreadManagement::UnlockStoreCommand();
     return isEmpty;
 }
 
