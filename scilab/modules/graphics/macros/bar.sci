@@ -195,9 +195,9 @@ function  varargout = bar(varargin)
     immediate_drawing = curFig.immediate_drawing
 
     if COLOR~=[]
-        plot(X,Y, "color",COLOR)
+        hdl = plot(X,Y, "color",COLOR)
     else
-        plot(X,Y)
+        hdl = plot(X,Y)
     end
 
     curFig.immediate_drawing = "off"
@@ -280,7 +280,7 @@ function  varargout = bar(varargin)
     curFig.immediate_drawing = immediate_drawing;
 
     if argn(1) == 1 then
-        varargout(1) = e;
+        varargout(1) = hdl;
     end
 
 endfunction
