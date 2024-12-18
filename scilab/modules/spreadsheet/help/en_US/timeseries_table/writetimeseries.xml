@@ -17,7 +17,7 @@
         <synopsis>
             writetimeseries(ts)
             writetimeseries(ts, filename)
-            writetimeseries(..., Name, Value)
+            writetimeseries(..., OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -37,17 +37,25 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"Delimiter"</emphasis>, string</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'Delimiter', Value: string (default value: ',')</emphasis>: 
-                        the column separator.
+                    <para> 
+                        the column separator. Default value: ",".
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"WriteVariableNames"</emphasis>, boolean</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'WriteVariableNames', Value: boolean (default value: %t)</emphasis>: 
+                    <para> 
                         when %t, writes variables names in the file (column names).
+                        Default value: %t.
                     </para>
                     <para/>
                 </listitem>
@@ -65,7 +73,7 @@
             <emphasis role="bold">writetimeseries(ts)</emphasis> writes timeseries ts into the file timeseries.txt saved in TMPDIR.
         </para>
         <para>
-            <emphasis role="bold">writetimeseries(ts, filename, Name, Value) can be used to specify the column delimiter and to write 
+            <emphasis role="bold">writetimeseries(ts, filename, OptionName, Value) can be used to specify the column delimiter and to write 
                 the variable names into the file.
             </emphasis>
         </para>

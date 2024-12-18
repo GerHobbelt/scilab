@@ -23,7 +23,7 @@
             g = groupsummary(t, groupvars, groupbins, method)
             g = groupsummary(t, groupvars, groupbins, method, inputvar)
 
-            g = groupsummary(..., Name, Value)
+            g = groupsummary(..., OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -75,28 +75,40 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>Name, Value</term>
+                <term>g</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'IncludeEmptyGroups', Value: boolean (default value: %f) </emphasis>: 
-                        returns only the combinations of groups present in the table t. When %t, the result contains also empty group.
-                    </para>
+                    <para>table object.</para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
+            <varlistentry>
+                <term><emphasis role="bold">"IncludeEmptyGroups"</emphasis>, boolean</term>
                 <listitem>
-                    <para>
-                        <emphasis role="bold">Name: 'IncludedEdge', Value: 'left' or 'right'</emphasis> (default value: 'left'): this option must 
-                        use only if groupbins is specified (i.e groupbins = [0 2 4]). When IncludedEdge is equal to 'left', data will be contained in the groups
-                        [groupbins(1), groupbins(2)), [groupbins(2), groupbins(3)), ..., [groupbins(n-1), groupbins(n)]. The last groupbins(n) is included. 
-                        If IncludedEdge is equal to 'right', the intervals will be: [groupbins(1), groupbins(2)], (groupbins(2), groupbins(3)], ... (groupbins(n-1), groupbins(n)]. 
-                        In this case, the first groupbins(1) is included. The values in groupbins must be in strictly increasing order.
+                    <para> 
+                        returns only the combinations of groups present in the table t. 
+                        When %t, the result contains also empty group.
+                        Default value: %f.
                     </para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>g</term>
+                <term><emphasis role="bold">"IncludedEdge"</emphasis>, "left" or "right"</term>
                 <listitem>
-                    <para>table object.</para>
+                    <para>
+                        this option must use only if groupbins is specified (i.e groupbins = [0 2 4]). 
+                        When IncludedEdge is equal to 'left', data will be contained in the groups
+                        [groupbins(1), groupbins(2)), [groupbins(2), groupbins(3)), ..., [groupbins(n-1), groupbins(n)]. 
+                        The last groupbins(n) is included. 
+                        If IncludedEdge is equal to 'right', the intervals will be: 
+                        [groupbins(1), groupbins(2)], (groupbins(2), groupbins(3)], ... (groupbins(n-1), groupbins(n)]. 
+                        In this case, the first groupbins(1) is included. The values in groupbins must be in strictly increasing order.
+                        Default value: "left".
+                    </para>
                     <para/>
                 </listitem>
             </varlistentry>

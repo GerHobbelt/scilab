@@ -28,7 +28,7 @@
             tsout = synchronize(tsin1, ..., tsinN, "regular", method, "TimeStep", timeStep)
             tsout = synchronize(tsin1, ..., tsinN, "regular", method, "SampleRate", sampleRate)
 
-            tsout = synchronize(..., Name, Value)
+            tsout = synchronize(..., OptionName, Value, ...)
 
             [tsout1, ..., tsoutN] = synchronize(tsin1, ..., tsinN, ....)
         </synopsis>
@@ -89,22 +89,33 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"Constant"</emphasis>, cell</term>
                 <listitem>
-                    <para><emphasis role="bold">'Constant'</emphasis>: option available only with fillwihconstant method</para>
+                    <para> 
+                        option available only with fillwihconstant method.
+                    </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"IncludedEdge"</emphasis>, "left" or "right"</term>
                 <listitem>
-                    <para><emphasis role="bold">'IncludedEdge': 'left' or 'right' value</emphasis>. This option is only available with 'count', 'firstvalue', 'lastvalue', 'mode', Scilab function,
-                    user function methods.</para>
+                    <para> 
+                        This option is only available with 'count', 'firstvalue', 'lastvalue', 'mode', Scilab function,
+                        user function methods.
+                    </para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>tsout1, ..., tsoutN</term>
                 <listitem>
-                    <para>new timeseries.</para>
+                    <para>output argument - new timeseries.</para>
                     <para/>
                 </listitem>
             </varlistentry>

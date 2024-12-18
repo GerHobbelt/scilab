@@ -19,7 +19,7 @@
             t = table(m)
             t = table(st)
 
-            t = table(..., Name, Value)
+            t = table(..., OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -47,21 +47,33 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">'VariableNames'</emphasis>: matrix of strings that contains the name of each column of <literal>t</literal>. Default value: ["Var1", ..., "VarN"]</para>
+                    <para> 
+                        contains the name of each column of <literal>t</literal>. Default value: ["Var1", ..., "VarN"]
+                    </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"RowNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">'RowNames'</emphasis>: indicator for reading the first column as row names</para>
+                    <para>
+                        the row names for t. The names must be unique and their number must be equal to size(m, 1). 
+                        Default value: [].
+                    </para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>t</term>
                 <listitem>
-                    <para>table object.</para>
+                    <para>output argument - table object.</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -97,7 +109,7 @@
             This syntaxe corresponds to <emphasis role="bold">t = <link linkend="struct2table"></link>(st)</emphasis>.
         </para>
         <para>
-            <emphasis role="bold">t = table(..., Name, Value)</emphasis> can be used to specify the variable names or the row names.
+            <emphasis role="bold">t = table(..., OptionName, Value)</emphasis> can be used to specify the variable names or the row names.
         </para>
         <itemizedlist>
             <listitem>

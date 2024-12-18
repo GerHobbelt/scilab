@@ -19,7 +19,7 @@
             p = pivot(t, Columns=colvarnames)
             p = pivot(t, Rows=rowvarnmes)
 
-            p = pivot(..., Name, Value)
+            p = pivot(..., OptionName=Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -51,24 +51,40 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>Name, Value</term>
+                <term>p</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: Method, Value: function</emphasis>: 
-                        function to apply on defined DataVariable, with prototype: y = f(x), z = f(x, ..., y)
-                    </para>
-                    <para>Available methods: "count", "percentage", "sum", "mean", "median", "mode", "var" (variance), "std" (standard deviation), 
-                        "min", "max", "range", "nummissing", "numunique, "nnz", and user function.</para>
-                    <para/>
+                    <para>output argument - the pivot table</para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName=Value</emphasis> are:
+            </para>
+            <para/>
+            <varlistentry>
+                <term><emphasis role="bold">"Method"</emphasis>=function</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: DataVariable, Value: variable names or variable indices</emphasis>: 
+                    <para> 
+                        function to apply on defined DataVariable, with prototype: y = f(x), z = f(x, ..., y).
+                        Available methods: "count", "percentage", "sum", "mean", "median", "mode", "var" (variance), "std" (standard deviation), 
+                        "min", "max", "range", "nummissing", "numunique, "nnz", and user function.
+                    </para>
+                    <para/>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"DataVariable"</emphasis>=variable names or variable indices</term>
+                <listitem>
+                    <para>
                         variable to which the computation method wil be applied.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"ColumnsBinMethod"</emphasis>=data interval or time interval</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: ColumnsBinMethod, Value: data interval or time interval</emphasis>: 
+                    <para>
                         indicates how the colvarnames is grouped.
                     </para>
                     <para>data type expected: vector of doubles vector containing the data interval
@@ -76,10 +92,12 @@
                     <para>Depending on the type of the variables contained in groupvars, groupbins will be a cell of the same size
                          as groupvars, where each element will be applied to each variable.</para>
                     <para/>
-                    <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"RowsBinMethod"</emphasis>=data interval or time interval</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: RowsBinMethod, Value: data interval or time interval</emphasis>: 
+                    <para>
                         indicates how the rowvarnames is grouped.
                     </para>
                     <para>data type expected: vector of doubles vector containing the data interval
@@ -87,30 +105,33 @@
                     <para>Depending on the type of the variables contained in groupvars, groupbins will be a cell of the same size
                          as groupvars, where each element will be applied to each variable.</para>
                     <para/>
-                    <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"IncludeTotals"</emphasis>=boolean</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: IncludeTotals, Value: boolean (default value: %f)</emphasis>: 
+                    <para>
                         when %t, the pivot table will have an additional row containing the totals for each column and an 
-                        additional variable containing the totals for each row
-                    </para>
-                    <para/>
-                </listitem>
-                <listitem>
-                    <para><emphasis role="bold">Name: IncludedEdge, Value: "left" or "right"</emphasis>: 
-                        (default value: 'left'): this option must use only if RowsBinMethod or/and ColumnsBinMethod are specified (i.e RowsBinMethod = [0 2 4]). 
-                        When IncludedEdge is equal to 'left', data will be contained in the groups
-                        [bins(1), bins(2)), [bins(2), bins(3)), ..., [bins(n-1), bins(n)]. The last bins(n) is included. 
-                        If IncludedEdge is equal to 'right', the intervals will be: [bins(1), bins(2)], (bins(2), bins(3)], ... (bins(n-1), bins(n)]. 
-                        In this case, the first bins(1) is included. The values in RowsBinMethod or/and ColumnsBinMethod must be in strictly increasing order.
-                    </para>
+                        additional variable containing the totals for each row.
+                        Default value: %f.
+                        </para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>p</term>
+                <term><emphasis role="bold">"IncludedEdge"</emphasis>="left" or "right"</term>
                 <listitem>
-                    <para>the pivot table</para>
+                    <para>
+                        this option must use only if RowsBinMethod or/and ColumnsBinMethod are specified 
+                        (i.e RowsBinMethod = [0 2 4]). 
+                        When IncludedEdge is equal to 'left', data will be contained in the groups
+                        [bins(1), bins(2)), [bins(2), bins(3)), ..., [bins(n-1), bins(n)]. The last bins(n) is included. 
+                        If IncludedEdge is equal to 'right', the intervals will be: 
+                        [bins(1), bins(2)], (bins(2), bins(3)], ... (bins(n-1), bins(n)]. 
+                        In this case, the first bins(1) is included. The values in RowsBinMethod 
+                        or/and ColumnsBinMethod must be in strictly increasing order.
+                        Default value: "left".
+                        </para>
                     <para/>
                 </listitem>
             </varlistentry>

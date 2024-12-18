@@ -16,7 +16,7 @@
         <title>Syntax</title>
         <synopsis>
             t = struct2table(st)
-            t = struct2table(st, Name, Value)
+            t = struct2table(st, OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -29,18 +29,25 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'VariableNames', Value: vector of strings</emphasis>: 
+                    <para> 
                         the variable name of each column of t. The variable names must be unique and their 
                         number must be equal to size(m, 2). 
                         Default value: ["Var1", ..., "VarN"].
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"RowNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'RowNames', Value: vector of string</emphasis>: 
+                    <para>
                         the row names for t. The names must be unique and their number must be equal to size(m, 1). 
                         Default value: [].
                     </para>
@@ -50,7 +57,7 @@
             <varlistentry>
                 <term>t</term>
                 <listitem>
-                    <para>table object</para>
+                    <para>output argument - table object</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -59,14 +66,11 @@
     <refsection>
         <title>Description</title>
         <para>
-            <emphasis role="bold">struct2table</emphasis> converts a struct into a table. 
+            <emphasis role="bold">struct2table</emphasis> converts a struct into a <link linkend="table">table</link>. 
             Each fieldnames of st becomes a variable name of t.
         </para>
         <para>
-            Like table function, you can specify the variable and row names thanks to optional parameters.
-        </para>
-        <para>
-            You can use directly <emphasis role="bold">t = table(st)</emphasis>.
+            <literal>t = struct2table(st, ...)</literal> is equivalent to <literal>t = table(st, ...)</literal>.
         </para>
     </refsection>
     <refsection>

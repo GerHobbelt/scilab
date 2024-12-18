@@ -16,7 +16,7 @@
         <title>Syntax</title>
         <synopsis>
             v = varfun(f, t)
-            v = varfun(f, t, Name, Value)
+            v = varfun(f, t, OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -37,19 +37,24 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"GroupingVariables"</emphasis>, variable names or variable indices</term>
                 <listitem>
-                    <para>
-                        Name: <emphasis role="bold">'GroupingVariables'</emphasis>, Value: <emphasis role="bold">variable names or variable indices</emphasis>: 
+                    <para> 
                         variables values are used to create unique groups.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"InputVariables"</emphasis>, variable names or variable indices</term>
                 <listitem>
-                    <para>
-                        Name: <emphasis role="bold">'InputVariables'</emphasis>, Value: <emphasis role="bold">variable names or variable indices</emphasis>: the 
-                        function will be apply only on this specified variables.
+                    <para> 
+                        the function will be apply only on this specified variables.
                     </para>
                     <para/>
                 </listitem>
@@ -57,7 +62,8 @@
             <varlistentry>
                 <term>v</term>
                 <listitem>
-                    <para>table or timeseries object (same object as t).</para>
+                    <para>output argument - <link linkend="table">table</link>
+                     or <link linkend="timeseries">timeseries</link> object (same object as t).</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -66,7 +72,8 @@
     <refsection>
         <title>Description</title>
         <para>
-            The <emphasis role="bold">varfun</emphasis> function returns a table or timeseries (same object as t) 
+            The <emphasis role="bold">varfun</emphasis> function returns a <link linkend="table">table</link> or 
+            <link linkend="timeseries">timeseries</link> (same object as t) 
             where each variable (columns) contains the result of the function applied to each variable of t.
         </para>
         <para>

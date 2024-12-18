@@ -17,7 +17,7 @@
         <synopsis>
             ts = readtimeseries(filename)
             ts = readtimeseries(filename, opts)
-            ts = readtimeseries(..., Name, Value)
+            ts = readtimeseries(..., OptionName, Value)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -37,40 +37,61 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para>
-                        <emphasis role="bold">Name: 'VariableNames', Value: vector of strings</emphasis>: extracts from the file only the data 
-                        corresponding to the entered variable names.
+                    <para> 
+                        extracts from the file only the data corresponding to the entered variable names.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"RowTimes"</emphasis>, <link linkend="duration">duration</link> or <link linkend="datetime">datetime</link> column vector</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'RowTimes', Value: <link linkend="duration"></link> or <link linkend="datetime"></link> column vector</emphasis>: 
                         if the filename has no time, use this property to add a time index in the timeseries.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"StartTime"</emphasis>, <link linkend="duration">duration</link> or <link linkend="datetime">datetime</link> value</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'StartTime', duration or datetime value</emphasis>: 
-                        pecifies the start time of the timeseries.
+                        specifies the start time of the timeseries.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"TimeStep"</emphasis>, <link linkend="duration">duration</link> or <link linkend="calendarDuration">calendarDuration</link> value</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'TimeStep', Value: duration or calendarDuration value</emphasis>: 
                         time step.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"SampleRate"</emphasis>, real scalar</term>
                 <listitem>
                     <para>
-                        <emphasis role="bold">Name: 'SampleRate', Value: real scalar</emphasis>: 
                         number of samples per second (Hz).
+                    </para>
+                    <para/>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"ConvertTime"</emphasis>, function</term>
+                <listitem>
+                    <para>
+                        function to apply on the column specified with RowTimes.
+                        It converts the data. For example: to convert to seconds with <link linkend="seconds">seconds</link> function.
                     </para>
                     <para/>
                 </listitem>
@@ -78,7 +99,7 @@
             <varlistentry>
                 <term>ts</term>
                 <listitem>
-                    <para>timeseries object.</para>
+                    <para>output argument - timeseries object.</para>
                     <para/>
                 </listitem>
             </varlistentry>

@@ -19,7 +19,7 @@
             ts = timeseries(var1, ..., varN, 'RowTimes', time)
             ts = timeseries(var1, ..., varN, 'TimeStep', timeStep)
             ts = timeseries(var1, ..., varN, 'SampleRate', sampleRate)
-            ts = timeseries(..., Name, Value)
+            ts = timeseries(..., OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -54,30 +54,54 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">'VariableNames'</emphasis>: matrix of strings that contains the name of each ts'column. Default value: ["Time", "Var1", ..., "VarN"]</para>
+                    <para> 
+                        contains the name of each ts'column. Default value: ["Time", "Var1", ..., "VarN"].
+                    </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"VariableUnits"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">'VariableUnits'</emphasis>: matrix of strings that contains the unit of each column. Default value: ["", ..., ""]</para>
+                    <para> 
+                        contains the unit of each column. Default value: ["", ..., ""].
+                    </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"VariableContinuity"</emphasis>, string</term>
                 <listitem>
-                    <para><emphasis role="bold">'VariableContinuity'</emphasis>: specifies how each variable is filled when calling the <link linkend="retime"/> and <link linkend="synchronize"/> functions: 
-                    <emphasis role="blod">"unset", "continuous", "step", "event"</emphasis>. Default value : ["", ..., ""]</para>
+                    <para> 
+                        specifies how each variable is filled when calling the <link linkend="retime"/> and 
+                        <link linkend="synchronize"/> functions: 
+                        <emphasis role="blod">"unset", "continuous", "step", "event"</emphasis>. 
+                        Default value : ["", ..., ""].
+                    </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"StartTime"</emphasis>, <link linkend="duration">duration</link> or <link linkend="datetime">datetime</link> value</term>
                 <listitem>
-                    <para><emphasis role="bold">'StartTime'</emphasis>: specifies the start time of the timeseries. duration or datetime value. Default value: first element of time vector.</para> 
+                    <para> 
+                        specifies the start time of the timeseries.
+                        Default value: first element of time vector.
+                    </para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>ts</term>
                 <listitem>
-                    <para>timeseries object.</para>
+                    <para>output argument - timeseries object.</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -101,7 +125,7 @@
             sample rate <emphasis role="bold">sampleRate</emphasis>. sampleRate is a real value, number of samples per second. The first value of this time vector is zero seconds 
             and will have the same number of rows as the variable data vectors.
         </para>
-        <para><emphasis role="bold">ts = timeseries(..., Name, Value)</emphasis> can be used to specify the variable names or unit, the start time or the continuity of variables.
+        <para><emphasis role="bold">ts = timeseries(..., OptionName, Value)</emphasis> can be used to specify the variable names or unit, the start time or the continuity of variables.
         </para>
         <itemizedlist>
             <listitem>

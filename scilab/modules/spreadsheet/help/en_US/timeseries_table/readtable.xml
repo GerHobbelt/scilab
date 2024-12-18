@@ -18,8 +18,8 @@
             t = readtable(filename)
             t = readtable(filename, opts)
 
-            t = readtable(filename, Name, Value)
-            t = readtable(filename, opts, Name, Value)
+            t = readtable(filename, OptionName, Value, ...)
+            t = readtable(filename, opts, OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -39,19 +39,25 @@
                     <para/>
                 </listitem>
             </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>
+            <para/>
             <varlistentry>
-                <term>Name, Value</term>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para>
-                        Name: <emphasis role="bold">'VariableNames'</emphasis>, Value: <emphasis role="bold">vector of strings</emphasis>: extracts from the file only the data 
-                        corresponding to the entered variable names.
+                    <para> 
+                        extracts from the file only the data corresponding to the entered variable names.
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"ReadRowNames"</emphasis>, boolean</term>
                 <listitem>
                     <para>
-                        Name: <emphasis role="bold">'ReadRowNames'</emphasis>, Value: <emphasis role="bold">boolean (default value: %f)</emphasis>: 
                         the first column of the file will be stored in the RowNames property of the table t.
+                        Default value: %f.
                     </para>
                     <para/>
                 </listitem>
@@ -59,7 +65,7 @@
             <varlistentry>
                 <term>t</term>
                 <listitem>
-                    <para>table object.</para>
+                    <para>output argument - table object.</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -73,7 +79,7 @@
             Accepted file formats are .txt, .dat or .csv.
         </para>
         <para>
-            readtable detects the format file thanks to detectImportOptions function. opts contains all information on the file.
+            readtable detects the format file thanks to <link linkend="detectImportOptions">detectImportOptions</link> function. opts contains all information on the file.
         </para>
         <para>
             To extract only the necessary variables (columns), use <emphasis role="bold">t = readtable(filename, "VariableNames", value)</emphasis>.

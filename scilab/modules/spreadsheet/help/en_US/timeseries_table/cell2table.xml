@@ -16,7 +16,7 @@
         <title>Syntax</title>
         <synopsis>
             t = cell2table(c)
-            t = cell2table(c, Name, Value)
+            t = cell2table(c, OptionName, Value, ...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -31,27 +31,34 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>Name, Value</term>
+                <term>t</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'VariableNames', Value: vector of strings</emphasis>: 
+                    <para>table object</para>
+                    <para/>
+                </listitem>
+            </varlistentry>
+            <para>
+                Optional pairs <emphasis role="bold">OptionName, Value</emphasis> are:
+            </para>    
+            <para/>            
+            <varlistentry>
+                <term><emphasis role="bold">"VariableNames"</emphasis>, vector of strings</term>
+                <listitem>
+                    <para> 
                         the variable name of each column of t. The variable names must be unique and their 
                         number must be equal to size(m, 2). 
                         Default value: ["Var1", ..., "VarN"].
                     </para>
                     <para/>
                 </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term><emphasis role="bold">"RowNames"</emphasis>, vector of strings</term>
                 <listitem>
-                    <para><emphasis role="bold">Name: 'RowNames', Value: vector of string</emphasis>: 
+                    <para>
                         the row names for t. The names must be unique and their number must be equal to size(m, 1). 
                         Default value: [].
                     </para>
-                    <para/>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term>t</term>
-                <listitem>
-                    <para>table object</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -64,7 +71,7 @@
             Each column of c becomes a variable in t. c{:,i} must be the same type.
         </para>
         <para>
-            Like table function, you can specify the variable and row names thanks to optional parameters.
+            Like <link linkend="table">table</link> function, "VariableNames" and "RowNames" can be specified.
         </para>
     </refsection>
     <refsection>
