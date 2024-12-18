@@ -69,6 +69,7 @@ ELEMENTARY_FUNCTIONS_IMPEXP void frank_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void invhilb_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void hilb_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void magic_matrix(int _iSize, double *_pData);
+ELEMENTARY_FUNCTIONS_IMPEXP void wilkinson_matrix(int _iSize, double *_pData);
 
 ELEMENTARY_FUNCTIONS_IMPEXP void deyes(double *_pdblOut, int _iRows, int _iCols);
 

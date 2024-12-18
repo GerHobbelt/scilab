@@ -93,6 +93,10 @@ types::Function::ReturnValue sci_gallery(types::typed_list &in, int _iRetCount, 
     {
         frank_matrix(N, pDblOut->get());
     }
+    else if (wcsName == L"wilkinson")
+    {
+        wilkinson_matrix(N, pDblOut-> get());
+    }
     else
     {
         Scierror(999, _("%s: Wrong value for input argument #%d: %s, %s, %s or %s expected.\n"), "%_gallery", "hilb", "invhilb", "magic", "frank");

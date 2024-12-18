@@ -197,3 +197,32 @@ void magic_matrix(int _iSize, double *_pData)
         }
     }
 }
+
+void wilkinson_matrix(int _iSize, double *_pData)
+{
+    int iIndex1		= 0;
+    int iIndex2		= 0;
+    double dblVal	= 0;
+    double N = _iSize;
+
+    memset(_pData, 0x00, sizeof(double) * _iSize * _iSize);
+
+    if (_iSize == 1)
+    {
+        return;
+    }
+
+    for (iIndex1 = 0 ; iIndex1 < _iSize ; iIndex1++)
+    {
+        dblVal = dabss(-(N - 1)/2 + iIndex1);
+        _pData[iIndex1 * _iSize + iIndex1] = dblVal;
+        if (iIndex1 * _iSize + iIndex1 + 1 < _iSize * _iSize)
+        {
+            _pData[iIndex1 * _iSize + iIndex1 + 1] = 1;
+        }
+        if (iIndex1 * _iSize + iIndex1 - 1 > 0)
+        {
+            _pData[iIndex1 * _iSize + iIndex1 - 1] = 1;
+        }
+    }
+}
