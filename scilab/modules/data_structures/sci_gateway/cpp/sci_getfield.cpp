@@ -217,7 +217,16 @@ static types::Function::ReturnValue sci_getfieldStruct(types::typed_list &in, in
 
         for (int i = 0 ; i < pFields->getSize() ; i++)
         {
-            wstFields.push_back(pFields->get(i));
+            std::wstring wstField(pFields->get(i));
+            if (pSt->exists(wstField))
+            {
+                wstFields.push_back(wstField);
+            }
+            else
+            {
+                Scierror(78, _("%s: Field \"%ls\" does not exist\n"), "getfield", wstField.data());
+                return types::Function::Error;
+            }
         }
 
         vectResult = pSt->extractFields(wstFields);
