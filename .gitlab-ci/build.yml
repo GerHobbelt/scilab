@@ -137,7 +137,6 @@ linux:
       - DISTRO:
           - ubuntu:20.04
           - ubuntu:22.04
-          - ubuntu:23.10
           - ubuntu:24.04
           - fedora:39
           - fedora:40
