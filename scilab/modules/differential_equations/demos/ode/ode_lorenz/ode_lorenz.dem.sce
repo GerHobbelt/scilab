@@ -35,6 +35,7 @@ function demo_ode_lorenz()
     clf(my_handle,"reset");
     demo_viewCode("ode_lorenz.dem.sce");
     title(_("Lorenz differential equation"))
+    my_handle.axes_size = [605 585];
 
     function h = poly3d(x,y,z)
         xpoly(x,y);h=gce();h.data(:,3)=z
@@ -47,16 +48,14 @@ function demo_ode_lorenz()
     curAxe.view            = "3d"
     curAxe.axes_visible    = "on"
     curAxe.data_bounds     = [min(y,"c")';max(y,"c")']
-    curAxe.margins(3)      = 0.2;
+    curAxe.margins(3)      = 0.25;
     curAxe.title.text      = [_("Lorenz differential equation")
-    "dy1/dt = -10*y1 + 10*y2"
-    "dy2/dt =  28*y1 -    y2 -  y1*y3"
-    "dy3/dt =          y1*y2 - 8/3*y3"
+    "$\left\{\begin{array}{rl} \frac{dy_1}{dt} &= -10y_1 + 10y_2 \\ \frac{dy_2}{dt} &= 28y_1 - y_2 - y_1y_3 \\ \frac{dy_3}{dt} &= y_1y_2 - \frac{8}{3}y_3\end{array}\right.$"
     ]
     curAxe.grid            = curAxe.hidden_axis_color*ones(1,3);
-    curAxe.x_label.text    = "y1"
-    curAxe.y_label.text    = "y2"
-    curAxe.z_label.text    = "y3"
+    curAxe.x_label.text    = "$y_1$"
+    curAxe.y_label.text    = "$y_2$"
+    curAxe.z_label.text    = "$y_3$"
 
     //the trace
     p = poly3d(y(1,1),y(2,1),y(3,1));

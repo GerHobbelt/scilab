@@ -26,6 +26,7 @@ function demo_ode_lotka()
     my_handle = scf(100001);
     clf(my_handle,"reset");
     demo_viewCode("ode_lotka.dem.sce");
+    my_handle.axes_size = [610 585];
 
 
     function yprim=f(t,y)
@@ -48,13 +49,13 @@ function demo_ode_lotka()
     fy = ymin:0.5:ymax;
 
     fchamp(f,1,fx,fy);
-    xlabel("y(1)","fontsize",3)
-    ylabel("y(2)","fontsize",3)
+    xlabel("$y_1$","fontsize",3)
+    ylabel("$y_2$","fontsize",3)
     a=gca();
     a.margins(3)=0.2;
     title([_("Lotka-Volterra vector field")
-    "dy1/dt=  3*y1 - 2*y1*y2";
-    "dy2/dt= -2*y2 +   y1*y2"],"fontsize",3)
+    "$\left\{\begin{array}{rl} \frac{dy_1}{dt} &= 3y_1 - 2y_1y_2 \\ \frac{dy_2}{dt} &= -2y_2 + y_1y_2\end{array}\right.$"
+    ],"fontsize",3)
 
 
     t0       = 0;

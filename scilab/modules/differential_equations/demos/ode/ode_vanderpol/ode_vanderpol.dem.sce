@@ -44,12 +44,11 @@ function demo_ode_vanderpol()
     yr = ymin:1:ymax;
 
     fchamp(f,1,xr,yr);
-    xlabel("y(1)","fontsize",3)
-    ylabel("y(2)","fontsize",3)
-    a=gca();a.margins(3)=0.2
+    xlabel("$y_1$","fontsize",3)
+    ylabel("$y_2$","fontsize",3)
+    a=gca();a.margins(3)=0.23
     title([_("Van der Pol vector field")
-    "dy1/dt=y2"
-    "dy2/dt=5*(1-y1^2)*y2-y1"],"fontsize",3)
+    "$\left\{\begin{array}{rl} \frac{dy_1}{dt} &= y_2 \\ \frac{dy_2}{dt} &= 5(1-y_1^2)y_2 - y_1 \end{array}\right.$"],"fontsize",3)
 
     t0=0; dt=0.05; tmax=15;
     t=t0:dt:tmax;

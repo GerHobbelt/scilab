@@ -28,7 +28,7 @@ function demo_ode_simple()
     plot2d(t',ee',style=2);
     xlabel("t");ylabel("x");
     title(["Simple ODE"
-    " xdot=x"],"fontsize",3)
+    "$\begin{array}{l} \frac{dx}{dt} &= x\end{array}$"],"fontsize",3)
 
 endfunction
 

@@ -44,7 +44,7 @@ function demo_ode_1dvect()
     a.tight_limits = "on"
     a.data_bounds = [tmin, ymin; tmax, ymax]
     title([_("ODE 1D vector field")
-    "dy/dt=  y^2 - t"], "fontsize", 3)
+    "$\begin{array}{l} \frac{dy}{dt} &= y^2 - t\end{array}$"], "fontsize", 3)
 
     oldt0 = 10*tmax;
     oldy0 = 10*ymax;
