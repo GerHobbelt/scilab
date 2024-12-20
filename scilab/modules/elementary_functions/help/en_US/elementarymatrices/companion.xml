@@ -28,7 +28,7 @@
             <varlistentry>
                 <term>p</term>
                 <listitem>
-                    <para>polynomial or vector of polynomials</para>
+                    <para>double or polynomial vector</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -41,6 +41,10 @@
     </refsection>
     <refsection>
         <title>Description</title>
+        <para>
+            <emphasis role="bold">A = companion(p)</emphasis> with p which is a vector of polynomial coefficients returns the 
+            companion matrix. The coefficients must be in order of decreasing degree.
+        </para>
         <para>
             Returns a matrix <literal>A</literal> with characteristic polynomial equal
             to <literal>p</literal> if <literal>p</literal> is monic. If <literal>p</literal> is not monic
@@ -55,13 +59,27 @@
     </refsection>
     <refsection>
         <title>Examples</title>
+        <para>
+            <emphasis role="bold">Companion matrix created from a polynom</emphasis></para>
+        <para>
         <programlisting role="example"><![CDATA[
 s=poly(0,'s');
 p=poly([1,2,3,4,1],'s','c')
-det(s*eye(4,4)-companion(p))
+c = companion(p)
+det(s*eye(4,4)-c)
 roots(p)
 spec(companion(p))
  ]]></programlisting>
+</para>
+<para><emphasis role="bold">Companion matrix created from vector of polynomial coefficients</emphasis></para>
+<para>
+    <programlisting role="example"><![CDATA[
+        // p = x4 + 4x3 + 3x2 + 2x + 1
+        c = [1 4 3 2 1];
+        companion(c)
+        ]]>
+        </programlisting>
+        </para>
     </refsection>
     <refsection role="see also">
         <title>See also</title>
@@ -76,5 +94,16 @@ spec(companion(p))
                 <link linkend="randpencil">randpencil</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revdescription>
+                    <literal>companion</literal> now accepts a vector of polynomial coefficients.
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>
