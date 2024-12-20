@@ -23,13 +23,12 @@ extern "C"
 
 types::Function::ReturnValue sci_gallery(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
-    types::Double* pDblIn       = NULL;
-    types::Double* pDblOut      = NULL;
+    types::Double* pDblIn   = NULL;
+    types::Double* pDblOut  = NULL;
 
-
-    if (in.size() != 2)
+    if (in.size() < 2)
     {
-        Scierror(77, _("%s: Wrong number of input argument: %d expected.\n"), "%_gallery", 2);
+        Scierror(77, _("%s: Wrong number of input argument: At least %d expected.\n"), "%_gallery", 2);
         return types::Function::Error;
     }
 
@@ -95,16 +94,26 @@ types::Function::ReturnValue sci_gallery(types::typed_list &in, int _iRetCount, 
     }
     else if (wcsName == L"wilkinson")
     {
-        wilkinson_matrix(N, pDblOut-> get());
+        wilkinson_matrix(N, pDblOut->get());
+    }
+    else if (wcsName == L"pascal")
+    {
+        int K = 0;
+        if (in.size() == 3)
+        {
+            types::Double* pDblInK = in[2]->getAs<types::Double>();
+            K = static_cast<int>(pDblInK->get(0));
+        }
+        pascal_matrix(N, K, pDblOut->get());
     }
     else
     {
-        Scierror(999, _("%s: Wrong value for input argument #%d: %s, %s, %s or %s expected.\n"), "%_gallery", "hilb", "invhilb", "magic", "frank");
+        Scierror(999, _("%s: Wrong value for input argument #%d: %s expected.\n"), "%_gallery", 1, "\"hilb\", \"invhilb\", \"magic\", \"frank\", \"wilkinson\" or \"pascal\"");
         return types::Function::Error;
     }
-        
+
     out.push_back(pDblOut);
-    
+
     return types::Function::OK;
 }
 /*--------------------------------------------------------------------------*/

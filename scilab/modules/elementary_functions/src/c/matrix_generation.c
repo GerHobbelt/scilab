@@ -16,6 +16,40 @@
 #include <string.h>
 #include "stdio.h"
 
+void pascal_matrix(int _iSize, int k, double *_pData)
+{
+    int iOne        = 1;
+    double dblOne   = 1.0;
+    int size        = _iSize * _iSize;
+    int iIndex1     = 0;
+
+    if (k == 0)
+    {
+        C2F(dset)(&size, &dblOne, _pData, &iOne);
+
+        for (iIndex1 = _iSize + 1; iIndex1 < size; iIndex1++)
+        {
+            if ((iIndex1 % _iSize) != 0) 
+            {
+                _pData[iIndex1] = _pData[iIndex1 - 1] + _pData[iIndex1 - _iSize];
+            }
+        }
+    } 
+    else
+    {
+        memset(_pData, 0x00, sizeof(double) * _iSize * _iSize);
+        C2F(dset)(&_iSize, &dblOne, _pData, &iOne);
+
+        for (iIndex1 = _iSize + 1; iIndex1 < size; iIndex1++)
+        {
+            if ((iIndex1 % (_iSize + 1)) <= ((size - iIndex1)/_iSize)) 
+            {
+                _pData[iIndex1] = _pData[iIndex1 - 1] - _pData[iIndex1 - _iSize - 1];
+            }
+        }
+    }
+}
+
 void frank_matrix(int _iSize, double *_pData)
 {
     int iIndex1		= 0;
