@@ -130,7 +130,7 @@ static void print_rules(const std::string& _parent, const double _value)
 %defines
 
 // error displayed in Scilab
-//%define parse.error detailed
+%define parse.error detailed
 
 %union
 {
