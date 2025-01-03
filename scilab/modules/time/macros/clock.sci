@@ -21,9 +21,9 @@ function [t, tz, Dst] = clock()
 
     // Time zone
     if argn(1) > 1 then
-        tz = getdate(0)
-        tz = tz(7) + tz(8)/60
-        if tz > 12
+        tz_vec = getdate(0)
+        tz = tz_vec(7) + tz_vec(8)/60
+        if tz_vec(1) < 1970
             tz = tz - 24
         end
     end

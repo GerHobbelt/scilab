@@ -49,14 +49,30 @@ f = (u - int(u))*1000;
 D = getdate(u);
 assert_checkequal(D(10), f);
 
-// -------------- // Only for time zone = +1h00
-dt = getdate(0);
-assert_checkequal(dt, [1970 1 1 1 5 1 1 0 0 0]);
+// -------------- check for reference value
+[_, tz] = clock();
+if tz >= 0
+    dt = getdate(0);
+    tz_hours = int(tz);
+    tz_minutes = (tz - tz_hours) * 60;
+    assert_checkequal(dt, [1970 1 1 1 5 1 tz_hours tz_minutes 0 0]);
+else
+    dt = getdate(-tz*3600);
+    assert_checkequal(dt, [1970 1 1 1 5 1 0 0 0 0]);
+end
 
-dt = getdate(1);
-assert_checkequal(dt, [1970 1 1 1 5 1 1 0 1 0]);
+if tz >= 0
+    dt = getdate(1);
+    tz_hours = int(tz);
+    tz_minutes = (tz - tz_hours) * 60;
+    assert_checkequal(dt, [1970 1 1 1 5 1 tz_hours tz_minutes 1 0]);
+else
+    dt = getdate(-tz*3600 + 1);
+    assert_checkequal(dt, [1970 1 1 1 5 1 0 0 1 0]);
+end
 
-dt = getdate(90542256);
+// reference time is in Europe/Paris GMT+1 ; translate on current timezone
+dt = getdate(90542256 - (tz - 1)*3600);
 assert_checkequal(dt, [1972 11 46 318 2 13 23 37 36 0]);
 
 t1_ref = getdate("s");
@@ -64,8 +80,8 @@ t3_ref = getdate();
 t2_ref = datenum();
 
 t1 = t1_ref - t3_ref(10)/1000;
-t2 = (t2_ref - datenum(1970,1,1,1,0,0)) *3600*24;
-t3 = (datenum(t3_ref(1),t3_ref(2),t3_ref(6),t3_ref(7),t3_ref(8),t3_ref(9)) - datenum(1970,1,1,1,0,0)) * 3600 * 24;
+t2 = (t2_ref - datenum(1970,1,1,tz,0,0)) *3600*24;
+t3 = (datenum(t3_ref(1),t3_ref(2),t3_ref(6),t3_ref(7),t3_ref(8),t3_ref(9)) - datenum(1970,1,1,tz,0,0)) * 3600 * 24;
 
 assert_checkfalse((abs(t2-t1) > 1) & (abs(t2-t1)-3600 > 1));
 assert_checkfalse((abs(t3-t1) > 1) & (abs(t3-t1)-3600 > 1));
