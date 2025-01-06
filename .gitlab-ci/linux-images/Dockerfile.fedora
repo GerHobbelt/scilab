@@ -13,10 +13,9 @@ RUN dnf install -y \
   libXft \
   util-linux \
   xz \
+  libXtst \
   && dnf clean all \
   && rm -fr /var/cache/*
-
-ENV SCI_JAVA_ENABLE_HEADLESS 1
 
 RUN useradd --create-home scilab
 USER scilab

@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install -y \
   xz-utils \
   curl \
   unzip \
+  libxi6 \
   locales gcc g++ gfortran make gettext \
   && rm -rf /var/lib/apt/lists/*
 
@@ -28,8 +29,6 @@ RUN locale-gen  en_US en_US.UTF-8 \
                 zh_TW zh_TW.UTF-8
 
 ENV LANG=en_US.UTF-8
-
-ENV SCI_JAVA_ENABLE_HEADLESS 1
 
 RUN useradd --create-home scilab
 USER scilab

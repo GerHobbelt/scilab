@@ -1098,6 +1098,14 @@ function status = test_single(_module, _testPath, _testName)
                     toRemove = grep(txt, "/usr/bin/chcon:");
                     txt(toRemove) = [];
                 end
+
+                if ~isempty(txt) then
+                    // Unsupported look & feel
+                    toRemove = grep(txt, "Cannot find this look and feel:");
+                    if ~isempty(toRemove) then
+                        txt(toRemove:(toRemove+1)) = [];
+                    end
+                end
             end
 
             if getos() == "Windows" then
