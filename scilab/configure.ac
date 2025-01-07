@@ -2693,11 +2693,11 @@ if test "$CURRENT_YEAR" != "$DETECTED_YEAR"; then
     sed -i -e "s|2017-$DETECTED_YEAR|2017-$CURRENT_YEAR|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
     
     sed -i -e "s| 2022-$DETECTED_YEAR | 2022-$CURRENT_YEAR |g" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg
-    AC_CHECK_PROG(INKSCAPE, inkscape)
+    AC_PATH_PROG(INKSCAPE, inkscape)
     if test -n "$INKSCAPE"; then
         $INKSCAPE -w 600 -h 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
     else
-        AC_CHECK_PROG(CAIROSVG, cairosvg)
+        AC_PATH_PROG(CAIROSVG, cairosvg)
         if test -n "$CAIROSVG"; then
             $CAIROSVG --output-width 600 --output-height 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
         fi
@@ -2717,7 +2717,6 @@ DETECTED_VERSION=$(grep -m 1 ">Scilab" ${SCI_SRCDIR}/modules/gui/images/icons/ab
 if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
     # alert the user
     AC_MSG_WARN([Migrating from version $DETECTED_VERSION to $SCILAB_BINARY_VERSION])
-    AC_PATH_PROG(INKSCAPE, inkscape)
     # put the version into Version.incl
     echo "SCIVERSION=scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR" >$SCI_SRCDIR/Version.incl
     # put the correct text in version.h version.h.in version.h.vc
@@ -2741,7 +2740,15 @@ if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
             $(find ${SCI_SRCDIR} -iname '*.rc')
     # update banner, inkscape is used to generate png from svg
     sed -i -e "s|Scilab [[0-9]]\+\(\.[[0-9]]\+\)\+|Scilab $SCILAB_BINARY_VERSION|" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg
-    $INKSCAPE -w 600 -h 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+    AC_PATH_PROG(INKSCAPE, inkscape)
+    if test -n "$INKSCAPE"; then
+        $INKSCAPE -w 600 -h 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+    else
+        AC_PATH_PROG(CAIROSVG, cairosvg)
+        if test -n "$CAIROSVG"; then
+            $CAIROSVG --output-width 600 --output-height 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+        fi
+    fi
     # alert the user
     AC_MSG_WARN([New version $SCILAB_BINARY_VERSION detected. Source files updated, commit them !])
 fi

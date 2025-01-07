@@ -68,7 +68,7 @@ BEGIN
             VALUE "FileDescription", "tclsci module"
             VALUE "FileVersion", "2025, 1, 0, 0"
             VALUE "InternalName", "tclsci module"
-            VALUE "LegalCopyright", "Copyright (C) 2024"
+            VALUE "LegalCopyright", "Copyright (C) 2025"
             VALUE "OriginalFilename", "tclsci.dll"
             VALUE "ProductName", " tclsci"
             VALUE "ProductVersion", "2025, 1, 0, 0"

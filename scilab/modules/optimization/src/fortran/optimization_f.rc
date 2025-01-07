@@ -67,7 +67,7 @@ BEGIN
             VALUE "FileDescription", "optmization_f module"
             VALUE "FileVersion", "2025, 1, 0, 0"
             VALUE "InternalName", "optmization_f module"
-            VALUE "LegalCopyright", "Copyright (C) 2024"
+            VALUE "LegalCopyright", "Copyright (C) 2025"
             VALUE "OriginalFilename", "optmization_f.dll"
             VALUE "ProductName", "optmization_f module"
             VALUE "ProductVersion", "2025, 1, 0, 0"

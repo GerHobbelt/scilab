@@ -61286,14 +61286,16 @@ if test "$CURRENT_YEAR" != "$DETECTED_YEAR"; then
 set dummy inkscape; ac_word=$2
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 printf %s "checking for $ac_word... " >&6; }
-if test ${ac_cv_prog_INKSCAPE+y}
+if test ${ac_cv_path_INKSCAPE+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
-  if test -n "$INKSCAPE"; then
-  ac_cv_prog_INKSCAPE="$INKSCAPE" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $INKSCAPE in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_INKSCAPE="$INKSCAPE" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
@@ -61304,7 +61306,7 @@ do
   esac
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
-    ac_cv_prog_INKSCAPE=""
+    ac_cv_path_INKSCAPE="$as_dir$ac_word$ac_exec_ext"
     printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -61312,9 +61314,10 @@ done
   done
 IFS=$as_save_IFS
 
+  ;;
+esac
 fi
-fi
-INKSCAPE=$ac_cv_prog_INKSCAPE
+INKSCAPE=$ac_cv_path_INKSCAPE
 if test -n "$INKSCAPE"; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $INKSCAPE" >&5
 printf "%s\n" "$INKSCAPE" >&6; }
@@ -61331,14 +61334,16 @@ fi
 set dummy cairosvg; ac_word=$2
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
 printf %s "checking for $ac_word... " >&6; }
-if test ${ac_cv_prog_CAIROSVG+y}
+if test ${ac_cv_path_CAIROSVG+y}
 then :
   printf %s "(cached) " >&6
 else $as_nop
-  if test -n "$CAIROSVG"; then
-  ac_cv_prog_CAIROSVG="$CAIROSVG" # Let the user override the test.
-else
-as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+  case $CAIROSVG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_CAIROSVG="$CAIROSVG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
 for as_dir in $PATH
 do
   IFS=$as_save_IFS
@@ -61349,7 +61354,7 @@ do
   esac
     for ac_exec_ext in '' $ac_executable_extensions; do
   if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
-    ac_cv_prog_CAIROSVG=""
+    ac_cv_path_CAIROSVG="$as_dir$ac_word$ac_exec_ext"
     printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
     break 2
   fi
@@ -61357,9 +61362,10 @@ done
   done
 IFS=$as_save_IFS
 
+  ;;
+esac
 fi
-fi
-CAIROSVG=$ac_cv_prog_CAIROSVG
+CAIROSVG=$ac_cv_path_CAIROSVG
 if test -n "$CAIROSVG"; then
   { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $CAIROSVG" >&5
 printf "%s\n" "$CAIROSVG" >&6; }
@@ -61390,6 +61396,29 @@ if test "$SCILAB_BINARY_VERSION" != "$DETECTED_VERSION"; then
     # alert the user
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: Migrating from version $DETECTED_VERSION to $SCILAB_BINARY_VERSION" >&5
 printf "%s\n" "$as_me: WARNING: Migrating from version $DETECTED_VERSION to $SCILAB_BINARY_VERSION" >&2;}
+    # put the version into Version.incl
+    echo "SCIVERSION=scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR" >$SCI_SRCDIR/Version.incl
+    # put the correct text in version.h version.h.in version.h.vc
+    sed -i  -e "s|SCI_VERSION_MAJOR [0-9]\+|SCI_VERSION_MAJOR $SCILAB_VERSION_MAJOR|" \
+            -e "s|SCI_VERSION_MINOR [0-9]\+|SCI_VERSION_MINOR $SCILAB_VERSION_MINOR|" \
+            -e "s|SCI_VERSION_MAINTENANCE [0-9]\+|SCI_VERSION_MAINTENANCE $SCILAB_VERSION_MAINTENANCE|" \
+            -e "s|SCI_VERSION_STRING \".*\"|SCI_VERSION_STRING \"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
+            -e "s|SCI_VERSION_WIDE_STRING L\".*\"|SCI_VERSION_WIDE_STRING L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
+            -e "s|DEFAULT_SCI_VERSION_MESSAGE L\".*\"|DEFAULT_SCI_VERSION_MESSAGE L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
+            ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.in ${SCI_SRCDIR}/modules/core/includes/version.h.vc
+    # put the correct text in DOCKER_TAG
+    sed -i -e "s|value: \"branch-[0-9\.]\+\"|value: \"branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" ${SCI_SRCDIR}/../.gitlab-ci.yml
+    # update some help pages
+    sed -i -e "s|scilab-[0-9]\+\(\.[0-9]\+\)\+|scilab-$SCILAB_BINARY_VERSION|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
+    # update rc files
+    sed -i  -e "s|FILEVERSION [0-9]\+\(,[0-9]\+\)\+|FILEVERSION $SCILAB_VERSION_MAJOR,$SCILAB_VERSION_MINOR,$SCILAB_VERSION_MAINTENANCE,0|" \
+            -e "s|PRODUCTVERSION [0-9]\+\(,[0-9]\+\)\+|FILEVERSION $SCILAB_VERSION_MAJOR,$SCILAB_VERSION_MINOR,$SCILAB_VERSION_MAINTENANCE,0|" \
+            -e "s|VALUE \"FileVersion\", \"[0-9]\+\(, [0-9]\+\)\+\"|VALUE \"FileVersion\", \"$SCILAB_VERSION_MAJOR, $SCILAB_VERSION_MINOR, $SCILAB_VERSION_MAINTENANCE, 0\"|" \
+            -e "s|VALUE \"ProductVersion\", \"[0-9]\+\(, [0-9]\+\)\+\"|VALUE \"ProductVersion\", \"$SCILAB_VERSION_MAJOR, $SCILAB_VERSION_MINOR, $SCILAB_VERSION_MAINTENANCE, 0\"|" \
+            -e "s|Scilab [0-9]\+\(\.[0-9]\+\)\+|Scilab $SCILAB_BINARY_VERSION|" \
+            $(find ${SCI_SRCDIR} -iname '*.rc')
+    # update banner, inkscape is used to generate png from svg
+    sed -i -e "s|Scilab [0-9]\+\(\.[0-9]\+\)\+|Scilab $SCILAB_BINARY_VERSION|" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg
     # Extract the first word of "inkscape", so it can be a program name with args.
 set dummy inkscape; ac_word=$2
 { printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
@@ -61435,30 +61464,58 @@ printf "%s\n" "no" >&6; }
 fi
 
 
-    # put the version into Version.incl
-    echo "SCIVERSION=scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR" >$SCI_SRCDIR/Version.incl
-    # put the correct text in version.h version.h.in version.h.vc
-    sed -i  -e "s|SCI_VERSION_MAJOR [0-9]\+|SCI_VERSION_MAJOR $SCILAB_VERSION_MAJOR|" \
-            -e "s|SCI_VERSION_MINOR [0-9]\+|SCI_VERSION_MINOR $SCILAB_VERSION_MINOR|" \
-            -e "s|SCI_VERSION_MAINTENANCE [0-9]\+|SCI_VERSION_MAINTENANCE $SCILAB_VERSION_MAINTENANCE|" \
-            -e "s|SCI_VERSION_STRING \".*\"|SCI_VERSION_STRING \"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
-            -e "s|SCI_VERSION_WIDE_STRING L\".*\"|SCI_VERSION_WIDE_STRING L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
-            -e "s|DEFAULT_SCI_VERSION_MESSAGE L\".*\"|DEFAULT_SCI_VERSION_MESSAGE L\"scilab-branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" \
-            ${SCI_SRCDIR}/modules/core/includes/version.h ${SCI_SRCDIR}/modules/core/includes/version.h.in ${SCI_SRCDIR}/modules/core/includes/version.h.vc
-    # put the correct text in DOCKER_TAG
-    sed -i -e "s|value: \"branch-[0-9\.]\+\"|value: \"branch-$SCILAB_VERSION_MAJOR.$SCILAB_VERSION_MINOR\"|" ${SCI_SRCDIR}/../.gitlab-ci.yml
-    # update some help pages
-    sed -i -e "s|scilab-[0-9]\+\(\.[0-9]\+\)\+|scilab-$SCILAB_BINARY_VERSION|" $(find ${SCI_SRCDIR} -iname 'banner.xml')
-    # update rc files
-    sed -i  -e "s|FILEVERSION [0-9]\+\(,[0-9]\+\)\+|FILEVERSION $SCILAB_VERSION_MAJOR,$SCILAB_VERSION_MINOR,$SCILAB_VERSION_MAINTENANCE,0|" \
-            -e "s|PRODUCTVERSION [0-9]\+\(,[0-9]\+\)\+|FILEVERSION $SCILAB_VERSION_MAJOR,$SCILAB_VERSION_MINOR,$SCILAB_VERSION_MAINTENANCE,0|" \
-            -e "s|VALUE \"FileVersion\", \"[0-9]\+\(, [0-9]\+\)\+\"|VALUE \"FileVersion\", \"$SCILAB_VERSION_MAJOR, $SCILAB_VERSION_MINOR, $SCILAB_VERSION_MAINTENANCE, 0\"|" \
-            -e "s|VALUE \"ProductVersion\", \"[0-9]\+\(, [0-9]\+\)\+\"|VALUE \"ProductVersion\", \"$SCILAB_VERSION_MAJOR, $SCILAB_VERSION_MINOR, $SCILAB_VERSION_MAINTENANCE, 0\"|" \
-            -e "s|Scilab [0-9]\+\(\.[0-9]\+\)\+|Scilab $SCILAB_BINARY_VERSION|" \
-            $(find ${SCI_SRCDIR} -iname '*.rc')
-    # update banner, inkscape is used to generate png from svg
-    sed -i -e "s|Scilab [0-9]\+\(\.[0-9]\+\)\+|Scilab $SCILAB_BINARY_VERSION|" ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg
-    $INKSCAPE -w 600 -h 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+    if test -n "$INKSCAPE"; then
+        $INKSCAPE -w 600 -h 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+    else
+        # Extract the first word of "cairosvg", so it can be a program name with args.
+set dummy cairosvg; ac_word=$2
+{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: checking for $ac_word" >&5
+printf %s "checking for $ac_word... " >&6; }
+if test ${ac_cv_path_CAIROSVG+y}
+then :
+  printf %s "(cached) " >&6
+else $as_nop
+  case $CAIROSVG in
+  [\\/]* | ?:[\\/]*)
+  ac_cv_path_CAIROSVG="$CAIROSVG" # Let the user override the test with a path.
+  ;;
+  *)
+  as_save_IFS=$IFS; IFS=$PATH_SEPARATOR
+for as_dir in $PATH
+do
+  IFS=$as_save_IFS
+  case $as_dir in #(((
+    '') as_dir=./ ;;
+    */) ;;
+    *) as_dir=$as_dir/ ;;
+  esac
+    for ac_exec_ext in '' $ac_executable_extensions; do
+  if as_fn_executable_p "$as_dir$ac_word$ac_exec_ext"; then
+    ac_cv_path_CAIROSVG="$as_dir$ac_word$ac_exec_ext"
+    printf "%s\n" "$as_me:${as_lineno-$LINENO}: found $as_dir$ac_word$ac_exec_ext" >&5
+    break 2
+  fi
+done
+  done
+IFS=$as_save_IFS
+
+  ;;
+esac
+fi
+CAIROSVG=$ac_cv_path_CAIROSVG
+if test -n "$CAIROSVG"; then
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: $CAIROSVG" >&5
+printf "%s\n" "$CAIROSVG" >&6; }
+else
+  { printf "%s\n" "$as_me:${as_lineno-$LINENO}: result: no" >&5
+printf "%s\n" "no" >&6; }
+fi
+
+
+        if test -n "$CAIROSVG"; then
+            $CAIROSVG --output-width 600 --output-height 290 ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.svg -o ${SCI_SRCDIR}/modules/gui/images/icons/aboutscilab.png
+        fi
+    fi
     # alert the user
     { printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: New version $SCILAB_BINARY_VERSION detected. Source files updated, commit them !" >&5
 printf "%s\n" "$as_me: WARNING: New version $SCILAB_BINARY_VERSION detected. Source files updated, commit them !" >&2;}

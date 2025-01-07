@@ -67,7 +67,7 @@ BEGIN
             VALUE "FileDescription", "javasci module"
             VALUE "FileVersion", "2025, 1, 0, 0"
             VALUE "InternalName", "javasci module"
-            VALUE "LegalCopyright", "Copyright (C) 2024"
+            VALUE "LegalCopyright", "Copyright (C) 2025"
             VALUE "OriginalFilename", "javasci.dll"
             VALUE "ProductName", "javasci module"
             VALUE "ProductVersion", "2025, 1, 0, 0"
