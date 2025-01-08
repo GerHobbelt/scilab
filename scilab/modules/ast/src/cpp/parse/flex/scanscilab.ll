@@ -481,16 +481,19 @@ sharp             "#"
 
 <INITIAL,MATRIX>{controltimes}   {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLTIMES);
 }
 
 <INITIAL,MATRIX>{controlrdivide} {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLRDIVIDE);
 }
 
 <INITIAL,MATRIX>{controlldivide} {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLLDIVIDE);
 }
 

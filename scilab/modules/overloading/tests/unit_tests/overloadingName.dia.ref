@@ -66,7 +66,7 @@ end
 M = mlist("unknown");
 if typeof(M) <> "unknown" then bugmes();quit;end
 M
- M = (unknown mlist) with no field
+ M = (unknown mlist)
   "Calling %unknown_p..."
 M(1)
   "Calling %unknown_e..."
@@ -77,7 +77,7 @@ M(1,2)
  ans = 
     []
 N = M
- N = (unknown mlist) with no field
+ N = (unknown mlist)
   "Calling %unknown_p..."
 N(2) = M
   "Calling %unknown_i_unknown..."

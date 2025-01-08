@@ -2845,6 +2845,7 @@ case 58:
 YY_RULE_SETUP
 {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLTIMES);
 }
 	YY_BREAK
@@ -2853,6 +2854,7 @@ case 59:
 YY_RULE_SETUP
 {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLRDIVIDE);
 }
 	YY_BREAK
@@ -2861,6 +2863,7 @@ case 60:
 YY_RULE_SETUP
 {
   unput(yytext[yyleng - 1]);
+  yylloc.last_column--;
   return scan_throw(CONTROLLDIVIDE);
 }
 	YY_BREAK
@@ -3374,7 +3377,7 @@ YY_RULE_SETUP
    * Scilab can perform a line continuation with the ..
    * In matrices as space may be coding extra care must be taken when parsing {next}
    * Some states must be preserved to parse next line and to revert to a proper state
-   * after the ... /NO_SPACE/ comments or ... /NO_SPACE* comments *NO_SPACE\
+   * after the ... /NO_SPACE/ comments or ... /NO_SPACE* comments *NO_SPACE/
    */
 case 106:
 YY_RULE_SETUP
