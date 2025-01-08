@@ -60,6 +60,12 @@ public class SciFileFilter extends FileFilter {
             } else if (fileMask.equals("*.sc*")) {
                 extensions = new String[]{"sci","sce"};
                 description = Messages.gettext("All Scilab files") + "(*.sc*)";
+            } else if (fileMask.equals("*.ssp")) {
+                extensions = new String[]{"ssp"};
+                description = Messages.gettext("Xcos files") + "(*.ssp)";
+            } else if (fileMask.equals("*.zcos")) {
+                extensions = new String[]{"zcos"};
+                description = Messages.gettext("Xcos files") + "(*.zcos)";
             } else if (fileMask.equals("*.xcos")) {
                 extensions = new String[]{"xcos"};
                 description = Messages.gettext("Xcos files") + "(*.xcos)";

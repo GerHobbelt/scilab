@@ -424,18 +424,16 @@ public enum XcosFileType {
         }
 
         /*
-         * One file filter for all valid extensions
-         */
-        filters[0] = new FileNameExtensionFilter(
-            XcosMessages.ALL_SUPPORTED_FORMATS, extensions);
-
-        /*
          * Then one file filter per enum value.
          */
         for (int i = 0; i < descriptions.length; i++) {
-            filters[i + 1] = new FileNameExtensionFilter(descriptions[i],
-                    extensions[i]);
+            filters[i] = new FileNameExtensionFilter(descriptions[i], extensions[i]);
         }
+
+        /*
+         * One file filter for all valid extensions, the last item will be the default one
+         */
+        filters[descriptions.length] = new FileNameExtensionFilter(XcosMessages.ALL_SUPPORTED_FORMATS, extensions);
 
         return filters;
     }
@@ -459,18 +457,16 @@ public enum XcosFileType {
         }
 
         /*
-         * One file filter for all valid extensions
-         */
-        filters[0] = new FileNameExtensionFilter(
-            XcosMessages.ALL_SUPPORTED_FORMATS, extensions);
-
-        /*
          * Then one file filter per enum value.
          */
         for (int i = 0; i < descriptions.length; i++) {
-            filters[i + 1] = new FileNameExtensionFilter(descriptions[i],
-                    extensions[i]);
+            filters[i] = new FileNameExtensionFilter(descriptions[i], extensions[i]);
         }
+
+        /*
+         * One file filter for all valid extensions, the last item will be the default one
+         */
+        filters[descriptions.length] = new FileNameExtensionFilter(XcosMessages.ALL_SUPPORTED_FORMATS, extensions);
 
         return filters;
     }

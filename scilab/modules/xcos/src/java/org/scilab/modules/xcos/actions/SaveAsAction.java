@@ -19,9 +19,10 @@ package org.scilab.modules.xcos.actions;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
@@ -113,11 +114,15 @@ public final class SaveAsAction extends DefaultAction {
         fc.setAcceptAllFileFilterUsed(false);
 
         final FileFilter[] filters = XcosFileType.getSavingFilters();
-        for (FileFilter fileFilter : filters) {
-            String[] exts = {"*."+((FileNameExtensionFilter)fileFilter).getExtensions()[0]};
-            String[] descr = {((FileNameExtensionFilter)fileFilter).getDescription()};
-            fc.addMask(exts,descr);
+        String[] exts = new String[filters.length];
+        String[] descr = new String[filters.length];
+        for (int i = 0; i < filters.length; i++) {
+            FileNameExtensionFilter filter = (FileNameExtensionFilter) filters[i];
+            // addMask handle file extension through a regexp
+            exts[i] = Arrays.stream(filter.getExtensions()).map(ext -> "*." + ext).collect( Collectors.joining( "|"));
+            descr[i] = filter.getDescription();
         }
+        fc.addMask(exts, descr);
     }
 }
 

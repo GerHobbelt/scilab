@@ -21,6 +21,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.stream.Collectors;
 
 import javax.swing.JButton;
 import javax.swing.filechooser.FileFilter;
@@ -118,14 +120,15 @@ public final class OpenAction extends DefaultAction {
         fc.setAcceptAllFileFilterUsed(true);
 
         final FileFilter[] filters = XcosFileType.getLoadingFilters();
-        for (FileFilter fileFilter : filters) {
-            String[] exts = {"*."+((FileNameExtensionFilter)fileFilter).getExtensions()[0]};
-            String[] descr = {((FileNameExtensionFilter)fileFilter).getDescription()};
-            fc.addMask(exts,descr);
+        String[] exts = new String[filters.length];
+        String[] descr = new String[filters.length];
+        for (int i = 0; i < filters.length; i++) {
+            FileNameExtensionFilter filter = (FileNameExtensionFilter) filters[i];
+            // addMask handle file extension through a regexp
+            exts[i] = Arrays.stream(filter.getExtensions()).map(ext -> "*." + ext).collect( Collectors.joining( "|"));
+            descr[i] = filter.getDescription();
         }
-
-        // the first valid filter is the "All valid files" one
-        // fc.setFileFilter(filters[0]);
+        fc.addMask(exts, descr);
     }
 
     protected static void displayAndOpen(final FileChooser fc, final java.awt.Component component) throws IOException {
