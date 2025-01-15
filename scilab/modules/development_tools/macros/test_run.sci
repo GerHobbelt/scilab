@@ -1014,6 +1014,7 @@ function status = test_single(_module, _testPath, _testName)
         if params.show_error == %T then
             res = mgetl(tmp_res)
             res(res=="") = []
+            res = strsubst(res, "/[^[:print:]]/", "", "regexp");
             if res <> [] then
                 res = [""
                        "----- " + tmp_res + " -----"
@@ -1023,6 +1024,7 @@ function status = test_single(_module, _testPath, _testName)
             end
             err = mgetl(tmp_err)
             err(err=="") = []
+            err = strsubst(err, "/[^[:print:]]/", "", "regexp");
             if err <> [] then
                 err = [""
                        "----- " + tmp_err + " -----"
@@ -1604,24 +1606,24 @@ function exportToXUnitFormat(exportToFile, testsuites)
                     testsuite.children(j).children(1) = xmlElement(doc,"error");
                     testsuite.children(j).children(1).attributes.type = unitTest.error.type;
                     content = unitTest.error.content;
-                    // escaping XML as described in https://www.w3.org/TR/REC-xml/#syntax
-                    // the extra spaces might not be needed but the spec is unclear on that point.
-                    content = strsubst(content, "&", "&amp;");
-                    content = strsubst(content, "<", "&lt;");
-                    content = strsubst(content, "]]>", "]]&gt;");
 
-                    testsuite.children(j).children(1).content = content;
+                    // escape ]]> as ]] > to break the CEND
+                    escaped_cend = strsubst(content, "]]>", "]] >");
+                    // embed lines into a CDATA section - https://www.w3.org/TR/REC-xml/#sec-cdata-sect
+                    escaped_content = ["<![CDATA[" ; escaped_cend ; "]]>"];
+
+                    testsuite.children(j).children(1).content = escaped_content
                 elseif isfield(unitTest,"failure") & size(unitTest.failure,"*") >= 1 then
                     testsuite.children(j).children(1) = xmlElement(doc,"failure");
                     testsuite.children(j).children(1).attributes.type = unitTest.failure.type;
                     content = unitTest.failure.content;
-                    // escaping XML as described in https://www.w3.org/TR/REC-xml/#syntax
-                    // the extra spaces might not be needed but the spec is unclear on that point.
-                    content = strsubst(content, "&", "&amp;");
-                    content = strsubst(content, "<", "&lt;");
-                    content = strsubst(content, "]]>", "]]&gt;");
 
-                    testsuite.children(j).children(1).content = content;
+                    // escape ]]> as ]] > to break the CEND
+                    escaped_cend = strsubst(content, "]]>", "]] >");
+                    // embed lines into a CDATA section - https://www.w3.org/TR/REC-xml/#sec-cdata-sect
+                    escaped_content = ["<![CDATA[" ; escaped_cend ; "]]>"];
+
+                    testsuite.children(j).children(1).content = escaped_content
                 elseif unitTest.skipped then
                     testsuite.children(j).children(1) = xmlElement(doc,"skipped");
                 end

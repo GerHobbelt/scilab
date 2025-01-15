@@ -116,7 +116,25 @@ void XMLElement::setNodeNameSpace(const XMLNs & ns) const
 
 void XMLElement::setNodeContent(const std::string & content) const
 {
-    xmlNodeSetContent(node, (const xmlChar *)content.c_str());
+    size_t CDATA_LEN = std::char_traits<char>::length("<![CDATA[");
+    size_t CDATA_END_LEN = std::char_traits<char>::length("]]>");
+    // See https://www.w3.org/TR/REC-xml/#sec-cdata-sect for exact pattern:
+    //  1. start with <![CDATA[
+    //  2. should only have ]]> at the end
+    if (content.find("<![CDATA[", 0) == 0 && content.find("]]>", 0) == (content.length() - CDATA_END_LEN))
+    {
+        // clear previous children nodes
+        xmlNodeSetContent(node, NULL);
+
+        // embed the content inside a new CDATA node
+        const char* innerContent = content.c_str() + CDATA_LEN;
+        size_t innerLen = content.length() - CDATA_LEN - CDATA_END_LEN;
+        xmlAddChild(node, xmlNewCDataBlock(node->doc, BAD_CAST innerContent, innerLen));
+    }
+    else
+    {
+        xmlNodeSetContent(node, (const xmlChar *)content.c_str());
+    }
 }
 
 void XMLElement::setAttributes(const XMLAttr & attrs) const
