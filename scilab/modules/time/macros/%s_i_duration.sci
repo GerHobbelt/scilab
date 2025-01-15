@@ -13,5 +13,7 @@ function out = %s_i_duration(varargin)
     out = varargin($);
     if varargin($-1) == [] then
         out.duration(varargin(1:$-2)) = varargin($-1);
+    else
+        out.duration(varargin(1:$-2)) = varargin($-1) * 60 * 60 * 1000;
     end
 endfunction

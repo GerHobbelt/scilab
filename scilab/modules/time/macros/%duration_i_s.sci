@@ -12,14 +12,18 @@
 function out = %duration_i_s(varargin)
     //do it with double matrix to get final size
     d = varargin($-1);
-    if and(size(d) <> size(varargin(1:$-2))) then
-        error(msprintf(gettext("%s: Wrong size for input arguments.\n"), "%duration_i_s"))
+    a = varargin($);
+    if a == [] then
+        [r, c] = size(d);
+        x = ones(r, c);
+        a(varargin(1:$-2)) = x;
+        out = duration(a, 0, 0);
+        out(a<>0) = d;
+        out.format = d.format;
+    else
+        d = d.duration /(60 * 60 * 1000);
+        a(varargin(1:$-2)) = d;
+        out = a;
     end
-    a = [];
-    [r, c] = size(d);
-    x = ones(r, c);
-    a(varargin(1:$-2)) = x;
-    out = duration(zeros(x), 0, 0);
-    out(a <> 0) = d;
-    out.format = d.format;
+    
 endfunction

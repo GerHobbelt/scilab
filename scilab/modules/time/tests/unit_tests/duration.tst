@@ -193,6 +193,22 @@ t = []; t($+1) = seconds(1);
 assert_checktrue(t == duration(0, 0, 1));
 checkstring(t, "00:00:01");
 
+t = hours(1:3);
+t(2) = 4;
+assert_checktrue(t == duration([1 4 3], 0, 0));
+
+t = hours([1 2; 3 4]);
+t(1, 3) = 5;
+assert_checktrue(t == duration([1 2 5; 3 4 0], 0, 0));
+
+t = [1 2 3];
+t(2) = hours(4);
+assert_checktrue(t == [1 4 3]);
+
+t = [1 2; 3 4];
+t(1, 3) = hours(5);
+assert_checktrue(t == [1 2 5; 3 4 0]);
+
 checkstring(duration(1,0,0, "OutputFormat", "mm:ss"), "60:00");
 checkstring(duration(["01:00:00" "02:00:00"; "03:00:00" "04:00:00"], "InputFormat", "hh:mm:ss"), ["01:00:00" "02:00:00"; "03:00:00" "04:00:00"]);
 checkstring(duration(["01:00" "02:00"; "03:00" "04:00"], "InputFormat", "hh:mm"), ["01:00:00" "02:00:00"; "03:00:00" "04:00:00"]);
