@@ -12,38 +12,28 @@
 //
 // nominal check using a user-defined function
 //
+testFunctionFile = fullfile(SCI+"/modules/coverage/tests/unit_tests/testFunctions.sce");
+exec(testFunctionFile);
 
-function foo()
-    2
-endfunction
-profileEnable(foo)
-
+profileEnable(coverageTest_foo)
 // Executes the function
-foo();
+coverageTest_foo();
 
 prof = profileGetInfo();
-assert_checkequal(prof.FunctionTable.FunctionName, "foo");
+assert_checkequal(prof.FunctionTable.FunctionName, "coverageTest_foo");
 assert_checkequal(size(prof.LineCoverage), 1);
 assert_checkequal(prof.LineCoverage(1)(:,1), [-1;1;-1]);
 
 //
 // check with inner functions
 //
-
-function with_inner()
-    2
-    function inner()
-        4
-    endfunction
-    6
-endfunction
-profileEnable(with_inner)
+profileEnable(coverageTest_with_inner)
 
 // execute
-with_inner()
+coverageTest_with_inner()
 
 prof = profileGetInfo();
-assert_checkequal(prof.FunctionTable.FunctionName, ["foo" ; "with_inner" ; "inner"]);
+assert_checkequal(prof.FunctionTable.FunctionName, ["coverageTest_foo" ; "coverageTest_with_inner" ; "coverageTest_inner"]);
 
 //
 // check API using Scilab functions
@@ -52,7 +42,7 @@ assert_checkequal(prof.FunctionTable.FunctionName, ["foo" ; "with_inner" ; "inne
 profileEnable(iscolumn) // from elementary_functionslib
 // check that foo, with_inner, inner and iscolumn are instrumented
 prof = profileGetInfo();
-assert_checkequal(prof.FunctionTable.FunctionName, ["foo" ; "with_inner" ; "inner" ; "iscolumn"]);
+assert_checkequal(prof.FunctionTable.FunctionName, ["coverageTest_foo" ; "coverageTest_with_inner" ; "coverageTest_inner" ; "iscolumn"]);
 
 profileEnable(corelib)
 // check that at least publicly visible function are instrumented (inner functions are not visible)
@@ -63,3 +53,13 @@ profileEnable()
 assert_checktrue(size(profileGetInfo().LineCoverage) > 4 + size(libraryinfo("corelib"), "*") + size(libraryinfo("elementary_functionslib"), "*"));
 
 profileDisable()
+
+//
+// Check errors
+//
+errmsg = "profileEnable: Wrong type for input argument #1: A macro or library expected.";
+assert_checkerror("execstr(""profileEnable(cos)"")", errmsg);
+
+functionThatDoesNotExists = 42;
+errmsg = "profileEnable: Wrong type for input argument #1: A macro or library expected.";
+assert_checkerror("execstr(""profileEnable(functionThatDoesNotExists)"")", errmsg);

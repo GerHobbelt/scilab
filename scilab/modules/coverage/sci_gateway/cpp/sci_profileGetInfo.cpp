@@ -47,7 +47,10 @@ bool is_nested_function(const std::map<std::wstring, std::pair<int, int>>& fileD
 {
     if (found != fileDescription.end() && found->first == macro->getFileName())
     {
-        return macro->getLastLine() < found->second.second;
+        int macroLastLine = macro->getLastLine();
+        int functionFirstLine = found->second.first;
+        int functionLastLine = found->second.second;
+        return (macro->getFirstLine() > found->second.first) && (macro->getLastLine() < found->second.second);
     }
     return false;
 }
@@ -81,6 +84,9 @@ void populateFunctionTable(types::Struct* functionTable, const std::map<std::wst
         fields.insert({L"FirstLine", i++});
         data.push_back(new types::Double(macro->getFirstLine()));
 
+        fields.insert({L"LastLine", i++});
+        data.push_back(new types::Double(macro->getLastLine()));
+
         fields.insert({L"LibraryName", i++});
         data.push_back(new types::String(macro->getModule().c_str()));
 
@@ -109,14 +115,11 @@ void populateFunctionTable(types::Struct* functionTable, const std::map<std::wst
 
     types::Double* firstLine = data[i++]->getAs<types::Double>();
     firstLine->resize(previousSize + 1, 1);
-    if (is_nested_function(fileDescription, found, macro))
-    {
-        firstLine->set(previousSize, 0, found->second.first);
-    }
-    else
-    {
-        firstLine->set(previousSize, 0, macro->getFirstLine());
-    }
+    firstLine->set(previousSize, 0, macro->getFirstLine());
+
+    types::Double* lastLine = data[i++]->getAs<types::Double>();
+    lastLine->resize(previousSize + 1, 1);
+    lastLine->set(previousSize, 0, macro->getLastLine());
 
     types::String* libraryName = data[i++]->getAs<types::String>();
     libraryName->resize(previousSize + 1, 1);
@@ -124,24 +127,21 @@ void populateFunctionTable(types::Struct* functionTable, const std::map<std::wst
 
     types::Double* parentIndex = data[i++]->getAs<types::Double>();
     parentIndex->resize(previousSize + 1, 1);
-    if (is_nested_function(fileDescription, found, macro))
+    for (int i = 0; i < fileName->getSize() - 1; i++)
     {
-        for (int i = 0; i < fileName->getSize() - 1; i++)
+        bool sameFileName = wcscmp(fileName->get(i), macro->getFileName().c_str()) == 0;
+        auto macroName = macro->getName().c_str();
+        bool isNested = (firstLine->get(i) < macro->getFirstLine()) && (lastLine->get(i) > macro->getLastLine());
+        if (sameFileName && isNested)
         {
-            bool sameFileName = wcscmp(fileName->get(i), macro->getFileName().c_str()) == 0;
-            bool samefirstLine = firstLine->get(i) == found->second.first;
-            if (sameFileName && samefirstLine)
-            {
-                parentIndex->set(previousSize, 0, i + 1);
-                break;
-            }
+            parentIndex->set(previousSize, 0, i + 1);
+            break;
+        }
+        else
+        {
+            parentIndex->set(previousSize, 0, 0);
         }
     }
-    else
-    {
-        parentIndex->set(previousSize, 0, 0);
-    }
-
 }
 
 void populateFunctionCoverage(types::Struct* functionCoverage, CoverModule* cm, types::Macro* macro)

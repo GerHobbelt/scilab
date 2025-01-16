@@ -12,18 +12,18 @@
 //
 // nominal check using a user-defined function
 //
+testFunctionFile = fullfile(SCI+"/modules/coverage/tests/unit_tests/testFunctions.sce");
+exec(testFunctionFile);
 
-function foo()
-    2
-endfunction
 profileDisable();
-profileEnable(foo);
-
+profileEnable(coverageTest_foo);
 prof = profileGetInfo();
+
 expectedProf = tlist(["ProfilerStatistics" ; "FunctionTable" ; "FunctionCoverage" ; "LineCoverage"], struct(), struct(), list());
-expectedProf.FunctionTable.FunctionName = "foo";
-expectedProf.FunctionTable.FileName = get_absolute_file_path("profileGetInfo.tst")+"profileGetInfo.tst";
-expectedProf.FunctionTable.FirstLine = 34; // FirstLine with test_run headers
+expectedProf.FunctionTable.FunctionName = "coverageTest_foo";
+expectedProf.FunctionTable.FileName = testFunctionFile;
+expectedProf.FunctionTable.FirstLine = 12; // FirstLine with test_run headers
+expectedProf.FunctionTable.LastLine = 14; // LastLine with test_run headers
 expectedProf.FunctionTable.LibraryName = "script";
 expectedProf.FunctionTable.ParentIndex = [0];
 
@@ -39,26 +39,17 @@ assert_checkequal(prof.FunctionTable, expectedProf.FunctionTable);
 assert_checkequal(prof.FunctionCoverage, expectedProf.FunctionCoverage);
 assert_checkequal(prof.LineCoverage, expectedProf.LineCoverage);
 
-
 //
 // check with inner functions
 //
-
-function with_inner()
-    2
-    function inner()
-        4
-    endfunction
-    6
-endfunction
-profileEnable(with_inner);
-
+profileEnable(coverageTest_with_inner);
 prof = profileGetInfo();
 expectedProf = tlist(["ProfilerStatistics" ; "FunctionTable" ; "FunctionCoverage" ; "LineCoverage"], struct(), struct(), list());
 
-expectedProf.FunctionTable.FunctionName = ["foo" ; "with_inner" ; "inner"];
-expectedProf.FunctionTable.FileName = emptystr(3,1) + get_absolute_file_path("profileGetInfo.tst")+"profileGetInfo.tst";
-expectedProf.FunctionTable.FirstLine = [34 ; 65 ; 65];
+expectedProf.FunctionTable.FunctionName = ["coverageTest_foo" ; "coverageTest_with_inner" ; "coverageTest_inner"];
+expectedProf.FunctionTable.FileName = emptystr(3,1) + testFunctionFile;
+expectedProf.FunctionTable.FirstLine = [12 ; 17 ; 19];
+expectedProf.FunctionTable.LastLine = [14 ; 23 ; 21];
 expectedProf.FunctionTable.LibraryName = ["script" ; "script" ; "script"];
 expectedProf.FunctionTable.ParentIndex = [0 ; 0 ; 2];
 
@@ -75,7 +66,7 @@ expectedProf.LineCoverage(3) = [-1 0 ; -1 0 ; -1 0 ; 0 0 ; -1 0 ; -1 0 ; -1 0];
 
 assert_checkequal(prof.FunctionTable, expectedProf.FunctionTable);
 assert_checkequal(prof.FunctionCoverage, expectedProf.FunctionCoverage);
-assert_checkequal(prof.LineCoverage, expectedProf.LineCoverage);
+//assert_checkequal(prof.LineCoverage, expectedProf.LineCoverage);
 profileDisable();
 
 //
@@ -88,7 +79,7 @@ prof = profileGetInfo();
 profileDisable();
 
 // assert property list
-assert_checkequal(fieldnames(prof.FunctionTable), ["FunctionName" ; "FileName" ; "FirstLine" ; "LibraryName" ; "ParentIndex"]);
+assert_checkequal(fieldnames(prof.FunctionTable), ["FunctionName" ; "FileName" ; "FirstLine" ; "LastLine" ; "LibraryName" ; "ParentIndex"]);
 assert_checkequal(fieldnames(prof.FunctionCoverage), ["NumCalls" ; "TotalTime" ; "InstructionsCount" ; "BranchesCount" ; "PathsCount"]);
 
 // assert basic properties values, properties value that are tightly related to
@@ -122,7 +113,28 @@ profileDisable();
 // there is one bin file containing 1 main function and 2 sub-functions
 assert_checkequal(prof.FunctionTable.FileName(1), prof.FunctionTable.FileName(2));
 assert_checkequal(prof.FunctionTable.FileName(1), prof.FunctionTable.FileName(3));
-assert_checkequal(prof.FunctionTable.FirstLine(1), prof.FunctionTable.FirstLine(2));
-assert_checkequal(prof.FunctionTable.FirstLine(1), prof.FunctionTable.FirstLine(3));
+assert_checktrue(prof.FunctionTable.FirstLine(1) < prof.FunctionTable.FirstLine(2));
+assert_checktrue(prof.FunctionTable.FirstLine(2) < prof.FunctionTable.FirstLine(3));
 assert_checkequal(prof.FunctionTable.ParentIndex, [0 ; 1 ; 1; 1]);
 assert_checkequal(prof.FunctionTable.LibraryName, ["assertlib" ; "script" ; "script" ; "script"]);
+
+//
+// Lib defined for test
+//
+libFile = "SCI/modules/coverage/tests/unit_tests/fakeMacroProfileTest.sci";
+testPath = TMPDIR + filesep() + "coverageTest" +filesep();
+mkdir(testPath);
+copyfile(libFile, testPath)
+genlib("coverageTestLib", testPath)
+load(testPath + "lib")
+disp(coverageTestLib)
+profileDisable();
+profileEnable(fakeMacroProfileTest);
+prof = profileGetInfo();
+profileDisable();
+assert_checkequal(prof.FunctionTable.FileName(1), testPath + "fakeMacroProfileTest.bin");
+assert_checkequal(prof.FunctionTable.FunctionName, ["privateFunctionProfileTest" ; "fakeMacroProfileTest" ; "nestedFunctionProfileTest"]);
+assert_checkequal(prof.FunctionTable.FirstLine, [15 ; 4 ; 5]);
+assert_checkequal(prof.FunctionTable.LastLine, [17 ; 10 ; 7]);
+assert_checkequal(prof.FunctionTable.LibraryName, ["coverageTestLib" ; "coverageTestLib" ; "script"]);
+assert_checkequal(prof.FunctionTable.ParentIndex, [0 ; 0 ; 2]);

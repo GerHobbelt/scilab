@@ -10,28 +10,18 @@
 //
 
 // helpers
-
-function simple()
-    2
-endfunction
-
-function with_inner()
-    2
-    function inner()
-        4
-    endfunction
-    6
-endfunction
+testFunctionFile = fullfile(SCI+"/modules/coverage/tests/unit_tests/testFunctions.sce");
+exec(testFunctionFile);
 
 // API check
-profileEnable(simple)
-profileDisable(simple)
+profileEnable(coverageTest_foo)
+profileDisable(coverageTest_foo)
 assert_checkequal(size(profileGetInfo().LineCoverage), 0);
 assert_checkequal(size(profileGetInfo().FunctionCoverage), [0 0]);
 assert_checkequal(size(profileGetInfo().FunctionTable), [0 0]);
 
-profileEnable(with_inner)
-profileDisable(with_inner)
+profileEnable(coverageTest_with_inner)
+profileDisable(coverageTest_with_inner)
 assert_checkequal(size(profileGetInfo().LineCoverage), 0);
 assert_checkequal(size(profileGetInfo().FunctionCoverage), [0 0]);
 assert_checkequal(size(profileGetInfo().FunctionTable), [0 0]);

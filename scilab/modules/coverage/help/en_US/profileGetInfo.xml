@@ -51,8 +51,8 @@
         </variablelist></para></listitem></varlistentry>
     <varlistentry><term>LineCoverage</term><listitem><para>a list of <code>M</code> vectors of <code>double</code>, where <code>M</code> the number of instrumented functions, storing execution counters per function with:
         <variablelist>
-            <varlistentry><term>LineCoverage(i)(1,j)</term><listitem><para>the number of times the line <literal>j</literal> of the function <literal>j</literal> has been executed or containing <literal>-1</literal> if this is not an executable line.</para></listitem></varlistentry>
-            <varlistentry><term>LineCoverage(i)(2,j)</term><listitem><para>cumulated CPU time [in seconds] spent to execute the line <literal>j</literal> of the function <literal>j</literal>.</para></listitem></varlistentry>
+            <varlistentry><term>LineCoverage(i)(1,j)</term><listitem><para>the number of times the line <literal>j</literal> of the function <literal>i</literal> has been executed or containing <literal>-1</literal> if this is not an executable line.</para></listitem></varlistentry>
+            <varlistentry><term>LineCoverage(i)(2,j)</term><listitem><para>cumulated CPU time [in seconds] spent to execute the line <literal>j</literal> of the function <literal>i</literal>.</para></listitem></varlistentry>
         </variablelist></para></listitem></varlistentry></variablelist></para>
     </refsection>
     <refsection role="see also">
@@ -70,4 +70,3 @@
         </simplelist>
     </refsection>
 </refentry>
-

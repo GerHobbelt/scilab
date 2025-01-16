@@ -39,13 +39,7 @@ namespace
 {
 void addToProcess(CoverModule* cm, types::Macro* current)
 {
-    // add .sci file
-    const std::wstring& file = current->getFileName();
-    std::size_t pos = file.find_last_of(L'.');
-    if (pos != std::string::npos)
-    {
-        cm->instrumentMacro(current->getModule(), file.substr(0, pos) + L".sci", current);
-    }
+    cm->instrumentMacro(current->getModule(), current->getFileName(), current);
 };
 } /* namespace */
 /*--------------------------------------------------------------------------*/
@@ -121,7 +115,7 @@ types::Function::ReturnValue sci_profileEnable(types::typed_list &in, int _iRetC
         }
 
         // default
-        Scierror(999, _("%s: Wrong type for input argument #%d: A macro or library expected.\n"), "profileGetInfo", idx + 1);
+        Scierror(999, _("%s: Wrong type for input argument #%d: A macro or library expected.\n"), "profileEnable", idx + 1);
         return types::Function::ReturnValue::Error;
     }
 
