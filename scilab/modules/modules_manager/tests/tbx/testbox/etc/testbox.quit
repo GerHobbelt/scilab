@@ -4,9 +4,9 @@
 
 function quitModule()
 
-    etc_tlbx  = get_absolute_file_path("toolbox_skeleton.quit");
+    etc_tlbx  = get_absolute_file_path();
     etc_tlbx  = getshortpathname(etc_tlbx);
-    root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("\etc\") );
+    root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("/etc/") );
 
     //unlink libraries
     [bOK, ilib] = c_link('skeleton_cpp');
@@ -27,7 +27,7 @@ function quitModule()
     // Remove Preferences GUI
     // =============================================================================
     if getscilabmode() == "STD" then
-    removeModulePreferences(root_tlbx);
+        removeModulePreferences(root_tlbx);
     end
 
 endfunction

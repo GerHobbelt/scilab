@@ -8,8 +8,6 @@
 // <-- NO CHECK ERROR OUTPUT -->
 // <-- ENGLISH IMPOSED -->
 
-warning('off');
-
 // Test the compilation of a simple toolbox with tbx_make()
 // Copying the testing toolbox from the test environment
 function reset_test_module(source, destDir)

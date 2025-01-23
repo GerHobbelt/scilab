@@ -6,7 +6,6 @@
 // =============================================================================
 // <-- NO CHECK ERROR OUTPUT -->
 // <-- ENGLISH IMPOSED -->
-warning('off');
 // Test the compilation of a simple toolbox with tbx_make()
 // Copying the testing toolbox from the test environment
 function reset_test_module(source, destDir)
@@ -69,9 +68,9 @@ Building sources...
    Compilation of fsum.f
    Building shared library (be patient)
    Generate a cleaner file
-   Building JAR library org.scilab.contrib.toolboxskeleton.jar
+   Building JAR library org.scilab.contrib.testbox.jar
    Compiling Java sources in TMPDIR\testbox\src\java
-   Creating JAR archive TMPDIR\testbox\jar\org.scilab.contrib.toolboxskeleton.jar
+   Creating JAR archive TMPDIR\testbox\jar\org.scilab.contrib.testbox.jar
    Create loader script for Java loader.sce
    Create cleaner script for Java cleaner.sce
 Generating cleaner_src.sce...
@@ -92,6 +91,9 @@ Building gateway...
    Generate a cleaner file
 Generating loader_gateway.sce...
 Generating cleaner_gateway.sce...
+WARNING: tbx_build_localization (testbox\locales\): 
+WARNING:    - The msgid have been updated in '*.po' files.
+WARNING:    - fr_FR.po : 0 untranslated messages.
 Generating localization
 -- Building for "en_US" --
 -- Building for "fr_FR" --

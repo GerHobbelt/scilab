@@ -1,5 +1,5 @@
 // ====================================================================
-// Template toolbox_skeleton
+// Template testbox
 // This file is released under the 3-clause BSD license. See COPYING-BSD.
 // ====================================================================
 //
@@ -10,11 +10,11 @@ function scilab_error(varargin)
 
     //in toolboxes, use "_(myDomain, message)" or "gettext(myDomain, message)" to your localized messages
     if argSize <> 1 then
-        error(msprintf(_("toolbox_skeleton", "%s: I''m waiting for only one argument.\n"), "scilab_error"));
+        error(msprintf(_("testbox", "%s: I''m waiting for only one argument.\n"), "scilab_error"));
     end
 
     if argSize == 1 then
-        error(msprintf(gettext("toolbox_skeleton", "%s: Yeah! %d is a good number of arguments but I prefer fail, sorry.\n"), "scilab_error", 1));
+        error(msprintf(gettext("testbox", "%s: Yeah! %d is a good number of arguments but I prefer fail, sorry.\n"), "scilab_error", 1));
     end
 endfunction
 // ====================================================================

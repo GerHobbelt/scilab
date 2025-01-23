@@ -17,7 +17,7 @@ function toolbox_skeletonlib = startModule()
 
   etc_tlbx  = get_absolute_file_path("toolbox_skeleton.start");
   etc_tlbx  = getshortpathname(etc_tlbx);
-  root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("\etc\") );
+  root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("/etc/") );
 
 //Load  functions library
 // =============================================================================

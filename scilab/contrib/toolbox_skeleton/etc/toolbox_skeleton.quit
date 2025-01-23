@@ -6,7 +6,7 @@ function quitModule()
 
     etc_tlbx  = get_absolute_file_path("toolbox_skeleton.quit");
     etc_tlbx  = getshortpathname(etc_tlbx);
-    root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("\etc\") );
+    root_tlbx = strncpy( etc_tlbx, length(etc_tlbx)-length("/etc/") );
 
     //unlink libraries
     [bOK, ilib] = c_link('skeleton_cpp');

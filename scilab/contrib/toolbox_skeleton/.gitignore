@@ -7,6 +7,17 @@ cleaner.sce
 loader_gateway.sce
 cleaner_gateway.sce
 jar/
+inline/
+sci_gateway/c/skeleton_c.cpp
+sci_gateway/c/skeleton_c.h
+sci_gateway/c/skeleton_c.hxx
+sci_gateway/cpp/skeleton_cpp.cpp
+sci_gateway/cpp/skeleton_cpp.h
+sci_gateway/cpp/skeleton_cpp.hxx
+sci_gateway/fortran/skeleton_fortran.cpp
+sci_gateway/fortran/skeleton_fortran.h
+sci_gateway/fortran/skeleton_fortran.hxx
+src/cleaner_src.sce
 #
 # Generated files (Windows)
 #

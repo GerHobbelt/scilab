@@ -30,9 +30,11 @@ assert_checktrue(isfile(path+"/locales/en_US.po"));
 
 // Checking some content:
 f = mgetl(path+"/locales/en_US.po");
-assert_checktrue(grep(f, pathconvert("#: ~\sci_gateway\cpp\sci_cpperror.cpp:23",%f))~=[]);
+// the error exist and is starting with ~
+assert_checktrue(grep(f, "sci_cpperror.cpp:23")~=[]);
+assert_checktrue(grep(f(grep(f, "sci_cpperror.cpp:23")), " sci_gateway")~=[]);
 assert_checktrue(grep(f, "msgid ""%s: I''m waiting for only one argument.\n""")~=[]);
-assert_checktrue(grep(f, "#: a XML file:5")~=[]);
+assert_checktrue(grep(f, "#: A-XML-file:5")~=[]);
 assert_checktrue(grep(f, "msgid ""Height""")~=[]);
 
 // Cleaning

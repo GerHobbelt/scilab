@@ -8,8 +8,6 @@
 // <-- NO CHECK ERROR OUTPUT -->
 // <-- ENGLISH IMPOSED -->
 
-warning('off');
-
 // Test the compilation of a simple toolbox with tbx_make(module, section)
 
 // Copying the testing toolbox from the test environment
@@ -88,16 +86,16 @@ subDirs = mytb_dir + "/src/" + ["c" "java" "fortran"];
 assert_checkfalse(or(isfile(subDirs + "/loader.sce")));
 assert_checkfalse(isfile(mytb_dir + "/sci_gateway/loader_gateway.sce"));
 
-// Build only gateways
-// -------------------
-//reset_test_module(source, mytb_dir);
-//tbx_make(mytb_dir, "sci_gateway");
-//assert_checktrue(isfile(mytb_dir + "/sci_gateway/loader_gateway.sce"));
-//
-//assert_checkfalse(isfile(mytb_dir + "/macros/lib"));
-//assert_checkfalse(isdir(mytb_dir + "/jar"));
-//subDirs = mytb_dir + "/src/" + ["c" "java" "fortran"];
-//assert_checkfalse(or(isfile(subDirs + "/loader.sce")));
-//subDirs = mytb_dir + "/locales/" + ["en_US" "fr_FR"] + "/LC_MESSAGES/";
-//assert_checkfalse(or(isfile(subDirs + "testbox.mo")));
-//assert_checkfalse(or(isfile(subDirs + "testbox.po")));
+// Build sources and gateways
+// --------------------------
+reset_test_module(source, mytb_dir);
+tbx_make(mytb_dir, ["src" "sci_gateway"]);
+assert_checktrue(isfile(mytb_dir + "/sci_gateway/loader_gateway.sce"));
+
+assert_checkfalse(isfile(mytb_dir + "/macros/lib"));
+assert_checktrue(isdir(mytb_dir + "/jar"));
+subDirs = mytb_dir + "/src/" + ["c" "java" "fortran"];
+assert_checktrue(or(isfile(subDirs + "/loader.sce")));
+subDirs = mytb_dir + "/locales/" + ["en_US" "fr_FR"] + "/LC_MESSAGES/";
+assert_checkfalse(or(isfile(subDirs + "testbox.mo")));
+assert_checkfalse(or(isfile(subDirs + "testbox.po")));

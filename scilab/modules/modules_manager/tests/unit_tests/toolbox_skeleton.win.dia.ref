@@ -28,8 +28,8 @@ Building sources...
    Generate a loader file
    Generate a Makefile
    Running the Makefile
-   Compilation of csum.c
    Compilation of csub.c
+   Compilation of csum.c
    Compilation of multiplybypi.c
    Building shared library (be patient)
    Generate a cleaner file

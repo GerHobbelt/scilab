@@ -1,5 +1,5 @@
 /* ==================================================================== */
-/* Template toolbox_skeleton */
+/* Template testbox */
 /* Example detail in "API_scilab getting started" help page */
 /* This file is released under the 3-clause BSD license. See COPYING-BSD. */
 /* ==================================================================== */

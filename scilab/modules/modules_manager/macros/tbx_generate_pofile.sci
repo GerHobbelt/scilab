@@ -64,7 +64,7 @@ function ret = tbx_generate_pofile(tbx_name, tbx_path)
         XGETTEXT="xgettext";
     end
     // -F : sort by file
-    XGETTEXT_OPTIONS = " --omit-header  --language=python --no-wrap -F " + ..
+    XGETTEXT_OPTIONS = " --omit-header --language=C --no-wrap --sort-by-file " + ..
         "-k --keyword=gettext:2 --keyword=_:2 " + ..
         "--keyword=dgettext:2 --keyword=_d:2 --keyword=xmlgettext:2";
 
@@ -106,8 +106,9 @@ function ret = tbx_generate_pofile(tbx_name, tbx_path)
     end
     tmp = fullfile(TMPDIR,"xgettext_srcFiles.txt")
     mputl(srcFiles, tmp)
+    potFilename = tbx_name + ".pot"
     cmd = XGETTEXT + XGETTEXT_OPTIONS + " --files-from="""+tmp+""" -d " + ..
-          tbx_name + " -p " + TARGETDIR + " -o " + "en_US.po.tmp";
+          tbx_name + " -p " + TARGETDIR + " -o " + potFilename;
     status = host(cmd)
     deletefile(tmp)
     if exists("xmlTmpFile") then
@@ -115,10 +116,10 @@ function ret = tbx_generate_pofile(tbx_name, tbx_path)
     end
 
     TARGETDIR = TARGETDIR + filesep()
-    fi = fileinfo(TARGETDIR + "en_US.po.tmp");
+    fi = fileinfo(TARGETDIR + potFilename);
     if fi == [] | fi(1) == 0 then
         //nothing to extract
-        deletefile(TARGETDIR + "en_US.po.tmp");
+        deletefile(TARGETDIR + potFilename);
         rmdir(TARGETDIR);
         cd(old)
         return
@@ -132,40 +133,59 @@ function ret = tbx_generate_pofile(tbx_name, tbx_path)
     """Content-Type: text/plain; charset=UTF-8\n""";
     """Content-Transfer-Encoding: 8bit\n""";""];
 
-    poFile = mgetl(TARGETDIR + "en_US.po.tmp");
-    poFile = [header ; poFile];
-
-    // Translating '' coming from Scilab into '
-    poFile = strsubst(poFile, "''''", "''");
+    potFile = mgetl(TARGETDIR + potFilename);
+    
+    // We need C strings format to be used as gettext key as in updateLocalization.sh
+    // "" -> \"
+    // '' -> '
+    potFile = strsubst(potFile, """""", "\""");
+    potFile = strsubst(potFile, "''''", "''");
+    // previous strsust, introduced `msgstr "` and `msgid "` ; restore double quoted end of line
+    potFile = strsubst(potFile, "msgstr \""", "msgstr """"");
+    potFile = strsubst(potFile, "msgid \""", "msgid """"");
 
     // Making location paths relative to the toolbox root
-    poFile = strsubst(poFile, "#: "+fullpath(tbx_path), "#: ~");
+    potFile = strsubst(potFile, "#: "+pathconvert(tbx_path), "#: "); // Call pathconvert to be sure to have a trailing file separator
     if isdef("xmlTmpFile", "l") then
-        poFile = strsubst(poFile, "#: "+xmlTmpFile, "#: a XML file");
+        potFile = strsubst(potFile, "#: "+xmlTmpFile, "#: A-XML-file");
     end
-    mputl(poFile, TARGETDIR + "en_US.po.tmp");
-     if ~isfile(TARGETDIR + "en_US.po") then
-         mputl(poFile, TARGETDIR + "en_US.po");
-     end
+    
+    potFile = [header ; potFile];
+    mputl(potFile, TARGETDIR + potFilename);
+
+    // msguniq in case of the modified Scilab script contained the same message in C
+    if getos() == "Windows" then
+        cmd = WSCI + "\tools\gettext\msguniq"
+    else
+        cmd = "msguniq"
+    end
+    cmd = cmd + " --use-first --no-wrap --sort-by-file "
+    cmd = cmd + " -o " + TARGETDIR + potFilename + ..
+                " " + TARGETDIR + potFilename;
+    s = host(cmd);
+    potFile = mgetl(TARGETDIR + potFilename);
+
+    if ~isfile(TARGETDIR + "en_US.po") then
+        mputl(potFile, TARGETDIR + "en_US.po");
+    end
 
     // Merging former defined *.po files with the new REF one
     // ------------------------------------------------------
     poFiles = findfiles("locales", "*.po")'
-    if poFile <> []
+    if potFile <> []
         if getos() == "Windows" then
-            cmd = WSCI + "\tools\gettext\msgcat"
+            cmd = WSCI + "\tools\gettext\msgmerge"
         else
-            cmd = "msgcat"
+            cmd = "msgmerge"
         end
-        cmd = cmd + " --use-first --no-wrap --sort-by-file "
+        cmd = cmd + " --no-wrap --sort-by-file --silent" // --silent added to avoid '........ done.' messages in error output
         for f = poFiles
             newPo = TARGETDIR + f
             Cmd = cmd + " -o " + newPo + ..
-                        " " + TARGETDIR + "en_US.po.tmp " + newPo
+                        " " + newPo + " " + TARGETDIR + potFilename
             s = host(Cmd);
          end
     end
-    deletefile(TARGETDIR + "en_US.po.tmp");
 
     cd(old);
     ret = fullfile(tbx_path, TARGETDIR, "en_US.po");
