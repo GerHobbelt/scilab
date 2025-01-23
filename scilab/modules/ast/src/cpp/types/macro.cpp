@@ -62,6 +62,7 @@ extern "C"
 }
 
 
+bool mustBeEmpty(types::InternalType* x) { return x->isDouble() && x->getAs<types::Double>()->isEmpty(); }
 bool mustBeDouble(types::InternalType* x) { return x->isDouble(); }
 bool mustBeString(types::InternalType* x) { return x->isString(); }
 bool mustBeBool(types::InternalType* x) { return x->isBool(); }
@@ -93,7 +94,7 @@ template<int go> bool mustBeHandleType(types::InternalType* x) { return x->isHan
 template<int go> bool mustBeUIControlStyle(types::InternalType* x) { return mustBeHandleType<__GO_UICONTROL__>(x) && hasUIControlStyle(x->getAs<types::GraphicHandle>()->get()[0], go); }
 
 std::map<std::wstring, std::function<bool(types::InternalType*)>> typeValidator = {
-    {L"double", mustBeDouble}, {L"constant", mustBeDouble}, {L"bool", mustBeBool}, {L"boolean", mustBeBool}, {L"string", mustBeString}, {L"int", mustBeInt},
+    {L"empty", mustBeEmpty}, {L"double", mustBeDouble}, {L"constant", mustBeDouble}, {L"bool", mustBeBool}, {L"boolean", mustBeBool}, {L"string", mustBeString}, {L"int", mustBeInt},
     {L"int8", mustBeInt8}, {L"uint8", mustBeUInt8}, {L"int16", mustBeInt16}, {L"uint16", mustBeUInt16}, {L"int32", mustBeInt32}, {L"uint32", mustBeUInt32},
     {L"int64", mustBeInt64}, {L"uint64", mustBeUInt64}, {L"poly", mustBePoly}, {L"polynomial", mustBePoly}, {L"list", mustBeList}, {L"tlist", mustBeTList},
     {L"mlist", mustBeMList}, {L"pointer", mustBePointer}, {L"handle", mustBeHandle}, {L"struct", mustBeStruct}, {L"st", mustBeStruct}, {L"cell", mustBeCell}, 
@@ -772,6 +773,11 @@ int mustBeNonempty(types::typed_list& x)
     return (x[0]->isDouble() && x[0]->getAs<types::Double>()->isEmpty()) ? 1 : 0;
 }
 
+int mustBeScalar(types::typed_list& x)
+{
+    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isScalar()) ? 0 : 1;
+}
+
 int mustBeScalarOrEmpty(types::typed_list& x)
 {
     return (x[0]->isGenericType() && (x[0]->getAs<types::GenericType>()->getSize() == 0 || x[0]->getAs<types::GenericType>()->isScalar())) ? 0 : 1;
@@ -988,35 +994,62 @@ int mustBeSameType(types::typed_list& x)
     return (x[0]->getType() == x[1]->getType()) ? 0 : 1;
 }
 
-int mustBeEqualDimsOrScalar(types::typed_list& x)
+int mustBeEqualDimsOrEmpty(types::typed_list& x)
 {
-    int size = static_cast<int>(x.size());
-
-    for (int i = 0; i < size - 1; ++i)
+    types::typed_list in1 = {x[0]};
+    types::typed_list out1;
+    if (Overload::call(L"isempty", in1, 1, out1) != types::Function::OK)
     {
-        for (int j = i + 1; j < size; ++j)
-        {
-            // if tested is scilar => OK
-            if (x[i]->getAs<types::GenericType>()->isScalar())
-            {
-                continue;
-            }
-
-            // if ref is scalar => OK
-            if (x[j]->getAs<types::GenericType>()->isScalar())
-            {
-                continue;
-            }
-
-            types::typed_list tl = {x[i], x[j]};
-            if (mustBeEqualDims(tl) != 0)
-            {
-                return j + 1;
-            }
-        }
+        return 1;
     }
 
-    return 0;
+    if (out1[0]->getAs<types::Bool>()->isTrue())
+    {
+        return 0;
+    }
+
+    types::typed_list in2 = {x[1]};
+    types::typed_list out2;
+    if (Overload::call(L"isempty", in2, 1, out2) != types::Function::OK)
+    {
+        return 1;
+    }
+
+    if (out2[0]->getAs<types::Bool>()->isTrue())
+    {
+        return 0;
+    }
+
+    return mustBeEqualDims(x);
+}
+
+int mustBeEqualDimsOrScalar(types::typed_list& x)
+{
+    types::typed_list in1 = {x[0]};
+    types::typed_list out1;
+    if (Overload::call(L"isscalar", in1, 1, out1) != types::Function::OK)
+    {
+        return 1;
+    }
+
+    if (out1[0]->getAs<types::Bool>()->isTrue())
+    {
+        return 0;
+    }
+
+    types::typed_list in2 = {x[1]};
+    types::typed_list out2;
+    if (Overload::call(L"isscalar", in2, 1, out2) != types::Function::OK)
+    {
+        return 1;
+    }
+
+    if (out2[0]->getAs<types::Bool>()->isTrue())
+    {
+        return 0;
+    }
+
+    return mustBeEqualDims(x);
 }
 
 std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::vector<int>>> functionValidators = {
@@ -1039,6 +1072,7 @@ std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::v
     {L"mustBeNumericOrLogical", {mustBeNumericOrLogical, {1}}},
     {L"mustBeNumericOrBoolean", {mustBeNumericOrLogical, {1}}},
     {L"mustBeNonempty", {mustBeNonempty, {1}}},
+    {L"mustBeScalar", {mustBeScalar, {1}}},
     {L"mustBeScalarOrEmpty", {mustBeScalarOrEmpty, {1}}},
     {L"mustBeVector", {mustBeVector, {1}}},
     {L"mustBeSquare", {mustBeSquare, {1}}},
@@ -1050,6 +1084,7 @@ std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::v
     {L"mustBeValidVariableName", {mustBeValidVariableName, {1}}},
     {L"mustBeEqualDims", {mustBeEqualDims, {2, 3}}},
     {L"mustBeSameType", {mustBeSameType, {2}}},
+    {L"mustBeEqualDimsOrEmpty", {mustBeEqualDimsOrEmpty, {-1}}},
     {L"mustBeEqualDimsOrScalar", {mustBeEqualDimsOrScalar, {-1}}}
 };
 
@@ -1074,6 +1109,7 @@ std::map<std::wstring, std::tuple<std::string, int>> errorValidators = {
     {L"mustBeNumericOrLogical", {"%s: Wrong type for input argument #%d: Must be numeric values or boolean.\n", 2}},
     {L"mustBeNumericOrBoolean", {"%s: Wrong type for input argument #%d: Must be numeric values or boolean.\n", 2}},
     {L"mustBeNonempty", {"%s: Wrong type for input argument #%d: Must not be empty.\n", 2}},
+    {L"mustBeScalar", {"%s: Wrong type for input argument #%d: Must be a scalar.\n", 2}},
     {L"mustBeScalarOrEmpty", {"%s: Wrong type for input argument #%d: Must be a scalar or empty.\n", 2}},
     {L"mustBeVector", {"%s: Wrong type for input argument #%d: Must be a vector.\n", 2}},
     {L"mustBeSquare", {"%s: Wrong type for input argument #%d: Must be a square matrix.\n", 2}},
@@ -1085,6 +1121,7 @@ std::map<std::wstring, std::tuple<std::string, int>> errorValidators = {
     {L"mustBeValidVariableName", {"%s: Wrong type for input argument #%d: Must be a valid variable name.\n", 2}},
     {L"mustBeEqualDims", {"%s: Wrong size for input argument #%d: Must be of the same dimensions of #%s.\n", 3}},
     {L"mustBeSameType", {"%s: Wrong type for input argument #%d: Must be same type of #%s.\n", 3}},
+    {L"mustBeEqualDimsOrEmpty", {"%s: Wrong size for input argument #%d: Must be of the same dimensions of #%s or empty.\n", -3}},
     {L"mustBeEqualDimsOrScalar", {"%s: Wrong size for input argument #%d: Must be of the same dimensions of #%s or scalar.\n", -3}},
 };
 
@@ -1098,6 +1135,7 @@ std::map<std::wstring, std::vector<std::tuple<int, std::string>>> errorArgs = {
     {L"mustBeInRange", {{1, ""}, {2, ""}}},
     {L"mustBeEqualDims", {{1, ""}}},
     {L"mustBeSameType", {{1, ""}}},
+    {L"mustBeEqualDimsOrEmpty", {{1, ""}}},
     {L"mustBeEqualDimsOrScalar", {{1, ""}}},
 };
 

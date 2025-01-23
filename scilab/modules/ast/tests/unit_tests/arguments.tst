@@ -237,7 +237,7 @@ test_default2(42);
 
 //validators
 //mustBeA
-function test_mustBeA(a, b, c, d, e, f, g, h, i, j, k)
+function test_mustBeA(a, b, c, d, e, f, g, h, i, j, k, l)
     arguments
         a {mustBeA(a, "double")}
         b {mustBeA(b, "constant")}
@@ -250,12 +250,13 @@ function test_mustBeA(a, b, c, d, e, f, g, h, i, j, k)
         i {mustBeA(i, "struct")}
         j {mustBeA(j, "function")}
         k {mustBeA(k, "custom")}
+        l {mustBeA(l, "empty")}
     end
 end
 
 st = struct("field", 1);
 custom = mlist(["custom", "field"], 1);
-test_mustBeA(42, 2+4*%i, %t, "scilab", int64(42), uint64(12), list(1, 2, 3), {"toto", %t, [1 2 3]}, st, cos, custom)
+test_mustBeA(42, 2+4*%i, %t, "scilab", int64(42), uint64(12), list(1, 2, 3), {"toto", %t, [1 2 3]}, st, cos, custom, [])
 
 //transtypage
 //* -> string

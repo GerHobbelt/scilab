@@ -239,6 +239,18 @@ foo(1);
 assert_checkerror("foo([])", [], 999);
 clear foo;
 
+// mustBeScalar
+function foo(a)
+    arguments
+        a {mustBeScalar}
+    end
+endfunction
+
+foo(1);
+assert_checkerror("foo([])", [], 999);
+assert_checkerror("foo([1 2])", [], 999);
+clear foo;
+
 // mustBeScalarOrEmpty
 function foo(a)
     arguments
@@ -367,6 +379,31 @@ foo(1, 1);
 foo(int8(1), int16(1));
 
 assert_checkerror("foo(1, %t);", [], 999);
+clear foo;
+
+// mustBeEqualDimsOrEmpty
+function foo(a, b, c)
+    arguments
+        a {mustBeEqualDimsOrEmpty(a, b)}
+        b {mustBeEqualDimsOrEmpty(b, a)}
+        c {mustBeEqualDimsOrEmpty(a, c)} = []
+    end
+endfunction
+
+foo(ones(1, 1), ones(1, 1));
+foo(ones(1, 1), []);
+foo(ones(1, 2), ones(1, 2));
+foo(ones(1, 2), []);
+foo(ones(2, 1), ones(2, 1));
+foo(ones(2, 1), []);
+foo(ones(2, 2), ones(2, 2));
+foo(ones(2, 2), []);
+foo(ones(2, 2), ones(2, 2), ones(2, 2));
+foo(ones(2, 2), ones(2, 2), []);
+
+assert_checkerror("foo(ones(1, 2), ones(2, 1));", [], 999);
+assert_checkerror("foo(ones(2, 1), ones(1, 2));", [], 999);
+assert_checkerror("foo(ones(2, 1), ones(2, 1), ones(1, 2));", [], 999);
 clear foo;
 
 // mustBeEqualDimsOrScalar

@@ -25,6 +25,8 @@
                     <code>mustBeA(x, ["figure", "polyline"])</code>
                     <para></para>
                     <code>mustBeA(x, ["frame", "pushbutton"])</code>
+                    <para></para>
+                    <code>mustBeA(x, ["string", "empty"])</code>
                 </td>
             </tr>
             <tr>
@@ -42,6 +44,40 @@
                     <code>mustBeEqualDims(x, y)</code>
                     <para></para>
                     <code>mustBeEqualDims(x, y, [2, 3])</code>
+                </td>
+            </tr>
+            <tr>
+                <td xml:id="mustBeEqualDimsOrEmpty">
+                    mustBeEqualDimsOrEmpty(value1, value2)
+                    <para></para>
+                    mustBeEqualDimsOrEmpty(value1, value2, dims)
+                </td>
+                <td>
+                    <literal>value1</literal> and <literal>value2</literal> must be of the same dimensions or empty
+                    <para></para>
+                    <literal>value1</literal> and <literal>value2</literal> must be of the same dimensions on <literal>dims</literal> or empty
+                </td>
+                <td>
+                    <code>mustBeEqualDimsOrEmpty(x, y)</code>
+                    <para></para>
+                    <code>mustBeEqualDimsOrEmpty(x, y, [2, 3])</code>
+                </td>
+            </tr>
+            <tr>
+                <td xml:id="mustBeEqualDimsOrScalar">
+                    mustBeEqualDimsOrScalar(value1, value2)
+                    <para></para>
+                    mustBeEqualDimsOrScalar(value1, value2, dims)
+                </td>
+                <td>
+                    <literal>value1</literal> and <literal>value2</literal> must be of the same dimensions or scalar
+                    <para></para>
+                    <literal>value1</literal> and <literal>value2</literal> must be of the same dimensions on <literal>dims</literal> or scalar
+                </td>
+                <td>
+                    <code>mustBeEqualDimsOrScalar(x, y)</code>
+                    <para></para>
+                    <code>mustBeEqualDimsOrScalar(x, y, [2, 3])</code>
                 </td>
             </tr>
             <tr>
@@ -173,6 +209,11 @@
                 <td xml:id="mustBeSameType">mustBeSameType(value1, value2)</td>
                 <td><literal>value1</literal> and <literal>value2</literal> must be of same type</td>
                 <td><code>mustBeSameType(x, y)</code></td>
+            </tr>
+            <tr>
+                <td xml:id="mustBeScalar">mustBeScalar(value)</td>
+                <td><literal>value</literal> must be scalar</td>
+                <td><code>mustBeScalar(x)</code></td>
             </tr>
             <tr>
                 <td xml:id="mustBeScalarOrEmpty">mustBeScalarOrEmpty(value)</td>
