@@ -276,17 +276,19 @@ assert_checkerror("foo([1 2; 3 4])", [], 999);
 clear foo;
 
 // mustBeMember
-function foo(a)
+function foo(a, b)
     arguments
         a {mustBeMember(a, [1, 2])}
+        b {mustBeMember(b, 1:6)} = 5
     end
 endfunction
 
 foo(1);
 foo(2);
+foo(2, 2);
 assert_checkerror("foo([])", [], 999);
 assert_checkerror("foo(4)", [], 999);
-clear foo;
+assert_checkerror("foo(2, 7)", [], 999);
 
 // mustBeInRange
 function foo(a)

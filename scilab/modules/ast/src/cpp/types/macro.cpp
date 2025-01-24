@@ -662,7 +662,23 @@ int mustBeMember(types::typed_list& x)
     }
     else
     {
-        tmp = GenericComparisonEqual(x[0], x[1]);
+        types::InternalType* x1 = x[1];
+        bool killMe = false;
+        if (x[1]->isImplicitList())
+        {
+            types::ImplicitList* pIL = x[1]->getAs<types::ImplicitList>();
+            if (pIL->isComputable())
+            {
+                x1 = pIL->extractFullMatrix();
+                killMe = true;
+            }
+        }
+        tmp = GenericComparisonEqual(x[0], x1);
+
+        if (killMe)
+        {
+            x1->killMe();
+        }
     }
 
     if (tmp)
