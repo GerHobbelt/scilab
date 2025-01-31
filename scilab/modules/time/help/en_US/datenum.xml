@@ -144,6 +144,8 @@ datenum(dt)
                         </listitem>
                     </itemizedlist>
                 </revdescription>
+            </revision>
+            <revision>
                 <revnumber>2025.0.0</revnumber>
                 <revdescription>
                     <literal>datenum</literal> allows a datetime as input argument.
