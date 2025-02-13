@@ -117,7 +117,7 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                     val(idx) = [];
                     count(idx) = [];
                 else
-                    idx = find(count == 1, 1);
+                    idx = find(count > 0, 1);
                     val(1:idx-1)= [];
                     count(1:idx-1) =[];
                 end
@@ -630,7 +630,7 @@ function [groupbins, rowtimes, dt] = groupTimeCheck(groupbins, d)
         end
 
         if dEnd.time <> 0 then
-            dEnd = dEnd + step;
+            dEnd.time = 0;
         end
 
         groupbins = (dStart:step:dEnd)';

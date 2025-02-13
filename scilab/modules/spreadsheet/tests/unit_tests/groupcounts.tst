@@ -256,3 +256,68 @@ str = ["[ 2024-04-01, 2024-04-04 )"; "[ 2024-04-07, 2024-04-10 )"; "[ 2024-04-10
 "[ 2024-04-19, 2024-04-22 )"; "[ 2024-04-22, 2024-04-25 )"; "[ 2024-04-25, 2024-04-28 ]"];
 expected = table(str, [2; 1; 1; 3; 1; 2], "VariableNames", ["time", "GroupCount"]);
 assert_checkequal(G, expected);
+
+y = 2023 * ones(10,1);
+m = [3;1;9;9;12;5;7;10;1;1];
+d = [16;21;1;12;3;13;21;18;28;26];
+hh = [12;2;15;9;16;20;17;6;1;16];
+mm = [19;37;44;58;21;14;57;41;44;38];
+time1 = datetime(y, m, d, hh, mm, 0);
+
+y2 = 2023 * ones(10,1);
+m2 = [1;8;11;4;6;10;6;3;4;5];
+d2 = [5;15;27;28;2;28;16;16;10;30];
+hh2 = [11;6;2;21;1;11;8;6;21;12];
+mm2 = [27;55;2;44;45;48;7;0;40;51];
+time2 = datetime(y2, m2,d2, hh2, mm2, 0);
+
+x = [3;3;3;4;4;1;1;1;2;2];
+x2 = ["q"; "y"; "b"; "s"; "k"; "p"; "v"; "b"; "u"; "x"];
+ts = table(time1, time2, x, x2, "VariableNames", ["time", "time2", "x", "x2"]);
+g = groupcounts(ts, "time", calmonths(2), "IncludeEmptyGroups", %t);
+str = ["[ 2023-01-01, 2023-03-01 )"
+  "[ 2023-03-01, 2023-05-01 )"
+  "[ 2023-05-01, 2023-07-01 )"
+  "[ 2023-07-01, 2023-09-01 )"
+  "[ 2023-09-01, 2023-11-01 )"
+  "[ 2023-11-01, 2024-01-01 ]"];
+expected = table(str, [3; 1; 1; 1; 3; 1], "VariableNames", ["time", "GroupCount"]);
+assert_checkequal(g, expected);
+
+y = 2023 * ones(10,1);
+m = [3;10;1;4;8;8;11;9;11;1];
+d = [17;20;22;6;17;7;7;7;27;20];
+hh = [7;21;4;7;8;6;13;11;7;13];
+mm = [29;25;15;37;23;57;2;28;15;24];
+time1 = datetime(y, m, d, hh, mm, 0);
+ts.time = time1;
+
+g = groupcounts(ts, "time", calmonths(2), "IncludeEmptyGroups", %t);
+str = ["[ 2023-01-01, 2023-03-01 )"
+  "[ 2023-03-01, 2023-05-01 )"
+  "[ 2023-05-01, 2023-07-01 )"
+  "[ 2023-07-01, 2023-09-01 )"
+  "[ 2023-09-01, 2023-11-01 )"
+  "[ 2023-11-01, 2024-01-01 ]"];
+
+expected = table(str, [2; 2; 0; 2; 2; 2], "VariableNames", ["time", "GroupCount"]);
+assert_checkequal(g, expected);
+
+g = groupcounts(ts, "time", calmonths(3), "IncludeEmptyGroups", %t);
+str = ["[ 2023-01-01, 2023-04-01 )"
+  "[ 2023-04-01, 2023-07-01 )"
+  "[ 2023-07-01, 2023-10-01 )"
+  "[ 2023-10-01, 2024-01-01 ]"];
+
+expected = table(str, [3; 1; 3; 3], "VariableNames", ["time", "GroupCount"]);
+assert_checkequal(g, expected);
+
+ts.time.Year = [2020;2022;2023;2020;2022;2022;2023;2023;2020;2022];
+g = groupcounts(ts, "time", calyears(1), "IncludeEmptyGroups", %t);
+str = ["[ 2020-01-01, 2021-01-01 )"
+  "[ 2021-01-01, 2022-01-01 )"
+  "[ 2022-01-01, 2023-01-01 )"
+  "[ 2023-01-01, 2024-01-01 ]"];
+
+expected = table(str, [3; 0; 4; 3], "VariableNames", ["time", "GroupCount"]);
+assert_checkequal(g, expected);
