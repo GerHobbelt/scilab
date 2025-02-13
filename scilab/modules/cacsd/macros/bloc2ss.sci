@@ -14,7 +14,7 @@
 function [sl,name]=bloc2ss(syst)
     //
     arguments
-        syst {mustBeA(syst, "blocd")}
+        syst {mustBeA(syst, "list")}
     end
 
     nsyst=size(syst)
