@@ -10,15 +10,20 @@
 // along with this program.
 
 function [h, m, s] = hms(dt)
-    if nargin <> 1 then
-        error(msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "hms", 1));
-    end
-    
-    if ~isdatetime(dt) then
-        error(msprintf(_("%s: Wrong type for input argument #%d: datetime expected.\n"), "hms", 1));
+    arguments
+        dt {mustBeA(dt, ["datetime", "duration"])}
     end
 
-    h = dt.Hour;
-    m = dt.Minute;
-    s = dt.Second;
+    if isdatetime(dt) then
+        h = dt.Hour;
+        m = dt.Minute;
+        s = dt.Second;
+    else
+        dt = dt.duration;
+        h = floor (dt / (60 * 60 * 1000));
+        dt = dt - 3600000 * h;
+        m = floor (dt / (60 * 1000));
+        dt = dt - 60000 * m;
+        s = dt / 1000;
+    end
 endfunction

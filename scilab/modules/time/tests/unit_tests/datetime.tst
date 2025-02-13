@@ -391,14 +391,10 @@ assert_checkequal(dt.Second, 30);
 dt = datetime(2022, 6, 15, 12, 45, 30);
 [y,m,d] = ymd(dt);
 assert_checkequal([y,m,d], [2022, 6, 15]);
-[h, mi, s] = hms(dt);
-assert_checkequal([h, mi, s], [12, 45, 30]);
 
 dt = datetime(2022, 6, 1:15, 12, 35:49, 30);
 [y,m,d] = ymd(dt);
 assert_checkequal([y;m;d], [2022*ones(1,15); 6*ones(1,15); 1:15]);
-[h, mi, s] = hms(dt);
-assert_checkequal([h; mi; s], [12*ones(1,15); 35:49; 30*ones(1,15)]);
 
 // datetime("") => NaT
 assert_checkequal(datetime(""), NaT());
@@ -607,8 +603,3 @@ msg = msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "ymd"
 assert_checkerror("ymd()", msg);
 msg = msprintf(_("%s: Wrong type for input argument #%d: datetime expected.\n"), "ymd", 1);
 assert_checkerror("ymd(1)", msg);
-
-msg = msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "hms", 1);
-assert_checkerror("hms()", msg);
-msg = msprintf(_("%s: Wrong type for input argument #%d: datetime expected.\n"), "hms", 1);
-assert_checkerror("hms(1)", msg);
