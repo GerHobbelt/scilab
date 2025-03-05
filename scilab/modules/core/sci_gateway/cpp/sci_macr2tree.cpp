@@ -61,7 +61,6 @@ types::Function::ReturnValue sci_macr2tree(types::typed_list &in, int _iRetCount
         macro = pIT->getAs<types::Macro>();
     }
 
-    std::vector<symbol::Variable*>* outputs = macro->getOutputs();
     std::vector<symbol::Variable*>* inputs = macro->getInputs();
     ast::SeqExp* body = macro->getBody();
 
@@ -82,11 +81,15 @@ types::Function::ReturnValue sci_macr2tree(types::typed_list &in, int _iRetCount
 
     //outputs
     types::List* o = new types::List();
-    for (auto p : *outputs)
+    if(macro->isLambda() == false)
     {
-        types::List* var = ast::TreeVisitor::createVar(p->getSymbol().getName());
-        o->append(var);
-        var->killMe();
+        std::vector<symbol::Variable*>* outputs = macro->getOutputs();
+        for (auto p : *outputs)
+        {
+            types::List* var = ast::TreeVisitor::createVar(p->getSymbol().getName());
+            o->append(var);
+            var->killMe();
+        }
     }
 
     l->append(o);

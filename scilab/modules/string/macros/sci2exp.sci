@@ -86,14 +86,19 @@ function t=sci2exp(a,nom,lmax)
         if named then
             name=nom;
         end
-        strfun(1) = strsubst(strfun(1), tree.name+"(", name+"(");
-        strfun($)=[];
-        t=strfun;
-        t(1) = part(t(1),10:length(t(1)))
-        t($) = [];
-        t = sci2exp(t, lmax);
-        t(1) = "createfun(" + t(1);
-        t($) = t($) + ")";
+        if tree.name == "anonymous" then
+            strfun(1) = name + "=" + strfun(1)
+            t=strfun;
+        else
+            strfun(1) = strsubst(strfun(1), tree.name+"(", name+"(");
+            strfun($)=[];
+            t=strfun;
+            t(1) = part(t(1),10:length(t(1)))
+            t($) = [];
+            t = sci2exp(t, lmax);
+            t(1) = "createfun(" + t(1);
+            t($) = t($) + ")";
+        end
     case 15 then
         t = list2exp(a, lmax);
     case 16 then

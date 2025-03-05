@@ -52,7 +52,11 @@ function C = tree2code(P, bprettyprintformat)
         end
         rhsstr = "(" + rhsstr + ")"
 
-        C = "function " + lhsstr + P.name + rhsstr;
+        if P.name == "anonymous" then
+            C = "#" + rhsstr + "->("
+        else
+            C = "function " + lhsstr + P.name + rhsstr;
+        end
     end
 
     I = P.statements
@@ -80,7 +84,13 @@ function C = tree2code(P, bprettyprintformat)
     end
 
     if P.name<>"" then // Not a batch file
-        C = cat_code(C, "endfunction"); // Replace last return
+        // Replace last return
+        if P.name == "anonymous" then
+            C = cat_code(C, ")");
+        else
+            C = cat_code(C, "endfunction");
+        end
+
         C = cat_code(C, "");
     end
 endfunction

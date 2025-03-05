@@ -1021,36 +1021,52 @@ void TreeVisitor::visit(const FunctionDec  &e)
 
     //header
     types::String* varstr = new types::String(1, 3);
-    varstr->set(0, L"inline");
-    varstr->set(1, L"prototype");
-    varstr->set(2, L"definition");
-    function->append(varstr);
-    size_t returnSize = e.getReturns().getOriginal()->getAs<ArrayListVar>()->getVars().size();
-    // First ask if there are some return values.
-    if (returnSize > 1)
+    if(e.isLambda())
     {
-        wostr << SCI_OPEN_RETURNS;
+        varstr->set(0, L"lambda");
+        varstr->set(1, L"prototype");
+        varstr->set(2, L"definition");
+        function->append(varstr);
+
+        wostr << SCI_LAMBDA << SCI_OPEN_LAMBDA;
+        e.getArgs().getOriginal()->accept(pv);
+        wostr << SCI_CLOSE_LAMBDA << SCI_LAMBDA_ARROW;
+    }
+    else
+    {
+        varstr->set(0, L"inline");
+        varstr->set(1, L"prototype");
+        varstr->set(2, L"definition");
+        function->append(varstr);
+
+        size_t returnSize = e.getReturns().getOriginal()->getAs<ArrayListVar>()->getVars().size();
+        // First ask if there are some return values.
+        if (returnSize > 1)
+        {
+            wostr << SCI_OPEN_RETURNS;
+        }
+
+        e.getReturns().getOriginal()->accept(pv);
+
+        if (returnSize > 1)
+        {
+            wostr << SCI_CLOSE_RETURNS;
+        }
+
+        if (returnSize > 0)
+        {
+            wostr << L" " << SCI_ASSIGN << L" ";
+        }
+
+        // Then get the function name
+        wostr << e.getSymbol().getName();
+
+        // Then get function args
+        wostr << SCI_OPEN_ARGS;
+        e.getArgs().getOriginal()->accept(pv);
+        wostr << SCI_CLOSE_ARGS << std::endl;
     }
 
-    e.getReturns().getOriginal()->accept(pv);
-
-    if (returnSize > 1)
-    {
-        wostr << SCI_CLOSE_RETURNS;
-    }
-
-    if (returnSize > 0)
-    {
-        wostr << L" " << SCI_ASSIGN << L" ";
-    }
-
-    // Then get the function name
-    wostr << e.getSymbol().getName();
-
-    // Then get function args
-    wostr << SCI_OPEN_ARGS;
-    e.getArgs().getOriginal()->accept(pv);
-    wostr << SCI_CLOSE_ARGS << std::endl;
     wchar_t* pwstFun = os_wcsdup(wostr.str().data());
     function->append(new types::String(os_wcstok(pwstFun, L"\n", &pwstState)));
     FREE(pwstFun);

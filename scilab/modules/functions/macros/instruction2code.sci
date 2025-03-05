@@ -303,6 +303,20 @@ function  C = instruction2code(I, bprettyprintformat)
         return
     end
 
+    // ----------------------------------------------------
+    // Generate code corresponding to a lambda definition
+    // ----------------------------------------------------
+    if typeof(I)=="lambda" then
+        if isscalar(I.definition) then
+            C = I.prototype+"("+I.definition+")";
+        else
+            B = cat_code("",I.definition)
+            C = [I.prototype+" ("; B; ")"];
+        end
+
+        return
+    end
+
     // -------
     // Command
     // -------

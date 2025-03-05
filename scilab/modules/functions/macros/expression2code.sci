@@ -332,6 +332,11 @@ function C = expression2code(e)
         // ------
     case "inline"
         C = ["function " + e.prototype;"  " + e.definition;"endfunction"];
+        // ------
+        // LAMBDA
+        // ------
+    case "lambda"
+        C = [e.prototype + "(";e.definition;")"];
         // -------
         // COMMENT (inside a matrix declaration for example)
         // -------

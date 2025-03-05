@@ -138,6 +138,7 @@
 
 // Syntax to have lambda declaration
 #define SCI_LAMBDA  		        L"#"
+#define SCI_LAMBDA_ARROW            L"->"
 #define SCI_OPEN_LAMBDA		        SCI_LPAREN
 #define SCI_CLOSE_LAMBDA	        SCI_RPAREN
 
