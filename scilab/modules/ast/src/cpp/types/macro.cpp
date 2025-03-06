@@ -2196,7 +2196,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
     }
     else
     {
-        InternalType* pOut = pContext->get(m_Varargout);
+        InternalType* pOut = pContext->getCurrentLevel(m_Varargout);
         if (pOut == NULL)
         {
             types::InternalType* result = ((ast::RunVisitor*)exec.get())->getLambdaResult();

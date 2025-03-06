@@ -293,3 +293,8 @@ b = 12;
 [x fval] = fminsearch ( list(bananaext,a,b) , [10 100] );
 assert_checkalmostequal ( x , [12  144], 1e-4 );
 assert_checkalmostequal ( fval , 0, [], 1e-5 );
+// Test Anonymous Function
+anonymousRosenbrock = #(x) -> (100*(x(2)-x(1)^2)^2 + (1-x(1))^2);
+[x , fval , exitflag , output] = fminsearch (anonymousRosenbrock, [-1.2, 1]);
+assert_checkalmostequal (x, [1.0, 1.0], 1e-4);
+assert_checkalmostequal (fval, 0.0, [], 1e-4);
