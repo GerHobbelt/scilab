@@ -260,3 +260,31 @@ void wilkinson_matrix(int _iSize, double *_pData)
         }
     }
 }
+
+void hankel_matrix(int _iSizeC, int _iSizeR, double *_C, double *_R, double *_pData)
+{
+    int iIndex1		= 0;
+    int iIndex2		= 0;
+    int iOne		= 1;
+    int N = _iSizeC + (_iSizeR - 1);
+
+    double* _pDataX = (double*)malloc(sizeof(double) * N);
+    if (!_C || !_R)
+    {
+        memset(_pDataX, 0x00, sizeof(double) * N);
+    }
+    if (_C)
+    {
+        memcpy(_pDataX, _C, _iSizeC * sizeof(double));
+    }
+    if (_R)
+    {
+        memcpy(_pDataX +_iSizeC, _R + 1, (_iSizeR - 1) * sizeof(double));    
+    }
+
+    for (iIndex1 = 0; iIndex1 < _iSizeR; iIndex1++)
+    {
+        memcpy(_pData + iIndex1 * _iSizeC, _pDataX + iIndex1, _iSizeC * sizeof(double));
+    }
+    free(_pDataX);
+}

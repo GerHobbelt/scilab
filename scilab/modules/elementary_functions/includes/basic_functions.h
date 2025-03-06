@@ -71,6 +71,7 @@ ELEMENTARY_FUNCTIONS_IMPEXP void hilb_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void magic_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void wilkinson_matrix(int _iSize, double *_pData);
 ELEMENTARY_FUNCTIONS_IMPEXP void pascal_matrix(int _iSize, int k, double *_pData);
+ELEMENTARY_FUNCTIONS_IMPEXP void hankel_matrix(int _iSizeC, int _iSizeR, double *_C, double *_R,  double *_pData);
 
 ELEMENTARY_FUNCTIONS_IMPEXP void deyes(double *_pdblOut, int _iRows, int _iCols);
 

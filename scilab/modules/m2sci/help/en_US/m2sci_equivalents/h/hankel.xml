@@ -35,52 +35,7 @@
                     <programlisting role="no-scilab-exec">hankel</programlisting>
                 </td>
                 <td>
-                    <programlisting role="no-scilab-exec">hank</programlisting>
-                </td>
-            </tr>
-        </informaltable>
-    </refsection>
-    <refsection>
-        <title>Particular cases</title>
-        <para>The main difference between Scilab and Matlab function is that they
-            do not use the same input values to build an Hankel matrix. If in Matlab,
-            you just have to give a column vector (and eventually a row vector),
-            Scilab function requires the size of the Hankel matrix to build and a
-            covariance sequence vector for this matrix. (See syntax below)
-        </para>
-    </refsection>
-    <refsection>
-        <title>Examples</title>
-        <informaltable border="1" width="100%">
-            <tr>
-                <td align="center">
-                    <emphasis role="bold">Matlab</emphasis>
-                </td>
-                <td align="center">
-                    <emphasis role="bold">Scilab</emphasis>
-                </td>
-            </tr>
-            <tr>
-                <td>
-                    <programlisting role="no-scilab-exec">H1 = hankel(C1)
-                        H2 = hankel(C2, R2)
-                    </programlisting>
-                </td>
-                <td>
-                    <programlisting role="no-scilab-exec">function H = hankel(C, R)
-                        [lhs, rhs] = argn(0);
-                        if rhs == 1 then
-                        N = size(C, "*");
-                        COV = [matrix(C, 1, -1), zeros(1, N)];
-                        H = hank(N, N, COV);
-                        else
-                        M = size(C, "*");
-                        N = size(R, "*");
-                        COV = [matrix(C, 1, -1), matrix(R(2:$), 1, -1)];
-                        H = hank(M, N, COV);
-                        end
-                        endfunction
-                    </programlisting>
+                    <programlisting role="no-scilab-exec">hankel</programlisting>
                 </td>
             </tr>
         </informaltable>
