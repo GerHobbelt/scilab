@@ -239,7 +239,7 @@ function out = %generic_i_table(varargin)
             if jIsImplicitlist then
                 if max(i) <=r then
                     for k = 1:c
-                        out.vars(k).data(i) = val;
+                        out.vars(1,k).data(i) = val;
                     end
                     out.props.rowNames(i) = val;
                     return
@@ -250,20 +250,21 @@ function out = %generic_i_table(varargin)
         end
 
         if istable(val) then
-            // traitement %table_i_table
+            // %table_i_table
             for k = 1:length(j)
                 //disp(i, j(k))
                 out.vars(j(k)).data(i) = val.vars(k).data
             end
+            varnames = val.props.VariableNames(1:length(j));
         elseif iscell(val) then
-            // traitement %ce_i_table
+            // %ce_i_table
             if (size(i, "*") <> 1 | size(j, "*") <> 1) & size(val, "*") == 1 then
                 val = repmat(val, length(i), length(j));
             end
 
             for l = 1:length(j)
                 for k = 1:length(i)
-                    out.vars(j(l)).data(i(k)) = val{k, l};
+                    out.vars(1,j(l)).data(i(k)) = val{k, l};
                 end
             end
         else
@@ -276,9 +277,7 @@ function out = %generic_i_table(varargin)
             end
 
             for l = 1:length(j)
-                for k = 1:length(i)
-                    out.vars(j(l)).data(i(k)) = val(k, l);
-                end
+                out.vars(1, j(l)).data(i) = val(:, l);
             end
         end
 
@@ -287,12 +286,21 @@ function out = %generic_i_table(varargin)
         end
 
         if max(j) > c then
+            n = grep(varnames, "Var");
             if varnames == [] then
                 varnames = "Var" + string(j);
             end
-            out.props.variableNames(j) = varnames;
-            out.props.variableDescriptions(j) = emptystr(1, length(j));
-            out.props.variableUnits(j) = emptystr(1, length(j));
+            if n <> [] then
+                varnames(n) = "Var" + string(j(n));
+            end
+            [r, w] = grep(out.props.variableNames, varnames);
+            if r <> [] then
+                [u, ki, ko, nb] = unique(w);
+                varnames(u) = varnames(u) + string(nb); //)"Var" + string(j(n<>0));
+            end
+            out.props.variableNames(1,j) = varnames;
+            out.props.variableDescriptions(1,j) = emptystr(1, length(j));
+            out.props.variableUnits(1,j) = emptystr(1, length(j));
         end
     end
 
