@@ -28,6 +28,7 @@
         <synopsis>
             subplot(m,n,p)
             subplot(mnp)
+            ax = subplot(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -45,6 +46,13 @@
                 <term>mnp</term>
                 <listitem>
                     un entier avec <literal>mnp</literal> comme notation décimale.
+                    <para/>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>ax</term>
+                <listitem>
+                    handle de l'entité de type Axes créée
                     <para/>
                 </listitem>
             </varlistentry>
@@ -200,34 +208,6 @@ sca(a2);
 subplot(2,2,4)
 plot(x, cosh(x)), title("cosh")
      ]]></programlisting>
-        <screen>
---> gcf().children
- ans  =
-3 by 1 matrix of handles:
-=========================
-uicontrol
-uicontrol
-uicontrol
-
---> gcf().children(1).children
- ans  =
-2 by 1 matrix of handles:
-=========================
-Axes
-Axes
-
---> gcf().children(2).children
- ans  =
-3 by 1 matrix of handles:
-=========================
-Axes
-Axes
-Axes
-
---> gcf().children(3).children
- ans  =
-    []
-</screen>
         <inlinemediaobject>
             <imageobject>
                 <imagedata fileref="../../images/subplot_frame.png"/>
@@ -256,6 +236,12 @@ Axes
                 <revdescription>
                     <literal>subplot(…)</literal> peut être utilisé sur des composants uicontrol
                     de style frame.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2025.0</revnumber>
+                <revdescription>
+                    <literal>subplot(…)</literal> retourne maintenant le handle de l'axe créé/sélectionné.
                 </revdescription>
             </revision>
         </revhistory>

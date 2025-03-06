@@ -66,6 +66,15 @@ plot(1:10)
 assert_checkequal(length(f.children), 2);
 assert_checkequal(f.children(2).title.text, "The  overall  title");
 
+// subplot output
+clf reset
+ax1 = subplot(1,2,1);
+ax2 = subplot(1,2,2);
+assert_checkequal(ax2,gca());
+subplot(1,2,1);
+assert_checkequal(ax1,gca());
+
+
 // ---------
 // on frames
 // ---------
@@ -137,3 +146,4 @@ assert_checkequal(f.children(1).children.title.text, ["sin" "sinc"]');
 assert_checkequal(f.children(2).children.type, ["Axes" "Axes" "Axes"]');
 assert_checkequal(f.children(2).children.title.text, ["cosh" "sinh" "tanh"]');
 assert_checkequal(f.children(3).children, []);
+

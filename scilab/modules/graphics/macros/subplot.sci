@@ -10,11 +10,17 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function subplot(m ,n, p)
+function varargout = subplot(m ,n, p)
 
-    rhs = argn(2)
+    [lhs,rhs] = argn(0);
+
     if rhs<>3 & rhs<>1 then
         error(msprintf(gettext("%s: Wrong number of input argument(s): %d or %d expected."), "subplot", 1, 3));
+        return
+    end
+
+    if lhs > 1
+        error(msprintf(gettext("%s: Wrong number of output argument(s): at most %d expected."), "subplot", 1));
         return
     end
 
@@ -35,8 +41,7 @@ function subplot(m ,n, p)
 
     // Determining the subplot' substrate
     // ----------------------------------
-    a = gca();
-    f = a.parent;
+    f = gca().parent;
     na = sum(f.children.type=="Axes");
 
     if na==1 then
@@ -49,6 +54,9 @@ function subplot(m ,n, p)
            a.x_label.text==da.x_label.text & a.y_label.text==da.y_label.text
             //a single axes with no children, just resize it
             a.axes_bounds=axes_bounds;
+            if lhs == 1
+                varargout(1) = a;
+            end
             return
         end
     end
@@ -59,6 +67,9 @@ function subplot(m ,n, p)
         if child.type == "Axes" & and(child.axes_bounds == axes_bounds) then
             //make it current
             sca(child)
+            if lhs == 1
+                varargout(1) = child;
+            end
             return
         end
     end
@@ -67,4 +78,9 @@ function subplot(m ,n, p)
     a = newaxes(f)
     a.axes_bounds = axes_bounds
     sca(a)
+
+    if lhs == 1
+        varargout(1) = a;
+    end
+
 endfunction

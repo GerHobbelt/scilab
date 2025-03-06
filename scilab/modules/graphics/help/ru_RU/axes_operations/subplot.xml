@@ -29,6 +29,7 @@
         <synopsis>
             subplot(m,n,p)
             subplot(mnp)
+            ax = subplot(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -49,6 +50,13 @@
                     <para>
                         целое число с десятичной нотацией <literal>mnp</literal>
                     </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>ax</term>
+                <listitem>
+                    дескриптор созданной сущности Axes
+                    <para/>
                 </listitem>
             </varlistentry>
         </variablelist>
@@ -204,34 +212,6 @@ sca(a2);
 subplot(2,2,4)
 plot(x, cosh(x)), title("cosh")
      ]]></programlisting>
-        <screen>
---> gcf().children
- ans  =
-3 by 1 matrix of handles:
-=========================
-uicontrol
-uicontrol
-uicontrol
-
---> gcf().children(1).children
- ans  =
-2 by 1 matrix of handles:
-=========================
-Axes
-Axes
-
---> gcf().children(2).children
- ans  =
-3 by 1 matrix of handles:
-=========================
-Axes
-Axes
-Axes
-
---> gcf().children(3).children
- ans  =
-    []
-</screen>
         <inlinemediaobject>
             <imageobject>
                 <imagedata fileref="../../images/subplot_frame.png"/>
