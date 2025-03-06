@@ -225,6 +225,13 @@ ts.Time = hours(1:5);
 expected = [string(hours(1:5)'), string([1 2 3].*. ones(5,1))];
 checkstring(ts, expected);
 
+dt = datetime(2025, 1:3, 1)';
+ts = timeseries(dt, [1; 2; 3]);
+ts.Time = datetime(2025, 5, 1:3)';
+assert_checkequal(ts.Properties.TimeStep, days(1));
+assert_checkequal(ts.Properties.StartTime, ts.Time(1));
+assert_checkequal(ts.Properties.SampleRate, seconds(1)/days(1));
+
 // -----------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------

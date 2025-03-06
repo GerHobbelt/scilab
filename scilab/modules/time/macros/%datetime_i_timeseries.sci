@@ -10,24 +10,5 @@
 // along with this program.
 
 function out = %datetime_i_timeseries(i, val, ts)
-    //disp("_i_4", i, val, ts);
-    out = ts;
-    select i
-    case "StartTime"
-    case "TimeStep"
-    case "Properties"
-    case "SampleRate"
-    else
-        idx = find(ts.props.variableNames == i);
-        if and(size(val) > [1 1]) then
-            error(msprintf(_("%s: Wrong size for input argument #%d: Must be a vector.\n"), "%datetime_i_timeseries", 2));
-        end
-        val = val(:);
-        if idx == [] then
-            varnames = [out.props.variableNames(1) i];
-            out = [out timeseries(out.vars(1).data, val, "VariableNames", varnames)]
-        else
-            out.vars(idx).data = val;
-        end
-    end
+    out = time_i_timeseries(i, val, ts)
 endfunction

@@ -50,7 +50,7 @@ function out = %props_i_timeseries(varargin)
         end
 
         if ~isnan(p.sampleRate) && isduration(p.timeStep) then
-            step = duration(0, 0, 1 / p.sampleRate);
+            step = duration(0, 0, 1 / p.sampleRate, "OutputFormat", p.timeStep.format);
             timeStep = step;
             startTime = out.vars(1).data(1);
             r = size(out.vars(1).data, 1);
@@ -60,7 +60,7 @@ function out = %props_i_timeseries(varargin)
             timeStep = p.timeStep;
             startTime = out.vars(1).data(1);
             r = size(out.vars(1).data, 1);
-            out.vars(1).data = (startTime:step:startTime + step * (r - 1))';
+            out.vars(1).data = (startTime:timeStep:startTime + timeStep * (r - 1))';
         end
 
     elseif (~isnan(out.props.timeStep) || ~isnan(p.timeStep)) || (~isnan(out.props.timeStep) && ~isnan(p.timeStep) && out.props.timeStep <> p.timeStep) then
