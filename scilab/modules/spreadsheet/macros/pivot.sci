@@ -37,7 +37,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
         groupvars = [groupvars, Rows];
 
         if isdef("RowsBinMethod", "l") then
-            if or(typeof(RowsBinMethod) == ["string", "constant", "ce"]) then
+            if or(typeof(RowsBinMethod) == ["string", "constant", "duration", "calendarDuration", "datetime"]) then
                 RowsBinMethod = {RowsBinMethod};
             end
         else
@@ -55,7 +55,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
         groupvars = [groupvars, Columns];
 
         if isdef("ColumnsBinMethod", "l") then
-            if or(typeof(ColumnsBinMethod) == ["string", "constant", "ce"]) then
+            if or(typeof(ColumnsBinMethod) == ["string", "constant", "duration", "calendarDuration", "datetime"]) then
                 ColumnsBinMethod = {ColumnsBinMethod};
             end
         else
@@ -139,7 +139,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
 
     if ~isdef("Columns", "l") then
         // pivot(t, Rows = ["var1", "var2"], ...) but not Columns
-        if includePercent then
+        if Method <> "" then
             g.GroupCount = [];
         end
         if or(IncludeTotals) then
@@ -207,7 +207,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
 
             colnames = [];
             for i = r+1:size(u)
-                colnames = [colnames, string(combinationsCol(i))];
+                colnames = [colnames, string(combinationsCol(i-r))];
             end
             colnames = strcat(colnames, "_", "c")
         end        

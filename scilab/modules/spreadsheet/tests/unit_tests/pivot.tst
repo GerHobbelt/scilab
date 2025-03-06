@@ -121,3 +121,34 @@ assert_checkequal(string(P), ["1" "1" "1"; "2" "1" "1"]);
 
 P = pivot(T, Rows="time", Columns="location", DataVariable="data");
 assert_checkequal(string(P), ["1" "24" "18"; "2" "25" "19"]);
+
+clear t
+v1 = ["v1"; "v1"; "v1"; "v2"; "v2"; "v2"];
+v2 = ["a1"; "a1"; "a2"; "a2"; "a3"; "a3"];
+v3 = ["b1"; "b2"; "b1"; "b2"; "b1"; "b2"];
+v4 = [1; 1; 1; 2; 2; 2];
+t = table(v1, v2, v3, v4, "VariableNames", ["v1", "v2", "v3", "v4"]);
+
+p = pivot(t, Rows=["v1", "v2"]);
+assert_checkequal(p, table(["v1"; "v1"; "v2"; "v2"], ["a1"; "a2"; "a2"; "a3"], [2; 1; 1; 2], "VariableNames", ["v1", "v2", "GroupCount"]));
+
+p = pivot(t, Rows=["v1", "v2"], DataVariable="v4", Method="sum");
+assert_checkequal(p, table(["v1"; "v1"; "v2"; "v2"], ["a1"; "a2"; "a2"; "a3"], [2; 1; 2; 4], "VariableNames", ["v1", "v2", "sum_v4"]));
+
+ts = table2timeseries(t, "RowTimes", hours(1:6)');
+fc = #(x) ->(mean(x));
+p = pivot(ts, Rows="Time", RowsBinMethod=hours(3), Method=fc, DataVariable="v4");
+expected = table(["[ 00:00:00, 03:00:00 )"; "[ 03:00:00, 06:00:00 ]"], [1; 1.75], "VariableNames", ["Time", "fun_v4"]);
+assert_checkequal(p, expected);
+
+ts = table2timeseries(t, "RowTimes", [datetime(2025, 1, 1):datetime(2025, 1, 6)]');
+p = pivot(ts, Rows="Time", RowsBinMethod=caldays(2), Method=fc, DataVariable="v4");
+expected = table(["[ 2025-01-01, 2025-01-03 )"; "[ 2025-01-03, 2025-01-05 )"; "[ 2025-01-05, 2025-01-07 ]"], [1; 1.5; 2], "VariableNames", ["Time", "fun_v4"]);
+assert_checkequal(p, expected);
+
+p = pivot(ts, Rows="Time", RowsBinMethod=[ts.Time(1); ts.Time(3); ts.Time($)], Method=fc, DataVariable="v4");
+expected = table(["[ 2025-01-01, 2025-01-03 )"; "[ 2025-01-03, 2025-01-06 ]"], [1; 1.75], "VariableNames", ["Time", "fun_v4"]);
+assert_checkequal(p, expected);
+
+p = pivot(ts, Rows="Time", RowsBinMethod={[ts.Time(1); ts.Time(3); ts.Time($)]}, Method=fc, DataVariable="v4");
+assert_checkequal(p, expected);
