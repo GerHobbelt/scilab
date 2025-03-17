@@ -40,8 +40,8 @@ function varargout = polarplot(theta,rho,style,strf,leg,rect)
         theta = theta * ones(rho(1,:));
     end
     rm=max(abs(rho))
-    x=rho.*cos(theta)
-    y=rho.*sin(theta)
+
+    [x, y] = pol2cart(theta, rho);
 
     opts=[]
     isstrf=%f;

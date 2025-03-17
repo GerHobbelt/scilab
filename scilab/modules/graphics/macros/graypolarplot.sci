@@ -115,12 +115,6 @@ function varargout = graypolarplot(theta,rho,z,strf,rect)
 endfunction
 // ---------------------------------------------------------------------------
 
-function [x,y] = polar2Cart(rho, theta)
-    x = rho * cos(theta);
-    y = rho * sin(theta);
-endfunction
-// ---------------------------------------------------------------------------
-
 function [nbDecomp] = computeNeededDecompos(theta)
     // Compute the needed decomposition for each patch
 
