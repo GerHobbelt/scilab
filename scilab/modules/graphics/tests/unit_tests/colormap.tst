@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - 3DS - Vincent COUVERT
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Vincent COUVERT
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
@@ -64,7 +64,9 @@ cmapFunctionsColorbrewer = [
     "spectral", ...
     "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"];
 
-cmapFunctions = [cmapFunctionsColorbrewer, cmapFunctionsMisc];
+cmapFunctionsNewOnes = "turbo";
+
+cmapFunctions = [cmapFunctionsNewOnes, cmapFunctionsColorbrewer, cmapFunctionsMisc];
 
 for cmapFun = cmapFunctions
 

@@ -49,7 +49,7 @@
         <title>Sample</title>
         <scilab:image localized="true">
             cm = ["autumn" "bone" "cool" "copper" "gray" "hot" "hsv" "jet" "ocean" ..
-                  "parula" "pink" "rainbow" "spring" "summer" "white" "winter", ..
+                  "parula" "pink" "rainbow" "spring" "summer" "turbo" "white" "winter", ..
                   "blues", "BrBG", "BuGn", "BuPu", ..
                   "coolwarm", ..
                   "GnBu", "greens", "greys", ..
@@ -259,6 +259,12 @@
                 <term xml:id="summercolormap">summercolormap</term>
                 <listitem>
                     <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="summer">summer</link> instead.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term xml:id="turbo">turbo</term>
+                <listitem>
+                    <para>Computes a colormap with <literal>n</literal> colors varying from blue, lightblue, green, yellow, orange then red (quite similar to <link linkend="jet">jet</link> but perceptually uniform).</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -497,6 +503,12 @@
                     <literal>oranges</literal>, <literal>OrRd</literal>, <literal>PiYG</literal>, <literal>PRGn</literal>, <literal>PuBu</literal>, <literal>PuBuGn</literal>, <literal>PuOr</literal>, <literal>PuRd</literal>,
                     <literal>purples</literal>, <literal>RdBu</literal>, <literal>RdGy</literal>, <literal>RdPu</literal>, <literal>RdYlBu</literal>, <literal>RdYlGn</literal>, <literal>reds</literal>, <literal>spectral</literal>,
                     <literal>YlGn</literal>, <literal>YlGnBu</literal>, <literal>YlOrBr</literal>, <literal>YlOrRd</literal> introduced.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revremark>
+                    New colormap function <literal>turbo</literal> introduced.
                 </revremark>
             </revision>
         </revhistory>

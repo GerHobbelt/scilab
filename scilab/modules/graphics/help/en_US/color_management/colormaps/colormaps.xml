@@ -53,7 +53,7 @@
         <title>Sample</title>
         <scilab:image localized="true">
             cm = ["autumn" "bone" "cool" "copper" "gray" "hot" "hsv" "jet" "ocean" ..
-                  "parula" "pink" "rainbow" "spring" "summer" "white" "winter", ..
+                  "parula" "pink" "rainbow" "spring" "summer" "turbo" "white" "winter", ..
                   "blues", "BrBG", "BuGn", "BuPu", ..
                   "coolwarm", ..
                   "GnBu", "greens", "greys", ..
@@ -186,6 +186,9 @@ gdf().color_map
             </member>
             <member>
                 <link linkend="summer">summer</link>
+            </member>
+            <member>
+                <link linkend="turbo">turbo</link>
             </member>
             <member>
                 <link linkend="white">white</link>

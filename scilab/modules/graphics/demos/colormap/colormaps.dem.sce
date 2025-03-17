@@ -93,7 +93,7 @@ function demo_colormaps()
     // Radio buttons
     // =========================================================================
     colormaps = ["Jet" "Parula" "HSV" "Hot" "Gray" ..
-                "Winter" "Spring" "Summer" "Autumn" ..
+                "Winter" "Spring" "Summer" "Turbo" "Autumn" ..
                 "Bone" "Copper" "Pink" "Rainbow" "Ocean" "White"];
     for i = 1:size(colormaps,"*")
         mapname = colormaps(i);
