@@ -1,7 +1,7 @@
 /*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2017 - ESI-Group - Antoine ELIAS
-*
+* Copyright (C) 2025 - Dassault Systemes S.E. - Cedric DELAMARRE
 *
 * This file is hereby licensed under the terms of the GNU GPL v2.0,
 * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -13,143 +13,80 @@
 */
 /*--------------------------------------------------------------------------*/
 
-#include <list>
-#include <vector>
-#include <unordered_map>
-#include <algorithm>
-#include <string>
 #include <fstream>
-#include <chrono>
-
-#define __API_SCILAB_UNSAFE__
+#include "webtools_gw.hxx"
+#include "function.hxx"
 #include "json.hxx"
-
-//#define SHOW_TIMER
+#include "string.hxx"
+#include "UTF8.hxx"
 
 extern "C"
 {
-#include "gw_webtools.h"
-#include "api_scilab.h"
-#include "Scierror.h"
-#include "sciprint.h"
-#include "sci_malloc.h"
-#include <localization.h>
-#include "charEncoding.h"
+    #include "localization.h"
+    #include "Scierror.h"
 }
 
-const std::string name("fromJSON");
-
-/* ==================================================================== */
-int sci_fromJSON(scilabEnv env, int nin, scilabVar *in, int nopt, scilabOpt opt, int nout, scilabVar *out)
+static const char fname[] = "fromJSON";
+types::Function::ReturnValue sci_fromJSON(types::typed_list &in, types::optional_list &opt, int _iRetCount, types::typed_list &out)
 {
-    std::string json;
-#ifdef SHOW_TIMER
-    std::chrono::steady_clock::time_point ttotal = std::chrono::steady_clock::now();
-    std::chrono::steady_clock::time_point tinput = std::chrono::steady_clock::now();
-#endif
-
-    if (1 > nin || nin > 2)
+    if (in.size() < 1 || in.size() > 2)
     {
-        Scierror(999, _("%s: Wrong number of input arguments: %d to %d expected.\n"), name.data(), 1, 2);
-        return STATUS_ERROR;
+        Scierror(999, _("%s: Wrong number of input arguments: %d to %d expected.\n"), fname, 1, 2);
+        return types::Function::Error;
     }
 
-    if (nin == 2)
+    if(in[0]->isString() == false)
     {
-        if (!scilab_isString(env, in[1]) || !scilab_isScalar(env, in[1]))
+        Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), fname, 1);
+        return types::Function::Error;
+    }
+
+    types::String* pStr = in[0]->getAs<types::String>();
+    std::string json = "";
+    for(int i = 0; i < pStr->getSize(); i++)
+    {
+        json += scilab::UTF8::toUTF8(pStr->get(i));
+    }
+
+    if(in.size() == 2)
+    {
+        if(in[1]->isString() == false || in[1]->getAs<types::String>()->isScalar() == false)
         {
-            Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), name.data(), 2);
-            return STATUS_ERROR;
+            Scierror(999, _("%s: Wrong type for input argument #%d: A scalar string expected.\n"), fname, 2);
+            return types::Function::Error;
         }
 
-        wchar_t *wf = nullptr;
-        scilab_getString(env, in[1], &wf);
-        if (wcscmp(wf, L"file") != 0)
+        std::wstring tmp = in[1]->getAs<types::String>()->get(0);
+        if (tmp != L"file")
         {
-            Scierror(999, _("%s: Wrong value for input argument #%d: \"file\" expected.\n"), name.data(), 2);
-            return STATUS_ERROR;
+            Scierror(999, _("%s: Wrong value for input argument #%d: \"file\" expected.\n"), fname, 2);
+            return types::Function::Error;
         }
 
-        wchar_t* wfile = nullptr;
-        scilab_getString(env, in[0], &wfile);
-
-        char *_filename = wide_string_to_UTF8(wfile);
-        if (_filename == NULL)
-        {
-            return false;
-        }
-
-        std::ifstream infile(_filename);
+        std::string filename = json;
+        std::ifstream infile(filename);
         if (infile.fail())
         {
-            Scierror(999, _("%s: Cannot open file %s.\n"), name.data(), _filename);
-            FREE(_filename);
-            return STATUS_ERROR;
+            Scierror(999, _("%s: Cannot open file %s.\n"), fname, filename.c_str());
+            return types::Function::Error;
         }
 
-        FREE(_filename);
-
+        json.clear();
         json.reserve(infile.tellg());
         infile.seekg(0, std::ios::beg);
 
         json.assign((std::istreambuf_iterator<char>(infile)),
             std::istreambuf_iterator<char>());
     }
-    else
-    {
-        //must be a string or string matrix
-        if (!scilab_isString(env, in[0]))
-        {
-            Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), name.data(), 1);
-            return STATUS_ERROR;
-        }
 
-        if (scilab_isScalar(env, in[0]))
-        {
-            wchar_t* w;
-            scilab_getString(env, in[0], &w);
-            char* s = wide_string_to_UTF8(w);
-            json = s;
-            FREE(s);
-        }
-        else
-        {
-            wchar_t** w;
-            int size = scilab_getSize(env, in[0]);
-            scilab_getStringArray(env, in[0], &w);
-
-            for (int i = 0; i < size; ++i)
-            {
-                char* s = wide_string_to_UTF8(w[i]);
-                json += s;
-                FREE(s);
-            }
-        }
-    }
-
-#ifdef SHOW_TIMER
-    std::chrono::steady_clock::time_point tinputend = std::chrono::steady_clock::now();
-    sciprint("Input\t: %d ms\n", std::chrono::duration_cast<std::chrono::milliseconds>(tinputend - tinput).count());
-
-    std::chrono::steady_clock::time_point tparse = std::chrono::steady_clock::now();
-#endif
-
-    scilabVar var = fromJSON(env, json);
+    std::string err;
+    types::InternalType* var = fromJSON(json, err);
     if (var == nullptr)
     {
-        Scierror(999, _("%s: JSON format expected.\n"), name.data(), 1);
-        return STATUS_ERROR;
+        Scierror(999, _("%s: %s\n"), fname, err.c_str());
+        return types::Function::Error;
     }
 
-    out[0] = var;
-
-#ifdef SHOW_TIMER
-    std::chrono::steady_clock::time_point toutputend = std::chrono::steady_clock::now();
-    sciprint("Output\t: %d ms\n", std::chrono::duration_cast<std::chrono::milliseconds>(toutputend - toutput).count());
-
-    std::chrono::steady_clock::time_point ttotalend = std::chrono::steady_clock::now();
-    sciprint("Total\t: %d ms\n", std::chrono::duration_cast<std::chrono::milliseconds>(ttotalend - ttotal).count());
-#endif
-
-    return STATUS_OK;
+    out.push_back(var);
+    return types::Function::OK;
 }

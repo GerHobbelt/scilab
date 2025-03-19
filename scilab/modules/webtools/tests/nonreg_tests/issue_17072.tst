@@ -19,7 +19,14 @@
 mode = xmlGetValues("//web/body/cookies", "mode");
 // private mode
 xmlSetValues("//web/body/cookies", ["mode"; "2"]);
-http_get("https://3ds.com", follow=%t);
+try
+    http_get("https://3ds.com", follow=%t);
+catch
+    // reset mode
+    xmlSetValues("//web/body/cookies", ["mode"; mode]);
+    error(lasterror());
+end
+
 // reset mode
 xmlSetValues("//web/body/cookies", ["mode"; mode]);
 // get lines where there is the string "3ds.com"

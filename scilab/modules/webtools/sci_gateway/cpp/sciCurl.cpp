@@ -77,8 +77,7 @@ bool SciCurl::init()
     curl_easy_setopt(_curl, CURLOPT_USERAGENT, pcUserAgent.data());
 
     // set Accept-Encoding whatever curl was built with
-    std::string empty;
-    curl_easy_setopt(_curl, CURLOPT_ACCEPT_ENCODING, empty.c_str());
+    curl_easy_setopt(_curl, CURLOPT_ACCEPT_ENCODING, "");
 
     curl_easy_setopt(_curl, CURLOPT_HEADERFUNCTION, write_headers);
     curl_easy_setopt(_curl, CURLOPT_HEADERDATA, this);
@@ -132,7 +131,8 @@ void SciCurl::verbose(bool verbose, const char* fname)
 
 types::InternalType* SciCurl::getResult()
 {
-    types::InternalType* res = fromJSON(_data);
+    std::string err = "";
+    types::InternalType* res = fromJSON(_data, err);
     if (res == nullptr)
     {
         res = new types::String(_data.c_str());
@@ -466,13 +466,13 @@ size_t SciCurl::write_result(char* pcInput, size_t size, size_t nmemb, void* out
     if(fd)
     {
         fwrite(pcInput, size, nmemb, fd);
-        return static_cast<int>(size*nmemb);
+        return size*nmemb;
     }
 #endif
 
     std::string d(pcInput, size * nmemb);
     query->appendData(d);
-    return static_cast<int>(size*nmemb);
+    return size*nmemb;
 }
 
 // concat query headers

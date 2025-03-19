@@ -79,7 +79,7 @@ XZ_VERSION=5.4.4
 JOGL_VERSION=2.5.0
 OPENXLSX_VERSION=0.3.2
 LIBARCHIVE_VERSION=3.7.1
-NLOHMANN_JSON_VERSION=3.11.3
+RAPIDJSON_VERSION=24b5e7a
 
 # # CppServer and its deps
 # CPPSERVER_VERSION=1.0.4.1
@@ -119,7 +119,7 @@ make_versions() {
     echo "JOGL_VERSION          = $JOGL_VERSION"
     echo "OPENXLSX_VERSION      = $OPENXLSX_VERSION"
     echo "LIBARCHIVE_VERSION    = $LIBARCHIVE_VERSION"
-    echo "NLOHMANN_JSON_VERSION = $NLOHMANN_JSON_VERSION"
+    echo "RAPIDJSON_VERSION     = $RAPIDJSON_VERSION"
     # echo "CPPSERVER_VERSION     = $CPPSERVER_VERSION"
     # echo "ASIO_VERSION          = $ASIO_VERSION"
     # echo "CPPCOMMON_VERSION     = $CPPCOMMON_VERSION"
@@ -178,8 +178,9 @@ download_dependencies() {
 
     [ ! -f libarchive-$LIBARCHIVE_VERSION.tar.xz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/libarchive-$LIBARCHIVE_VERSION.tar.xz
 
-    # Path in source: single_include/nlohmann/json.hpp
-    [ ! -f nlohmann_json-$NLOHMANN_JSON_VERSION.hpp ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp
+    # $RAPIDJSON_VERSION=24b5e7a
+    # curl -o rapidjson-$RAPIDJSON_VERSION.tar.gz https://github.com/Tencent/rapidjson/archive/$RAPIDJSON_VERSION.tar.gz
+    [ ! -f rapidjson-$RAPIDJSON_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/rapidjson-$RAPIDJSON_VERSION.tar.gz
 
     # # CppServer and its deps
     # [ ! -f cppserver-$CPPSERVER_VERSION.zip ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cppserver-$CPPSERVER_VERSION.zip
@@ -214,7 +215,7 @@ make_all() {
     build_ncurses
     build_openxlsx
     build_libarchive
-    build_nlohmann_json
+    build_rapidjson
     # build_cppserver
 }
 
@@ -241,7 +242,7 @@ make_binary_directory() {
     ##### INCLUDES #####
     ####################
     cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/include/"
-    cp -R "$INSTALLUSRDIR/include/nlohmann/" "$INSTALLROOTDIR/include/"
+    cp -R "$INSTALLUSRDIR/include/rapidjson/" "$INSTALLROOTDIR/include/"
     cp -R "$INSTALLUSRDIR/include/libxml2/" "$INSTALLROOTDIR/include/"
     cp -R "$INSTALLUSRDIR/include/pcre.h" "$INSTALLROOTDIR/include/"
 
@@ -878,10 +879,9 @@ build_libarchive() {
     cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
 }
 
-build_nlohmann_json() {
-    rm -rf "$INSTALLUSRDIR/include/nlohmann/"
-    mkdir -p "$INSTALLUSRDIR/include/nlohmann/"
-    cp -a "$DOWNLOADDIR"/nlohmann_json-$NLOHMANN_JSON_VERSION.hpp "$INSTALLUSRDIR/include/nlohmann/json.hpp"
+build_rapidjson() {
+    rm -rf "$INSTALLUSRDIR/include/rapidjson/"
+    tar -xzf "$DOWNLOADDIR"/rapidjson-$RAPIDJSON_VERSION.tar.gz -C "$INSTALLUSRDIR/include/" --strip-components=2 --wildcards rapidjson-$RAPIDJSON_VERSION*/include
 }
 
 build_suitesparse() {

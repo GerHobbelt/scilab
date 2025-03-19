@@ -22,6 +22,8 @@
 ;
 Source: bin\{#WEBTOOLS}.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\{#WEBTOOLS}.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
+Source: bin\{#WEBTOOLS}_gw.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
+Source: bin\{#WEBTOOLS}_gw.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#WEBTOOLS}\license.txt; DestDir: {app}\modules\{#WEBTOOLS}; Components: {#COMPN_SCILAB}
 ;

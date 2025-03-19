@@ -16,7 +16,7 @@
     <refnamediv>
         <refname>fromJSON</refname>
         <refpurpose>
-            Convert JSON to scilab variable.
+            Convert JSON to a Scilab variable.
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -39,14 +39,14 @@
             <varlistentry>
                 <term>jsonFilename</term>
                 <listitem>
-                    Path and name of the file containing input JSON data.
+                    A JSON file path.
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>result</term>
                 <listitem>
-                    If the string is a correct JSON, result contain the scilab variable.
+                    If the string is a correct JSON, the result contains the Scilab variable.
                     <para/>
                 </listitem>
             </varlistentry>
@@ -55,15 +55,24 @@
     <refsection>
         <title>Description</title>
         <para>
-            This function convert string or JSON files into a Scilab variable.
+            This function converts a string or a JSON file into a Scilab variable.
+            <literal>NaN</literal>, <literal>Infinity</literal> and <literal>-Infinity</literal> are converted to <literal>%nan</literal>, <literal>%inf</literal> and <literal>-%inf</literal>.
+            JSON <literal>null</literal> is converted to an empty matrix <literal>[]</literal> while it is converted to <literal>%nan</literal> in number arrays.
+            Non-homogeneous data types or size arrays are converted into a list of elements.
         </para>
     </refsection>
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-fromJSON("{status: OK, value:12}")
+// JSON object
+fromJSON("{""status"": ""OK"", ""value"":12}")
+// JSON array
 fromJSON("[1, 2, 3]")
-fromJSON("{test:[a, b], values:[1, 2]")
+// JSON null values
+fromJSON("[1, 2, null]")
+fromJSON("[1, true, null]")
+// non-finite values
+fromJSON("[NaN, Infinity, -Infinity]")
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

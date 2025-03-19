@@ -19,31 +19,31 @@
 expected = struct("root", []);
 
 expected.root= list(list(struct("a", %t), struct("b", 4)));
-computed = fromJSON("{root: [[{a: true}, {b:4}]]}")
+computed = fromJSON("{""root"": [[{""a"": true}, {""b"":4}]]}")
 assert_checkequal(computed, expected);
 
 expected.root = struct("a", %t);
 expected.root(1,2).a = 4;
-computed = fromJSON("{root: [[{a: true}, {a:4}]]}")
+computed = fromJSON("{""root"": [[{""a"": true}, {""a"":4}]]}")
 assert_checkequal(computed, expected);
 
 expected.root = struct("a", %f);
 expected.root(1,2).a = 40;
 expected.root(2,1).a = %t;
 expected.root(2,2).a = 4;
-computed = fromJSON("{root: [[{a: false}, {a:40}],[{a: true}, {a:4}]]}");
+computed = fromJSON("{""root"": [[{""a"": false}, {""a"":40}],[{""a"": true}, {""a"":4}]]}");
 assert_checkequal(computed, expected);
 
 expected.root = list(list(struct("a", %f)));
 expected.root(1)(2) = struct("b", 40);
 expected.root(2) = list(struct("a", %t));
 expected.root(2)(2) = struct("b", 4);
-computed = fromJSON("{root: [[{a: false}, {b:40}],[{a: true}, {b:4}]]}")
+computed = fromJSON("{""root"": [[{""a"": false}, {""b"":40}],[{""a"": true}, {""b"":4}]]}")
 assert_checkequal(computed, expected);
 
 expected.root = list(struct("a", %f));
 expected.root(1)(1,2).a = 40;
 expected.root(2) = list(struct("a", %t));
 expected.root(2)(2) = struct("b", 4);
-computed = fromJSON("{root: [[{a: false}, {a:40}],[{a: true}, {b:4}]]}")
+computed = fromJSON("{""root"": [[{""a"": false}, {""a"":40}],[{""a"": true}, {""b"":4}]]}")
 assert_checkequal(computed, expected);

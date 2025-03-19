@@ -16,8 +16,8 @@
 // <-- Short Description -->
 // toJSON creates "\/" string in place of "/"
 
-txt = "{""burn_rate_units"": ""m/s""}";
+txt = "{""burn_rate_units"":""m/s""}";
 st = fromJSON(txt);
 json = toJSON(st);
-assert_checkequal(json, txt)
+assert_checkequal(json, txt);
 

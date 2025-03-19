@@ -21,14 +21,14 @@ exp_result.body = strcat(["quia et suscipit"
                           "suscipit recusandae consequuntur expedita et cum"
                           "reprehenderit molestiae ut ut quas totam"
                           "nostrum rerum est autem sunt rem eveniet architecto"], ascii(10));
-assert_checkequal(http_get(root + "/posts/1", cert="none"), exp_result);
+assert_checkequal(http_get(root + "/posts/1"), exp_result);
 
-res = http_get(root + "/posts", cert="none");
+res = http_get(root + "/posts");
 assert_checkequal(size(res), [1, 100]);
 assert_checkequal(res(50).userId, 5);
 assert_checkequal(res(50).id, 50);
 
-res = http_get(root + "/posts?userId=1", cert="none");
+res = http_get(root + "/posts?userId=1");
 assert_checkequal(size(res), [1 10]);
 assert_checkequal(res(1), exp_result);
 
@@ -39,7 +39,7 @@ data.title  = "A title";
 data.body   = "A body";
 exp_result  = data;
 exp_result.id = 101;
-assert_checkequal(http_post(root+"/posts", data, cert="none"), exp_result);
+assert_checkequal(http_post(root+"/posts", data), exp_result);
 
 // HTTP PUT
 clear data;
@@ -47,7 +47,7 @@ data.userId = 12;
 data.title  = "A title";
 data.body   = "A body";
 data.id = 1;
-assert_checkequal(http_put(root+"/posts/1", data, cert="none"), data);
+assert_checkequal(http_put(root+"/posts/1", data), data);
 
 // HTTP PATCH
 clear data;
@@ -61,7 +61,7 @@ exp_result.body = strcat(["quia et suscipit"
                           "suscipit recusandae consequuntur expedita et cum"
                           "reprehenderit molestiae ut ut quas totam"
                           "nostrum rerum est autem sunt rem eveniet architecto"], ascii(10));
-assert_checkequal(http_patch(root+"/posts/1", data, cert="none"), exp_result);
+assert_checkequal(http_patch(root+"/posts/1", data), exp_result);
 
 // HTTP DELETE
-assert_checkequal(http_delete(root+"/posts/1", cert="none"), fromJSON("{}"));
+assert_checkequal(http_delete(root+"/posts/1"), fromJSON("{}"));

@@ -18,6 +18,7 @@
 #include "function.hxx"
 #include "string.hxx"
 #include "double.hxx"
+#include "UTF8.hxx"
 #include "json.hxx"
 
 extern "C"
@@ -32,7 +33,6 @@ extern "C"
 types::Function::ReturnValue sci_http_put_post(types::typed_list &in, types::optional_list &opt, int _iRetCount, types::typed_list &out, const char* fname)
 {
     bool isJson  = false;
-    char* pcData = NULL;
 
     if (in.size() < 1 || in.size() > 2)
     {
@@ -107,16 +107,24 @@ types::Function::ReturnValue sci_http_put_post(types::typed_list &in, types::opt
         }
     }
 
+    std::string data;
     if(in.size() > 1)
     {
         // get data
         if(in[1]->isString() && in[1]->getAs<types::String>()->isScalar())
         {
-            pcData = wide_string_to_UTF8(in[1]->getAs<types::String>()->get(0));
+            data = scilab::UTF8::toUTF8(in[1]->getAs<types::String>()->get(0));
         }
         else
         {
-            pcData = os_strdup(toJSON(in[1]).c_str());
+            std::string err;
+            data = toJSON(in[1], err);
+            if(err.empty() == false)
+            {
+                Scierror(999, _("%s: JSON convertion failed.\n%s\n"), fname, err.c_str());
+                return types::Function::Error;
+            }
+
             isJson = true;
         }
 
@@ -126,7 +134,7 @@ types::Function::ReturnValue sci_http_put_post(types::typed_list &in, types::opt
             query.addHTTPHeader("Content-Type: application/json;charset=utf-8");
         }
 
-        query.setData(pcData);
+        query.setData(data.c_str());
     }
 
     // configure headers when they have all been added.
@@ -134,11 +142,6 @@ types::Function::ReturnValue sci_http_put_post(types::typed_list &in, types::opt
 
     // send the query
     query.perform();
-    if (pcData)
-    {
-        FREE(pcData);
-    }
-
     if(query.hasFailed())
     {
         Scierror(999, _("%s: CURL execution failed.\n%s\n"), fname, query.getError());

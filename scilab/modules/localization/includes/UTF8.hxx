@@ -13,6 +13,9 @@
  *
  */
 
+#ifndef __SCILAB_UTF8_HXX__
+#define __SCILAB_UTF8_HXX__
+
 #include <string>
 
 #include "dynlib_localization.h"
@@ -36,3 +39,4 @@ private:
 };
 
 }
+#endif /* !__SCILAB_UTF8_HXX__ */

@@ -75,8 +75,8 @@
 /* HAVE_CPLUS_DEMANGLE */
 #undef HAVE_CPLUS_DEMANGLE
 
-/* Define to 1 if you have the <curl.h> header file. */
-#undef HAVE_CURL_H
+/* Define to 1 if you have the <curl/curl.h> header file. */
+#undef HAVE_CURL_CURL_H
 
 /* Define to 1 if you have the <curses.h> header file. */
 #undef HAVE_CURSES_H
@@ -489,6 +489,9 @@
 
 /* PCRE version */
 #undef PCRE_VERSION
+
+/* Using rapidjson master branch */
+#undef RAPIDJSON_MASTER
 
 /* Extension of a shared library */
 #undef SHARED_LIB_EXT

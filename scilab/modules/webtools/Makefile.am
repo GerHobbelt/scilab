@@ -5,13 +5,13 @@
 
 
 WEBTOOLS_C_SOURCES = \
-    src/c/DllmainWebtools.c \
-    src/c/jsmn.c
+    src/c/DllmainWebtools_gw.c
 
 WEBTOOLS_CPP_SOURCES = \
-    src/cpp/sciCurl.cpp \
     src/cpp/webtools.cpp \
-    src/cpp/json.cpp
+    src/cpp/json.cpp \
+    src/cpp/fromJSON.cpp \
+    src/cpp/toJSON.cpp
 
 GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_url_split.c
@@ -29,6 +29,7 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_toJSON.cpp \
     sci_gateway/cpp/sci_fromJSON.cpp \
     sci_gateway/cpp/gateway_tools.cpp \
+    sci_gateway/cpp/sciCurl.cpp \
     sci_gateway/cpp/webtools_gw.cpp
 
 libsciwebtools_la_CPPFLAGS= \
@@ -88,6 +89,7 @@ libsciwebtools_la_etc_DATA = etc/webtools.quit etc/webtools.start
 libsciwebtools_la_includedir=$(pkgincludedir)
 libsciwebtools_la_include_HEADERS = \
 includes/json.hxx \
-includes/dynlib_webtools.h
+includes/dynlib_webtools.h \
+includes/dynlib_webtools_gw.h
 
 include $(top_srcdir)/Makefile.incl.am

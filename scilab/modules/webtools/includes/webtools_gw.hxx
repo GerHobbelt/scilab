@@ -21,7 +21,7 @@
 
 extern "C"
 {
-#include "dynlib_webtools.h"
+#include "dynlib_webtools_gw.h"
 }
 
 class WebtoolsModule
@@ -30,21 +30,23 @@ private :
     WebtoolsModule() {};
     ~WebtoolsModule() {};
 public :
-    WEBTOOLS_IMPEXP static int Load();
-    WEBTOOLS_IMPEXP static int Unload()
+    WEBTOOLS_GW_IMPEXP static int Load();
+    WEBTOOLS_GW_IMPEXP static int Unload()
     {
         return 1;
     }
 };
 
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_get, WEBTOOLS_IMPEXP);
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_post, WEBTOOLS_IMPEXP);
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_put, WEBTOOLS_IMPEXP);
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_patch, WEBTOOLS_IMPEXP);
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_delete, WEBTOOLS_IMPEXP);
-CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_upload, WEBTOOLS_IMPEXP);
-CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_encode, WEBTOOLS_IMPEXP);
-CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_decode, WEBTOOLS_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_get, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_post, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_put, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_patch, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_delete, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_http_upload, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_toJSON, WEBTOOLS_GW_IMPEXP);
+CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_fromJSON, WEBTOOLS_GW_IMPEXP);
+CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_encode, WEBTOOLS_GW_IMPEXP);
+CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_decode, WEBTOOLS_GW_IMPEXP);
 
 types::Function::ReturnValue sci_http_put_post(types::typed_list& in, types::optional_list& opt, int _iRetCount, types::typed_list& out, const char* fname);
 

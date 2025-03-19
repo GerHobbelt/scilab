@@ -19,6 +19,7 @@
 #include "string.hxx"
 #include "double.hxx"
 #include "struct.hxx"
+#include "UTF8.hxx"
 #include "json.hxx"
 
 extern "C"
@@ -174,8 +175,15 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
         std::vector<types::InternalType*> pITData = pStruct->get(0)->getData();
         for (const auto & field : fieldsMap)
         {
-            char* pcFieldName = wide_string_to_UTF8(field.first.data());
-            std::string strData(toJSON(pITData[field.second]));
+            std::string sFieldName = scilab::UTF8::toUTF8(field.first);
+            std::string err;
+            std::string strData(toJSON(pITData[field.second], err));
+            if(err.empty() == false)
+            {
+                Scierror(999, _("%s: JSON convertion failed.\n%s\n"), fname, err.c_str());
+                return types::Function::Error;
+            }
+
             //remove " @start and @end of string
             if (strData.front() == '\"' && strData.back() == '\"')
             {
@@ -183,8 +191,7 @@ types::Function::ReturnValue sci_http_upload(types::typed_list &in, types::optio
                 strData.pop_back();
             }
 
-            query.addContentToForm(pcFieldName, strData.data());
-            FREE(pcFieldName);
+            query.addContentToForm(sFieldName.c_str(), strData.c_str());
         }
     }
 

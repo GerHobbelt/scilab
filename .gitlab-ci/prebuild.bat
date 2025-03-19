@@ -25,7 +25,7 @@ if exist "%LOGDIR%" (
 rem ################################
 rem ##### DEPENDENCIES VERSION #####
 rem ################################
-set SVN_REVISION=30112
+set SVN_REVISION=30118
 
 rem ###############################
 rem ##### ARGUMENT MANAGEMENT #####

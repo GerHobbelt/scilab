@@ -16,10 +16,10 @@
 #ifndef __WEBTOOLS_H__
 #define __WEBTOOLS_H__
 
-#include "dynlib_webtools.h"
+#include "dynlib_webtools_gw.h"
 
-WEBTOOLS_IMPEXP int Initialize_Webtools(void);
-WEBTOOLS_IMPEXP int Finalize_Webtools(void);
+WEBTOOLS_GW_IMPEXP int Initialize_Webtools(void);
+WEBTOOLS_GW_IMPEXP int Finalize_Webtools(void);
 
 #endif /* __WEBTOOLS_H__ */
 /*--------------------------------------------------------------------------*/

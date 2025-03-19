@@ -22,10 +22,10 @@
 
 extern "C"
 {
-#include "dynlib_webtools.h"
+#include "dynlib_webtools_gw.h"
 }
 
-class WEBTOOLS_IMPEXP SciCurl
+class SciCurl
 {
 public:
     SciCurl();

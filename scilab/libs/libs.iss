@@ -18,8 +18,6 @@ Source: libs\f2c\f2c.h; DestDir: {app}\libs\f2c; Flags: recursesubdirs; Componen
 ; intl used by localization
 Source: libs\intl\*.h; DestDir: {app}\libs\intl; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 ;
-; nlohmann json
-Source: libs\nlohmann\include\nlohmann\*.hpp; DestDir: {app}\libs\nlohmann\include\nlohmann; Components: {#COMPN_SCILAB}
 
 ; libxml2
 Source: libs\libxml2\*.h; DestDir: {app}\libs\libxml2; Flags: recursesubdirs; Components: {#COMPN_SCILAB}

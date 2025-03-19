@@ -339,8 +339,8 @@
     <ProjectReference Include="..\ui_data\src\c\ui_data.vcxproj">
       <Project>{142d643b-a9ec-49db-9d48-a925a20f63b1}</Project>
     </ProjectReference>
-    <ProjectReference Include="..\webtools\webtools.vcxproj">
-      <Project>{8dbf9ba7-abb8-4c35-a82a-0adbeb7e5331}</Project>
+    <ProjectReference Include="..\webtools\sci_gateway\cpp\webtools_gw.vcxproj">
+      <Project>{e46b6b29-48e9-4953-a0ac-ed574c692b82}</Project>
     </ProjectReference>
     <ProjectReference Include="..\windows_tools\src\c\windows_tools.vcxproj">
       <Project>{9594ac02-20ee-4fbf-95b4-bfa5865ed7ca}</Project>

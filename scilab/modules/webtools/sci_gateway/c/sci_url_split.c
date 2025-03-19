@@ -25,18 +25,11 @@
 int sci_url_split(char* fname, void* pvApiCtx)
 {
     SciErr sciErr;
-    int length = 0;
-    int *piAddr = NULL;
     char *url = NULL;
-    char *dest = NULL;
-
-    int iRows = 0, iCols = 0;
-    int iType = 0;
     int *piAddressVarOne = NULL;
     char *emptyString = "";
     int ret = 0;
     xmlURIPtr c = NULL;
-    int zero = 0;
 
     int iRhs = nbInputArgument(pvApiCtx);
 
