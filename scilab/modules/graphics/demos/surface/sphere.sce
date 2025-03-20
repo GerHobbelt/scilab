@@ -6,18 +6,12 @@
 //
 
 // =============================================================================
-// sphere()
+// demo_sphere()
 // =============================================================================
 
-function sphere()
+function demo_sphere()
 
-    exec("SCI/modules/graphics/demos/surface/Macros.sci",-1);
-
-    u = linspace(-%pi/2,%pi/2,40);
-    v = linspace(0,2*%pi,20);
-    x = cos(u)'*cos(v);
-    y = cos(u)'*sin(v);
-    z = sin(u)'*ones(v);
+    [x, y, z] = sphere(40);
 
     my_handle                   = scf(100001);
     clf(my_handle,"reset");
@@ -36,5 +30,5 @@ function sphere()
 
 endfunction
 
-sphere();
-clear sphere;
+demo_sphere();
+clear demo_sphere;

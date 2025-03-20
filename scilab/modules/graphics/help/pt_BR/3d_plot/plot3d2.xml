@@ -294,11 +294,7 @@
     <refsection>
         <title>Exemplos</title>
         <programlisting role="example"><![CDATA[
-u = linspace(-%pi/2,%pi/2,40);
-v = linspace(0,2*%pi,20);
-X = cos(u)'*cos(v);
-Y = cos(u)'*sin(v);
-Z = sin(u)'*ones(v);
+[X, Y, Z] = sphere([20, 40]);
 e=plot3d2(X,Y,Z);
 // apenas no novo modo de gráficos
 e.color_mode=4; // mudando a cor

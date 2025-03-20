@@ -45,14 +45,10 @@
     <refsection>
         <title>Exemplos</title>
         <programlisting role="example"><![CDATA[
-//Uma esfera...
-u = linspace(-%pi/2,%pi/2,40);
-v = linspace(0,2*%pi,20);
-x= cos(u)'*cos(v);
-y= cos(u)'*sin(v);
-z= sin(u)'*ones(v);
+// Uma esfera...
+[x, y, z] = sphere([20, 40]);
 //plot3d2(x,y,z) é equivalente a...
-[xx,yy,zz]=nf3d(x,y,z); plot3d(xx,yy,zz)
+[xx,yy,zz]=nf3d(x,y,z); plot3d(xx,yy,zz);
  ]]></programlisting>
     </refsection>
     <refsection role="see also">
