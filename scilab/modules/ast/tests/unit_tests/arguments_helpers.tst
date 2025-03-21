@@ -142,6 +142,18 @@ assert_checkerror("foo(10)", [], 999);
 assert_checkerror("foo(9)", [], 999);
 clear foo;
 
+function foo(a, b)
+    arguments
+        a {mustBeGreaterThan(a, b)}
+        b
+    end
+endfunction
+
+foo(11, 10);
+assert_checkerror("foo(10, 10)", [], 999);
+assert_checkerror("foo(9, 10)", [], 999);
+clear foo;
+
 // mustBeLessThan
 function foo(a)
     arguments
@@ -152,6 +164,18 @@ endfunction
 foo(9);
 assert_checkerror("foo(10)", [], 999);
 assert_checkerror("foo(11)", [], 999);
+clear foo;
+
+function foo(a, b)
+    arguments
+        a {mustBeLessThan(a, b)}
+        b
+    end
+endfunction
+
+foo(9, 10);
+assert_checkerror("foo(10, 10)", [], 999);
+assert_checkerror("foo(11, 10)", [], 999);
 clear foo;
 
 // mustBeGreaterThanOrEqual
@@ -166,6 +190,18 @@ foo(11);
 assert_checkerror("foo(9)", [], 999);
 clear foo;
 
+function foo(a, b)
+    arguments
+        a {mustBeGreaterThanOrEqual(a, b)}
+        b
+    end
+endfunction
+
+foo(10, 10);
+foo(11, 10);
+assert_checkerror("foo(9, 10)", [], 999);
+clear foo;
+
 // mustBeLessThanOrEqual
 function foo(a)
     arguments
@@ -176,6 +212,18 @@ endfunction
 foo(10);
 foo(9);
 assert_checkerror("foo(11)", [], 999);
+clear foo;
+
+function foo(a, b)
+    arguments
+        a {mustBeLessThanOrEqual(a, b)}
+        b
+    end
+endfunction
+
+foo(10, 10);
+foo(9, 10);
+assert_checkerror("foo(11, 10)", [], 999);
 clear foo;
 
 // mustBeA
@@ -303,6 +351,50 @@ foo(10);
 assert_checkerror("foo(-1)", [], 999);
 assert_checkerror("foo(11)", [], 999);
 clear foo;
+
+function foo(a, b)
+    arguments
+        a {mustBeInRange(a, b, 10)}
+        b
+    end
+endfunction
+
+foo(0, 0);
+foo(10, 0);
+
+assert_checkerror("foo(-1, 0)", [], 999);
+assert_checkerror("foo(11, 0)", [], 999);
+clear foo;
+
+function foo(a, b)
+    arguments
+        a {mustBeInRange(a, 0, b)}
+        b
+    end
+endfunction
+
+foo(0, 10);
+foo(10, 10);
+
+assert_checkerror("foo(-1, 10)", [], 999);
+assert_checkerror("foo(11, 10)", [], 999);
+clear foo;
+
+function foo(a, b, c)
+    arguments
+        a 
+        b {mustBeInRange(b, a, c)}
+        c
+    end
+endfunction
+
+foo(0, 0, 10);
+foo(0, 10, 10);
+
+assert_checkerror("foo(0, -1, 10)", [], 999);
+assert_checkerror("foo(0, 11, 10)", [], 999);
+clear foo;
+
 
 // mustBeFile
 function foo(a)

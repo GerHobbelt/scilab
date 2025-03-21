@@ -61,6 +61,30 @@ extern "C"
 #include "expandPathVariable.h"
 }
 
+std::string var2str(types::InternalType* pIT)
+{
+    std::wostringstream ostr;
+    
+    types::typed_list in = {pIT};
+    types::optional_list opt;
+    types::typed_list out;
+
+    types::InternalType* pCall = symbol::Context::getInstance()->get(symbol::Symbol(L"sci2exp"));
+    if (pCall && pCall->isCallable())
+    {
+        if (pCall->getAs<types::Callable>()->call(in, opt, 1, out) == types::Function::OK)
+        {
+            if (out.size() == 1 && out[0]->isString())
+            {
+                std::wstring output = out[0]->getAs<types::String>()->get()[0];
+                return scilab::UTF8::toUTF8(output);
+            }
+        }
+    }
+
+    return "";
+}
+
 
 bool mustBeEmpty(types::InternalType* x) { return x->isDouble() && x->getAs<types::Double>()->isEmpty(); }
 bool mustBeDouble(types::InternalType* x) { return x->isDouble(); }
@@ -1970,6 +1994,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                         if (ret != 0)
                         {
                             auto error = arg.validators[j].error;
+                            auto inputs = arg.validators[j].inputs;
                             auto errorArgs = arg.validators[j].errorArgs;
                             char msg[128];
 
@@ -1979,14 +2004,26 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                                     os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1);
                                     break;
                                 case 3:
-                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data());
+                                {
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
+                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data());
                                     break;
+                                }
                                 case 4:
-                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data());
+                                {
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
+                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? var2str(in[std::get<0>(errorArgs[1])]) : std::get<1>(errorArgs[1]);
+                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data(), s2.data());
                                     break;
+                                }
                                 case 5:
-                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, errorArgs[0].data(), errorArgs[1].data(), errorArgs[2].data());
+                                {
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
+                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? var2str(in[std::get<0>(errorArgs[1])]) : std::get<1>(errorArgs[1]);
+                                    std::string s3 = std::get<0>(errorArgs[2]) != -1 ? var2str(in[std::get<0>(errorArgs[2])]) : std::get<1>(errorArgs[2]);
+                                    os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data(), s2.data(), s3.data());
                                     break;
+                                }
                             }
 
                             throw ast::InternalError(scilab::UTF8::toWide(msg), 999, arg.loc);
@@ -2599,11 +2636,12 @@ void Macro::updateArguments()
                             {
                                 //never occur
                                 sciprint("arg != -1");
-                                argValidator.errorArgs.push_back("arg != -1");
+                                argValidator.errorArgs.push_back({-1, "arg != -1"});
                             }
                             else
                             {
-                                argValidator.errorArgs.push_back(std::get<1>(args[k]));
+                                int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]) + 1;
+                                argValidator.errorArgs.push_back({pos, ""});
                             }
                         }
 
@@ -2745,17 +2783,18 @@ void Macro::updateArguments()
                                         output = ostr.str();
                                     }
 
-                                    argValidator.errorArgs.push_back(scilab::UTF8::toUTF8(output));
+                                    argValidator.errorArgs.push_back({-1, scilab::UTF8::toUTF8(output)});
                                 }
                                 else //use position of variable as message information
                                 {
-                                    int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]) + 1;
-                                    argValidator.errorArgs.push_back(std::to_string(pos));
+                                    int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]);
+                                    argValidator.errorArgs.push_back({pos, ""});
                                 }
                             }
-                            else
+                            else // use position of variable as message information
                             {
-                                argValidator.errorArgs.push_back(std::get<1>(args[k]));
+                                int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]);
+                                argValidator.errorArgs.push_back({pos, ""});
                             }
                         }
 
