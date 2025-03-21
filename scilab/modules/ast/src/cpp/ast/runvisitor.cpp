@@ -1310,17 +1310,6 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
         pVarList->push_back(var->getAs<SimpleVar>()->getStack());
     }
 
-    //get output parameters list
-    std::vector<symbol::Variable*>* pRetList = new std::vector<symbol::Variable*>();
-    if (e.isLambda() == false)
-    {
-        const exps_t& rets = e.getReturns().getVars();
-        for (const auto ret : rets)
-        {
-            pRetList->push_back(ret->getAs<SimpleVar>()->getStack());
-        }
-    }
-
     types::Macro* pMacro = nullptr;
     if (e.isLambda())
     {
@@ -1333,8 +1322,20 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
         pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
         if (pMacro == nullptr)
         {
+            //get output parameters list
+            std::vector<symbol::Variable*>* pRetList = new std::vector<symbol::Variable*>();
+            const exps_t& rets = e.getReturns().getVars();
+            for (const auto ret : rets)
+            {
+                pRetList->push_back(ret->getAs<SimpleVar>()->getStack());
+            }
+
             pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
             const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
+        }
+        else
+        {
+            delete pVarList;
         }
     }
 
