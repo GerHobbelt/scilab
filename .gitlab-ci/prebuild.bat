@@ -62,7 +62,8 @@ rem #####################
     goto :eof
 
 :download_prereqs
-    curl.exe -L -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-svn-revision-%SVN_REVISION%-windows_x64.zip
+    curl.exe -L -k -o prereq.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements/prerequirements-scilab-svn-revision-%SVN_REVISION%-windows_x64.zip || exit 1
+    unzip.exe -qt prereq.zip || exit 1
     goto :eof
 
 :copy
