@@ -18,8 +18,8 @@ function VSVersion = dlwGetVisualStudioVersion()
     idx = 1;
     if size(versions, "*") > 1 then
         idx = findinlist(versions.name, version);
+        if length(idx) > 1 then idx = idx(1); end
     end
-    
     VSVersion = versions(idx).version;
 endfunction
 //=============================================================================
