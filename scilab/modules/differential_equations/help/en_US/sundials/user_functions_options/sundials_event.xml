@@ -24,28 +24,26 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>evFn</term></td>
-              <td>    
-                  <para>A Scilab function, a list, a string.</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>nb</term></td>
-                <td>
+        <variablelist>
+            <varlistentry>
+                <term>evFn</term>
+                <listitem>    
+                    <para>A Scilab function, a list, a string.</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>nb</term>
+                <listitem>
                     <para>The size of the vector yielded by the DLL entrypoint when <term>evFn</term> is a string.</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>dir,term</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>dir,term</term>
+                <listitem>
                     <para>Two vectors of length <term>nb</term>, when <term>evFn</term> is a string</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
 
     <refsection role="description">

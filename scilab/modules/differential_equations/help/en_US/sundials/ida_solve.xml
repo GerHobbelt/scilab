@@ -25,68 +25,65 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>F</term></td>
-              <td>    <para>a function, a string or a list, the residual of the differential-algebraic equation
-                    </para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>tspan</term></td>
-                <td>
+        <variablelist>
+            <varlistentry>
+                <term>F</term>
+                <listitem>    
+                    <para>a function, a string or a list, the residual of the differential-algebraic equation</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>tspan</term>
+                <listitem>    
                     <para>double vector, time interval or time points</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>y0,yp0</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y0, yp0</term>
+                <listitem>    
                     <para>double arrays: initial state and initial state derivative</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>options</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>options</term>
+                <listitem>
                     <para>a sequence of optional named arguments, see the <link linkend="sundials_options">solvers options</link></para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>t</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>t</term>
+                <listitem>
                     <para>vector of time points used by the solver</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>y</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y</term>
+                <listitem>
                     <para>array of solution at time values in <term>t</term></para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>sol, solext</term></td>
-                <td>
-                    <para>MList of <literal>_odeSolution</literal> type, see the
-                <link linkend="sundials_solution">solution output</link> help page</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>info</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>sol, solext</term>
+                <listitem>    
+                    <para>MList of <literal>_odeSolution</literal> type, see the <link linkend="sundials_solution">solution output</link> help page</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>info</term>
+                <listitem>    
                     <para>MList of <literal>_odeSolution</literal> type with solver information, including the sensitivity of solution (if applicable),
                     user events information (if applicable) and statistics</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>tfinal</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>tfinal</term>
+                <listitem>    
                     <para>final time of extended solution</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
-
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
+
     <refsection role="description">
         <title>Description</title>
         <para>

@@ -25,49 +25,47 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-              <tr>
-                  <td><term>sol, solext</term></td>
-                  <td>
-                      <para>MList of <literal>_odeSolution</literal> type</para>
-                  </td>
-              </tr>
-              <tr>
-                  <td><term>tfinal</term></td>
-                  <td>
-                      <para>final time of extended solution</para>
-                  </td>
-              </tr>
-              <tr>
-                  <td><term>options</term></td>
-                  <td>
-                      <para>a sequence of optional named arguments (see <link linkend="sundials_options">sundials options</link>)</para>
-                  </td>
-              </tr>
-              <tr>
-                  <td><term>t</term></td>
-                  <td>
-                      <para>a vector of time values</para>
-                  </td>
-              </tr>
-              <tr>
-                  <td><term>y,yd</term></td>
-                  <td>
-                      <para>The matrices of interpolated solution and its derivative at times values given in <term>t</term></para>
-                  </td>
-              </tr>
-              <tr>
-                  <td><term>i</term></td>
-                  <td>
-                      <para>the component of the solution to interpolate. If the state of the equation is not a 
-                          vector then <term>i</term> indexes the state as a flatened vector.</para>
-                  </td>
-              </tr>
-        </tbody>
-    </informaltable>
-
+        <variablelist>
+            <varlistentry>
+                <term>sol, solext</term>
+                <listitem>    
+                    <para>MList of <literal>_odeSolution</literal> type</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>tfinal</term>
+                <listitem>    
+                     <para>final time of extended solution</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>options</term>
+                <listitem>    
+                    <para>a sequence of optional named arguments (see <link linkend="sundials_options">sundials options</link>)</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>t</term>
+                <listitem>
+                    <para>a vector of time values</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y,yd</term>
+                <listitem>
+                    <para>The arrays of interpolated solution and its derivative at times values given in <term>t</term></para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>i</term>
+                <listitem>
+                    <para>the component of the solution to interpolate. If the state of the equation is not a 
+                        vector then <term>i</term> indexes the state as a flatened vector.</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
+
     <refsection role="description">
         <title>Description</title>
     <para>

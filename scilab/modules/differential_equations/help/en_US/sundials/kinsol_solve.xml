@@ -19,50 +19,47 @@
             [y,val,info,extra] = kinsol(f,y0,options)
         </synopsis>
     </refsynopsisdiv>
+
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>f</term></td>
-              <td>    <para>a function, a string or a list, the right hand side of the nonlinear system
-                    </para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>y0</term></td>
-                <td>
+        <variablelist>
+            <varlistentry>
+                <term>f</term>
+                <listitem>    
+                    <para>a function, a string or a list, the right hand side of the nonlinear system</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y0</term>
+                <listitem>    
                     <para>a double array: initial guess</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>options</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>options</term>
+                <listitem>    
                     <para>a sequence of optional named arguments, see the <link linkend="sundials_kinsol_options">solvers options</link></para>
-                </td>
-            </tr>
-            <tr>
-              <td><term>y,val</term></td>
-              <td>
-                  <para>double arrays: approximate solution at the end of solver iterations and value of the system function, at y, respectively
-                    </para>
-                </td>
-            </tr>
-            <tr>
-              <td><term>info</term></td>
-              <td>
-                  <para>an integer, the solver exit code, see the related section below
-                  </para>
-                </td>
-            </tr>
-            <tr>
-              <td><term>extra</term></td>
-              <td>
-                  <para>a MList containing solver information and statistics, see the related section below</para> 
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y, val</term>
+                <listitem>
+                    <para>double arrays: approximate solution at the end of solver iterations and value of the system function, at y, respectively</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>info</term>
+                <listitem>
+                    <para>an integer, the solver exit code, see the related section below</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>extra</term>
+                <listitem>
+                     <para>a MList containing solver information and statistics, see the related section below</para> 
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
 
     <refsection role="description">

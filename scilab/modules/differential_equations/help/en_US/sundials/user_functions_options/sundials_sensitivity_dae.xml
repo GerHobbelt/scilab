@@ -22,48 +22,46 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>pvalue</term></td>
-              <td>    
-                  <para>a real double array: the value of parameters with respect to which sensitivity is computed</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>options</term></td>
-                <td>
+        <variablelist>
+            <varlistentry>
+                <term>pvalue</term>
+                <listitem>    
+                    <para>a real double array: the value of parameters with respect to which sensitivity is computed</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>options</term>
+                <listitem>    
                     <para>a sequence of optional named arguments (see the <link linkend="sundials_options">solvers options</link>) and below for sensitivity
                     specific options.</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>t</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>t</term>
+                <listitem>    
                     <para>vector of time points used by the solver.</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>y</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>y</term>
+                <listitem>
                     <para>array of solution at time values in <term>t</term></para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>info</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>info</term>
+                <listitem>
                     <para>MList of <literal>_odeSolution</literal> type with solver information, 
                     user events information (if applicable), statistics and sensitivity of the solution at solver time points.</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>sol</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>sol</term>
+                <listitem>
                     <para>MList of <literal>_odeSolution</literal> type</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
 
     <refsection role="description">

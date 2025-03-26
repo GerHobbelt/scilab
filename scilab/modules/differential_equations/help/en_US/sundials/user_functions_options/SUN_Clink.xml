@@ -22,35 +22,36 @@
 
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>names</term></td>
-              <td>    <para>a string matrix giving the entry point names which are to be linked
+        <variablelist>
+            <varlistentry>
+                <term>names</term>
+                <listitem>
+                    <para>a string matrix giving the entry point names which are to be linked
                     </para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>files</term></td>
-                <td>
-                    <para>string matrix giving source files needed for shared library creation</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>options</term></td>
-                <td>
-                    <para>a sequence of optional named arguments</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>lib</term></td>
-                <td>
-                    <para>the full path of the generated library</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
-
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>files</term>
+                <listitem>
+                    <para>string matrix giving source files needed for shared library creation
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>options</term>
+                <listitem>
+                    <para>a sequence of optional named arguments
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>lib</term>
+                <listitem>
+                    <para>the full path of the generated library
+                    </para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
 
     <refsection role="example">

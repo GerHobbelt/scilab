@@ -21,18 +21,15 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>cbFn</term></td>
-              <td>    
-                  <para>A Scilab function, a list or a string</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
+        <variablelist>
+            <varlistentry>
+                <term>cbFn</term>
+                <listitem>
+                    <para>A Scilab function, a list or a string</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
-
 
     <refsection role="description" xml:id="cvode_callback">
         <title>Description</title>

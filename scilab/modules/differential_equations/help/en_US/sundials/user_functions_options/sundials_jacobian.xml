@@ -25,41 +25,39 @@
     </refsynopsisdiv>
     <refsection role="parameters">
         <title>Arguments</title>
-        <informaltable border='0'>
-          <tbody>
-            <tr>
-              <td><term>jacFn</term></td>
-              <td>    
-                  <para>A Scilab function, a list, a string, a matrix (dense or sparse).</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>[ml,mu]</term></td>
-                <td>
+        <variablelist>
+            <varlistentry>
+                <term>jacFn</term>
+                <listitem>    
+                    <para>A Scilab function, a list, a string, a matrix (dense or sparse).</para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>[ml,mu]</term>
+                <listitem>
                     <para>A vector of two positive integers <literal>[mu,ml]</literal> giving respectively the upper and lower half bandwidth
                     of the Jacobian.</para>
-                </td>
-            </tr>
-            <tr>
-               <td><term>jacSp</term></td>
-                <td>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>jacSp</term>
+                <listitem>
                     <para>A sparse matrix with the same sparsity pattern as the true Jacobian.</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>nnz</term></td>
-                <td>    
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>nnz</term>
+                <listitem>
                     <para>An integer, the number of non-zeros terms when the Jacobian is sparse and given as the output of a DLL entrypoint.</para>
-                </td>
-            </tr>
-            <tr>
-                <td><term>jFmt</term></td>
-                <td>    
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>jFmt</term>
+                <listitem>
                     <para>A string "CSC" (the default) or "CSR" giving the sparse Jacobian format when given as the output of a DLL entrypoint.</para>
-                </td>
-            </tr>
-        </tbody>
-    </informaltable>
+                </listitem>
+            </varlistentry>
+        </variablelist>
     </refsection>
 
     <refsection role="description">
