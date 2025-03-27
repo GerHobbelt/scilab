@@ -78,7 +78,7 @@ function tbx_build_help(moduletitle, path)
 
         mputl(code, tmp);
 
-        [status, out, err] = scilab(file=tmp);
+        [status, out, err] = scilab(file=tmp, args="-nouserstartup");
         if ~isempty(out) then
             printf("%s\n", out)
         end
