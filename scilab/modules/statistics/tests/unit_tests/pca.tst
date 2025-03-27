@@ -14,6 +14,9 @@
 // =============================================================================
 msg = msprintf(_("%s: Wrong number of input argument: At least %d expected.\n"), "pca", 1);
 assert_checkerror("pca()", msg);
+msg = msprintf(_("%s: unknown option ""%s"".\n"), "pca", "centers");
+assert_checkerror("pca([1 2 1;2 1 3;3 2 3], ""centers"", %f)", msg);
+assert_checktrue(execstr("pca([1 2 1;2 1 3;3 2 3], ""CeNtErEd"", %f)", "errcatch") == 0); // Test case-sensitivity on options
 
 // =============================================================================
 a=rand(100,10,'n');

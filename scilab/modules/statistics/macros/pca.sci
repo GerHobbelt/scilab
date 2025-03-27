@@ -38,8 +38,8 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                 break;
             end
 
-            select varargin(i)
-            case "Centered"
+            select convstr(varargin(i), "l")
+            case "centered"
                 centered = varargin(i + 1);
 
                 if typeof(centered) <> "boolean" then
@@ -49,7 +49,7 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                 if size(centered, "*") <> 1 then
                     error(msprintf(_("%s: Wrong size for ""%s"" argument: A scalar expected.\n"), "pca", "Centered"));
                 end
-            case "Economy"
+            case "economy"
                 eco = varargin(i + 1);
 
                 if typeof(eco) <> "boolean" then
@@ -60,7 +60,7 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                     error(msprintf(_("%s: Wrong size for ""%s"" argument: A scalar expected.\n"), "pca", "Economy"));
                 end
 
-            case "NumComponents"
+            case "numcomponents"
                 numcomp = varargin(i + 1);
 
                 if typeof(numcomp) <> "constant" then
@@ -79,7 +79,7 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                     error(msprintf(_("%s: Wrong value for ""%s"" argument: Must be positive and lower than or equal to %d.\n"), "pca", "NumComponents", size(x, 1)));
                 end
 
-            case "Weights"
+            case "weights"
                 weights = varargin(i + 1);
 
                 if typeof(weights) <> "constant" then
@@ -96,7 +96,7 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                 weights = weights(:);
                 isweights = %t;
 
-            case "VariableWeights"
+            case "variableweights"
                 varweights = varargin(i + 1);
                 typ = typeof(varweights);
 
@@ -115,7 +115,7 @@ function [comprinc, score, lambda, tsquare, explainedvar, mu] = pca(x, varargin)
                 end
 
             else
-                break,
+                error(msprintf(_("%s: unknown option ""%s"".\n"), "pca", varargin(i)));
             end
         end
     end
