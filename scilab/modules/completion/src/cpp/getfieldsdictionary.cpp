@@ -178,14 +178,26 @@ char **getfieldsdictionary(char *lineBeforeCaret, char *pattern, int *size)
     int iLast = 0;
     char** _fields = (char**)MALLOC(sizeof(char*) * (iSize + 1));
     wchar_t* wpattern = to_wide_string(pattern);
+    int iPatternLength = std::wcslen(wpattern);
     for (int i = iXlist; i < (iSize + iXlist); ++i)
     {
         // fieldnames can be empty strings or only spaces (used for splitting sets of
         // properties when displaying containers). They are just ignored when composing
         // the completion set.
-        if (!std::isspace(pstData[i][0]) && wcsstr(pstData[i], wpattern) == pstData[i])
+        if (!std::isspace(pstData[i][0]) && iPatternLength <= std::wcslen(pstData[i]))
         {
-            _fields[iLast++] = wide_string_to_UTF8(pstData[i]);
+            bool bMatch = TRUE;
+            for (int k = 0; k < iPatternLength; k++) {
+                if (std::tolower(wpattern[k]) != std::tolower(pstData[i][k]))
+                {
+                    bMatch = FALSE;
+                    break;
+                }
+            }
+            if (bMatch)
+            {
+                 _fields[iLast++] = wide_string_to_UTF8(pstData[i]);   
+            }            
         }
 
     }
