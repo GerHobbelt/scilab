@@ -1,8 +1,7 @@
-Install OCaml 3.11.0 from www.ocaml.org
-Download FlexDLL and copy flexlink.exe and flexdll_msvc.obj in bin directory of ocaml
-(http://alain.frisch.fr/flexdll.html)
+Install OCaml via Opam (https://ocaml.org/docs/ocaml-on-windows)
+> opam install system-msvc
 
-Edit Makefile.mak and modify first line with a correct path if OCAMLLIB is not defined as environment variable
+In a command line execute to setup environment:
+> for /f "tokens=*" %i in ('opam env --switch=default') do @%i
 
-OCAMLPATH=C:\Program Files\Objective Caml
-
+And launch Visual Studio from this shell (devenv)

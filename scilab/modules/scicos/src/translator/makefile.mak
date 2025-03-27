@@ -18,14 +18,8 @@
 #
 # See the file ./license.txt
 
-!IF "$(OCAMLLIB)" == ""
-OCAMLPATH=C:\Program Files\Objective Caml
-!ELSE
-OCAMLPATH=$(OCAMLLIB)\..
-!ENDIF
+OCAMLPATH=$(OPAM_SWITCH_PREFIX)
 
-OCAMLPATHBIN=$(OCAMLPATH)\bin
-OCAMLPATHLIB=$(OCAMLPATH)\lib
 OCAMLC=ocamlc
 OCAMLOPT=ocamlopt
 OCAMLDEP=ocamldep
@@ -40,6 +34,7 @@ all::
 	$(OCAMLYACC) parsing/parser.mly
 	$(RM) parsing\parser.mli
 	$(OCAMLLEX) parsing/lexer.mll
+	$(OCAMLLEX) parsing/linenum.mll
 	$(OCAMLC) $(INCLUDEPATHS) -c parsing/syntax.ml parsing/parser.ml
 	$(OCAMLC) $(INCLUDEPATHS) -c parsing/parser.ml parsing/lexer.ml
 	$(OCAMLC) $(INCLUDEPATHS) -c parsing/lexer.ml parsing/linenum.ml

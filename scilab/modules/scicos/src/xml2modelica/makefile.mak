@@ -19,14 +19,8 @@
 #
 # See the file ./license.txt
 
-!IF "$(OCAMLLIB)" == ""
-OCAMLPATH=C:\Program Files\Objective Caml
-!ELSE
-OCAMLPATH=$(OCAMLLIB)\..
-!ENDIF
+OCAMLPATH=$(OPAM_SWITCH_PREFIX)
 
-OCAMLPATHBIN=$(OCAMLPATH)\bin
-OCAMLPATHLIB=$(OCAMLPATH)\lib
 OCAMLC=ocamlc
 OCAMLOPT=ocamlopt
 OCAMLDEP=ocamldep
@@ -37,6 +31,8 @@ RM=del
 EXEC=xml2modelica.exe
 
 all::
+	$(OCAMLLEX) linenum.mll
+
 	$(OCAMLOPT) -c xMLTree.ml
 	$(OCAMLOPT) -c linenum.ml
 	$(OCAMLOPT) -c stringParser.ml

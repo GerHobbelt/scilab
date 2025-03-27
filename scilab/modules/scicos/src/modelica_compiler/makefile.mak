@@ -19,11 +19,7 @@
 #
 # See the file ./license.txt
 
-!IF "$(OCAMLLIB)" == ""
-OCAMLPATH=C:\Program Files\Objective Caml
-!ELSE
-OCAMLPATH=$(OCAMLLIB)\..
-!ENDIF
+OCAMLPATH=$(OPAM_SWITCH_PREFIX)
 
 OCAMLPATHBIN=$(OCAMLPATH)\bin
 OCAMLPATHLIB=$(OCAMLPATH)\lib
@@ -65,77 +61,63 @@ all:: step1 step2 step3 step4 step5 step6
 
 
 step1: 
-	@"$(OCAMLPATHBIN)\$(OCAMLLEX)" linenum.mll
-	@"$(OCAMLPATHBIN)\$(OCAMLYACC)" $(PARSER_SRC)
+	@"$(OCAMLLEX)" linenum.mll
+	@"$(OCAMLYACC)" $(PARSER_SRC)
 	@$(RM) parser.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLLEX)" $(LEXER_SRC)
+	@"$(OCAMLLEX)" $(LEXER_SRC)
 	
 	
 step2:
-	@"$(OCAMLPATHBIN)\$(OCAMLDEP)" $(MLS)
+	@"$(OCAMLDEP)" $(MLS)
 	
 step3: 
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c linenum.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c parseTree.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c parseTree.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c parser.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c lexer.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c precompilation.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c precompilation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c compilation.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c compilation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c instantiation.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c instantiation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c graphNodeSet.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c graphNodeSet.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c symbolicExpression.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c symbolicExpression.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c squareSparseMatrix.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c squareSparseMatrix.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c bipartiteGraph.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c bipartiteGraph.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c hungarianMethod.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c hungarianMethod.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c causalityGraph.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c causalityGraph.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c optimization.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c optimization.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c xMLCodeGeneration.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c xMLCodeGeneration.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c optimizingCompiler.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c optimizingCompiler.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c scicosCodeGeneration.mli
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c scicosCodeGeneration.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -c scicosOptimizingCompiler.ml
+	@"$(OCAMLC)" -c linenum.ml
+	@"$(OCAMLC)" -c parseTree.ml
+	@"$(OCAMLC)" -c parser.ml
+	@"$(OCAMLC)" -c lexer.ml
+	@"$(OCAMLC)" -c precompilation.ml
+	@"$(OCAMLC)" -c compilation.ml
+	@"$(OCAMLC)" -c instantiation.ml
+	@"$(OCAMLC)" -c graphNodeSet.ml
+	@"$(OCAMLC)" -c symbolicExpression.ml
+	@"$(OCAMLC)" -c squareSparseMatrix.ml
+	@"$(OCAMLC)" -c bipartiteGraph.ml
+	@"$(OCAMLC)" -c hungarianMethod.ml
+	@"$(OCAMLC)" -c causalityGraph.ml
+	@"$(OCAMLC)" -c optimization.ml
+	@"$(OCAMLC)" -c xMLCodeGeneration.ml
+	@"$(OCAMLC)" -c optimizingCompiler.ml
+	@"$(OCAMLC)" -c scicosCodeGeneration.ml
+	@"$(OCAMLC)" -c scicosOptimizingCompiler.ml
 	
 	
 step4:
-	@"$(OCAMLPATHBIN)\$(OCAMLC)" -o $(EXEC) $(CMACMO) scicosOptimizingCompiler.ml
+	@"$(OCAMLC)" -o $(EXEC) $(CMACMO) scicosOptimizingCompiler.ml
 	
 	
 step5:
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c linenum.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c parseTree.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c parser.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c lexer.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c precompilation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c compilation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c instantiation.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c graphNodeSet.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c symbolicExpression.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c squareSparseMatrix.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c bipartiteGraph.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c hungarianMethod.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c causalityGraph.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c optimization.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c xMLCodeGeneration.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c scicosCodeGeneration.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c optimizingCompiler.ml
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -c scicosOptimizingCompiler.ml
+	@"$(OCAMLOPT)" -c linenum.ml
+	@"$(OCAMLOPT)" -c parseTree.ml
+	@"$(OCAMLOPT)" -c parser.ml
+	@"$(OCAMLOPT)" -c lexer.ml
+	@"$(OCAMLOPT)" -c precompilation.ml
+	@"$(OCAMLOPT)" -c compilation.ml
+	@"$(OCAMLOPT)" -c instantiation.ml
+	@"$(OCAMLOPT)" -c graphNodeSet.ml
+	@"$(OCAMLOPT)" -c symbolicExpression.ml
+	@"$(OCAMLOPT)" -c squareSparseMatrix.ml
+	@"$(OCAMLOPT)" -c bipartiteGraph.ml
+	@"$(OCAMLOPT)" -c hungarianMethod.ml
+	@"$(OCAMLOPT)" -c causalityGraph.ml
+	@"$(OCAMLOPT)" -c optimization.ml
+	@"$(OCAMLOPT)" -c xMLCodeGeneration.ml
+	@"$(OCAMLOPT)" -c scicosCodeGeneration.ml
+	@"$(OCAMLOPT)" -c optimizingCompiler.ml
+	@"$(OCAMLOPT)" -c scicosOptimizingCompiler.ml
 	
 	
 step6:
-	@"$(OCAMLPATHBIN)\$(OCAMLOPT)" -o $(EXEC) $(OCAMLLIBS) $(CMX)
+	@"$(OCAMLOPT)" -o $(EXEC) $(OCAMLLIBS) $(CMX)
 	@copy  $(EXEC) ..\..\..\..\bin\$(EXEC)
 	
 clean::
