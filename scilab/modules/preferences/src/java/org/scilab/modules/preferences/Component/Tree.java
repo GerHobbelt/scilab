@@ -19,7 +19,6 @@ package org.scilab.modules.preferences.Component;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTree;
 import javax.swing.event.TreeModelListener;
@@ -30,13 +29,11 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
-import org.w3c.dom.Element;
-import org.w3c.dom.Node;
-import org.w3c.dom.NodeList;
-
 import org.scilab.modules.preferences.XChooser;
 import org.scilab.modules.preferences.XCommonManager;
 import org.scilab.modules.preferences.XComponent;
+import org.w3c.dom.Node;
+import org.w3c.dom.NodeList;
 
 /**
  * Implementation of Select compliant with extended management.
@@ -170,6 +167,10 @@ public class Tree extends Panel implements XComponent, XChooser, TreeSelectionLi
             try {
                 index += Integer.parseInt(ids[i]) - 1;
                 node = node.getChild(index);
+                if (node == null) {
+                    tree.setSelectionRow(0);
+                    break;
+                }
                 if (i < ids.length - 1) {
                     tree.expandRow(index);
                 } else {
