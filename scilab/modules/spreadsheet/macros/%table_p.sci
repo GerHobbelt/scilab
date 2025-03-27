@@ -34,7 +34,7 @@ function %table_p(t)
         output = [rowNames string(t)];
     end
 
-    for c = 1:size(output, 2)
+    for c = 1:size(variableNames, 2)
         name = variableNames(c);
         len = length(name);
         max_len = max(length(output(: , c)));

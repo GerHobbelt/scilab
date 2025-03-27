@@ -281,3 +281,19 @@ assert_checkerror("table()", msg);
 
 t = table(["A"; "B"; "C"], [1; 2; 3], "VariableNames", ["Key", "Value"]);
 assert_checkequal(t(t.Key == "A"), table("A", 1, "VariableNames", ["Key", "Value"]));
+
+// insertion in table
+t = table([], [], "VariableNames", ["A", "B"]);
+t("a", :) = [0, 1];
+assert_checkequal(t, table(0, 1, "VariableNames", ["A", "B"], "RowNames", "a"));
+
+t("b", :) = [1, 2];
+assert_checkequal(t, table([0 1; 1 2], "VariableNames", ["A", "B"], "RowNames", ["a"; "b"]));
+
+t("c", :) = [2, 3];
+assert_checkequal(t, table([0 1; 1 2; 2 3], "VariableNames", ["A", "B"], "RowNames", ["a"; "b"; "c"]));
+
+t("", :) = [3, 4];
+assert_checkequal(t, table([0 1; 1 2; 2 3; 3 4], "VariableNames", ["A", "B"], "RowNames", ["a"; "b"; "c"; ""]));
+t.Row($) = "d";
+assert_checkequal(t.Row, ["a"; "b"; "c"; "d"]);

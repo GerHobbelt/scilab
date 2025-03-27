@@ -123,13 +123,17 @@ function out = %generic_i_table(varargin)
         case "string"
             rownames = out.props.rowNames;
             if rownames == [] then
-                rownames = "Row" + string(1:r);
-                rownames = [rownames i];
+                if r == 0 then
+                    rownames = i;
+                else
+                    rownames = "Row" + string(1:r);
+                    rownames = [rownames; i];
+                end
                 i = r + 1:r + size(i, "*")
             else
                 [xxx, idx] = members(i, rownames);
                 if and(idx == 0) then
-                    rownames = [rownames, i];
+                    rownames = [rownames; i];
                     i = r + 1:r + size(i, "*")
                 else
                     i = idx;

@@ -16,6 +16,8 @@ function out = %table_6(varargin)
         props = varargin($).props;
         props.userdata = size(varargin($).vars);
         out = props;
+    elseif varargin(1) == "Row" then
+        out = varargin($).props.rowNames;
     else
         ts = varargin($);
         if typeof(varargin(1)) == "string" then
