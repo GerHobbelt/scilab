@@ -52,7 +52,10 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
     try
         value = x(i);
     catch
-        value = getfield(i,x);
+        try
+            value = getfield(i,x);
+        catch
+        end
     end
     if ~exists("value","local")    
         head = "void";
