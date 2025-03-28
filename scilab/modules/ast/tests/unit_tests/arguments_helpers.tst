@@ -155,6 +155,7 @@ assert_checkerror("foo(9, 10)", [], 999);
 clear foo;
 
 // mustBeLessThan
+msg = "foo: Wrong value for input argument #1: Must be < 10.";
 function foo(a)
     arguments
         a {mustBeLessThan(a, 10)}
@@ -162,8 +163,8 @@ function foo(a)
 endfunction
 
 foo(9);
-assert_checkerror("foo(10)", [], 999);
-assert_checkerror("foo(11)", [], 999);
+assert_checkerror("foo(10)", msg, 999);
+assert_checkerror("foo(11)", msg, 999);
 clear foo;
 
 function foo(a, b)
@@ -174,8 +175,8 @@ function foo(a, b)
 endfunction
 
 foo(9, 10);
-assert_checkerror("foo(10, 10)", [], 999);
-assert_checkerror("foo(11, 10)", [], 999);
+assert_checkerror("foo(10, 10)", msg, 999);
+assert_checkerror("foo(11, 10)", msg, 999);
 clear foo;
 
 // mustBeGreaterThanOrEqual
@@ -458,8 +459,23 @@ foo(ones(2, 1), ones(2, 1));
 foo(ones(2, 2), ones(2, 2));
 
 assert_checkerror("foo(ones(1, 2), ones(2, 1));", [], 999);
-assert_checkerror("foo(ones(2, 1), ones(1, 2));", [], 999);
+msg = "foo: Wrong size for input argument #1: Must be of the same dimensions of #2.";
+assert_checkerror("foo(ones(2, 1), ones(1, 2));", msg, 999);
 clear foo;
+
+function foo(a, b, c, d)
+    arguments
+        a
+        b {mustBeEqualDims(b, a)}
+        c = 3
+        d {mustBeEqualDims(d, c)} = 4
+    end
+endfunction
+
+msg = "foo: Wrong size for input argument #2: Must be of the same dimensions of #1.";
+assert_checkerror("foo(ones(2, 1), ones(1, 2));", msg, 999);
+msg = "foo: Wrong size for input argument #4: Must be of the same dimensions of #3.";
+assert_checkerror("foo(1, 2, ones(2, 1), ones(1, 2));", msg, 999);
 
 // mustBeSameType
 function foo(a, b)

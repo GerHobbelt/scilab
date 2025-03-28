@@ -61,7 +61,7 @@ extern "C"
 #include "expandPathVariable.h"
 }
 
-std::string var2str(types::InternalType* pIT)
+std::wstring var2str(types::InternalType* pIT)
 {
     std::wostringstream ostr;
     
@@ -76,13 +76,15 @@ std::string var2str(types::InternalType* pIT)
         {
             if (out.size() == 1 && out[0]->isString())
             {
-                std::wstring output = out[0]->getAs<types::String>()->get()[0];
-                return scilab::UTF8::toUTF8(output);
+                return out[0]->getAs<types::String>()->get()[0];
             }
         }
+
+        pIT->toString(ostr);
+        return ostr.str();
     }
 
-    return "";
+    return L"";
 }
 
 
@@ -1165,14 +1167,16 @@ std::map<std::wstring, std::tuple<std::string, int>> errorValidators = {
     {L"mustBeEqualDimsOrScalar", {"%s: Wrong size for input argument #%d: Must be of the same dimensions of #%s or scalar.\n", -3}},
 };
 
+// < 0 to print varaible/constant content
+// > 0 to print #num (variable position)
 std::map<std::wstring, std::vector<std::tuple<int, std::string>>> errorArgs = {
-    {L"mustBeMember", {{1, ""}}},
-    {L"mustBeGreaterThan", {{1, ""}}},
-    {L"mustBeGreaterThanOrEqual", {{1, ""}}},
-    {L"mustBeLessThan", {{1, ""}}},
-    {L"mustBeLessThanOrEqual", {{1, ""}}},
-    {L"mustBeA", {{1, ""}}},
-    {L"mustBeInRange", {{1, ""}, {2, ""}}},
+    {L"mustBeMember", {{-1, ""}}},
+    {L"mustBeGreaterThan", {{-1, ""}}},
+    {L"mustBeGreaterThanOrEqual", {{-1, ""}}},
+    {L"mustBeLessThan", {{-1, ""}}},
+    {L"mustBeLessThanOrEqual", {{-1, ""}}},
+    {L"mustBeA", {{-1, ""}}},
+    {L"mustBeInRange", {{-1, ""}, {-2, ""}}},
     {L"mustBeEqualDims", {{1, ""}}},
     {L"mustBeSameType", {{1, ""}}},
     {L"mustBeEqualDimsOrEmpty", {{1, ""}}},
@@ -1994,7 +1998,6 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                         if (ret != 0)
                         {
                             auto error = arg.validators[j].error;
-                            auto inputs = arg.validators[j].inputs;
                             auto errorArgs = arg.validators[j].errorArgs;
                             char msg[128];
 
@@ -2005,22 +2008,22 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                                     break;
                                 case 3:
                                 {
-                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[0])])) : std::get<1>(errorArgs[0]);
                                     os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data());
                                     break;
                                 }
                                 case 4:
                                 {
-                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
-                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? var2str(in[std::get<0>(errorArgs[1])]) : std::get<1>(errorArgs[1]);
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[0])])) : std::get<1>(errorArgs[0]);
+                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[1])])) : std::get<1>(errorArgs[1]);
                                     os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data(), s2.data());
                                     break;
                                 }
                                 case 5:
                                 {
-                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? var2str(in[std::get<0>(errorArgs[0])]) : std::get<1>(errorArgs[0]);
-                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? var2str(in[std::get<0>(errorArgs[1])]) : std::get<1>(errorArgs[1]);
-                                    std::string s3 = std::get<0>(errorArgs[2]) != -1 ? var2str(in[std::get<0>(errorArgs[2])]) : std::get<1>(errorArgs[2]);
+                                    std::string s1 = std::get<0>(errorArgs[0]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[0])])) : std::get<1>(errorArgs[0]);
+                                    std::string s2 = std::get<0>(errorArgs[1]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[1])])) : std::get<1>(errorArgs[1]);
+                                    std::string s3 = std::get<0>(errorArgs[2]) != -1 ? scilab::UTF8::toUTF8(var2str(in[std::get<0>(errorArgs[2])])) : std::get<1>(errorArgs[2]);
                                     os_sprintf(msg, _(std::get<0>(error).data()), scilab::UTF8::toUTF8(m_wstName).data(), i + 1, s1.data(), s2.data(), s3.data());
                                     break;
                                 }
@@ -2747,54 +2750,25 @@ void Macro::updateArguments()
                         auto args = errorArgs[name];
                         for (int k = 0; k < args.size(); ++k)
                         {
-                            
-                            if (std::get<0>(args[k]) != -1) //not a constant string
+                            int idx = std::get<0>(args[k]);
+                            if (idx > 0) // #num of variable
                             {
-                                types::InternalType* pIT = std::get<1>(argValidator.inputs[std::get<0>(args[k])]);
-                                if (pIT) //data from variable
+                                int pos = pos = std::get<0>(argValidator.inputs[idx]) + 1;
+                                argValidator.errorArgs.push_back({-1, std::to_string(pos)});
+                            }
+                            else // content of variable
+                            {
+                                types::InternalType* pIT = std::get<1>(argValidator.inputs[std::abs(idx)]);
+                                if (pIT) // data from variable
                                 {
-                                    std::wostringstream ostr;
-                                    std::wstring output;
-                                    types::InternalType* pIT = std::get<1>(argValidator.inputs[std::get<0>(args[k])]);
-                                    typed_list in = {pIT};
-                                    optional_list opt;
-                                    typed_list out;
-                                    types::InternalType* pCall = symbol::Context::getInstance()->get(symbol::Symbol(L"sci2exp"));
-                                    if (pCall && pCall->isCallable())
-                                    {
-                                        if (pCall->getAs<types::Callable>()->call(in, opt, 1, out) == types::Function::OK)
-                                        {
-                                            if (out.size() == 1 && out[0]->isString())
-                                            {
-                                                output = out[0]->getAs<types::String>()->get()[0];
-                                                if (pIT->isGenericType() == false || pIT->getAs<types::GenericType>()->getSize() == 1)
-                                                {
-                                                    // output = L"[" + output + L"]";
-                                                }
-
-                                                pIT = nullptr;
-                                            }
-                                        }
-                                    }
-
-                                    if (pIT)
-                                    {
-                                        pIT->toString(ostr);
-                                        output = ostr.str();
-                                    }
-
+                                    std::wstring output = var2str(pIT);
                                     argValidator.errorArgs.push_back({-1, scilab::UTF8::toUTF8(output)});
                                 }
-                                else //use position of variable as message information
+                                else // use var content of variable as message information
                                 {
-                                    int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]);
+                                    int pos = std::get<0>(argValidator.inputs[std::abs(idx)]);
                                     argValidator.errorArgs.push_back({pos, ""});
                                 }
-                            }
-                            else // use position of variable as message information
-                            {
-                                int pos = std::get<0>(argValidator.inputs[std::get<0>(args[k])]);
-                                argValidator.errorArgs.push_back({pos, ""});
                             }
                         }
 
