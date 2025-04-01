@@ -191,18 +191,18 @@ function out = datetime(varargin)
     fname = "datetime";
 
     if rhs > 2 then
-        if varargin($-1) == "OutputFormat" && (type(varargin($)) == 10 || isempty(varargin($))) then
-            outputFormat = varargin($);
-            varargin($) = null();
-            varargin($) = null();
-        else
-            if type(varargin($-1)) == 10 then
-                if and(varargin($-1) <> ["OutputFormat", "InputFormat", "ConvertFrom"]) then
-                    error(msprintf(_("%s: Wrong value for input argument #%d: %s, %s or %s expected.\n"), fname, rhs-1, """InputFormat""", """OutputFormat""", """ConvertFrom"""));
-                end
-                if varargin($) <> [] && type(varargin($)) <> 10 then
-                    error(msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), fname, rhs));
-                end
+        if type(varargin($-1)) == 10 then
+            fmt = convstr(varargin($-1));
+            if and(fmt <> ["outputformat", "inputformat", "convertfrom"]) then
+                error(msprintf(_("%s: Wrong value for input argument #%d: %s, %s or %s expected.\n"), fname, rhs-1, """InputFormat""", """OutputFormat""", """ConvertFrom"""));
+            end
+            if varargin($) <> [] && type(varargin($)) <> 10 then
+                error(msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), fname, rhs));
+            end
+            if fmt == "outputformat" then
+                outputFormat = varargin($);
+                varargin($) = null();
+                varargin($) = null();
             end
         end
     end
@@ -251,7 +251,7 @@ function out = datetime(varargin)
         if and(type(varargin(2)) <> [1 10]) then
             error(msprintf(_("%s: Wrong type for input argument #%d: A real matrix or a string expected.\n"), fname, 2));
         else
-            if type(varargin(2)) == 10 && and(varargin(2) <> ["InputFormat", "ConvertFrom"]) then
+            if type(varargin(2)) == 10 && and(convstr(varargin(2)) <> ["inputformat", "convertfrom"]) then
                 error(msprintf(_("%s: Wrong value for input argument #%d: %s or %s expected.\n"), fname, 2, """InputFormat""", """ConvertFrom"""));
             end
         end
@@ -277,12 +277,12 @@ function out = datetime(varargin)
             input3 = varargin(3);
         end
 
-        if type(varargin(1)) == 10 && type(varargin(2)) == 10 && varargin(2) == "InputFormat" && type(varargin(3)) == 10 then
+        if type(varargin(1)) == 10 && type(varargin(2)) == 10 && convstr(varargin(2)) == "inputformat" && type(varargin(3)) == 10 then
             input1 = varargin(1)
             inputFormat = varargin(3);
         end
 
-        if type(varargin(1)) == 1 && type(varargin(2)) == 10 && varargin(2) == "ConvertFrom" && type(varargin(3)) == 10 then
+        if type(varargin(1)) == 1 && type(varargin(2)) == 10 && convstr(varargin(2)) == "convertfrom" && type(varargin(3)) == 10 then
             input1 = varargin(1)
             convertFrom = varargin(3);
         end
@@ -684,7 +684,11 @@ function out = datetime(varargin)
                     // d(size(input1, "*"), size(size_d, 2)) = "";
 
                     for i = kk//1:size(input1, "*")
-                        [_a, _b, _c, d(i, :)] = regexp(input1(i), inputFormat);
+                        [_a, _b, _c, _d] = regexp(input1(i), inputFormat);
+                        if size(_d, 1) <> 1 then
+                            _d = "";
+                        end
+                        d(i, :) = _d;
                     end
                     if d == "" then
                         error(msprintf(_("%s: Wrong or missing ""InputFormat"" to be applied.\n"), fname));
@@ -716,25 +720,32 @@ function out = datetime(varargin)
                     end
 
                     if isnan(d(:, order == 2)) then
-                        [m_loc, m_idx] = members(mount_val, mount_list1);
-                        if m_idx == 0 then
+                        k = index(:,1) == 2;
+                        select index(k, 2)
+                        case 1
                             [m_loc, m_idx] = members(mount_val, mount_list2);
-                            if m_idx == 0 then
+                        case 2
+                            [m_loc, m_idx] = members(mount_val, mount_list1);
+                        end
+                        if exists("m_idx") then
+                            if and(m_idx ==0) then
                                 error(msprintf(_("%s: Wrong or missing ""InputFormat"" to be applied.\n"), fname));
                             end
+                            input1(m_idx == 0) = "";
+                            d(:, order == 2) = m_idx';
+                        end
+                    end
+
+                    year_val = d(:, order == 1);
+                    if year_val <> [] then
+                        if or(year_val < 50) then
+                            d(year_val < 50, order == 1) = d(year_val < 50, order == 1) + 2000;
                         end
 
-                        d(:, order == 2) = m_idx';
-                    end
-
-                    year_val = d(:, order == 1);
-                    if or(year_val < 50) then
-                        d(year_val < 50, order == 1) = d(year_val < 50, order == 1) + 2000;
-                    end
-
-                    year_val = d(:, order == 1);
-                    if or(year_val < 100) then
-                        d(year_val < 100, order == 1) = d(year_val < 100, order == 1) + 1900;
+                        year_val = d(:, order == 1);
+                        if or(year_val < 100) then
+                            d(year_val < 100, order == 1) = d(year_val < 100, order == 1) + 1900;
+                        end
                     end
 
                     d(:, order == 7) = 0;

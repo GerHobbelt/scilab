@@ -486,6 +486,15 @@ dt = datetime(d, "InputFormat", "yyyy-MM-dd HH");
 expected = "2024-04-10 14:00:00";
 assert_checkequal(string(dt), expected);
 
+d = datetime(["April"; "May"; "June"], "InputFormat", "MMMM");
+assert_checkequal(d.Month, [4; 5; 6]);
+
+d = datetime(["Apr"; "May"; "June"], "InputFormat", "MMMM");
+assert_checkequal(d.Month, [%nan; 5; 6]);
+
+d = datetime(["Apr", "May", "January"], "InputFormat", "MMM");
+assert_checkequal(d.Month, [4 5 %nan]);
+
 // check error
 msg = msprintf(_("%s: Wrong number of input argument: %d to %d expected, except %d, %d and %d.\n"), "datetime", 0, 7, 2, 4, 5);
 assert_checkerror("datetime(1, 2, 3, 4, 5, 6, 7, 8)", msg);
