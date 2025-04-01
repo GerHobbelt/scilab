@@ -48,6 +48,8 @@ IF NOT EXIST prereq.zip (
     unzip.exe -qt prereq.zip || DEL /q prereq.zip
     set OVERRIDE_THIRDPARTY=1
 )
+git clean -fxd scilab/bin scilab/java scilab/libs scilab/modules/tclsci/tcl scilab/thirdparty scilab/tools > nul
+del /f /q /a scilab\svn-info.txt scilab\version.txt
 unzip -o prereq.zip -d scilab > %LOG_PATH%\build_prereq_%CI_COMMIT_SHORT_SHA%.log
 IF %ERRORLEVEL% NEQ 0 exit 1
 

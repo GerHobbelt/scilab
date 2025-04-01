@@ -26,11 +26,29 @@
     - $scilab_to_kill=(Get-Process *scilex* | Where StartTime -lt (Get-Date).AddHours(-4))
     - if($scilab_to_kill.length) { $scilab_to_kill.kill() }
     # Uninstall Scilab older than 2 day
-    - Get-ChildItem -Path "$SCILAB_COMMON_PATH\*\install\unins000.exe" -Erroraction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-48))} | foreach { Start-Process $_ -ArgumentList /VERYSILENT,SP-,/SUPPRESSMSGBOXES,/FORCECLOSEAPPLICATIONS  -NoNewWindow -Wait -Erroraction 'Continue'} ; $null
+    - >
+      $ErrorActionPreference = 'Continue';
+      Get-ChildItem -Path "$SCILAB_COMMON_PATH\*\install\unins000.exe" -Erroraction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-48))} | foreach {
+        Start-Process $_ -ArgumentList /VERYSILENT,SP-,/SUPPRESSMSGBOXES,/FORCECLOSEAPPLICATIONS  -NoNewWindow -Wait -Erroraction 'Continue'
+      } ; $null
     # Remove folder older than 3 day
-    - Get-ChildItem -Path "$SCILAB_COMMON_PATH\*" -Erroraction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-72))} | Remove-Item -Recurse -Erroraction 'Continue'; $null
+    - >
+      $ErrorActionPreference = 'Continue';
+      Get-ChildItem -Path "$SCILAB_COMMON_PATH\*" -Erroraction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-72))} | Get-ChildItem -Recurse | foreach {
+        if ( (Remove-Item -Force -Verbose -Confirm:$False -ErrorAction 'Continue' $_.FullName *>&1) -ne $null)
+        {
+          echo "Unable to remove $_"
+        }
+      } ; $null
     # Remove TMPDIR older than 3 day
-    - Get-ChildItem -Path "$env:TEMP/SCI_TMP*" -ErrorAction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-72))} | Remove-Item -Recurse -ErrorAction 'Continue'; $null
+    - >
+      $ErrorActionPreference = 'Continue';
+      Get-ChildItem -Path "$env:TEMP/SCI_TMP*" -ErrorAction 'Continue' | Where-Object {($_.LastWriteTime -lt (Get-Date).AddHours(-72))} | Get-ChildItem -Recurse | foreach {
+        if ( (Remove-Item -Force -Verbose -Confirm:$False -ErrorAction 'Continue' $_.FullName *>&1) -ne $null)
+        {
+          echo "Unable to remove $_"
+        }
+      }; $null
 
   script:
     - cmd /C "call .gitlab-ci\build.bat"
@@ -122,12 +140,12 @@ linux:
       export DEBIAN_FRONTEND=noninteractive &&
       apt update &&
       apt upgrade -y &&
-      apt install -y gcc g++ gfortran libxml2-dev libhdf5-dev libmatio-dev libfftw3-dev libncurses-dev libeigen3-dev gettext libblas-dev liblapack-dev libarpack2-dev libsuitesparse-dev libpcre3-dev tcl-dev tk-dev libcurl3-dev libarchive-dev >/dev/null
+      apt install -y gcc g++ gfortran libxml2-dev libhdf5-dev libmatio-dev libfftw3-dev libncurses-dev libeigen3-dev gettext libblas-dev liblapack-dev libarpack2-dev libsuitesparse-dev libpcre3-dev tcl-dev tk-dev libcurl3-dev libarchive-dev rapidjson-dev >/dev/null
     - >
       [ -x /usr/bin/dnf ] &&
       dnf update -y &&
       dnf install -y util-linux &&
-      dnf install -y gcc gcc-c++ gcc-fortran libxml2-devel hdf5-devel matio-devel fftw-devel ncurses-devel eigen3-devel gettext blas-devel lapack-devel arpack-devel suitesparse-devel pcre-devel tcl-devel tk-devel libcurl-devel libarchive-devel >/dev/null
+      dnf install -y gcc gcc-c++ gcc-fortran libxml2-devel hdf5-devel matio-devel fftw-devel ncurses-devel eigen3-devel gettext blas-devel lapack-devel arpack-devel suitesparse-devel pcre-devel tcl-devel tk-devel libcurl-devel libarchive-devel rapidjson-devel >/dev/null
     - useradd scilab
     - cd scilab
     - su -c './configure --without-jdk --without-modelica' scilab
@@ -153,4 +171,6 @@ linux:
           - scilab/modules/Makefile.in
           - scilab/modules/*/Makefile.in
         compare_to: $CI_DEFAULT_BRANCH
+      allow_failure: true
+    - when: manual
       allow_failure: true
