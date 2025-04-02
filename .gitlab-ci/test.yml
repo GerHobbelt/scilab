@@ -10,6 +10,12 @@
 .windows_test:
   stage: test
   tags: [x64_windows, scilab]
+  variables:
+    CI_DEBUG_TRACE: "true"
+    ARTIFACT_DOWNLOAD_ATTEMPTS: 3
+  retry:
+    max: 2
+    when: runner_system_failure
   script:
     - cmd /C "call .gitlab-ci\test.bat"
   artifacts:
