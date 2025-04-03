@@ -7,10 +7,6 @@
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -50,7 +46,11 @@
             <varlistentry>
                 <term>f</term>
                 <listitem>
-                    <para>an external i.e. function or character string or list.</para>
+                    <para>
+                        an <link linkend="external">external</link> function (Scilab function, list or string), computes the value of 
+                        <literal>f(t, y)</literal>. It is the right hand side of the differential equation. 
+                        See <link linkend="ode">ode</link> help for more details.
+                    </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -64,19 +64,29 @@
             <varlistentry>
                 <term>jac</term>
                 <listitem>
-                    <para>an external i.e. function or character string or list.</para>
+                    <para>
+                        an <link linkend="external">external</link> function (a Scilab fuction, list or string), 
+                        computes the Jacobian of the function <literal>f(t, y)</literal>. 
+                        See <link linkend="ode">ode</link> help for more details.
+                    </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>ng</term>
                 <listitem>
-                    <para>an integer.</para>
+                    <para>
+                        an integer, number of components of <varname>g</varname> function
+                    </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>g</term>
                 <listitem>
-                    <para>an external i.e. function or character string or list.</para>
+                    <para>
+                        an <link linkend="external">external</link> function (a Scilab fuction, list or string) with the syntax 
+                        <literal>g(t, y)</literal>, returns a vector of size <varname>ng</varname>.
+                        Each component defines a surface.
+                    </para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -111,29 +121,113 @@
         </para>
         <para>
             <literal>g</literal> should give the equation of the surface. It is
-            an external i.e. a function with specified syntax, or the name of a
+            an <link linkend="external">external</link> i.e. a function with specified syntax, or the name of a
             Fortran subroutine or a C function (character string) with specified
-            syntax or a list.
+            syntax or a list:
         </para>
-        <para>
-            If <literal>g</literal> is a function the syntax should be as
-            follows:
-        </para>
-        <screen><![CDATA[
-z = g(t,y)
-]]></screen>
-        <para>
-            where <literal>t</literal> is a real scalar (time) and
-            <literal>y</literal> a real vector (state). It returns a vector of size
-            <literal>ng</literal> which corresponds to the <literal>ng</literal>
-            constraints. If <literal>g</literal> is a character string it refers to
-            the name of a Fortran subroutine or a C function, with the following
-            calling sequence: <literal>g(n,t,y,ng,gout)</literal> where
-            <literal>ng</literal> is the number of constraints and
-            <literal>gout</literal> is the value of <literal>g</literal> (output of
-            the program). If <literal>g</literal> is a list the same conventions as
-            for <literal>f</literal> apply (see <link linkend="ode">ode</link> help).
-        </para>
+        <variablelist>
+            <varlistentry>
+                <term>a Scilab function</term>
+                <listitem>
+                    <para>
+                        Its syntax must be
+                    </para>
+                    <para>
+                        <programlisting role="no-scilab-exec"><![CDATA[
+                            r = g(t,y)]]>
+                        </programlisting>
+                    </para>
+                    <para>
+                        this function must return a vector with <varname>ng</varname> elements.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>a list</term>
+                <listitem>
+                    <para>
+                        This form of external is used to pass parameters to the
+                        function. It must be as follows:
+                    </para>
+                    <para>
+                        <programlisting role="no-scilab-exec"><![CDATA[
+                            list(g, p1, p2,...)]]>
+                        </programlisting>
+                    </para>
+                    <para>where the syntax of the function
+                        <literal>g</literal> is now
+                    </para>
+                    <para>
+                        <programlisting role="no-scilab-exec"><![CDATA[
+                            r = g(t, y, p1, p2,...)]]>
+                        </programlisting>
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>a character string</term>
+                <listitem>
+                    <para>it must refer to the name of a C or Fortran routine.
+                        Assuming that &lt;g_name&gt; is the given name,
+                    </para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                The Fortran calling sequence must be
+                            </para>
+                            <para>
+                                <programlisting role="no-scilab-exec"><![CDATA[
+                                    subroutine <g_name>(n, t, y, ng, gout)
+                                    double precision t, y(*), gout(*)
+                                    integer n, ng]]>
+                                </programlisting>
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                The C syntax must be
+                            </para>
+                            <para>
+                                <programlisting role="no-scilab-exec"><![CDATA[
+                                    void <g_name>(int *n, double *t, double *y, int *ng, double *gout)]]>
+                                </programlisting>
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                    <para>
+                        where
+                    </para>
+                    <itemizedlist>
+                        <listitem>
+                            <para>
+                                <literal>t</literal> is a real scalar (time)
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <literal>y</literal> is a real vector (the state)
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <literal>ng</literal> is the number of constraints
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <literal>n</literal> the dimension of the state
+                            </para>
+                        </listitem>
+                        <listitem>
+                            <para>
+                                <literal>gout</literal> is the results array.
+                            </para>
+                        </listitem>
+                    </itemizedlist>
+                    <para>See the <link linkend="ode_root">ode_root</link> help for more details.</para>
+                </listitem>
+            </varlistentry>
+        </variablelist>
         <para>
             Output <literal>rd</literal> is a <literal>1 x k</literal> vector.
             The first entry contains the stopping time. Other entries indicate which
@@ -156,7 +250,7 @@ deff("z = g(t,y)", "z=y-2")
 y0 = 1; ng = 1;
 [y,rd] = ode("root", y0, 0, 2, f, ng, g)
 
-deff("z = g(t,y)", "z = y-[2;2;33]")
+g = #(t, y) -> (y - [2;2;33]);
 [y,rd] = ode("root", 1, 0, 2, f, 3, g)
  ]]></programlisting>
     </refsection>
