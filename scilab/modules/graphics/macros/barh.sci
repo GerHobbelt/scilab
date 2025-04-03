@@ -25,7 +25,7 @@ function  varargout = barh(varargin)
     end
 
     if argn(1) > 1 then
-        msg = gettext("%s: Wrong number of input argument(s): at most %d expected.\n")
+        msg = gettext("%s: Wrong number of output argument(s): at most %d expected.\n")
         error(msprintf(msg, fname, 1));
     end
 
@@ -179,9 +179,9 @@ function  varargout = barh(varargin)
     immediate_drawing = curFig.immediate_drawing;
 
     if COLORBOOL
-        e = plot(X,Y,COLOR); // plot manages immediate_drawing property itself to avoid flickering
+        hdl = plot(X,Y,COLOR); // plot manages immediate_drawing property itself to avoid flickering
     else
-        e = plot(X,Y); // plot manages immediate_drawing property itself to avoid flickering
+        hdl = plot(X,Y); // plot manages immediate_drawing property itself to avoid flickering
     end
 
     curFig.immediate_drawing = "off";
@@ -205,12 +205,13 @@ function  varargout = barh(varargin)
     wmax=inter/barh_number
     y_shift=zeros(size(X,"*"),1)
     bar_number= size(Y,2)
+    e=gce()
     a=gca()
     a.sub_ticks(2) = 0
 
     for i=bar_number:-1:1
 
-        ei = e(i)
+        ei = e.children(i)
 
         // Perform x_shift
         if modulo(bar_number,2)==0 then
@@ -287,7 +288,6 @@ function  varargout = barh(varargin)
     curFig.immediate_drawing = immediate_drawing;
 
     if argn(1) == 1 then
-       varargout(1) = e;
+       varargout(1) = hdl;
     end
-
 endfunction
