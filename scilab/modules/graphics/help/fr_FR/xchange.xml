@@ -24,13 +24,13 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>x1,y1  </term>
+                <term>x1,y1</term>
                 <listitem>
                     <para>deux matrices de taille (n1,n2) (coordonnées transformées).</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term>rect  </term>
+                <term>rect</term>
                 <listitem>
                     <para>un vecteur de taille 4.</para>
                 </listitem>
@@ -50,14 +50,36 @@
             <literal>rect</literal> sont les coordonnées en pixels
             du rectangle du cadre courant : [point en haut à gauche, largeur, hauteur].
         </para>
+        <para>
+            <warning>
+                Les coordonnées en pixels sont relatives au point en haut à gauche de la zone graphique de la figure
+                (voir <literal>axes_size</literal> dans les <link linkend="figure_properties">propriétés des figures</link>)
+                contrairement aux positions des <link linkend="uicontrol">uicontrols</link> qui sont relatives au point en bas à gauche
+                de la zone graphique de la figure (voir les exemples ci-dessous).
+            </warning>
+        </para>
     </refsection>
     <refsection>
         <title>Exemples</title>
+        <para><emphasis role="bold">Conversions de données</emphasis></para>
         <programlisting role="example"><![CDATA[
 t=[0:0.1:2*%pi]';
 plot2d(t,sin(t))
 [x,y,rect]=xchange(1,1,"f2i")
 [x,y,rect]=xchange(0,0,"i2f")
+ ]]></programlisting>
+        <para><emphasis role="bold">Avec des uicontrols</emphasis></para>
+        <programlisting role="example"><![CDATA[
+plot(-10:10, -10:10);
+
+sz = gcf().axes_size; // Utilisé pour changer la référence des positions
+xpos = [-10 -10 0 10 10];
+ypos = [-10 10 0 -10 10];
+
+for i = 1:size(xpos, "*")
+    [xp, yp] = xchange(xpos(i), ypos(i), "f2i");
+    uicontrol("Style", "pushbutton", "Position", [xp, sz(2)-yp, 70, 20], "String", string(xpos(i)) + "/" + string(ypos(i)));
+end
  ]]></programlisting>
     </refsection>
 </refentry>
