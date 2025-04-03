@@ -1,5 +1,5 @@
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2022 - Clement DAVID
+# Copyright (C) 2022 - Dassault Systèmes S.E. - Clément DAVID
 #
 #
 # This YAML file describe the test stage of the CI. Tests run are defined
@@ -11,8 +11,9 @@
   stage: test
   tags: [x64_windows, scilab]
   variables:
-    CI_DEBUG_TRACE: "true"
     ARTIFACT_DOWNLOAD_ATTEMPTS: 3
+    GET_SOURCES_ATTEMPTS: 3
+    GIT_STRATEGY: "fetch"
   retry:
     max: 2
     when: runner_system_failure
@@ -184,6 +185,14 @@ windows_only:
   stage: test
   tags: [x86_64-linux-gnu, docker, scilab]
   image: ${SCI_REGISTRY_IMAGE}/ubuntu-20.04:${DOCKER_TAG}
+  variables:
+    ARTIFACT_DOWNLOAD_ATTEMPTS: 3
+    EXECUTOR_JOB_SECTION_ATTEMPTS: 3
+    GET_SOURCES_ATTEMPTS: 3
+    GIT_STRATEGY: "fetch"
+  retry:
+    max: 2
+    when: runner_system_failure
   script: bash -e -x .gitlab-ci/test.sh
   artifacts:
     when: always
