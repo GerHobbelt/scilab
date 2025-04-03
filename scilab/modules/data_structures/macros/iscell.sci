@@ -12,5 +12,8 @@
 
 
 function r=iscell(S)
+    arguments
+        S
+    end
     r=typeof(S)=="ce"
 endfunction
