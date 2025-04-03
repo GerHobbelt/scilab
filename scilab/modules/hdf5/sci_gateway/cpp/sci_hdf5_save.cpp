@@ -850,6 +850,19 @@ static hid_t export_cell(hid_t parent, const std::string& name, types::Cell* dat
 
 static hid_t export_handles(hid_t parent, const std::string& name, types::GraphicHandle* data, hid_t xfer_plist_id)
 {
+    {
+        // check handle valid
+        int size = data->getSize();
+        long long* ll = data->get();
+        std::vector<hobj_ref_t> vrefs(size);
+        for (int i = 0; i < size; ++i)
+        {
+            if (getObjectFromHandle(static_cast<long>(ll[i])) == 0)
+            {
+                return -1;
+            }
+        }
+    }
 
     //create a group with cell name
     hid_t dset = openList6(parent, name.data(), g_SCILAB_CLASS_HANDLE);
