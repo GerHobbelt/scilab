@@ -150,7 +150,6 @@ clear pre_xcos_simulate;
 function post_xcos_simulate(%cpr, scs_m, needcompile)
     // 全オブジェクトを取得
     objs = scs_m.objs;
-    clrBlock = [];
     // CLRブロックを探す
     for i=1:size(objs)
         if objs(i).gui == "CLR" then
@@ -159,7 +158,7 @@ function post_xcos_simulate(%cpr, scs_m, needcompile)
         end
     end
     // CLRが見つかったかどうかを確認
-    if isempty(clrBlock) then
+    if ~exists("clrBlock","local") then
         disp("No CLR block found.")
         return
     end
@@ -192,7 +191,6 @@ clear post_xcos_simulate;
 function continueSimulation = pre_xcos_simulate(scs_m, needcompile)
     // 全オブジェクトを取得
     objs = scs_m.objs;
-    clrBlock = [];
     //CLRブロックを探す
     for i=1:size(objs)
         if objs(i).gui == "CLR" then
@@ -201,7 +199,7 @@ function continueSimulation = pre_xcos_simulate(scs_m, needcompile)
         end
     end
     // CLRが見つかったかどうかを確認
-    if isempty(clrBlock) then
+    if ~exists("clrBlock","local") then
         disp("No CLR block found.")
         return
     end

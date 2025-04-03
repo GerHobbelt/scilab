@@ -168,7 +168,6 @@ function post_xcos_simulate(%cpr, scs_m, needcompile)
     // Retrieve all objects
     objs = scs_m.objs;
 
-    clrBlock = [];
     //Looking for CLR block
     for i=1:size(objs)
         if objs(i).gui == "CLR" then
@@ -178,7 +177,7 @@ function post_xcos_simulate(%cpr, scs_m, needcompile)
     end
 
     // Check if we found some CLR
-    if isempty(clrBlock) then
+    if ~exists("clrBlock","local") then
         disp("No CLR block found.")
         return
     end
@@ -216,7 +215,6 @@ function continueSimulation = pre_xcos_simulate(scs_m, needcompile)
     // Retrieve all objects
     objs = scs_m.objs;
 
-    clrBlock = [];
     //Looking for CLR block
     for i=1:size(objs)
         if objs(i).gui == "CLR" then
@@ -226,7 +224,7 @@ function continueSimulation = pre_xcos_simulate(scs_m, needcompile)
     end
 
     // Check if we found some CLR
-    if isempty(clrBlock) then
+    if ~exists("clrBlock","local") then
         disp("No CLR block found.")
         return
     end
