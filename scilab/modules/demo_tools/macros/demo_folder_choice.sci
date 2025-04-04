@@ -15,15 +15,12 @@ function []=demo_folder_choice(path,ch)
 
     if ch=="anim" then
         deff("[]=demoexc(num)","exec(path+demolist(num,2),-1)")
-        fs = get("figure_style");
         while %t then
             num=x_choose_modeless(demolist(:,1),"Choose a demo");
             if num==0 then
-                set("figure_style",fs);
                 lines(oldln(1));
                 return
             else
-                set("figure_style","old");
                 close();
                 clf();
                 demoexc(num);

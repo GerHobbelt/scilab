@@ -5,6 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 // <-- TEST WITH GRAPHIC -->
+// <-- ENGLISH IMPOSED -->
 // <-- Non-regression test for bug 9457 -->
 //
 // <-- GitLab URL -->
@@ -13,6 +14,7 @@
 // <-- Short Description -->
 // set("figure_style", "new") returned a error message
 ierr = execstr("set(""figure_style"", ""new"")", "errcatch");
+WARNING: 'figure_style' property is obsolete and will be removed in Scilab 2026.0.0.
 if ierr <> 0 then bugmes();quit;end
 ierr = execstr("set(""figure_style"", ""old"")", "errcatch");
 if ierr <> 999 then bugmes();quit;end

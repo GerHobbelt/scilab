@@ -49,6 +49,7 @@ int set_figure_style_property(void* _pvCtx, int iObjUID, void* _pvData, int valu
     {
         /* graphic mode must be new */
         /* nothing to do */
+        sciprint(_("WARNING: '%s' property is obsolete and will be removed in Scilab 2026.0.0.\n"), "figure_style");
         return SET_PROPERTY_UNCHANGED;
     }
     else

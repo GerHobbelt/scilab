@@ -32,7 +32,7 @@
 /*------------------------------------------------------------------------*/
 void* get_figure_style_property(void* _pvCtx, int iObjUID)
 {
-    /* no more old style */
+    sciprint(_("WARNING: '%s' property is obsolete and will be removed in Scilab 2026.0.0.\n"), "figure_style");
     sciReturnString("new");
     return NULL;
 }

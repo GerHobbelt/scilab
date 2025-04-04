@@ -74,7 +74,6 @@ endfunction
 
 function display_car_trajectory(state)
     bigL=1
-    set figure_style new;
     clf();
     show_window()
     a=gca()

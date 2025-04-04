@@ -33,7 +33,6 @@ function [blocks] = anim_pen(blocks,flag)
     rcirc=csiz/3;
     if flag==4 then
         scf(win)
-        set("figure_style","new")
         H=scf(win)
         clf(H)
         Axe=H.children

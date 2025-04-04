@@ -75,7 +75,7 @@ function r=xdel_run(w,opt)
         ids_=[]
         for k=1:size(w,"*")
             scf(w(k))
-            if get("figure_style")=="new" then ids_=[ids_,w(k)],end
+            ids_=[ids_,w(k)]
         end
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
@@ -86,7 +86,6 @@ function r=xdel_run(w,opt)
         end
         close(w)
     else
-        if get("figure_style")=="old" then return,end
         ids_ = cur
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
@@ -125,7 +124,7 @@ function r=clf_run(w,opt)
         end
         for k=1:size(w,"*")
             scf(w(k))
-            if get("figure_style")=="new" then ids_=[ids_,w(k)],end
+            ids_=[ids_,w(k)]
         end
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
@@ -136,7 +135,6 @@ function r=clf_run(w,opt)
         end
         if rhs==1 then clf(w),else clf(w,opt),end
     else
-        if get("figure_style")=="old" then return,end
         ids_ = cur
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
@@ -165,7 +163,7 @@ function r=xbasc_run(w)
         ids_=[]
         for k=1:size(w,"*")
             scf(w(k))
-            if get("figure_style")=="new" then ids_=[ids_,w(k)],end
+            ids_=[ids_,w(k)]
         end
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
@@ -178,7 +176,6 @@ function r=xbasc_run(w)
 
         clf(w)
     else
-        if get("figure_style")=="old" then return,end
         ids_ = cur;
         load(%U,"ids_ref")
         if or(ids_ref<>ids_) then r=%t,return,end
