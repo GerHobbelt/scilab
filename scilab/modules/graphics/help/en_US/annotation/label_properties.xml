@@ -126,9 +126,9 @@
                 <term>font_style: </term>
                 <listitem>
                     <para>
-                        Integer id ≥ 0 identifying the font used to display the label, among loaded
-                        ones. = rank of the font in the vector listed with
-                        <link linkend="xlfont">xlfont()'</link>, - 1.
+                        Integer <literal>id</literal> &gt;= 0 identifying the font used to display the label, among loaded ones. 
+                        The <link linkend="xlfont">xlfont</link> function returns the list of loaded fonts. 
+                        To find out the corresponding font name, use <literal>xlfont()(id+1)</literal>.
                         For more information, see <link linkend="graphics_fonts">graphics_fonts</link>.
                     </para>
                 </listitem>
