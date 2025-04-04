@@ -116,6 +116,9 @@ gca().isoview = "on";
             <member>
                 <link linkend="surf">surf</link>
             </member>
+            <member>
+                <link linkend="cylinder">cylinder</link>
+            </member>
         </simplelist>
     </refsection>
     <refsection role="history">
