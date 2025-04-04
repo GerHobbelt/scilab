@@ -102,7 +102,7 @@ function tbx_build_loader(name, path)
         start_file = name + ".start"
         loadertxt = [
             "exec(get_absolute_file_path(""loader.sce"")+""etc"+filesep()+"""+"""+start_file+""");"
-            "loadToolboxInlineHelp(get_absolute_file_path(""loader.sce""), """+name+""");"
+            //"loadToolboxInlineHelp(get_absolute_file_path(""loader.sce""), """+name+""");"
         ]
     end
     loadertxt = [headertxt ; "    " + loadertxt ; trailertxt]
