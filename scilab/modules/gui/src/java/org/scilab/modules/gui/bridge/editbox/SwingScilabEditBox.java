@@ -31,6 +31,8 @@ import java.awt.event.ActionEvent;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.KeyEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.util.ArrayList;
 
 import javax.swing.AbstractAction;
@@ -198,6 +200,18 @@ public class SwingScilabEditBox extends JScrollPane implements SwingViewObject, 
         if (Console.getConsole().getUseDeprecatedLF() == false) {
             setEditFont(getFont());
         }
+
+        // Forward scrolling event to parent when vertical scrollbar reaches its min/max
+        // See https://gitlab.com/scilab/scilab/-/issues/17261
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int val = getVerticalScrollBar().getValue();
+                if (( val == getVerticalScrollBar().getMinimum()) || (val == getVerticalScrollBar().getMaximum() - getVerticalScrollBar().getVisibleAmount())) {
+                    getParent().dispatchEvent(e);
+                }
+            }
+        });
     }
 
     /**

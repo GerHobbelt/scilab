@@ -24,6 +24,8 @@ import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -121,6 +123,18 @@ public class SwingScilabLabel extends JScrollPane implements SwingViewObject, Wi
         setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_NEVER);
         // Initialize display
         setAlignment();
+
+        // Forward scrolling event to parent when vertical scrollbar reaches its min/max
+        // See https://gitlab.com/scilab/scilab/-/issues/17261
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int val = getVerticalScrollBar().getValue();
+                if (( val == getVerticalScrollBar().getMinimum()) || (val == getVerticalScrollBar().getMaximum() - getVerticalScrollBar().getVisibleAmount())) {
+                    getParent().dispatchEvent(e);
+                }
+            }
+        });
     }
 
     /**

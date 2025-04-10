@@ -33,6 +33,8 @@ import java.awt.event.AdjustmentListener;
 import java.io.IOException;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.event.MouseWheelListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -46,7 +48,6 @@ import javax.swing.ListCellRenderer;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
-import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import org.scilab.modules.commons.gui.FindIconHelper;
@@ -87,7 +88,6 @@ public class SwingScilabListBox extends JScrollPane implements SwingViewObject, 
 
     private AdjustmentListener adjustmentListener;
 
-    private int selectionCount = 0;
     /**
      * the JList we use
      */
@@ -188,6 +188,18 @@ public class SwingScilabListBox extends JScrollPane implements SwingViewObject, 
             }
         };
         getVerticalScrollBar().addAdjustmentListener(adjustmentListener);
+
+        // Forward scrolling event to parent when vertical scrollbar reaches its min/max
+        // See https://gitlab.com/scilab/scilab/-/issues/17261
+        addMouseWheelListener(new MouseWheelListener() {
+            @Override
+            public void mouseWheelMoved(MouseWheelEvent e) {
+                int val = getVerticalScrollBar().getValue();
+                if (( val == getVerticalScrollBar().getMinimum()) || (val == getVerticalScrollBar().getMaximum() - getVerticalScrollBar().getVisibleAmount())) {
+                    getParent().dispatchEvent(e);
+                }
+            }
+        });
     }
 
     private void updateAndCallback() {
@@ -201,7 +213,6 @@ public class SwingScilabListBox extends JScrollPane implements SwingViewObject, 
     private void updateValue() {
         // Scilab indices in Value begin at 1 and Java indices begin at 0
         int[] javaIndices = getList().getSelectedIndices().clone();
-        selectionCount = javaIndices.length;
         Double[] scilabIndices = new Double[javaIndices.length];
         for (int i = 0; i < getList().getSelectedIndices().length; i++) {
             scilabIndices[i] = (double) javaIndices[i] + 1;
