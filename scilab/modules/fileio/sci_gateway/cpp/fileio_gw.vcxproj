@@ -229,6 +229,7 @@
     <ClCompile Include="sci_removedir.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\includes\archive_utils.hxx" />
     <ClInclude Include="..\..\includes\fileio_gw.hxx" />
     <ClInclude Include="..\..\includes\scanf_utils.hxx" />
   </ItemGroup>
