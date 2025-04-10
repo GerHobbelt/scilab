@@ -172,6 +172,20 @@ static types::InternalType* callComparison(std::function<types::InternalType*(ty
     return pIT;
 }
 
+static bool callIsFunction(const wchar_t* name, types::typed_list& x)
+{
+    types::typed_list in = {x[0]};
+    types::typed_list out;
+    if (Overload::call(name, in, 1, out) != types::Function::OK)
+    {
+        return false;
+    }
+
+    bool bIsTrue = out[0]->getAs<types::Bool>()->isTrue();
+    out[0]->killMe();
+    return bIsTrue;
+}
+
 template<class T_OUT, class T_IN>
 types::InternalType* convertNum(types::InternalType* val)
 {
@@ -563,7 +577,7 @@ int mustBeNonNan(types::typed_list& x)
 {
     if (mustBeNumeric(x) != 0)
     {
-        return 1;
+        return callIsFunction(L"isnan", x) ? 1 : 0;
     }
 
     if (x[0]->isDouble())
@@ -577,14 +591,13 @@ int mustBeNonNan(types::typed_list& x)
             }
         }
     }
+
     return 0;
 }
 
 int mustBeNonzero(types::typed_list& x)
 {
-    types::Double* tmp = new types::Double(0);
-    types::InternalType* tmp2 = GenericComparisonNonEqual(x[0], tmp);
-    tmp->killMe();
+    types::InternalType* tmp2 = callComparison(GenericComparisonNonEqual, ast::OpExp::Oper::ne, x[0], new types::Double(0));
     if (tmp2)
     {
         bool res = andBool(tmp2);
@@ -817,12 +830,22 @@ int mustBeNonempty(types::typed_list& x)
 
 int mustBeScalar(types::typed_list& x)
 {
-    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isScalar()) ? 0 : 1;
+    if(x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isScalar())
+    {
+        return 0;
+    }
+
+    return callIsFunction(L"isscalar", x) ? 0 : 1;
 }
 
 int mustBeScalarOrEmpty(types::typed_list& x)
 {
-    return (x[0]->isGenericType() && (x[0]->getAs<types::GenericType>()->getSize() == 0 || x[0]->getAs<types::GenericType>()->isScalar())) ? 0 : 1;
+    if(x[0]->isGenericType() && (x[0]->getAs<types::GenericType>()->isScalar() || x[0]->getAs<types::GenericType>()->getSize() == 0))
+    {
+        return 0;
+    }
+
+    return (callIsFunction(L"isscalar", x) || callIsFunction(L"isempty", x)) ? 0 : 1;
 }
 
 int mustBeVector(types::typed_list& x)
@@ -1038,60 +1061,36 @@ int mustBeSameType(types::typed_list& x)
 
 int mustBeEqualDimsOrEmpty(types::typed_list& x)
 {
-    types::typed_list in1 = {x[0]};
-    types::typed_list out1;
-    if (Overload::call(L"isempty", in1, 1, out1) != types::Function::OK)
+    if(mustBeEqualDims(x) == 0)
     {
-        return 1;
+        return 0;
     }
 
-    if (out1[0]->getAs<types::Bool>()->isTrue())
+    types::typed_list in1 = {x[0]};
+    if(callIsFunction(L"isempty", in1))
     {
         return 0;
     }
 
     types::typed_list in2 = {x[1]};
-    types::typed_list out2;
-    if (Overload::call(L"isempty", in2, 1, out2) != types::Function::OK)
-    {
-        return 1;
-    }
-
-    if (out2[0]->getAs<types::Bool>()->isTrue())
-    {
-        return 0;
-    }
-
-    return mustBeEqualDims(x);
+    return callIsFunction(L"isempty", in2) ? 0 : 1;
 }
 
 int mustBeEqualDimsOrScalar(types::typed_list& x)
 {
-    types::typed_list in1 = {x[0]};
-    types::typed_list out1;
-    if (Overload::call(L"isscalar", in1, 1, out1) != types::Function::OK)
+    if(mustBeEqualDims(x) == 0)
     {
-        return 1;
+        return 0;
     }
 
-    if (out1[0]->getAs<types::Bool>()->isTrue())
+    types::typed_list in1 = {x[0]};
+    if(callIsFunction(L"isscalar", in1))
     {
         return 0;
     }
 
     types::typed_list in2 = {x[1]};
-    types::typed_list out2;
-    if (Overload::call(L"isscalar", in2, 1, out2) != types::Function::OK)
-    {
-        return 1;
-    }
-
-    if (out2[0]->getAs<types::Bool>()->isTrue())
-    {
-        return 0;
-    }
-
-    return mustBeEqualDims(x);
+    return callIsFunction(L"isscalar", in2) ? 0 : 1;
 }
 
 std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::vector<int>>> functionValidators = {
@@ -2753,7 +2752,7 @@ void Macro::updateArguments()
                             int idx = std::get<0>(args[k]);
                             if (idx > 0) // #num of variable
                             {
-                                int pos = pos = std::get<0>(argValidator.inputs[idx]) + 1;
+                                int pos = std::get<0>(argValidator.inputs[idx]) + 1;
                                 argValidator.errorArgs.push_back({-1, std::to_string(pos)});
                             }
                             else // content of variable

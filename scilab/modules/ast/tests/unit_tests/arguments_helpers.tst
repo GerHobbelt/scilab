@@ -77,7 +77,9 @@ endfunction
 
 foo(0);
 foo(%inf);
+foo(hours(1));
 assert_checkerror("foo(%nan)", [], 999);
+assert_checkerror("foo(hours(%nan));", [], 999);
 clear foo;
 
 // mustBeNonzero
@@ -89,6 +91,7 @@ endfunction
 
 foo(1);
 foo(-1);
+foo(hours(1));
 assert_checkerror("foo(0)", [], 999);
 clear foo;
 
@@ -296,6 +299,8 @@ function foo(a)
 endfunction
 
 foo(1);
+foo(hours(1));
+foo(datetime());
 assert_checkerror("foo([])", [], 999);
 assert_checkerror("foo([1 2])", [], 999);
 clear foo;
@@ -309,6 +314,8 @@ endfunction
 
 foo(1);
 foo([]);
+foo(hours(1));
+foo(datetime());
 assert_checkerror("foo([1 2])", [], 999);
 clear foo;
 
