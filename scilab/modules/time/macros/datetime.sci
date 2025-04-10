@@ -159,22 +159,6 @@ function out = datetime(varargin)
         condition = and((test1 & test2) | test3)
     
     endfunction
-
-    function val = allCombinations(uniqueVal)
-        val = list();
-        s = []
-        
-        for k = 1:size(uniqueVal)
-            s = [s size(uniqueVal(k), "*")];
-        end
-    
-        for k = 1:size(uniqueVal)
-            tmp = uniqueVal(k)
-            // from ndgrid function
-            ind = (ones(1, prod(s(1:k-1))) .*. (1:size(tmp, "*")) .*. ones(1, prod(s(k+1:$))))';
-            val(k) = tmp(ind);
-        end
-    endfunction
     
     rhs = nargin;
     inputFormat = [];
@@ -582,23 +566,23 @@ function out = datetime(varargin)
                 Y = ["yy"; "yyyy"];
                 M = ["M"; "MM"; "MMM"];
                 D = ["d"; "dd"];
-                v = allCombinations(list(Y, M, D))
+                v = %_combinations(list(Y, M, D))
                 c = strcat(matrix(list2vec(v), 12, 3), "-", "c");
 
-                v1 = allCombinations(list(D, M(1:2), Y))
+                v1 = %_combinations(list(D, M(1:2), Y))
                 c1 = strcat(matrix(list2vec(v1), 8, 3), "/", "c");
 
-                v2 = allCombinations(list(M(1:2), D, Y))
+                v2 = %_combinations(list(M(1:2), D, Y))
                 c2 = strcat(matrix(list2vec(v2), 8, 3), "/", "c");
 
-                v3 = allCombinations(list(D,M(1:2),Y(2)))
+                v3 = %_combinations(list(D,M(1:2),Y(2)))
                 c3 = strcat(matrix(list2vec(v3), 4, 3), ".", "c");
 
-                v4 = allCombinations(list(D, M(3), Y))
+                v4 = %_combinations(list(D, M(3), Y))
                 c4 = strcat(matrix(list2vec(v4), 4, 3), " ", "c");
                 c5 = strcat(matrix(list2vec(v4), 4, 3), "-", "c");
 
-                v6 = allCombinations(list(M(3), D, Y(2)))
+                v6 = %_combinations(list(M(3), D, Y(2)))
                 comb = matrix(list2vec(v6), 2, 3);
                 comb2 = comb;
                 comb2(:,2) = comb2(:,2) + ",";

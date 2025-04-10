@@ -194,7 +194,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
         r = size(Rows, "*");
         uv = list(u(1:r));
         if r <> 1 then
-            rownames = %_allCombinations(uv, [], []);
+            rownames = %_combinations(uv);
         else
             rownames = uv;
         end
@@ -203,7 +203,7 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
         if size(uc) == 1 then
             colnames = string(uc(1));
         else
-            combinationsCol = %_allCombinations(uc, [], []);
+            combinationsCol = %_combinations(uc);
 
             colnames = [];
             for i = r+1:size(u)
@@ -217,9 +217,10 @@ function out = pivot(t, Columns, Rows, DataVariable, Method, ColumnsBinMethod, R
             mat = matrix(count, size(colnames, "*"), size(rownames(1), "*"));
             idx = sum(mat, "c")==0
             mat(idx, :) = [];
-            for i = 1:r
-                rownames(i)(idx) = []
-            end
+            colnames(idx) = [];
+            // for i = 1:r
+            //     rownames(i)(idx) = []
+            // end
             mat(mat <> 0) = res;
             mat = mat';
         else

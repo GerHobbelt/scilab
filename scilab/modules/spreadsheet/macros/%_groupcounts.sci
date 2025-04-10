@@ -86,7 +86,7 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                     [uniqueVal(1), km, vindex, count] = unique(d)
                 else
                     // for example: groupbins = ["second", "minute", "hour", "day", "month", "year", "dayname", "monthname"])
-                    [uniqueVal(1), km, vindex, count] = groupBinsCheck(groupbins, d, includeEmpty);
+                    [uniqueVal(1), vindex, count] = groupBinsCheck(groupbins, d, includeEmpty);
                     if includeEmpty then
                         nb = zeros(size(uniqueVal(1), "r"), 1);
                         nb(unique(vindex)) = count;
@@ -236,8 +236,7 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
         elseif or(typeof(groupbins) == ["datetime", "duration", "calendarDuration"]) then
             // a groupbins for all groupvars
             V = zeros(size(t, 1), sizeGroupvars);
-            vv = [];
-            kmd = list();
+
             for i = 1:sizeGroupvars
                 d = t.vars(groupvars(i)).data
                 [u, rowtimes, dt] = groupTimeCheck(groupbins, d);
@@ -261,21 +260,21 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 if idx <> [] then
                     str = [str; "<undefined>"];
                     V(idx, i) = size(str, "*");
-                    km(km == 0) = idx(1);
                 end
                 uniqueVal(i) = str;
-                kmd(i) = km;
             end
 
             [rV, km, vindex, nbV] = unique(V, "r");
 
             if includeEmpty then
-                vv = list();
-                kmd = list();
+
+                [val, vind] = %_combinations(uniqueVal);
+                b = [];
                 for i = 1:sizeGroupvars
-                    [tmp, kmd(i), vv(i)] = unique(uniqueVal(i));
+                    v = [1:size(uniqueVal(i), "*")]';
+                    b = [b, v(vind(i))]
                 end
-                [val, b] = %_allCombinations(uniqueVal, vv, kmd)
+
                 count = zeros(size(b, 1), 1);
                 [res, kmres, index, nbres] = unique([b; rV], "r");
                 count(nbres == 2) = nbV;
@@ -289,29 +288,28 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
         else
             if sizeGroupbins == 1 then
                 V = zeros(size(t, 1), sizeGroupvars);
-                kmd = list();
                 if groupbins == "none" || groupbins == {"none"} then
                     for i = 1:sizeGroupvars
                         d = t.vars(groupvars(i)).data
-                        [uniqueVal(i), kmd(i), V(:,i), nb] = unique(d)
+                        [uniqueVal(i), kmd, V(:,i), nb] = unique(d)
                     end
                 else
                     // for example: groupbins = ["second", "minute", "hour", "day", "month", "year", "dayname", "monthname"])
                     for i = 1:sizeGroupvars
                         d = t.vars(groupvars(i)).data;
-                        [uniqueVal(i), kmd(i), V(:, i), nb] = groupBinsCheck(groupbins, d, includeEmpty);
+                        [uniqueVal(i), V(:, i), nb] = groupBinsCheck(groupbins, d, includeEmpty);
                     end
                 end  
                     
                 [rV, km, vindex, nbV] = unique(V, "r");
 
                 if includeEmpty then
-                    vv = list();
-                    kmd = list();
+                    [val, vind] = %_combinations(uniqueVal);
+                    b = [];
                     for i = 1:sizeGroupvars
-                        [tmp, kmd(i), vv(i)] = unique(uniqueVal(i));
+                        v = [1:size(uniqueVal(i), "*")]';
+                        b = [b, v(vind(i))]
                     end
-                    [val, b] = %_allCombinations(uniqueVal, vv, kmd)
                     count = zeros(size(b, 1), 1);
                     [res, kmres, index, nbres] = unique([b; rV], "r");
                     count(nbres == 2) = nbV;
@@ -328,7 +326,6 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 // groupbins has the same size as groupvars
                 // one groupbins for one groupvars
                 V = zeros(size(t, 1), sizeGroupbins);
-                kmd = list();
                 if type(groupbins) == 10 then
                     // possible cases: ["none", "month"], ["month", "year"], ["year", "none"]
                     for k = 1:sizeGroupbins
@@ -336,9 +333,9 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                         d = t.vars(groupvars(k)).data;
 
                         if bins == "none" then
-                            [uniqueVal(k), kmd(k), V(:, k), nb] = unique(d)
+                            [uniqueVal(k), kmd, V(:, k), nb] = unique(d)
                         else
-                            [uniqueVal(k), kmd(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
+                            [uniqueVal(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
                         end
                     end
 
@@ -350,7 +347,6 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                         if type(bins) == 1 then
                             minbounds = bins(1:$-1);
                             maxbounds = bins(2:$);
-                            km = [];
                             
                             bins = [minbounds' maxbounds'];
 
@@ -367,7 +363,6 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                                     end
                                     mat(test) = str(i)
                                     V(:,k) = V(:,k) + test * i;
-                                    km(i) = find(test, 1)
                                 end
                             else
                                 str = "(" + string(bins(:,1))+ ", "+ string(bins(:,2)) + "]";
@@ -382,7 +377,6 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                                     end
                                     mat(test) = str(i)
                                     V(:,k) = V(:,k) + test * i;
-                                    km(i) = find(test, 1)
                                 end
                             end
 
@@ -390,11 +384,10 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                             if idx <> [] then
                                 str = [str; "<undefined>"];
                                 V(idx,k) = size(str, "*");
-                                km($+1) = idx(1);
                             end
 
                             uniqueVal(k) = str;
-                            kmd(k) = km;
+
                         elseif or(typeof(bins) == ["datetime", "duration", "calendarDuration"]) then
                             [vecbins, rowtimes, dt] = groupTimeCheck(bins, d);
                             // dt(2:$) = dt(2:$)-1d-10;
@@ -422,15 +415,13 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                             if idx <> [] then
                                 str = [str; "<undefined>"];
                                 V(idx, k) = size(str, "*");
-                                km(km == 0) = idx(1);
                             end
                             uniqueVal(k) = str;
-                            kmd(k) = km;
                         else
                             if bins == "none" then
-                                [uniqueVal(k), kmd(k), V(:,k), nb] = unique(d)
+                                [uniqueVal(k), kmd, V(:,k), nb] = unique(d)
                             else
-                                [uniqueVal(k), kmd(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
+                                [uniqueVal(k), V(:, k), nb] = groupBinsCheck(bins, d, includeEmpty);
                             end
                         end
                     end
@@ -439,12 +430,12 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
                 [rV, km, vindex, nbV] = unique(V, "r");
 
                 if includeEmpty then
-                    vv = list();
-                    kmd = list();
+                    [val, vind] = %_combinations(uniqueVal);
+                    b = [];
                     for i = 1:sizeGroupvars
-                        [tmp, kmd(i), vv(i)] = unique(uniqueVal(i));
+                        v = [1:size(uniqueVal(i), "*")]';
+                        b = [b, v(vind(i))]
                     end
-                    [val, b] = %_allCombinations(uniqueVal, vv, kmd)
                     count = zeros(size(b, 1), 1);
                     [res, km, index, nbres] = unique([b; rV], "r", "keepOrder");
                     count(nbres == 2) = nbV;
@@ -461,7 +452,7 @@ function [val, count, vindex, uniqueVal] = %_groupcounts(t, groupvars, groupbins
     end
 endfunction
 
-function [u, km, vindex, count] = groupBinsCheck(bins, d, includeEmpty)
+function [u, vindex, count] = groupBinsCheck(bins, d, includeEmpty)
     select bins
     case "year"
         if isdatetime(d) then

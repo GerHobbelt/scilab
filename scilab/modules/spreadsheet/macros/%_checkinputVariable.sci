@@ -52,7 +52,7 @@ function [t, varnames, groupingVariables] = %_checkinputVariable(t, inputVariabl
                 end
             end
 
-            t = t(:, [jdx idx])
+            t = t(:, unique([jdx idx], "keepOrder"))
             varnames = t.props.variableNames;
             if type(groupingVariables) == 1 then
                 groupingVariables = 1:length(jdx);
