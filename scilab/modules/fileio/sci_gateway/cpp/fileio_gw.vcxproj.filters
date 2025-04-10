@@ -162,9 +162,15 @@
     <ClCompile Include="archive_utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="scanf_utils.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\includes\fileio_gw.hxx">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\includes\scanf_utils.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

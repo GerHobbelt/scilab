@@ -21,12 +21,12 @@
 #include "mlist.hxx"
 #include "function.hxx"
 #include "double.hxx"
+#include "scanf_utils.hxx"
 
 extern "C"
 {
 #include "localization.h"
 #include "Scierror.h"
-#include "do_xxscanf.h"
 #include "scanf_functions.h"
 }
 
@@ -36,7 +36,6 @@ types::Function::ReturnValue sci_msscanf(types::typed_list &in, int _iRetCount, 
     int iNiter                  = 1;
     wchar_t* wcsFormat          = NULL;
     types::String* pStrRead     = NULL;
-    std::vector<types::InternalType*> IT;
 
     int args        = 0;
     int nrow        = 0;
@@ -123,182 +122,11 @@ types::Function::ReturnValue sci_msscanf(types::typed_list &in, int _iRetCount, 
         }
     }
 
-    unsigned int uiFormatUsed = 0;
-    for (int i = 0; i < ncol; i++)
-    {
-        switch ( type_s[i] )
-        {
-            case SF_C:
-            case SF_S:
-            {
-                types::String* ps = new types::String(iNiter, 1);
-                for (int j = 0; j < iNiter; j++)
-                {
-                    ps->set(j, data[i + ncol * j].s);
-                }
-
-                IT.push_back(ps);
-                uiFormatUsed |= (1 << 1);
-            }
-            break;
-            case SF_LUI:
-            case SF_SUI:
-            case SF_UI:
-            case SF_LI:
-            case SF_SI:
-            case SF_I:
-            case SF_LF:
-            case SF_F:
-            {
-                types::Double* p = new types::Double(iNiter, 1);
-                for (int j = 0; j < iNiter; j++)
-                {
-                    p->set(j, data[i + ncol * j].d);
-                }
-
-                IT.push_back(p);
-                uiFormatUsed |= (1 << 2);
-            }
-            break;
-            case NONE:
-                break;
-        }
-    }
-
-    int sizeOfVector = (int)IT.size();
-    if (_iRetCount > 1)
-    {
-        out.push_back(new types::Double((double)retval));
-
-        for (int i = 0; i < sizeOfVector; i++)
-        {
-            out.push_back(IT[i]);
-        }
-        for (int i = sizeOfVector + 1; i < _iRetCount; i++)
-        {
-            out.push_back(types::Double::Empty());
-        }
-    }
-    else
-    {
-        if (sizeOfVector == 0)
-        {
-            out.push_back(types::Double::Empty());
-            return types::Function::OK;
-        }
-
-        switch (uiFormatUsed)
-        {
-            case (1 << 1) :
-            {
-                int sizeOfString = IT[0]->getAs<types::String>()->getRows();
-                int dimsArrayOfRes[2] = {sizeOfString, sizeOfVector};
-                types::String* pString = new types::String(2, dimsArrayOfRes);
-                for (int i = 0; i < sizeOfVector; i++)
-                {
-                    for (int j = 0; j < sizeOfString; j++)
-                    {
-                        pString->set(i * sizeOfString + j, IT[i]->getAs<types::String>()->get(j));
-                    }
-                }
-                out.push_back(pString);
-            }
-            break;
-            case (1 << 2) :
-            {
-                int sizeOfDouble = IT[0]->getAs<types::Double>()->getRows();
-                int dimsArrayOfRes[2] = {sizeOfDouble, sizeOfVector};
-                types::Double* pDouble = new types::Double(2, dimsArrayOfRes);
-                for (int i = 0; i < sizeOfVector; i++)
-                {
-                    types::Double* pdbl = IT[i]->getAs<types::Double>();
-                    double* dbl = pdbl->get();
-                    for (int j = 0; j < sizeOfDouble; j++)
-                    {
-                        pDouble->set(i * sizeOfDouble + j, dbl[j]);
-                    }
-
-                    pdbl->killMe();
-                }
-                out.push_back(pDouble);
-            }
-            break;
-            default :
-            {
-                std::vector<types::InternalType*> pITTemp = std::vector<types::InternalType*>();
-                pITTemp.push_back(IT[0]);
-
-                // sizeOfVector always > 1
-                for (int i = 1; i < sizeOfVector; i++) // concatenates the Cells. ex : [String 4x1] [String 4x1] = [String 4x2]
-                {
-                    if (pITTemp.back()->getType() == IT[i]->getType())
-                    {
-                        switch (pITTemp.back()->getType())
-                        {
-                            case types::InternalType::ScilabString :
-                            {
-                                int iRows               = pITTemp.back()->getAs<types::String>()->getRows();
-                                int iCols               = pITTemp.back()->getAs<types::String>()->getCols();
-                                int arrayOfType[2]      = {iRows, iCols + 1};
-                                types::String* pType    = new types::String(2, arrayOfType);
-
-                                for (int k = 0; k < pITTemp.back()->getAs<types::String>()->getSize(); k++)
-                                {
-                                    pType->set(k, pITTemp.back()->getAs<types::String>()->get(k));
-                                }
-                                for (int k = 0; k < IT[i]->getAs<types::String>()->getSize(); k++)
-                                {
-                                    pType->set(iRows * iCols + k, IT[i]->getAs<types::String>()->get(k));
-                                }
-                                pITTemp.pop_back();
-                                pITTemp.push_back(pType);
-                            }
-                            break;
-                            case types::InternalType::ScilabDouble :
-                            {
-                                int iRows               = pITTemp.back()->getAs<types::Double>()->getRows();
-                                int iCols               = pITTemp.back()->getAs<types::Double>()->getCols();
-                                int arrayOfType[2]      = {iRows, iCols + 1};
-                                types::Double* pType    = new types::Double(2, arrayOfType);
-
-                                pType->set(pITTemp.back()->getAs<types::Double>()->get());
-                                for (int k = 0; k < IT[i]->getAs<types::Double>()->getSize(); k++)
-                                {
-                                    pType->set(iRows * iCols + k, IT[i]->getAs<types::Double>()->get(k));
-                                }
-                                pITTemp.pop_back();
-                                pITTemp.push_back(pType);
-                            }
-                            break;
-                            default :
-                                return types::Function::Error;
-                        }
-                    }
-                    else
-                    {
-                        pITTemp.push_back(IT[i]);
-                    }
-                }
-
-                types::MList* pMList = new types::MList();
-                pMList->append(new types::String(L"cblock"));
-                for (int i = 0 ; i < pITTemp.size() ; i++)
-                {
-                    pMList->append(pITTemp[i]);
-                }
-                out.push_back(pMList);
-
-                //                int dimsArrayOfCell[2] = {1, (int)pITTemp.size()};
-                //                types::Cell* pCell = new types::Cell(2, dimsArrayOfCell);
-                //                for (int i = 0; i < pITTemp.size(); i++)
-                //                {
-                //                    pCell->set(i, pITTemp[i]);
-                //                }
-                //                out.push_back(pCell);
-            }
-        }
-    }
+    std::vector<types::InternalType*> vIT;
+    unsigned int uiFormatUsed = scanfToInternalTypes(data, type_s, rowcount, ncol, vIT);
     Free_Scan(rowcount, ncol, type_s, &data);
+    InternalTypesToOutput(vIT, _iRetCount, retval, uiFormatUsed, out);
+
     return types::Function::OK;
 }
 /*--------------------------------------------------------------------------*/

@@ -186,6 +186,7 @@
     <ClCompile Include="..\c\sci_tempname.c" />
     <ClCompile Include="archive_utils.cpp" />
     <ClCompile Include="fileio_gw.cpp" />
+    <ClCompile Include="scanf_utils.cpp" />
     <ClCompile Include="sci_basename.cpp" />
     <ClCompile Include="sci_compress.cpp" />
     <ClCompile Include="sci_createdir.cpp" />
@@ -229,6 +230,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\includes\fileio_gw.hxx" />
+    <ClInclude Include="..\..\includes\scanf_utils.hxx" />
   </ItemGroup>
   <ItemGroup>
     <Library Include="..\..\..\..\bin\blasplus.lib" />

@@ -488,6 +488,10 @@ types::InternalType* AddElementToVariable(types::InternalType* _poDest, types::I
             case types::InternalType::ScilabPolynom:
                 if (poResult->getAs<types::Polynom>()->getVariableName() !=  _poSource->getAs<types::Polynom>()->getVariableName())
                 {
+                    if (isNew)
+                    {
+                        poResult->killMe();
+                    }
                     // call overload
                     return NULL;
                 }

@@ -212,10 +212,10 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                     continue;
                 }
 
-                types::GenericType* pGTResult = poRow->getAs<types::GenericType>();
+                types::GenericType* pGTRow = poRow->getAs<types::GenericType>();
 
                 //check dimension
-                if (pGT->getDims() != 2 || ( (pGT->getRows() != pGTResult->getRows()) && pGT->getRows() != 0 && pGTResult->getRows() != 0) )
+                if (pGT->getDims() != 2 || ( (pGT->getRows() != pGTRow->getRows()) && pGT->getRows() != 0 && pGTRow->getRows() != 0) )
                 {
                     poRow->killMe();
                     if (poRow != pGT)
@@ -229,28 +229,28 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
 
                 // if we concatenate [Double Sparse], transform the Double to Sparse and perform [Sparse Sparse]
                 // this avoids to allocate a Double result of size of Double+Sparse and initialize all elements.
-                if (pGT->isSparse() && pGTResult->isDouble())
+                if (pGT->isSparse() && pGTRow->isDouble())
                 {
-                    poRow = new types::Sparse(*pGTResult->getAs<types::Double>());
-                    pGTResult->killMe();
-                    pGTResult = poRow->getAs<types::GenericType>();
+                    poRow = new types::Sparse(*pGTRow->getAs<types::Double>());
+                    pGTRow->killMe();
+                    pGTRow = poRow->getAs<types::GenericType>();
                 }
-                else if (pGT->isSparseBool() && pGTResult->isBool()) // [Bool SparseBool] => [SparseBool SparseBool]
+                else if (pGT->isSparseBool() && pGTRow->isBool()) // [Bool SparseBool] => [SparseBool SparseBool]
                 {
-                    poRow = new types::SparseBool(*pGTResult->getAs<types::Bool>());
-                    pGTResult->killMe();
-                    pGTResult = poRow->getAs<types::GenericType>();
+                    poRow = new types::SparseBool(*pGTRow->getAs<types::Bool>());
+                    pGTRow->killMe();
+                    pGTRow = poRow->getAs<types::GenericType>();
                 }
-                else if (pGT->isDollar() && pGTResult->isDouble())
+                else if (pGT->isDollar() && pGTRow->isDouble())
                 {
-                    int _iRows = pGTResult->getRows();
-                    int _iCols = pGTResult->getCols();
+                    int _iRows = pGTRow->getRows();
+                    int _iCols = pGTRow->getCols();
                     int* piRank = new int[_iRows * _iCols];
                     memset(piRank, 0x00, _iRows * _iCols * sizeof(int));
                     poRow = new types::Polynom(pGT->getAs<types::Polynom>()->getVariableName(), _iRows, _iCols, piRank);
                     types::Polynom* pP = poRow->getAs<types::Polynom>();
                     types::SinglePoly** pSS = pP->get();
-                    types::Double* pDb = pGTResult->getAs<types::Double>();
+                    types::Double* pDb = pGTRow->getAs<types::Double>();
                     double* pdblR = pDb->get();
                     if (pDb->isComplex())
                     {
@@ -270,17 +270,18 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                             pSS[i]->setCoef(pdblR + i, NULL);
                         }
                     }
-
+                    pGTRow->killMe();
+                    pGTRow = poRow->getAs<types::GenericType>();
                     delete[] piRank;
                 }
 
                 types::InternalType* p = NULL;
                 if (!pGT->isSparse() && !pGT->isSparseBool())
                 {
-                    types::InternalType *pNewSize = AddElementToVariable(NULL, poRow, std::max(pGTResult->getRows(),pGT->getRows()), pGTResult->getCols() + pGT->getCols());
+                    types::InternalType *pNewSize = AddElementToVariable(NULL, poRow, std::max(pGTRow->getRows(),pGT->getRows()), pGTRow->getCols() + pGT->getCols());
                     if(pNewSize)
                     {
-                        p = AddElementToVariable(pNewSize, pGT, 0, pGTResult->getCols());
+                        p = AddElementToVariable(pNewSize, pGT, 0, pGTRow->getCols());
                         if (p != pNewSize)
                         {
                             pNewSize->killMe();
@@ -293,7 +294,7 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                 {
                     try
                     {
-                        poRow = callOverloadMatrixExp(L"c", pGTResult, pGT, e.getLocation());
+                        poRow = callOverloadMatrixExp(L"c", pGTRow, pGT, e.getLocation());
                     }
                     catch (const InternalError& error)
                     {

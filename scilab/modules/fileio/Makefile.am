@@ -87,6 +87,7 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_getdrives.cpp \
 	sci_gateway/cpp/sci_compress.cpp \
 	sci_gateway/cpp/sci_decompress.cpp \
+	sci_gateway/cpp/scanf_utils.cpp \
 	sci_gateway/cpp/archive_utils.cpp
 
 FILEIO_CPP_SOURCES = \

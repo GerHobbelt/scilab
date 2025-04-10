@@ -286,6 +286,7 @@ am__objects_4 = sci_gateway/cpp/libscifileio_la-fileio_gw.lo \
 	sci_gateway/cpp/libscifileio_la-sci_getdrives.lo \
 	sci_gateway/cpp/libscifileio_la-sci_compress.lo \
 	sci_gateway/cpp/libscifileio_la-sci_decompress.lo \
+	sci_gateway/cpp/libscifileio_la-scanf_utils.lo \
 	sci_gateway/cpp/libscifileio_la-archive_utils.lo
 am_libscifileio_la_OBJECTS = $(am__objects_3) $(am__objects_4)
 libscifileio_la_OBJECTS = $(am_libscifileio_la_OBJECTS)
@@ -320,6 +321,7 @@ am__depfiles_remade =  \
 	sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-fileio_gw.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_basename.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_compress.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_createdir.Plo \
@@ -886,6 +888,7 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_getdrives.cpp \
 	sci_gateway/cpp/sci_compress.cpp \
 	sci_gateway/cpp/sci_decompress.cpp \
+	sci_gateway/cpp/scanf_utils.cpp \
 	sci_gateway/cpp/archive_utils.cpp
 
 FILEIO_CPP_SOURCES = \
@@ -1398,6 +1401,9 @@ sci_gateway/cpp/libscifileio_la-sci_compress.lo:  \
 sci_gateway/cpp/libscifileio_la-sci_decompress.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
+sci_gateway/cpp/libscifileio_la-scanf_utils.lo:  \
+	sci_gateway/cpp/$(am__dirstamp) \
+	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 sci_gateway/cpp/libscifileio_la-archive_utils.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
@@ -1428,6 +1434,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-fileio_gw.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_basename.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_compress.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_createdir.Plo@am__quote@ # am--include-marker
@@ -2259,6 +2266,13 @@ sci_gateway/cpp/libscifileio_la-sci_decompress.lo: sci_gateway/cpp/sci_decompres
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscifileio_la-sci_decompress.lo `test -f 'sci_gateway/cpp/sci_decompress.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_decompress.cpp
 
+sci_gateway/cpp/libscifileio_la-scanf_utils.lo: sci_gateway/cpp/scanf_utils.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscifileio_la-scanf_utils.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Tpo -c -o sci_gateway/cpp/libscifileio_la-scanf_utils.lo `test -f 'sci_gateway/cpp/scanf_utils.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/scanf_utils.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Tpo sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/scanf_utils.cpp' object='sci_gateway/cpp/libscifileio_la-scanf_utils.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscifileio_la-scanf_utils.lo `test -f 'sci_gateway/cpp/scanf_utils.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/scanf_utils.cpp
+
 sci_gateway/cpp/libscifileio_la-archive_utils.lo: sci_gateway/cpp/archive_utils.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscifileio_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscifileio_la-archive_utils.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Tpo -c -o sci_gateway/cpp/libscifileio_la-archive_utils.lo `test -f 'sci_gateway/cpp/archive_utils.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/archive_utils.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Tpo sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Plo
@@ -2484,6 +2498,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-fileio_gw.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_basename.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_compress.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_createdir.Plo
@@ -2630,6 +2645,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/c/$(DEPDIR)/libscifileio_la-sci_tempname.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-archive_utils.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-fileio_gw.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-scanf_utils.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_basename.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_compress.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscifileio_la-sci_createdir.Plo
