@@ -45,10 +45,10 @@ template<typename W>
 static bool jsonSetValue(double& val, W& json, bool isBool)
 {
     double dd;
-    if(std::modf(val, &dd) == 0.0 && std::int64_t(dd) == dd)
+    if(std::modf(val, &dd) == 0.0 && int64_t(dd) == dd)
     {
         // serialize integer value
-        return json.Int64(std::int64_t(val));
+        return json.Int64(int64_t(val));
     }
 
     // serialize floating point value
