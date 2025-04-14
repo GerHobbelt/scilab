@@ -37,6 +37,8 @@ extern "C"
 #include "storeCommand.h"
 }
 
+// #define DEBUG_REF
+
 size_t ast::Ast::globalNodeNumber = 0;
 
 /*
@@ -2645,14 +2647,14 @@ std::wstring printVarEqualTypeDimsInfo(types::InternalType *pIT, std::wstring wc
     {
         ostr << std::endl;
     }
+
     ostr << L" " << wcsVarName << L" = ";
-#ifndef NDEBUG
+#ifdef DEBUG_REF
     ostr << L"(" << pIT->getRef() << L")";
 #endif
-
     ostr << printTypeDimsInfo(pIT);
-
     ostr << std::endl;
+
     if (ConfigVariable::isPrintCompact() == false)
     {
         ostr << std::endl;
