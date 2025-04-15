@@ -125,7 +125,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
     /* READ THE COLUMN LABELS or DEFAULT VALUES */
     if (checkInputArgumentType(pvApiCtx, 3, sci_strings))
     {
-        if (nbInputArgument(pvApiCtx) >= 3)
+        if (nbInputArgument(pvApiCtx) == 3 || (nbInputArgument(pvApiCtx) == 4 && checkInputArgumentType(pvApiCtx, 4, sci_boolean)))
         {
             sciErr = getVarAddressFromPosition(pvApiCtx, 3, &piAddrdefaultValuesAdr);
             if (sciErr.iErr)
@@ -238,7 +238,7 @@ int sci_x_mdialog(char *fname, void* pvApiCtx)
         }
         else
         {
-            Scierror(999, _("%s: Wrong type for input argument #%d: Boolean vector expected.\n"), fname, 4);
+            Scierror(999, _("%s: Wrong size for input argument #%d: Boolean vector or %d x %d matrix of strings expected.\n"), fname, 4, nbRowLineLabels * nbColLineLabels, nbRowColumnLabels * nbColColumnLabels);
             return FALSE;
         }
     }
