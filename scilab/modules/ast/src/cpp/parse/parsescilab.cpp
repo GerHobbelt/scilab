@@ -1094,21 +1094,21 @@ static const yytype_int16 yyrline[] =
     1219,  1220,  1221,  1222,  1230,  1231,  1232,  1233,  1241,  1242,
     1243,  1244,  1246,  1247,  1249,  1250,  1259,  1260,  1261,  1262,
     1263,  1264,  1265,  1266,  1267,  1274,  1282,  1283,  1296,  1301,
-    1306,  1312,  1323,  1332,  1347,  1348,  1355,  1356,  1363,  1364,
-    1371,  1372,  1373,  1381,  1382,  1393,  1401,  1407,  1422,  1428,
-    1445,  1446,  1447,  1448,  1449,  1457,  1458,  1459,  1460,  1461,
-    1462,  1470,  1471,  1472,  1473,  1474,  1475,  1483,  1489,  1503,
-    1519,  1520,  1531,  1532,  1551,  1552,  1560,  1561,  1562,  1563,
-    1564,  1565,  1566,  1574,  1575,  1583,  1584,  1585,  1586,  1587,
-    1595,  1596,  1597,  1598,  1599,  1600,  1604,  1610,  1625,  1626,
-    1627,  1628,  1629,  1630,  1631,  1632,  1633,  1634,  1635,  1636,
-    1644,  1645,  1653,  1654,  1663,  1664,  1665,  1666,  1667,  1668,
-    1669,  1670,  1674,  1680,  1695,  1703,  1709,  1724,  1725,  1726,
-    1727,  1728,  1729,  1730,  1731,  1732,  1733,  1734,  1735,  1736,
-    1737,  1738,  1739,  1740,  1741,  1749,  1750,  1765,  1771,  1777,
-    1783,  1789,  1797,  1812,  1813,  1814,  1821,  1822,  1830,  1831,
-    1839,  1840,  1841,  1842,  1843,  1844,  1845,  1846,  1847,  1848,
-    1849,  1850,  1851,  1852,  1853,  1854,  1855,  1856
+    1306,  1312,  1323,  1332,  1348,  1353,  1365,  1366,  1373,  1374,
+    1381,  1382,  1383,  1391,  1392,  1403,  1411,  1417,  1432,  1438,
+    1455,  1456,  1457,  1458,  1459,  1467,  1468,  1469,  1470,  1471,
+    1472,  1480,  1481,  1482,  1483,  1484,  1485,  1493,  1499,  1513,
+    1529,  1530,  1541,  1542,  1561,  1562,  1570,  1571,  1572,  1573,
+    1574,  1575,  1576,  1584,  1585,  1593,  1594,  1595,  1596,  1597,
+    1605,  1606,  1607,  1608,  1609,  1610,  1614,  1620,  1635,  1636,
+    1637,  1638,  1639,  1640,  1641,  1642,  1643,  1644,  1645,  1646,
+    1654,  1655,  1663,  1664,  1673,  1674,  1675,  1676,  1677,  1678,
+    1679,  1680,  1684,  1690,  1705,  1713,  1719,  1734,  1735,  1736,
+    1737,  1738,  1739,  1740,  1741,  1742,  1743,  1744,  1745,  1746,
+    1747,  1748,  1749,  1750,  1751,  1759,  1760,  1775,  1781,  1787,
+    1793,  1799,  1807,  1822,  1823,  1824,  1831,  1832,  1840,  1841,
+    1849,  1850,  1851,  1852,  1853,  1854,  1855,  1856,  1857,  1858,
+    1859,  1860,  1861,  1862,  1863,  1864,  1865,  1866
 };
 #endif
 
@@ -4719,7 +4719,7 @@ yyreduce:
 
   case 268: /* argumentsDeclarations: argumentsDeclarations argumentDeclaration lineEnd  */
                                                         {
-        (yyval.t_arguments_exp)->getExps().push_back((yyvsp[-1].t_argument_dec));
+        (yyvsp[-2].t_arguments_exp)->getExps().push_back((yyvsp[-1].t_argument_dec));
         (yyval.t_arguments_exp) = (yyvsp[-2].t_arguments_exp);
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
@@ -4727,7 +4727,7 @@ yyreduce:
 
   case 269: /* argumentsDeclarations: argumentsDeclarations "line comment" "end of line"  */
                                                         {
-        (yyval.t_arguments_exp)->getExps().push_back(new ast::CommentExp((yylsp[-1]), (yyvsp[-1].comment)));
+        (yyvsp[-2].t_arguments_exp)->getExps().push_back(new ast::CommentExp((yylsp[-1]), (yyvsp[-1].comment)));
         (yyval.t_arguments_exp) = (yyvsp[-2].t_arguments_exp);
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
@@ -4771,15 +4771,25 @@ yyreduce:
                                 *(yyvsp[-1].t_exp),
                                 *(yyvsp[0].t_exp));
                                 print_rules("argumentDeclaration", "ID LPAREN RPAREN ID");
+    delete (yyvsp[-2].str);
 }
     break;
 
   case 274: /* argumentName: "identifier"  */
-            { (yyval.t_exp) = new ast::SimpleVar((yyloc), symbol::Symbol(*(yyvsp[0].str))); print_rules("argumentName", "ID");}
+            {
+    (yyval.t_exp) = new ast::SimpleVar((yyloc), symbol::Symbol(*(yyvsp[0].str)));
+    print_rules("argumentName", "ID");
+    delete (yyvsp[0].str);
+}
     break;
 
   case 275: /* argumentName: "identifier" "." "identifier"  */
-            { (yyval.t_exp) = new ast::FieldExp((yyloc), *new ast::SimpleVar((yylsp[-2]), symbol::Symbol(*(yyvsp[-2].str))), *new ast::SimpleVar((yylsp[0]), symbol::Symbol(*(yyvsp[0].str)))); print_rules("argumentName", "ID DOT ID");}
+            {
+    (yyval.t_exp) = new ast::FieldExp((yyloc), *new ast::SimpleVar((yylsp[-2]), symbol::Symbol(*(yyvsp[-2].str))), *new ast::SimpleVar((yylsp[0]), symbol::Symbol(*(yyvsp[0].str))));
+    print_rules("argumentName", "ID DOT ID");
+    delete (yyvsp[-2].str);
+    delete (yyvsp[0].str);
+}
     break;
 
   case 276: /* argumentDimension: "(" functionArgs ")"  */

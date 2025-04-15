@@ -559,6 +559,7 @@ int checkIndexesArguments(InternalType* _pRef, typed_list* _pArgsIn, typed_list*
                     bUndefine = true;
                     // compute size using RHS variable
                     _pArgsOut->push_back(NULL);
+                    pIL->killMe();
                     continue;
                 }
 

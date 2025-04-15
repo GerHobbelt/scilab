@@ -145,6 +145,16 @@ assert_checkerror("foo(10)", [], 999);
 assert_checkerror("foo(9)", [], 999);
 clear foo;
 
+function foo(a)
+    arguments
+        a {mustBeGreaterThan(a, %eps)}
+    end
+endfunction
+
+foo(11);
+assert_checkerror("foo(0)", [], 999);
+clear foo;
+
 function foo(a, b)
     arguments
         a {mustBeGreaterThan(a, b)}
@@ -345,6 +355,7 @@ foo(2, 2);
 assert_checkerror("foo([])", [], 999);
 assert_checkerror("foo(4)", [], 999);
 assert_checkerror("foo(2, 7)", [], 999);
+clear foo;
 
 // mustBeInRange
 function foo(a)
@@ -483,6 +494,7 @@ msg = "foo: Wrong size for input argument #2: Must be of the same dimensions of 
 assert_checkerror("foo(ones(2, 1), ones(1, 2));", msg, 999);
 msg = "foo: Wrong size for input argument #4: Must be of the same dimensions of #3.";
 assert_checkerror("foo(1, 2, ones(2, 1), ones(1, 2));", msg, 999);
+clear foo;
 
 // mustBeSameType
 function foo(a, b)
@@ -542,4 +554,3 @@ foo(ones(2, 2), ones(1, 1));
 assert_checkerror("foo(ones(1, 2), ones(2, 1));", [], 999);
 assert_checkerror("foo(ones(2, 1), ones(1, 2));", [], 999);
 clear foo;
-

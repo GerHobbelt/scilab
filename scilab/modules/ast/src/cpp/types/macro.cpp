@@ -63,24 +63,28 @@ extern "C"
 
 std::wstring var2str(types::InternalType* pIT)
 {
-    std::wostringstream ostr;
-    
-    types::typed_list in = {pIT};
-    types::optional_list opt;
-    types::typed_list out;
-
     types::InternalType* pCall = symbol::Context::getInstance()->get(symbol::Symbol(L"sci2exp"));
     if (pCall && pCall->isCallable())
     {
+        std::wostringstream ostr;
+        types::typed_list in = {pIT};
+        types::optional_list opt;
+        types::typed_list out;
+
+        pIT->IncreaseRef();
         if (pCall->getAs<types::Callable>()->call(in, opt, 1, out) == types::Function::OK)
         {
             if (out.size() == 1 && out[0]->isString())
             {
-                return out[0]->getAs<types::String>()->get()[0];
+                std::wstring strOut(out[0]->getAs<types::String>()->get(0));
+                out[0]->killMe();
+                pIT->DecreaseRef();
+                return strOut;
             }
         }
 
         pIT->toString(ostr);
+        pIT->DecreaseRef();
         return ostr.str();
     }
 
@@ -143,9 +147,13 @@ static types::InternalType* callComparison(std::function<types::InternalType*(ty
     types::InternalType* pIT = cmp(x, y);
     if (pIT == nullptr)
     {
+        x->IncreaseRef();
+        y->IncreaseRef();
         types::typed_list in = {x, y};
         types::typed_list out;
         types::Function::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(oper), in, 1, out, true);
+        x->DecreaseRef();
+        y->DecreaseRef();
         if (ret == types::Function::ReturnValue::OK)
         {
             return out[0];
@@ -160,9 +168,13 @@ static types::InternalType* callComparison(std::function<types::InternalType*(ty
     types::InternalType* pIT = cmp(x, y, operstr);
     if (pIT == nullptr)
     {
+        x->IncreaseRef();
+        y->IncreaseRef();
         types::typed_list in = {x, y};
         types::typed_list out;
         types::Function::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(oper), in, 1, out, true);
+        x->DecreaseRef();
+        y->DecreaseRef();
         if (ret == types::Function::ReturnValue::OK)
         {
             return out[0];
@@ -196,21 +208,6 @@ types::InternalType* convertNum(types::InternalType* val)
     for (int i = 0; i < in->getSize(); ++i)
     {
         pout[i] = static_cast<typename T_OUT::type>(pin[i]);
-    }
-
-    return out;
-}
-
-template<class T_IN>
-types::InternalType* convertBool(types::InternalType* val)
-{
-    T_IN* in = val->getAs<T_IN>();
-    types::Bool* out = new types::Bool(in->getDims(), in->getDimsArray());
-    int* pout = out->get();
-    typename T_IN::type* pin = in->get();
-    for (int i = 0; i < in->getSize(); ++i)
-    {
-        pout[i] = pin[i] == 0 ? 0 : 1;
     }
 
     return out;
@@ -461,102 +458,98 @@ std::map<std::wstring, std::function<types::InternalType*(types::InternalType*, 
 };
 
 
-bool andBool(types::InternalType* ret)
+bool andBool(types::InternalType* pIT)
 {
-    if (ret && ret->isBool())
+    if (pIT == nullptr)
     {
-        types::Bool* b = ret->getAs<types::Bool>();
+        return false;
+    }
+
+    bool iRet = true;
+    if(pIT->isBool())
+    {
+        types::Bool* b = pIT->getAs<types::Bool>();
         for (int i = 0; i < b->getSize(); ++i)
         {
             if (b->get()[i] == 0)
             {
-                return false;
+                iRet = false;
+                break;
             }
         }
     }
 
-    return true;
+    pIT->killMe();
+    return iRet;
 }
 
-bool orBool(types::InternalType* ret)
+bool orBool(types::InternalType* pIT)
 {
-    if (ret && ret->isBool())
+    if (pIT == nullptr)
     {
-        types::Bool* b = ret->getAs<types::Bool>();
+        return false;
+    }
+
+    int iRet = false;
+    if(pIT->isBool())
+    {
+        types::Bool* b = pIT->getAs<types::Bool>();
         for (int i = 0; i < b->getSize(); ++i)
         {
             if (b->get()[i] == 1)
             {
-                return true;
+                iRet = true;
+                break;
             }
         }
     }
 
-    return false;
+    pIT->killMe();
+    return iRet;
 }
 
-int mustBePositive(types::typed_list& x)
+bool mustBePositive(types::typed_list& x)
 {
-    types::InternalType* tmp2 = callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], new types::Double(0));
-    if (tmp2)
+    types::Double* pDbl = new types::Double(0);
+    types::InternalType* pComp = callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], pDbl);
+    pDbl->killMe();
+    return andBool(pComp);
+}
+
+bool mustBeNonpositive(types::typed_list& x)
+{
+    types::Double* pDbl = new types::Double(0);
+    types::InternalType* pComp = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], pDbl);
+    pDbl->killMe();
+    return andBool(pComp);
+}
+
+bool mustBeNonnegative(types::typed_list& x)
+{
+    types::Double* pDbl = new types::Double(0);
+    types::InternalType* pComp = callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], pDbl);
+    pDbl->killMe();
+    return andBool(pComp);
+}
+
+bool mustBeNegative(types::typed_list& x)
+{
+    types::Double* pDbl = new types::Double(0);
+    types::InternalType* pComp = callComparison(GenericLess, ast::OpExp::Oper::le, L"<", x[0], pDbl);
+    pDbl->killMe();
+    return andBool(pComp);
+}
+
+bool mustBeNumeric(types::typed_list& x)
+{
+    return x[0]->isDouble() || x[0]->isInt();
+}
+
+bool mustBeFinite(types::typed_list& x)
+{
+    if (mustBeNumeric(x) == false)
     {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
-}
-
-int mustBeNonpositive(types::typed_list& x)
-{
-    types::InternalType* tmp2 = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], new types::Double(0));
-    if (tmp2)
-    {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
-}
-
-int mustBeNonnegative(types::typed_list& x)
-{
-    types::InternalType* tmp2 = callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], new types::Double(0)); 
-    if (tmp2)
-    {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
-}
-
-int mustBeNegative(types::typed_list& x)
-{
-    types::InternalType* tmp2 = callComparison(GenericLess, ast::OpExp::Oper::le, L"<", x[0], new types::Double(0));
-    if (tmp2)
-    {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
-}
-
-int mustBeNumeric(types::typed_list& x)
-{
-    return x[0]->isDouble() || x[0]->isInt() ? 0 : 1;
-}
-
-int mustBeFinite(types::typed_list& x)
-{
-    if (mustBeNumeric(x) != 0)
-    {
-        return 1;
+        return false;
     }
 
     if (x[0]->isDouble())
@@ -566,18 +559,19 @@ int mustBeFinite(types::typed_list& x)
         {
             if (std::isfinite(p[i]) == false)
             {
-                return 1;
+                return false;
             }
         }
     }
-    return 0;
+
+    return true;
 }
 
-int mustBeNonNan(types::typed_list& x)
+bool mustBeNonNan(types::typed_list& x)
 {
-    if (mustBeNumeric(x) != 0)
+    if (mustBeNumeric(x) == false)
     {
-        return callIsFunction(L"isnan", x) ? 1 : 0;
+        return callIsFunction(L"isnan", x) == false;
     }
 
     if (x[0]->isDouble())
@@ -587,60 +581,55 @@ int mustBeNonNan(types::typed_list& x)
         {
             if (std::isnan(p[i]))
             {
-                return 1;
+                return false;
             }
         }
     }
 
-    return 0;
+    return true;
 }
 
-int mustBeNonzero(types::typed_list& x)
+bool mustBeNonzero(types::typed_list& x)
 {
-    types::InternalType* tmp2 = callComparison(GenericComparisonNonEqual, ast::OpExp::Oper::ne, x[0], new types::Double(0));
-    if (tmp2)
-    {
-        bool res = andBool(tmp2);
-        tmp2->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    types::Double* pDbl = new types::Double(0);
+    types::InternalType* pComp = callComparison(GenericComparisonNonEqual, ast::OpExp::Oper::ne, x[0], pDbl);
+    pDbl->killMe();
+    return andBool(pComp);
 }
 
-int mustBeNonsparse(types::typed_list& x)
+bool mustBeNonsparse(types::typed_list& x)
 {
-    return x[0]->isSparse() ? 1 : 0;
+    return x[0]->isSparse() == false;
 }
 
-static int isComplex(const double* val, size_t size, double eps)
+static bool isReal(const double* val, size_t size, double eps)
 {
     for (size_t i = 0; i < size; ++i)
     {
         if (abs(val[i]) > eps)
         {
-            return 1;
+            return false;
         }
     }
 
-    return 0;
+    return true;
 }
 
-int mustBeReal(types::typed_list& x)
+bool mustBeReal(types::typed_list& x)
 {
     if (x[0]->isDouble() || x[0]->isPoly() || x[0]->isSparse())
     {
         if (x[0]->isDouble() && x[0]->getAs<types::Double>()->isComplex())
         {
             types::Double* d = x[0]->getAs<types::Double>();
-            return isComplex(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
+            return isReal(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
         }
 
         if (x[0]->isPoly() && x[0]->getAs<types::Polynom>()->isComplex())
         {
             types::Polynom* p = x[0]->getAs<types::Polynom>();
             types::Double* d = p->getCoef();
-            int ret = isComplex(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
+            int ret = isReal(d->getImg(), d->getSize(), x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
             d->killMe();
             return ret;
         }
@@ -653,18 +642,18 @@ int mustBeReal(types::typed_list& x)
             std::vector<double> NonZeroI(nonZeros);
             sp->outputValues(NonZeroR.data(), NonZeroI.data());
 
-            return isComplex(NonZeroI.data(), nonZeros, x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
+            return isReal(NonZeroI.data(), nonZeros, x.size() > 1 ? x[1]->getAs<types::Double>()->get()[0] : 0);
         }
     }
 
-    return 0;
+    return true;
 }
 
-int mustBeInteger(types::typed_list& x)
+bool mustBeInteger(types::typed_list& x)
 {
-    if (mustBeNumeric(x) != 0)
+    if (mustBeNumeric(x) == false)
     {
-        return 1;
+        return false;
     }
 
     if (x[0]->isDouble())
@@ -674,15 +663,15 @@ int mustBeInteger(types::typed_list& x)
         {
             if (floor(p[i]) != p[i])
             {
-                return 1;
+                return false;
             }
         }
     }
 
-    return 0;
+    return true;
 }
 
-int mustBeMember(types::typed_list& x)
+bool mustBeMember(types::typed_list& x)
 {
     types::InternalType* tmp = nullptr;
     if (x[1]->isCell())
@@ -691,10 +680,7 @@ int mustBeMember(types::typed_list& x)
         types::Bool* tmp2 = new types::Bool(1, ce->getSize());
         for (int i = 0; i < ce->getSize(); ++i)
         {
-            types::InternalType* tmp3 = GenericComparisonEqual(x[0], ce->get(i));
-            bool res = andBool(tmp3);
-            tmp2->set(i, res);
-            tmp3->killMe();
+            tmp2->set(i, andBool(GenericComparisonEqual(x[0], ce->get(i))) ? 1 : 0);
         }
 
         tmp = tmp2;
@@ -720,79 +706,39 @@ int mustBeMember(types::typed_list& x)
         }
     }
 
-    if (tmp)
-    {
-        bool res = orBool(tmp);
-        tmp->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    return orBool(tmp);
 }
 
-int mustBeGreaterThan(types::typed_list& x)
+bool mustBeGreaterThan(types::typed_list& x)
 {
-    types::InternalType* tmp = callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], x[1]);
-    if (tmp)
-    {
-        bool res = andBool(tmp);
-        tmp->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    return andBool(callComparison(GenericGreater, ast::OpExp::Oper::gt, x[0], x[1]));
 }
 
-int mustBeGreaterThanOrEqual(types::typed_list& x)
+bool mustBeGreaterThanOrEqual(types::typed_list& x)
 {
-    types::InternalType* tmp = callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], x[1]);
-    if (tmp)
-    {
-        bool res = andBool(tmp);
-        tmp->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    return andBool(callComparison(GenericGreaterEqual, ast::OpExp::Oper::ge, x[0], x[1]));
 }
 
-int mustBeLessThan(types::typed_list& x)
+bool mustBeLessThan(types::typed_list& x)
 {
-    types::InternalType* tmp = callComparison(GenericLess, ast::OpExp::Oper::lt, L"<", x[0], x[1]);
-    if (tmp)
-    {
-        bool res = andBool(tmp);
-        tmp->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    return andBool(callComparison(GenericLess, ast::OpExp::Oper::lt, L"<", x[0], x[1]));
 }
 
-int mustBeLessThanOrEqual(types::typed_list& x)
+bool mustBeLessThanOrEqual(types::typed_list& x)
 {
-    types::InternalType* tmp = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], x[1]);
-    if (tmp)
-    {
-        bool res = andBool(tmp);
-        tmp->killMe();
-        return res ? 0 : 1;
-    }
-
-    return 1;
+    return andBool(callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], x[1]));
 }
 
-int mustBeA(types::typed_list& x)
+bool mustBeA(types::typed_list& x)
 {
     types::String* types = x[1]->getAs<types::String>();
-
     for (int i = 0; i < types->getSize(); ++i)
     {
         if (typeValidator.find(types->get()[i]) != typeValidator.end())
         {
             if (typeValidator[types->get()[i]](x[0]))
             {
-                return 0;
+                return true;
             }
         }
         else
@@ -810,82 +756,71 @@ int mustBeA(types::typed_list& x)
 
             if (type == types->get()[i])
             {
-                return 0;
+                return true;
             }
         }
     }
 
-    return 1;
+    return false;
 }
 
-int mustBeNumericOrLogical(types::typed_list& x)
+bool mustBeNumericOrLogical(types::typed_list& x)
 {
-    return (mustBeNumeric(x) == 0 || x[0]->isBool()) ? 0 : 1;
+    return mustBeNumeric(x) || x[0]->isBool();
 }
 
-int mustBeNonempty(types::typed_list& x)
+bool mustBeNonempty(types::typed_list& x)
 {
-    return (x[0]->isDouble() && x[0]->getAs<types::Double>()->isEmpty()) ? 1 : 0;
+    return (x[0]->isDouble() && x[0]->getAs<types::Double>()->isEmpty()) == false;
 }
 
-int mustBeScalar(types::typed_list& x)
+bool mustBeScalar(types::typed_list& x)
 {
     if(x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isScalar())
     {
-        return 0;
+        return true;
     }
 
-    return callIsFunction(L"isscalar", x) ? 0 : 1;
+    return callIsFunction(L"isscalar", x);
 }
 
-int mustBeScalarOrEmpty(types::typed_list& x)
+bool mustBeScalarOrEmpty(types::typed_list& x)
 {
     if(x[0]->isGenericType() && (x[0]->getAs<types::GenericType>()->isScalar() || x[0]->getAs<types::GenericType>()->getSize() == 0))
     {
-        return 0;
+        return true;
     }
 
-    return (callIsFunction(L"isscalar", x) || callIsFunction(L"isempty", x)) ? 0 : 1;
+    return callIsFunction(L"isscalar", x) || callIsFunction(L"isempty", x);
 }
 
-int mustBeVector(types::typed_list& x)
+bool mustBeVector(types::typed_list& x)
 {
-    return (x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector()) ? 0 : 1;
+    return x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector();
 }
 
-int mustBeSquare(types::typed_list& x)
+bool mustBeSquare(types::typed_list& x)
 {
     if (x[0]->isGenericType() == false)
     {
-        return 1;
+        return false;
     }
     
     types::GenericType* gt = x[0]->getAs<types::GenericType>();
-
     if (gt->isDouble() && gt->getAs<types::Double>()->isEmpty())
     {
-        return 1;
+        return false;
     }
 
-    if (gt->getDims() != 2)
+    if (gt->getDims() != 2 || gt->getRows() != gt->getCols())
     {
-        return 1;
+        return false;
     }
 
-    int* dims = gt->getDimsArray();
-    int ref = dims[0];
-    for (int i = 1; i < gt->getDims(); ++i)
-    {
-        if (dims[i] < 1 || dims[i] != ref) //-1 0
-        {
-            return 1;
-        }
-    }
-
-    return 0;
+    return true;
 }
 
-int mustBeInRange(types::typed_list& x)
+bool mustBeInRange(types::typed_list& x)
 {
     #define checkFunc(name) [](types::InternalType* x1, types::InternalType* x2) { return name(x1, x2); }
     typedef std::function<types::InternalType*(types::InternalType*, types::InternalType*)> checker;
@@ -910,10 +845,10 @@ int mustBeInRange(types::typed_list& x)
         }
     }
 
-    return andBool(checkLeft(x[0], x[1])) && andBool(checkRight(x[0], x[2])) ? 0 : 1;
+    return andBool(checkLeft(x[0], x[1])) && andBool(checkRight(x[0], x[2]));
 }
 
-int mustBeFile(types::typed_list& x)
+bool mustBeFile(types::typed_list& x)
 {
     if (x[0]->isString())
     {
@@ -921,18 +856,18 @@ int mustBeFile(types::typed_list& x)
         wchar_t* e = expandPathVariableW(f);
         if (e == nullptr)
         {
-            return 1;
+            return false;
         }
 
         std::wstring exp(e);
         FREE(e);
-        return (isdirW(exp.data()) == false && FileExistW(exp.data())) ? 0 : 1;
+        return isdirW(exp.data()) == false && FileExistW(exp.data());
     }
 
-    return 1;
+    return false;
 }
 
-int mustBeFolder(types::typed_list& x)
+bool mustBeFolder(types::typed_list& x)
 {
     if (x[0]->isString())
     {
@@ -940,51 +875,51 @@ int mustBeFolder(types::typed_list& x)
         wchar_t* e = expandPathVariableW(f);
         if (e == nullptr)
         {
-            return 1;
+            return false;
         }
 
         std::wstring exp(e);
         FREE(e);
-        return isdirW(exp.data()) ? 0 : 1;
+        return isdirW(exp.data());
     }
 
-    return 1;
+    return false;
 }
 
-int mustBeNonzeroLengthText(types::typed_list& x)
+bool mustBeNonzeroLengthText(types::typed_list& x)
 {
     if (x[0]->isString() && x[0]->getAs<types::String>()->isScalar())
     {
-        return wcslen(x[0]->getAs<types::String>()->get()[0]) > 0 ? 0 : 1;
+        return wcslen(x[0]->getAs<types::String>()->get()[0]) > 0;
     }
 
-    return 1;
+    return false;
 }
 
-int mustBeValidVariableName(types::typed_list& x)
+bool mustBeValidVariableName(types::typed_list& x)
 {
     if (x[0]->isString() && x[0]->getAs<types::String>()->isScalar())
     {
-        return symbol::Context::getInstance()->isValidVariableName(x[0]->getAs<types::String>()->get()[0]) ? 0 : 1;
+        return symbol::Context::getInstance()->isValidVariableName(x[0]->getAs<types::String>()->get()[0]);
     }
 
-    return 1;
+    return false;
 }
 
-int mustBeEqualDims(types::typed_list& x)
+bool mustBeEqualDims(types::typed_list& x)
 {
     types::typed_list in1 = {x[0]};
     types::typed_list out1;
     if (Overload::call(L"size", in1, 1, out1) != types::Function::OK)
     {
-        return 1;
+        return false;
     }
 
     types::typed_list in2 = {x[1]};
     types::typed_list out2;
     if (Overload::call(L"size", in2, 1, out2) != types::Function::OK)
     {
-        return 1;
+        return false;
     }
 
     types::Double* p1 = out1[0]->getAs<types::Double>();
@@ -1013,7 +948,7 @@ int mustBeEqualDims(types::typed_list& x)
         {
             if (dims1.size() < ref[i] || dims2.size() < ref[i])
             {
-                return 1;
+                return false;
             }
         }
     }
@@ -1021,7 +956,7 @@ int mustBeEqualDims(types::typed_list& x)
     {
         if (dims1.size() != dims2.size())
         {
-            return 1;
+            return false;
         }
     }
 
@@ -1031,7 +966,7 @@ int mustBeEqualDims(types::typed_list& x)
         {
             if (dims1[ref[i] - 1] != dims2[ref[i] - 1])
             {
-                return 1;
+                return false;
             }
         }
     }
@@ -1041,56 +976,56 @@ int mustBeEqualDims(types::typed_list& x)
         {
             if (dims1[i] != dims2[i])
             {
-                return 1;
+                return false;
             }
         }
     }
 
-    return 0;
+    return true;
 }
 
-int mustBeSameType(types::typed_list& x)
+bool mustBeSameType(types::typed_list& x)
 {
     if (x[0]->isInt() && x[1]->isInt())
     {
-        return 0;
+        return true;
     }
 
-    return (x[0]->getType() == x[1]->getType()) ? 0 : 1;
+    return x[0]->getType() == x[1]->getType();
 }
 
-int mustBeEqualDimsOrEmpty(types::typed_list& x)
+bool mustBeEqualDimsOrEmpty(types::typed_list& x)
 {
-    if(mustBeEqualDims(x) == 0)
+    if(mustBeEqualDims(x))
     {
-        return 0;
+        return true;
     }
 
     types::typed_list in1 = {x[0]};
     if(callIsFunction(L"isempty", in1))
     {
-        return 0;
+        return true;
     }
 
     types::typed_list in2 = {x[1]};
-    return callIsFunction(L"isempty", in2) ? 0 : 1;
+    return callIsFunction(L"isempty", in2);
 }
 
-int mustBeEqualDimsOrScalar(types::typed_list& x)
+bool mustBeEqualDimsOrScalar(types::typed_list& x)
 {
-    if(mustBeEqualDims(x) == 0)
+    if(mustBeEqualDims(x))
     {
-        return 0;
+        return true;
     }
 
     types::typed_list in1 = {x[0]};
     if(callIsFunction(L"isscalar", in1))
     {
-        return 0;
+        return true;
     }
 
     types::typed_list in2 = {x[1]};
-    return callIsFunction(L"isscalar", in2) ? 0 : 1;
+    return callIsFunction(L"isscalar", in2);
 }
 
 std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::vector<int>>> functionValidators = {
@@ -1482,7 +1417,6 @@ std::wstring dims2str(const std::vector<std::tuple<std::vector<int>, symbol::Var
 
     return res;
 }
-
 namespace types
 {
 Macro::Macro(std::vector<symbol::Variable*>& _inputArgs, ast::SeqExp& _body, const std::wstring& _stModule, std::unordered_map<std::wstring, types::InternalType*> captured) : Callable(),
@@ -1503,7 +1437,15 @@ Macro::Macro(std::vector<symbol::Variable*>& _inputArgs, ast::SeqExp& _body, con
     m_body->setReturnable();
     m_stPath = L"";
 
-    updateArguments();
+    try
+    {
+        updateArguments();
+    }
+    catch (const ast::InternalError& ie)
+    {
+        cleanup();
+        throw ie;
+    }
 
     // check variables/macros in body
     ast::MacrovarVisitor visit;
@@ -1604,11 +1546,25 @@ Macro::Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _input
     // Do not enable debug for Macro called when checking arguments (calling sci2exp)
     bool isDebug = ConfigVariable::getEnableDebug();
     ConfigVariable::setEnableDebug(false);
-    updateArguments();
+    try
+    {
+        updateArguments();
+    }
+    catch (const ast::InternalError& ie)
+    {
+        cleanup();
+        throw ie;
+    }
+
     ConfigVariable::setEnableDebug(isDebug);
 }
 
 Macro::~Macro()
+{
+    cleanup();
+}
+
+void Macro::cleanup()
 {
     delete m_body;
     m_pDblArgIn->DecreaseRef();
@@ -1641,6 +1597,23 @@ Macro::~Macro()
         }
     }
     m_submacro.clear();
+
+    for(auto& a : m_arguments)
+    {
+        for(auto& v : a.second.validators)
+        {
+            for(auto& i : v.inputs)
+            {
+                types::InternalType* val = std::get<1>(i);
+                if(val)
+                {
+                    val->DecreaseRef();
+                    val->killMe();
+                }
+            }
+        }
+    }
+    m_arguments.clear();
 }
 
 void Macro::cleanCall(symbol::Context* pContext, int oldPromptMode)
@@ -1907,9 +1880,9 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                 {
                     if (arg.default_value)
                     {
-                        ast::RunVisitor* exec = (ast::RunVisitor*)ConfigVariable::getDefaultVisitor();
+                        std::unique_ptr<ast::ConstVisitor> exec(ConfigVariable::getDefaultVisitor());
                         arg.default_value->accept(*exec);
-                        InternalType* pIT = exec->getResult();
+                        InternalType* pIT = ((ast::RunVisitor*)exec.get())->getResult();
                         if (pIT == nullptr || pIT->isAssignable() == false)
                         {
                             char msg[128];
@@ -1920,7 +1893,6 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                         pIT->IncreaseRef();
                         pContext->put(symbol::Symbol(name), pIT);
                         in.push_back(pIT);
-                        delete exec;
                     }
                 }
             }
@@ -1993,8 +1965,7 @@ Callable::ReturnValue Macro::call(typed_list& in, optional_list& opt, int _iRetC
                             }
                         }
 
-                        int ret = arg.validators[j].validator(args);
-                        if (ret != 0)
+                        if (arg.validators[j].validator(args) == false)
                         {
                             auto error = arg.validators[j].error;
                             auto errorArgs = arg.validators[j].errorArgs;
@@ -2707,7 +2678,9 @@ void Macro::updateArguments()
                                 }
                                 else
                                 {
-                                    argValidator.inputs.push_back({-1, symbol::Context::getInstance()->get(symbol::Symbol(name))});
+                                    types::InternalType* pIT = symbol::Context::getInstance()->get(symbol::Symbol(name));
+                                    pIT->IncreaseRef();
+                                    argValidator.inputs.push_back({-1, pIT});
                                 }
                             }
                             else // constant
@@ -2719,7 +2692,7 @@ void Macro::updateArguments()
                                     throw ast::InternalError(scilab::UTF8::toWide(msg), 999, dec->getArgumentType()->getLocation());
                                 }
 
-                                ast::RunVisitor* exec = (ast::RunVisitor*)ConfigVariable::getDefaultVisitor();
+                                std::unique_ptr<ast::ConstVisitor> exec(ConfigVariable::getDefaultVisitor());
                                 try
                                 {
                                     inputs[i]->accept(*exec);
@@ -2731,7 +2704,7 @@ void Macro::updateArguments()
                                     throw ast::InternalError(scilab::UTF8::toWide(msg), 999, inputs[i]->getLocation());
                                 }
 
-                                types::InternalType* pIT = exec->getResult();
+                                types::InternalType* pIT = ((ast::RunVisitor*)exec.get())->getResult();
                                 if (pIT == nullptr || pIT->isAssignable() == false)
                                 {
                                     char msg[128];
@@ -2741,7 +2714,6 @@ void Macro::updateArguments()
 
                                 pIT->IncreaseRef();
                                 argValidator.inputs.push_back({-1, pIT});
-                                delete exec;
                             }
                         }
 

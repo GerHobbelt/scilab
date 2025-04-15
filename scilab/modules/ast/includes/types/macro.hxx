@@ -165,8 +165,9 @@ public :
     /*lambda*/
     bool                                m_isLambda;
     std::unordered_map<std::wstring, types::InternalType*> m_captured;
+
+    void cleanup();
 };
 }
-
 
 #endif /* !__MACRO_HXX__ */

@@ -1294,12 +1294,12 @@ ARGUMENTS EOL argumentsDeclarations END           { $$ = $3; print_rules("argume
 */
 argumentsDeclarations :
 argumentsDeclarations argumentDeclaration lineEnd       {
-        $$->getExps().push_back($2);
+        $1->getExps().push_back($2);
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
 | argumentsDeclarations COMMENT EOL                     {
-        $$->getExps().push_back(new ast::CommentExp(@2, $2));
+        $1->getExps().push_back(new ast::CommentExp(@2, $2));
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
@@ -1337,6 +1337,7 @@ argumentName argumentDimension argumentValidators argumentDefaultValue          
                                 *$4,
                                 *$5);
                                 print_rules("argumentDeclaration", "ID LPAREN RPAREN ID");
+    delete $3;
 }
 ;
 
@@ -1344,8 +1345,17 @@ argumentName argumentDimension argumentValidators argumentDefaultValue          
 ** -*- ARGUMENT NAME -*-
 */
 argumentName :
-ID          { $$ = new ast::SimpleVar(@$, symbol::Symbol(*$1)); print_rules("argumentName", "ID");}
-| ID DOT ID { $$ = new ast::FieldExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::SimpleVar(@3, symbol::Symbol(*$3))); print_rules("argumentName", "ID DOT ID");}
+ID          {
+    $$ = new ast::SimpleVar(@$, symbol::Symbol(*$1));
+    print_rules("argumentName", "ID");
+    delete $1;
+}
+| ID DOT ID {
+    $$ = new ast::FieldExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::SimpleVar(@3, symbol::Symbol(*$3)));
+    print_rules("argumentName", "ID DOT ID");
+    delete $1;
+    delete $3;
+}
 ;
 
 /*
