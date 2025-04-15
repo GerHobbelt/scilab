@@ -435,18 +435,26 @@ function [x, y, ok, gc] = edit_curv(varargin)
             end
 
         case "Reframe"
-            replot()
+            ierr = execstr("replot()", "errcatch"); // Catch errors to avoid to break loop
+            if ierr <> 0 then
+                msg = lasterror();
+                disp(msg)
+            end
 
         case "Bounds" then
             while %t
-                [ok,xmn,xmx,ymn,ymx]=getvalue("Please input new limits",..
+                [ok,xmn1,xmx1,ymn1,ymx1]=getvalue(_("Please input new limits"),..
                 ["xmin"; "xmax"; "ymin"; "ymax"],..
                 list("vec",1, "vec",1, "vec",1, "vec",1),..
                 string([xmn; xmx; ymn; ymx]))
                 if ~ok then break,end
-                if xmn > xmx | ymn > ymx then
-                    messagebox("Limits are not accettable","modal");
+                if xmn1 > xmx1 | ymn1 > ymx1 then
+                    messagebox(_("Limits are not acceptable."),"modal");
                 else
+                    xmn = xmn1;
+                    xmx = xmx1;
+                    ymn = ymn1;
+                    ymx = ymx1;
                     break
                 end
             end
@@ -464,7 +472,7 @@ function [x, y, ok, gc] = edit_curv(varargin)
             [x, y] = ([],[])
             iHistory = addToHistory(x, y)
 
-        case "Read" then
+        case "Load" then
             [x,y]=readxy()
             mx=min(prod(size(x)), prod(size(y)))
             if mx<>0 then
@@ -683,12 +691,12 @@ function [x,y] = readxy()
                 if xy <> [] then
                     [x, y] = (xy(:,1), xy(:,2))
                 else
-                    msg = _("%s: The file "'%s"' does not contains any "'Polyline"' graphic entity.\n")
+                    msg = _("%s: The file ''%s'' does not contains any ''Polyline'' graphic entity.\n")
                     messagebox(msprintf(msg, "edit_curve", flname))
                     return
                 end
             else
-                msg = _("%s: Cannot open file "'%s"' for reading.\n")
+                msg = _("%s: Cannot open file ''%s'' for reading.\n")
                 messagebox(msprintf(msg, "edit_curv", flname), "modal")
                 return
             end
@@ -696,7 +704,7 @@ function [x,y] = readxy()
             if execstr("xy = read(fn,-1,2)","errcatch") == 0 then
                 [x, y] = (xy(:,1), xy(:,2))
             else
-                msg = _("%s: Cannot open file "'%s"' for reading.\n")
+                msg = _("%s: Cannot open file ''%s'' for reading.\n")
                 messagebox(msprintf(msg, "edit_curv", flname), "modal")
                 return
             end
@@ -704,7 +712,7 @@ function [x,y] = readxy()
             if execstr("load(fn)","errcatch") == 0 then
                 [x, y] = (xy(:,1), xy(:,2))
             else
-                msg = _("%s: Cannot open file "'%s"' for reading.\n")
+                msg = _("%s: Cannot open file ''%s'' for reading.\n")
                 messagebox(msprintf(msg, "edit_curv", flname), "modal")
                 return
             end
@@ -742,7 +750,7 @@ function savexy(x,y)
         select ext
         case ".sod" then
             if execstr("save(fil,""xy"")","errcatch")<>0 then
-                msg = _("%s: The file "'%s"' cannot be written.\n")
+                msg = _("%s: The file ''%s'' cannot be written.\n")
                 messagebox(msprintf(msg, "edit_curv", flname), "modal");
                 return
             end
@@ -753,7 +761,7 @@ function savexy(x,y)
                 isErr = execstr("write(fil,xy)","errcatch");
             end
             if isErr <> 0 then
-                msg = _("%s: The file "'%s"' cannot be written.\n")
+                msg = _("%s: The file ''%s'' cannot be written.\n")
                 messagebox(msprintf(msg, "edit_curv", flname), "modal");
                 return
             end
