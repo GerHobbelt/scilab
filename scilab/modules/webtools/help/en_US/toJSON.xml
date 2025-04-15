@@ -164,6 +164,12 @@ toJSON([[%nan, 1]; [1e+380, 1e-380]; [%inf, -%inf]], convertInfAndNaN=%f)
                     Handling of tabs (ascii(9)) changed.
                 </revremark>
             </revision>
+            <revision>
+                <revnumber>2024.1.0</revnumber>
+                <revremark>
+                    <literal>convertInfAndNaN</literal> option added.
+                </revremark>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>

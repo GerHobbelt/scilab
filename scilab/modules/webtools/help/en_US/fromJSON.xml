@@ -116,6 +116,12 @@ fromJSON("[NaN, Infinity, -Infinity]")
                     Handling of tabs (ascii(9)) changed.
                 </revremark>
             </revision>
+            <revision>
+                <revnumber>2024.1.0</revnumber>
+                <revremark>
+                    <literal>NaN</literal>, <literal>-Infinity</literal> and <literal>Infinity</literal> values are now managed.
+                </revremark>
+            </revision>
         </revhistory>
     </refsection>
 </refentry>
