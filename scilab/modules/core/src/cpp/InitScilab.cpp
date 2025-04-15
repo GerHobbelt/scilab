@@ -767,6 +767,9 @@ void* scilabReadAndStore(void*)
             FREE(command);
             command = NULL;
             scilabForcedWriteW(parserErrorMsg);
+            ConfigVariable::setLastErrorNumber(999);
+            ConfigVariable::setLastErrorMessage(parserErrorMsg);
+    
             continue;
         }
 
