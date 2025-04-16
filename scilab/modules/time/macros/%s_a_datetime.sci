@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %s_a_datetime(dura, dt)
-    if size(dt, "*") <> 1 && size(dura, "*") <> 1 && or(size(dt) <> size(dura)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%s_a_datetime", 1, 2))
+    arguments
+        dura
+        dt {mustBeEqualDimsOrScalar(dt, dura)}
     end
 
     out = dt + caldays(dura);

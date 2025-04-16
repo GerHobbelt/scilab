@@ -10,12 +10,8 @@
 // along with this program.
 
 function y = year(dt)
-    if nargin <> 1 then
-        error(msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "year", 1));
-    end
-    
-    if ~isdatetime(dt) then
-        error(msprintf(_("%s: Wrong type for input argument #%d: datetime expected.\n"), "year", 1));
+    arguments
+        st {mustBeA(x, ["datetime"])}
     end
 
     y = dt.Year;

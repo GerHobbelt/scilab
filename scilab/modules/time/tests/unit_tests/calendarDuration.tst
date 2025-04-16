@@ -262,37 +262,38 @@ assert_checkerror("calendarDuration(1, 2, 3, 1)", msg);
 msg = msprintf(_("%s: Wrong type for input arguments #%d, #%d, #%d, #%d, #%d and #%d: reals expected.\n"), "calendarDuration", 1, 2, 3, 4, 5, 6);
 assert_checkerror("calendarDuration(1, ""2"", 3, 1, 15, 30)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_a_s", 1, 2);
+str = _("%s: Wrong size for input argument #%d: Must be of the same dimensions of #%d or scalar.\n");
+msg = msprintf(str, "%calendarDuration_a_s", 2, 1);
 assert_checkerror("calendarDuration(0, [10 20 30], 0) + [10 20]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_a_calendarDuration", 1, 2);
+msg = msprintf(str, "%s_a_calendarDuration", 2, 1);
 assert_checkerror("[10 20] + calendarDuration(0, [10 20 30], 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_a_calendarDuration", 1, 2);
+msg = msprintf(str, "%calendarDuration_a_calendarDuration", 2, 1);
 assert_checkerror("caldays([10 20]) + calendarDuration(0, [10 20 30], 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_a_calendarDuration", 1, 2);
+msg = msprintf(str, "%duration_a_calendarDuration", 2, 1);
 assert_checkerror("hours([10 20]) + calendarDuration(0, [10 20 30], 0)", msg);
 assert_checkerror("hours([10; 20]) + calendarDuration(0, [10 20 30], 0)", msg);
 assert_checkerror("hours([10; 20]) + calendarDuration(0, [10; 20; 30], 0)", msg);
 assert_checkerror("hours([10 20]) + calendarDuration(0, [10; 20; 30], 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_a_duration", 1, 2);
+msg = msprintf(str, "%calendarDuration_a_duration", 2, 1);
 assert_checkerror("calendarDuration(0, [10 20 30], 0) + hours([10 20])", msg);
 assert_checkerror("calendarDuration(0, [10 20 30], 0) + hours([10; 20])", msg);
 assert_checkerror("calendarDuration(0, [10; 20; 30], 0) + hours([10; 20])", msg);
 assert_checkerror("calendarDuration(0, [10; 20; 30], 0) + hours([10 20])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_2_calendarDuration", 1, 2);
+msg = msprintf(str, "%calendarDuration_2_calendarDuration", 2, 1);
 assert_checkerror("calendarDuration([1 2 3], 0, 0) > calendarDuration([1 2], 0, 0)", msg);
 assert_checkerror("calendarDuration([1 2], 0, 0) > calendarDuration([1 2 3], 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_4_calendarDuration", 1, 2);
+msg = msprintf(str, "%calendarDuration_4_calendarDuration", 2, 1);
 assert_checkerror("calendarDuration([1 2 3], 0, 0) >= calendarDuration([1 2], 0, 0)", msg);
 assert_checkerror("calendarDuration([1 2], 0, 0) >= calendarDuration([1 2 3], 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_1_calendarDuration", 1, 2);
+msg = msprintf(str, "%calendarDuration_1_calendarDuration", 2, 1);
 assert_checkerror("calendarDuration([1 2 3], 0, 0) < calendarDuration([1 2], 0, 0)", msg);
 assert_checkerror("calendarDuration([1 2], 0, 0) < calendarDuration([1 2 3], 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_3_calendarDuration", 1, 2);
+msg = msprintf(str, "%calendarDuration_3_calendarDuration", 2, 1);
 assert_checkerror("calendarDuration([1 2 3], 0, 0) <= calendarDuration([1 2], 0, 0)", msg);
 assert_checkerror("calendarDuration([1 2], 0, 0) <= calendarDuration([1 2 3], 0, 0)", msg);
 

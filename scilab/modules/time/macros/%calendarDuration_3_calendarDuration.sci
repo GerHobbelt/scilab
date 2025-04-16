@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %calendarDuration_3_calendarDuration(cd1, cd2)
-    if size(cd1, "*") <> 1 && size(cd2, "*") <> 1 && or(size(cd1) <> size(cd2)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_3_calendarDuration", 1, 2))
+    arguments
+        cd1
+        cd2 {mustBeEqualDimsOrScalar(cd2, cd1)}
     end
 
     y1 = cd1.y > cd2.y; //exclution

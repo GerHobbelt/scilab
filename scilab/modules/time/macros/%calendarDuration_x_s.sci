@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %calendarDuration_x_s(cd1, coef)
-    if size(cd1, "*") <> 1 && size(coef, "*") <> 1 && or(size(cd1) <> size(coef)) then
-        error(msprintf(_("%s: Inconsistent row/column dimensions.\n"), "%calendarDuration_x_s"));
+    arguments
+        cd1
+        coef {mustBeEqualDimsOrScalar(coef, cd1)}
     end
 
     out_m = (cd1.y*12 + cd1.m) .* coef;

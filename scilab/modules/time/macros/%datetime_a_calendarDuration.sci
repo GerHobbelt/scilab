@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %datetime_a_calendarDuration(dt, cd1)
-    if size(dt, "*") <> 1 && size(cd1, "*") <> 1 && or(size(dt) <> size(cd1)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_a_calendarDuration", 1, 2))
+    arguments
+        dt
+        cd1 {mustBeEqualDimsOrScalar(cd1, dt)}
     end   
 
     ref_size = [1 1];

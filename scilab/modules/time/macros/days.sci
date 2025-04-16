@@ -10,9 +10,8 @@
 // along with this program.
 
 function out = days(x)
-    fname = "days";
-    if nargin <> 1 then
-        error(msprintf(gettext("%s: Wrong number of input argument: %d expected.\n"), fname, 1));
+    arguments
+        x {mustBeA(x, ["double", "duration"]), mustBeReal}
     end
 
     if type(x) == 1 then
@@ -21,9 +20,8 @@ function out = days(x)
         else
             out = duration(x * 24, 0, 0);
         end
-    elseif typeof(x) == "duration" then
-        out = x.duration / (24 * 60 * 60 * 1000);
     else
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: real or duration expected.\n"), fname, 1));
+        // x is a duration
+        out = x.duration / (24 * 60 * 60 * 1000);
     end
 endfunction

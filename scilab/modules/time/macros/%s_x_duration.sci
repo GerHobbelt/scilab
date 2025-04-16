@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %s_x_duration(coef, dura)
-    if size(dura, "*") <> 1 && size(coef, "*") <> 1 && or(size(coef) <> size(dura)) then
-        error(msprintf(gettext("%s: Inconsistent row/column dimensions.\n"), "%s_x_duration"))
+    arguments
+        coef
+        dura {mustBeEqualDimsOrScalar(dura, coef)}
     end
 
     out = mlist(["duration", "duration", "format"], dura.duration .* coef, dura.format);

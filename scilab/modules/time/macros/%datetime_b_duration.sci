@@ -10,10 +10,13 @@
 // along with this program.
 
 function out = %datetime_b_duration(dt1, dura, dt2)
-    if size(dt1, "*") <> 1 || size(dura, "*") <> 1 || size(dt2, "*") <> 1 then
-        error(msprintf(_("%s: Wrong size for input arguments: scalars expected.\n"), "%datetime_b_duration"));
-    end
 
+    arguments
+        dt1 {mustBeScalar}
+        dura {mustBeScalar}
+        dt2 {mustBeScalar}
+    end
+    
     out = datetime([], "OutputFormat", dt1.format);
     if dt1 <= dt2 && dura > duration(0, 0, 0) then
         s = dt2 - dt1;

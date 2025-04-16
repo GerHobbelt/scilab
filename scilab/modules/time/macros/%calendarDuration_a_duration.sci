@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %calendarDuration_a_duration(cd1, dura)
-    if size(cd1, "*") <> 1 && size(dura, "*") <> 1 && or(size(cd1) <> size(dura)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_a_duration", 1, 2))
+    arguments
+        cd1
+        dura {mustBeEqualDimsOrScalar(dura, cd1)}
     end
 
     ref_size = [1 1];

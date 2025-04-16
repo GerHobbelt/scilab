@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %s_a_duration(a, b)
-    if size(a, "*") <> 1 && size(b, "*") <> 1 && or(size(a) <> size(b)) then
-        error(msprintf(gettext("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_a_duration", 1, 2))
+    arguments
+        a
+        b {mustBeEqualDimsOrScalar(b, a)}
     end
 
     out = hours(a) + b;

@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %datetime_4_c(dt1, str)
-    if size(dt1, "*") <> 1 && size(str, "*") <> 1 && or(size(dt1) <> size(str)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_4_c", 1, 2))
+    arguments
+        dt1
+        str {mustBeEqualDimsOrScalar(str, dt1)}
     end
 
     out = dt1 >= datetime(str);

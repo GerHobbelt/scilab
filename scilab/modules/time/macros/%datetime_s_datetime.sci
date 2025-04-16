@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %datetime_s_datetime(dt1, dt2)
-    if size(dt1, "*") <> 1 && size(dt2, "*") <> 1 && or(size(dt1) <> size(dt2)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_s_datetime", 1, 2))
+    arguments
+        dt1
+        dt2 {mustBeEqualDimsOrScalar(dt2, dt1)}
     end
     d = (dt1.date - dt2.date) * 86400;
     t = (dt1.time - dt2.time);

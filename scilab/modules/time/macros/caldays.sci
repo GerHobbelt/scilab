@@ -10,12 +10,8 @@
 // along with this program.
 
 function out = caldays(x)
-    fname = "caldays";
-    if nargin <> 1 then
-        error(msprintf(_("%s: Wrong number of input argument: %d expected.\n"), fname, 1));
-    end
-    if type(x) <> 1 then
-        error(msprintf(_("%s: Wrong type for input argument #%d: real expected.\n"), fname, 1));
+    arguments
+        x {mustBeA(x, "double"), mustBeReal}
     end
 
     out = calendarDuration(0, 0, x);

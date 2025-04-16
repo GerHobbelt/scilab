@@ -10,9 +10,10 @@
 // along with this program.
 
 function out = %duration_r_duration(dura1, dura2)
-    if size(dura1, "*") <> 1 && size(dura2, "*") <> 1 && or(size(dura1) <> size(dura2)) then
-        error(msprintf(gettext("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_r_duration", 1, 2))
+    arguments
+        dura1
+        dura2 {mustBeEqualDimsOrScalar(dura2, dura1)}
     end
-
+    
     out = dura1.duration ./ dura2.duration;
 endfunction

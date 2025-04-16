@@ -396,18 +396,19 @@ assert_checkerror("duration([12; 13], 20, [15 30], 300)", msg);
 assert_checkerror("duration([12; 13], [20 25], [15 30], 300)", msg);
 assert_checkerror("duration([12; 13], 20, 30, [300 400])", msg);
 
-msg = "%duration_a_duration: Wrong size for input argument #2: Must be of the same dimensions of #1 or scalar.";
+str = _("%s: Wrong size for input argument #%d: Must be of the same dimensions of #%d or scalar.\n");
+msg = msprintf(str, "%duration_a_duration", 2, 1);
 assert_checkerror("duration(1:3, 0, 0) + hours(1:2)", msg);
 assert_checkerror("hours(1:2) + duration(1:3, 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_a_s", 1, 2);
+msg = msprintf(str, "%duration_a_s", 2, 1);
 assert_checkerror("duration(1:3, 0, 0) + [1:2]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_a_duration", 1, 2);
+msg = msprintf(str, "%s_a_duration", 2, 1);
 assert_checkerror("[1:2] + duration(1:3, 0, 0)", msg);
 
-msg = "%duration_s_duration: Wrong size for input argument #2: Must be of the same dimensions of #1 or scalar.";
+msg = msprintf(str, "%duration_s_duration", 2, 1);
 assert_checkerror("duration(1:3, 0, 0) - hours(1:2)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_s_s", 1, 2);
+msg = msprintf(str, "%duration_s_s", 2, 1);
 assert_checkerror("duration(1:3, 0, 0) - [1:2]", msg);
 
 msg = msprintf(_("%s: Inconsistent row/column dimensions.\n"), "%duration_m_s");
@@ -415,37 +416,37 @@ assert_checkerror("duration(1:3, 0, 0) * [1:2]", msg);
 msg = msprintf(_("%s: Inconsistent row/column dimensions.\n"), "%s_m_duration");
 assert_checkerror("[1:2] * duration(1:3, 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_r_s", 1, 2);
+msg = msprintf(str, "%duration_r_s", 2, 1);
 assert_checkerror("duration(1:3, 0, 0)/[1:2]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_r_duration", 1, 2);
+msg = msprintf(str, "%duration_r_duration", 2, 1);
 assert_checkerror("duration(1:3, 0, 0)/duration(1:2, 0, 0)", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_2_s", 1, 2);
+msg = msprintf(str, "%duration_2_s", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) > [5 6]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_2_duration", 1, 2);
+msg = msprintf(str, "%duration_2_duration", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) > duration([5 6], 0, 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_2_duration", 1, 2);
+msg = msprintf(str, "%s_2_duration", 2, 1);
 assert_checkerror("[5 6] > duration([6 30 30; 4 15 0])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_4_s", 1, 2);
+msg = msprintf(str, "%duration_4_s", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) >= [5 6]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_4_duration", 1, 2);
+msg = msprintf(str, "%duration_4_duration", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) >= duration([5 6], 0, 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_4_duration", 1, 2);
+msg = msprintf(str, "%s_4_duration", 2, 1);
 assert_checkerror("[5 6] >= duration([6 30 30; 4 15 0])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_1_s", 1, 2);
+msg = msprintf(str, "%duration_1_s", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) < [7 5]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_1_duration", 1, 2);
+msg = msprintf(str, "%duration_1_duration", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) < duration([7 6], 0, 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_1_duration", 1, 2);
+msg = msprintf(str, "%s_1_duration", 2, 1);
 assert_checkerror("[5 6] < duration([6 30 30; 6 15 0])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_3_s", 1, 2);
+msg = msprintf(str, "%duration_3_s", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) <= [7 5]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_3_duration", 1, 2);
+msg = msprintf(str, "%duration_3_duration", 2, 1);
 assert_checkerror("duration([6 30 30; 4 15 0]) <= duration([7 6], 0, 0)", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_3_duration", 1, 2);
+msg = msprintf(str, "%s_3_duration", 2, 1);
 assert_checkerror("[5 6] <= duration([6 30 30; 6 15 0])", msg);
 
 msg = msprintf(_("%s: Wrong size for input arguments: scalars expected.\n"), "%duration_b_duration");

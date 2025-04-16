@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %duration_r_s(dura, coef)
-    if size(dura, "*") <> 1 && size(coef, "*") <> 1 && or(size(dura) <> size(coef)) then
-        error(msprintf(gettext("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%duration_r_s", 1, 2))
+    arguments
+        dura
+        coef {mustBeEqualDimsOrScalar(coef, dura)}
     end
 
     out = mlist(["duration", "duration", "format"], dura.duration ./ coef, dura.format);

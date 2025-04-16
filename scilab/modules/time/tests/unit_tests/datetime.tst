@@ -559,56 +559,64 @@ assert_checkerror("datetime(1, 2, 3, 4, 5, ""toto"", ""OutputFormat"", ""dd-MM-y
 msg = msprintf(_("%s: Wrong or missing ""InputFormat"" to be applied.\n"), "datetime");
 assert_checkerror("datetime(""toto"")", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_a_s", 1, 2);
+str = _("%s: Wrong size for input argument #%d: Must be of the same dimensions of #%d or scalar.\n");
+msg = msprintf(str, "%datetime_a_s", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) + [1; 2]", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) + [1 2]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%s_a_datetime", 1, 2);
+msg = msprintf(str, "%s_a_datetime", 2, 1);
 assert_checkerror("[1; 2] + datetime(2022, 10, [1 2])", msg);
 assert_checkerror("[1 2] + datetime(2022, 10, [1; 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_a_duration", 1, 2);
+msg = msprintf(str, "%datetime_a_duration", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) + hours([1; 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) + hours([1 2])", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%duration_a_datetime", 1, 2);
+msg = msprintf(str, "%duration_a_datetime", 2, 1);
 assert_checkerror("hours([1; 2]) + datetime(2022, 10, [1 2])", msg);
 assert_checkerror("hours([1 2]) + datetime(2022, 10, [1; 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_a_calendarDuration", 1, 2);
+msg = msprintf(str, "%datetime_a_calendarDuration", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) + caldays([1; 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) + caldays([1 2])", msg);
 assert_checkerror("caldays([1; 2]) + datetime(2022, 10, [1 2])", msg);
 assert_checkerror("caldays([1 2]) + datetime(2022, 10, [1; 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_s_datetime", 1, 2);
+msg = msprintf(str, "%datetime_s_datetime", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) - datetime(2022, 10, [1; 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) - datetime(2022, 10, [1 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) - datetime(2022, 10, [1 2])", msg);
 assert_checkerror("datetime(2022, 10, [1 2]) - datetime(2022, 10, [1; 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_s_s", 1, 2);
+msg = msprintf(str, "%datetime_s_s", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) - [1; 2]", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) - [1 2]", msg);
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%s_s_datetime", 1, 2);
+msg = msprintf(str, "%s_s_datetime", 2, 1);
 assert_checkerror("[1; 2] - datetime(2022, 10, [1 2])", msg);
 assert_checkerror("[1 2] - datetime(2022, 10, [1; 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_s_duration", 1, 2);
+msg = msprintf(str, "%datetime_s_duration", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) - hours([1; 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) - hours([1 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_s_calendarDuration", 1, 2);
+msg = msprintf(str, "%datetime_s_calendarDuration", 2, 1);
 assert_checkerror("datetime(2022, 10, [1 2]) -caldays([1; 2])", msg);
 assert_checkerror("datetime(2022, 10, [1; 2]) - caldays([1 2])", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments: scalars expected.\n"), "%datetime_b_duration");
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be a scalar.\n"), "%datetime_b_duration", 2);
 assert_checkerror("(datetime(2022, 10, 06):hours(5:10):datetime(2022, 10, 7))", msg);
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be a scalar.\n"), "%datetime_b_duration", 3);
 assert_checkerror("(datetime(2022, 10, 06):hours(5):datetime(2022, 10, 07:10))", msg);
 
-msg = msprintf(_("%s: Wrong size for input arguments: scalars expected.\n"), "%datetime_b_calendarDuration");
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be a scalar.\n"), "%datetime_b_calendarDuration", 2);
 assert_checkerror("(datetime(2022, 10, 06):caldays(5:10):datetime(2022, 10, 7))", msg);
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be a scalar.\n"), "%datetime_b_calendarDuration", 3);
 assert_checkerror("(datetime(2022, 10, 06):caldays(5):datetime(2022, 10, 07:10))", msg);
 
 msg = msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "ymd", 1);
 assert_checkerror("ymd()", msg);
-msg = msprintf(_("%s: Wrong type for input argument #%d: datetime expected.\n"), "ymd", 1);
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be in %s.\n"), "ymd", 1, sci2exp("datetime"));
 assert_checkerror("ymd(1)", msg);
+
+msg = msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "hms", 1);
+assert_checkerror("hms()", msg);
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be in %s.\n"), "hms", 1, sci2exp(["datetime", "duration"]));
+assert_checkerror("hms(1)", msg);

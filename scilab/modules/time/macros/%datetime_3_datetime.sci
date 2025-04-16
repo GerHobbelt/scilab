@@ -10,9 +10,9 @@
 // along with this program.
 
 function out = %datetime_3_datetime(dt1, dt2)
-    //check dimensions compatibilities
-    if size(dt1, "*") <> 1 && size(dt2, "*") <> 1 && or(size(dt1) <> size(dt2)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_3_datetime", 1, 2))
+    arguments
+        dt1
+        dt2 {mustBeEqualDimsOrScalar(dt2, dt1)}
     end
 
     date_bool1 = dt1.date > dt2.date; //exclution

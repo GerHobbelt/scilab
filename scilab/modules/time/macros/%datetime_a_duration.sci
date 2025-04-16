@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %datetime_a_duration(dt, dura)
-    if size(dt, "*") <> 1 && size(dura, "*") <> 1 && or(size(dt) <> size(dura)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: Same size expected.\n"), "%datetime_a_duration", 1, 2))
+    arguments
+        dt
+        dura {mustBeEqualDimsOrScalar(dura, dt)}
     end
 
     d = floor(dura.duration / 86400000);

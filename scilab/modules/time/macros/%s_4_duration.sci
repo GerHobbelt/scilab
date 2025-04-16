@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %s_4_duration(val, dura1)
-    if size(dura1, "*") <> 1 && size(val, "*") <> 1 && or(size(dura1) <> size(val)) then
-        error(msprintf(gettext("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%s_4_duration", 1, 2))
+    arguments
+        val
+        dura1 {mustBeEqualDimsOrScalar(dura1, val)}
     end
 
     out = hours(val) >= dura1;

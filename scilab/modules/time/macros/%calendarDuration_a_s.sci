@@ -10,8 +10,9 @@
 // along with this program.
 
 function out = %calendarDuration_a_s(cd1, val)
-    if size(cd1, "*") <> 1 && size(val, "*") <> 1 && or(size(cd1) <> size(val)) then
-        error(msprintf(_("%s: Wrong size for input arguments #%d and #%d: scalar or matrix of same size expected.\n"), "%calendarDuration_a_s", 1, 2))
+    arguments
+        cd1
+        val {mustBeEqualDimsOrScalar(val, cd1)}
     end
 
     out = cd1 + caldays(val);

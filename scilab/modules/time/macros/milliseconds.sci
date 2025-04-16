@@ -10,9 +10,8 @@
 // along with this program.
 
 function out = milliseconds(x)
-    fname = "milliseconds";
-    if nargin <> 1 then
-        error(msprintf(gettext("%s: Wrong number of input argument: %d expected.\n"), fname, 1));
+    arguments
+        x {mustBeA(x, ["double", "duration"]), mustBeReal}
     end
 
     if type(x) == 1 then
@@ -21,9 +20,8 @@ function out = milliseconds(x)
         else
             out = duration(0, 0, 0, x);
         end
-    elseif typeof(x) == "duration" then
-        out = x.duration;
     else
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: real or duration expected.\n"), fname, 1));
+        // x is duration
+        out = x.duration;
     end
 endfunction
