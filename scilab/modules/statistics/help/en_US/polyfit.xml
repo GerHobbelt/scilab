@@ -15,9 +15,9 @@
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>
-            p = polyfit(x, y, n)
-            [p, S] = polyfit(x, y, n)
-            [p, S, mu] = polyfit(x, y, n)
+            p = polyfit(x, y, n [,w])
+            [p, S] = polyfit(x, y, n [,w])
+            [p, S, mu] = polyfit(x, y, n [,w])
         </synopsis>
     </refsynopsisdiv>
     <refsection role="arguments">
@@ -45,6 +45,14 @@
                     <para>
                         an integer, n>=0. It is a degree of the fitting polynomial. Or a polynom. 
                         In the case, <literal>polyfit</literal> extracts the degree of polynom and returns a polynom containing the coefficients.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>w</term>
+                <listitem>
+                    <para>
+                        real vector/matrix, the weights to apply to each <literal>y</literal> value. Default value: ones(x).
                     </para>
                 </listitem>
             </varlistentry>
@@ -122,6 +130,7 @@
             <emphasis role="bold">[p, S, mu] = polyfit(x, y, n)</emphasis> returns a third output argument <literal>mu</literal> 
             containing [mean(x), stdev(x)]. <literal>x</literal> is centered at zero and scaled to have unit standard deviation.
         </para>
+        <para><emphasis role="bold">p = polyfit(x, y, n, w)</emphasis> specifies weights to apply to each <literal>y</literal> value.</para>
     </refsection>
     <refsection role="example">
         <title>Examples</title>
@@ -182,6 +191,30 @@
 
             ]]></programlisting>
         </para>
+        <para>
+            <emphasis role="bold">example 4 - p = polyfit(x, y, n, w)</emphasis>
+        </para>
+        <para>
+            <programlisting role="example"><![CDATA[
+                x = [1 1.5 2.1 3.3 4 6];
+                y = 39 *x - [22 28 12 20 -2 22];
+                w = [1 0.25 0.11 0.8 0.2 1]
+
+                p = polyfit(x,y,1)
+                pw = polyfit(x,y,1,w)
+
+                xx = 1:6;
+                yy = polyval(p, xx); // unweighted
+                yyw = polyval(pw, xx); // weighted
+
+                plot(x, y, ".")
+                plot(xx, yy, "k")
+                plot(xx, yyw, "r")
+
+                legend(["data"; "unweighted"; "weight"], "in_upper_left")
+
+            ]]></programlisting>
+        </para>
     </refsection>
     <refsection role="see also">
         <title>See also</title>
@@ -200,6 +233,10 @@
             <revision>
                 <revnumber>2025.0.0</revnumber>
                 <revremark>Introduction in Scilab.</revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revremark>Weights (<literal>w</literal>) for <literal>y</literal> values are now managed.</revremark>
             </revision>
         </revhistory>
     </refsection>

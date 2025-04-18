@@ -52,8 +52,15 @@ p = polyfit(x, y(x), %s^5);
 expected = -3 + %s +%s^5;
 assert_checkalmostequal(p, expected, [], 1e-11);
 
+// with weights
+y = [2 5 9 1 3 6];
+w = [0.1 0.3 1 0.04 0.6 0.02];
+p = polyfit(x, y, 2, w);
+expected = [-1.9660409483297, 8.8573392878916, -0.9296599543285];
+assert_checkalmostequal(p, expected, [], 1e-11);
+
 // checkerror
-msg = msprintf(_("%s: Wrong number of input argument(s): %d expected.\n"), "polyfit", 3);
+msg = msprintf(_("%s: Wrong number of input arguments: %d to %d expected.\n"), "polyfit", 3, 4);
 assert_checkerror("polyfit()", msg);
 
 msg = msprintf(_("%s: Wrong size of input arguments #%d and #%d: Must have the same size.\n"), "polyfit", 1, 2);
@@ -70,3 +77,9 @@ assert_checkerror("polyfit(1, 1, 0.5)", msg);
 
 msg = msprintf(_("%s: Wrong value for input argument #%d: Non negative numbers expected.\n"), "polyfit", 3);
 assert_checkerror("polyfit(1, 1, -2)", msg);
+
+msg = msprintf(_("%s: Wrong type for input argument #%d: Must be in ""double"".\n"), "polyfit", 4);
+assert_checkerror("polyfit(1, 1, 1, ""1"")", msg);
+
+msg = msprintf(_("%s: Wrong size of input arguments #%d and #%d: Must have the same size.\n"), "polyfit", 1, 4);
+assert_checkerror("polyfit(1, 1, 1, [])", msg);

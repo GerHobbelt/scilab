@@ -4,11 +4,12 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function [p, s, mu] = polyfit(x, y, n)
+function [p, s, mu] = polyfit(x, y, n, w)
     arguments
         x {mustBeA(x, "double")}
         y {mustBeA(y, "double")}
         n (1,1) {mustBeA(n, ["double", "polynomial"])}
+        w {mustBeA(w, "double")} = ones(x)
     end
 
     if size(x, "*") <> size(y, "*") then
@@ -29,7 +30,13 @@ function [p, s, mu] = polyfit(x, y, n)
         end
         n = degree(n);
     end
-    
+
+    hasWeight = nargin == 4;
+    if hasWeight then
+        if size(x, "*") <> size(w, "*") then
+            error(msprintf(_("%s: Wrong size of input arguments #%d and #%d: Must have the same size.\n"), "polyfit", 1, 4));
+        end
+    end    
 
     if nargout == 3 then
         mu = [mean(x), stdev(x)];
@@ -38,12 +45,18 @@ function [p, s, mu] = polyfit(x, y, n)
 
     x = x(:);
     y = y(:);
+    
     if (n >= length(x)) then
         warning(msprintf(_("%s: The solution is not unique because the argument #%d n >= number of data points.\n"), "polyfit", 3));
     end
     
     v = vander(x, n+1);
     v = v(:, $:-1:1);
+    if hasWeight then
+        w = w(:);
+        y = y .* w;
+        v = v .* (w .*. ones(1, n+1));
+    end
 
     [Q, R, P] = qr(v, "e");
     p = R \ (Q' * y);
