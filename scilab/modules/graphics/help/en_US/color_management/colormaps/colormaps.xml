@@ -61,7 +61,8 @@
                   "PiYG", "PRGn", "PuBu", "PuBuGn", "PuOr", "PuRd", "purples", ..
                   "RdBu", "RdGy", "RdPu", "RdYlBu", "RdYlGn", "reds", ..
                   "spectral", ...
-                  "YlGn", "YlGnBu", "YlOrBr", "YlOrRd"];
+                  "YlGn", "YlGnBu", "YlOrBr", "YlOrRd", ...
+                  "flag", "prism", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"];
 
             ncm = size(cm,"*");
             indices = [];

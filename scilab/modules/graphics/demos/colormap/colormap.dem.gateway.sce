@@ -9,6 +9,7 @@ subdemolist = [                                   ..
 _("Classical colormaps")      , "colormaps.dem.sce"    ; ..
 _("Additional colormaps")    , "additional_colormaps.dem.sce"       ; ..
 _("Interactive colormaps")    , "interactive_colormap.dem.sce"       ; ..
+_("Qualitative colormaps")    , "qualitative_colormaps.dem.sce"       ; ..
 _("Scilab colormaps")    , "scilab_colormaps.dem.sce"       ];
 
 subdemolist(:,2) = demopath + subdemolist(:,2);

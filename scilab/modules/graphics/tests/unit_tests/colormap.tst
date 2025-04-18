@@ -66,7 +66,10 @@ cmapFunctionsColorbrewer = [
 
 cmapFunctionsNewOnes = "turbo";
 
-cmapFunctions = [cmapFunctionsNewOnes, cmapFunctionsColorbrewer, cmapFunctionsMisc];
+cmapFunctionsQualitatives = ["flag", "prism", "Accent", "Dark2", "Paired", "Pastel1", "Pastel2", "Set1", "Set2", "Set3"];
+
+
+cmapFunctions = [cmapFunctionsNewOnes, cmapFunctionsColorbrewer, cmapFunctionsMisc, cmapFunctionsQualitatives];
 
 for cmapFun = cmapFunctions
 
@@ -80,7 +83,12 @@ for cmapFun = cmapFunctions
 
     // Use colormap function with a string
     execstr("cmap2 = colormap(""" + cmapFun + """);");
-    assert_checkequal(size(cmap2), [32, 3]);
+    if or(cmapFun == cmapFunctionsQualitatives) then
+        assert_checktrue(size(cmap2, 1) <= 12);
+        assert_checkequal(size(cmap2, 2), 3);
+    else
+        assert_checkequal(size(cmap2), [32, 3]);
+    end
 
     // Use colormap function with a function
     execstr("cmap3 = colormap(" + cmapFun + "(42));");
@@ -106,7 +114,12 @@ close(winsid());
 for cmapFun = cmapFunctions
     cmap = [];
     execstr("cmap = " + cmapFun + "();");
-    assert_checkequal(size(cmap), size(gdf().color_map));
+    if or(cmapFun == cmapFunctionsQualitatives) then
+        assert_checktrue(size(cmap2, 1) <= 12);
+        assert_checkequal(size(cmap2, 2), 3);
+    else
+        assert_checkequal(size(cmap), size(gdf().color_map));
+    end
 end
 // Existing figure then use the size of this figure colormap
 f = gcf();
@@ -114,5 +127,10 @@ colormap(f, jet(48));
 for cmapFun = cmapFunctions
     cmap = [];
     execstr("cmap = " + cmapFun + "();");
-    assert_checkequal(size(cmap), size(f.color_map));
+    if or(cmapFun == cmapFunctionsQualitatives) then
+        assert_checktrue(size(cmap2, 1) <= 12);
+        assert_checkequal(size(cmap2, 2), 3);
+    else
+        assert_checkequal(size(cmap), size(f.color_map));
+    end
 end

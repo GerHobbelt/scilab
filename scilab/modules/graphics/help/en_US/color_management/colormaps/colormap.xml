@@ -103,11 +103,9 @@ colormap(jet); // Equivalent to colormap("jet")
         <revhistory>
             <revision>
                 <revnumber>2024.1.0</revnumber>
-                <revdescription>
-                    <revremark>
-                        Function <literal>colormap</literal> introduced.
-                    </revremark>
-                </revdescription>
+                <revremark>
+                    Function <literal>colormap</literal> introduced.
+                </revremark>
             </revision>
         </revhistory>
     </refsection>
