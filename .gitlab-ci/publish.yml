@@ -113,3 +113,4 @@ archive_test_results:
       - "${SCI_VERSION_STRING}/*/*/*.err"
       - "${SCI_VERSION_STRING}/*/*/*.dia.tmp"
       - "${SCI_VERSION_STRING}/*/*/*.dia"
+  

@@ -111,3 +111,17 @@ docker_display_env:
   tags: [x86_64-linux-gnu, docker, scilab, build]
   script:
     - env
+
+# on problem, the user can kill all running Scilab manually
+# /!\ This will also kill other pipeline jobs, use with care.
+windows_cleanup_kill_all:
+  stage: docker_setup
+  tags: [x64_windows, shell, scilab]
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - echo "/!\ This will also kill other pipeline jobs, use with care."
+    - taskkill.exe /f /im Scilex.exe; taskkill.exe /f /im WScilex-cli.exe; taskkill.exe /f /im WScilex.exe; echo done
+    - taskkill.exe /f /im cl.exe; echo done
+    - taskkill.exe /f /im javac.exe; echo done
+  when: manual
