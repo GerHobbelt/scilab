@@ -136,6 +136,7 @@ public class JFXScilabFileChooser implements SimpleFileChooser {
                         filter = getFileFilterFromExtension(extension);
                         if (filter != null) {
                             fileChooser.setSelectedExtensionFilter(filter);
+                            fileChooser.setInitialFileName(fileName.substring(0,index));
                         }
                     }
                     if (filter == null) {
