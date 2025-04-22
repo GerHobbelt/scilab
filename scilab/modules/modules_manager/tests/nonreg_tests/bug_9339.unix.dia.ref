@@ -50,7 +50,6 @@ Building the manual file [javaHelp] in TMPDIR/toolbox_skeleton/help/en_US.
 Generate image ./c_multiplybypi_en_US_1.png from Scilab code from file c_multiplybypi.xml
 Generate image ./c_sub_1.png from Scilab code from file c_sub.xml
 Generate image ./c_sub_en_US_2.png from Scilab code from file c_sub.xml
-Building the manual file [inline] in TMPDIR/toolbox_skeleton/inline/en_US.
 Start Toolbox Skeleton
 	Load macros
 	Load gateways
@@ -60,7 +59,6 @@ Start Toolbox Skeleton
 Building the manual file [javaHelp] in TMPDIR/toolbox_skeleton/help/fr_FR.
 Generate image ./c_sub_1.png from Scilab code from file c_sub.xml
 Generate image ./c_sub_fr_FR_2.png from Scilab code from file c_sub.xml
-Building the manual file [inline] in TMPDIR/toolbox_skeleton/inline/fr_FR.
 Generating loader.sce...
 Generating unloader.sce...
 Generating cleaner.sce...
