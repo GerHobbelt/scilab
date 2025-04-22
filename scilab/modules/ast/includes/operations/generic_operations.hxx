@@ -67,10 +67,10 @@ types::InternalType* GenericDotPower(types::InternalType *_pLeftOperand, types::
 types::InternalType* GenericComparisonEqual(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand);
 
 // <
-types::InternalType *GenericLess(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand, const std::wstring& op = L"<");
+types::InternalType *GenericLess(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand);
 
 // <=
-types::InternalType *GenericLessEqual(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand, const std::wstring& op = L"<=");
+types::InternalType *GenericLessEqual(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand);
 
 // >
 types::InternalType *GenericGreater(types::InternalType *_pLeftOperand, types::InternalType *_pRightOperand);

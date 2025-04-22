@@ -366,9 +366,11 @@ endfunction
 
 foo(0);
 foo(10);
+foo(int64(10));
 
 assert_checkerror("foo(-1)", [], 999);
 assert_checkerror("foo(11)", [], 999);
+assert_checkerror("foo(int64(11))", [], 999);
 clear foo;
 
 function foo(a, b)

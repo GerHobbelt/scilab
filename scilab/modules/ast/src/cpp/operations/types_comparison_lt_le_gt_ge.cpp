@@ -28,7 +28,7 @@ extern "C"
 
 using namespace types;
 
-InternalType *GenericLess(InternalType *_pLeftOperand, InternalType *_pRightOperand, const std::wstring& op)
+InternalType *GenericCompLess(InternalType *_pLeftOperand, InternalType *_pRightOperand, const std::wstring& op)
 {
     InternalType *pResult = NULL;
 
@@ -230,7 +230,7 @@ int SparseLessDouble(Sparse* _pSparse, Double* _pDouble, SparseBool** _pOut)
 }
 
 
-InternalType *GenericLessEqual(InternalType *_pLeftOperand, InternalType *_pRightOperand, const std::wstring& op)
+InternalType *GenericCompLessEqual(InternalType *_pLeftOperand, InternalType *_pRightOperand, const std::wstring& op)
 {
     InternalType *pResult = NULL;
 
@@ -443,12 +443,22 @@ int SparseLessEqualDouble(Sparse* _pSparse, Double* _pDouble, SparseBool** _pOut
 
 InternalType *GenericGreater(InternalType *_pLeftOperand, InternalType *_pRightOperand)
 {
-    return GenericLess(_pRightOperand, _pLeftOperand, L">");
+    return GenericCompLess(_pRightOperand, _pLeftOperand, L">");
 }
 
 InternalType *GenericGreaterEqual(InternalType *_pLeftOperand, InternalType *_pRightOperand)
 {
-    return GenericLessEqual(_pRightOperand, _pLeftOperand, L">=");
+    return GenericCompLessEqual(_pRightOperand, _pLeftOperand, L">=");
+}
+
+InternalType *GenericLess(InternalType *_pLeftOperand, InternalType *_pRightOperand)
+{
+    return GenericCompLess(_pLeftOperand, _pRightOperand, L"<");
+}
+
+InternalType *GenericLessEqual(InternalType *_pLeftOperand, InternalType *_pRightOperand)
+{
+    return GenericCompLessEqual(_pLeftOperand, _pRightOperand, L"<=");
 }
 
 template <class T>

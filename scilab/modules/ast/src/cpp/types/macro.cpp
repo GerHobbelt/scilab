@@ -519,7 +519,7 @@ bool mustBePositive(types::typed_list& x)
 bool mustBeNonpositive(types::typed_list& x)
 {
     types::Double* pDbl = new types::Double(0);
-    types::InternalType* pComp = callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], pDbl);
+    types::InternalType* pComp = callComparison(GenericLessEqual, ast::OpExp::Oper::le, x[0], pDbl);
     pDbl->killMe();
     return andBool(pComp);
 }
@@ -535,7 +535,7 @@ bool mustBeNonnegative(types::typed_list& x)
 bool mustBeNegative(types::typed_list& x)
 {
     types::Double* pDbl = new types::Double(0);
-    types::InternalType* pComp = callComparison(GenericLess, ast::OpExp::Oper::le, L"<", x[0], pDbl);
+    types::InternalType* pComp = callComparison(GenericLess, ast::OpExp::Oper::le, x[0], pDbl);
     pDbl->killMe();
     return andBool(pComp);
 }
@@ -721,12 +721,12 @@ bool mustBeGreaterThanOrEqual(types::typed_list& x)
 
 bool mustBeLessThan(types::typed_list& x)
 {
-    return andBool(callComparison(GenericLess, ast::OpExp::Oper::lt, L"<", x[0], x[1]));
+    return andBool(callComparison(GenericLess, ast::OpExp::Oper::lt, x[0], x[1]));
 }
 
 bool mustBeLessThanOrEqual(types::typed_list& x)
 {
-    return andBool(callComparison(GenericLessEqual, ast::OpExp::Oper::le, L"<=", x[0], x[1]));
+    return andBool(callComparison(GenericLessEqual, ast::OpExp::Oper::le, x[0], x[1]));
 }
 
 bool mustBeA(types::typed_list& x)
@@ -822,26 +822,29 @@ bool mustBeSquare(types::typed_list& x)
 
 bool mustBeInRange(types::typed_list& x)
 {
-    #define checkFunc(name) [](types::InternalType* x1, types::InternalType* x2) { return name(x1, x2); }
+    #define checkFunc(name, op) [](types::InternalType* x1, types::InternalType* x2) { \
+        return callComparison(name, op, x1, x2); \
+    }
+
     typedef std::function<types::InternalType*(types::InternalType*, types::InternalType*)> checker;
-    checker checkLeft = checkFunc(GenericGreaterEqual);
-    checker checkRight = checkFunc(GenericLessEqual);
+    checker checkLeft = checkFunc(GenericGreaterEqual, ast::OpExp::Oper::ge);
+    checker checkRight = checkFunc(GenericLessEqual, ast::OpExp::Oper::le);
 
     if (x.size() == 4)
     {
         std::wstring bounds = x[3]->getAs<types::String>()->get()[0];
         if (bounds == L"exclusive")
         {
-            checkLeft = checkFunc(GenericGreater);
-            checkRight = checkFunc(GenericLess);
+            checkLeft = checkFunc(GenericGreater, ast::OpExp::Oper::gt);
+            checkRight = checkFunc(GenericLess, ast::OpExp::Oper::lt);
         }
         else if (bounds == L"exclude-lower")
         {
-            checkLeft = checkFunc(GenericGreater);
+            checkLeft = checkFunc(GenericGreater, ast::OpExp::Oper::gt);
         }
         else if (bounds == L"exclude-upper")
         {
-            checkRight = checkFunc(GenericLess);
+            checkRight = checkFunc(GenericLess, ast::OpExp::Oper::lt);
         }
     }
 
