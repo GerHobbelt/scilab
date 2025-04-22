@@ -75,8 +75,8 @@ function varargout=legend(varargin)
     if type(varargin(k0))==9 then //a handle that could be an Axes, Agreg. or Polyline handle.
         tmpH=varargin(k0)
         if tmpH.type=="Axes" | tmpH.type=="Compound" then
-            H = getvalidchildren(A)($:-1:1);
-        else
+            H = getvalidchildren(tmpH)($:-1:1);
+        elseif tmpH.type=="Polyline"
             H = tmpH;
         end
         k0 = k0+1;
