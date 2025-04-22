@@ -201,63 +201,63 @@
 			in a block diagram to another.
         </para>
     </refsection>
-    <refsection id="Blocks_Signalrouting_pal" role="see also">
+    <refsection xml:id="Blocks_Signalrouting_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="DEMUX">DEMUX</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="EXTRACTOR">EXTRACTOR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="FROM">FROM</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="FROMMO">FROMMO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="GOTO">GOTO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="GOTOMO">GOTOMO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLKFROM">CLKFROM</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLKGOTO">CLKGOTO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="GotoTagVisibility">GotoTagVisibility</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="GotoTagVisibilityMO">GotoTagVisibilityMO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="ISELECT_m">ISELECT_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MUX">MUX</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="M_SWITCH">M_SWITCH</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="NRMSOM_f">NRMSOM_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="RELAY_f">RELAY_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SELECT_m">SELECT_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SWITCH2_m">SWITCH2_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SWITCH_f">SWITCH_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

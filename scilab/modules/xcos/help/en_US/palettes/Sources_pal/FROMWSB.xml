@@ -296,12 +296,12 @@
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_FROMWSB" role="see also">
+    <refsection xml:id="Seealso_FROMWSB" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="TOWS_c">TOWS_c</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

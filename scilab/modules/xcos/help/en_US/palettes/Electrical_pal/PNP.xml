@@ -436,12 +436,12 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_PNP" role="see also">
+    <refsection xml:id="Seealso_PNP" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="NPN">NPN</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

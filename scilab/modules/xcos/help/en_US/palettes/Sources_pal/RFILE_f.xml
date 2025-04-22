@@ -342,15 +342,15 @@ box "Field #N";
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="Seealso_RFILE_f">
+    <refsection role="see also" xml:id="Seealso_RFILE_f">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="READC_f">READC_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="WRITEC_f">WRITEC_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

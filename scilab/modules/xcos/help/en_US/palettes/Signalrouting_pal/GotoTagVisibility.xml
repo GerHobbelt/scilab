@@ -153,15 +153,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_GotoTagVisibility" role="see also">
+    <refsection xml:id="Seealso_GotoTagVisibility" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="GOTO">GOTO</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="FROM">FROM</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

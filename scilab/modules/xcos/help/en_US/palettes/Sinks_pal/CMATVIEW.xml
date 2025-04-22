@@ -216,7 +216,7 @@
         <para/>
     </refsection>
 
-    <refsection id="Seealso_CMATVIEW" role="see also">
+    <refsection xml:id="Seealso_CMATVIEW" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

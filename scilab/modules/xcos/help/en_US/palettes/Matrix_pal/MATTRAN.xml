@@ -233,15 +233,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATTRAN" role="see also">
+    <refsection xml:id="Seealso_MATTRAN" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATZCONJ">MATZCONJ</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="quote">quote</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

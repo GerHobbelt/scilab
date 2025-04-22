@@ -592,7 +592,7 @@ axes = cutaxes(x0, "y",intervals, "ticksmode","alt", "widths","isoscaled");
         </para>
     </refsect3>
     </refsection>
-    <refsection role="see also" id="cutaxes_seealso">
+    <refsection role="see also" xml:id="cutaxes_seealso">
         <title>See Also</title>
         <simplelist type="inline">
             <member>
@@ -608,7 +608,6 @@ axes = cutaxes(x0, "y",intervals, "ticksmode","alt", "widths","isoscaled");
                 <link linkend="xsetech">xsetech</link>
             </member>
         </simplelist>
-        <para/>
     </refsection>
     <refsection role="history" id="cutaxes_history">
         <title>History</title>

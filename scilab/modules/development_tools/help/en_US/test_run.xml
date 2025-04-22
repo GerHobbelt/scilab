@@ -608,9 +608,7 @@ test_run string *ascii*
                 <link linkend="slint">slint</link>
             </member>
             <member>
-                <ulink url="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">
-                  List of MS Windows exit codes
-                </ulink>
+                <link xlink:href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">List of MS Windows exit codes</link>
             </member>
         </simplelist>
     </refsection>

@@ -209,12 +209,12 @@ xcos_simulate(scs_m, 4);
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_INTRPLBLK_f">
+    <refsection role="see also" xml:id="Seealso_INTRPLBLK_f">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="INTRP2BLK_f">INTRP2BLK_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -161,7 +161,7 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_SUM_f" role="see also">
+    <refsection xml:id="Seealso_SUM_f" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

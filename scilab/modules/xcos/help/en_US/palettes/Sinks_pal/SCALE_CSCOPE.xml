@@ -303,19 +303,15 @@
             xcos_simulate(scs_m, 4);
         ]]></scilab:image>
     </refsection>
-    <refsection id="Seealso_SCALE_CSCOPE">
+    <refsection xml:id="Seealso_SCALE_CSCOPE" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
-                <para>
-                    <link linkend="CSCOPE">CSCOPE - Single Display Scope</link>
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-                    <link linkend="CMSCOPE">CMSCOPE - Multi display scope</link>
-                </para>
-            </listitem>
-        </itemizedlist>
+        <simplelist type="inline">
+            <member>
+                <link linkend="CSCOPE">CSCOPE - Single Display Scope</link>
+            </member>
+            <member>
+                <link linkend="CMSCOPE">CMSCOPE - Multi display scope</link>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

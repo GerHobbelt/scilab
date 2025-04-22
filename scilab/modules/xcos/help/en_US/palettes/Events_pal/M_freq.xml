@@ -247,12 +247,12 @@ When t=2  , we loop back to 0.
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_M_freq" role="see also">
+    <refsection xml:id="Seealso_M_freq" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MFCLCK_f">MFCLCK_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

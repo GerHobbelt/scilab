@@ -50,12 +50,12 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="SeeAlso_importXcosDiagram">
-        <title role="see also">See also</title>
-        <itemizedlist>
-            <listitem>
+    <refsection xml:id="SeeAlso_importXcosDiagram" role="see also">
+        <title>See also</title>
+        <simplelist type="inline">
+            <member>
                 <link linkend="xcosDiagramToScilab">xcosDiagramToScilab</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -140,42 +140,42 @@
             as well as common gates encountered in digital circuits.
         </para>
     </refsection>
-    <refsection id="Blocks_Integer_pal" role="see also">
+    <refsection xml:id="Blocks_Integer_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BITCLEAR">BITCLEAR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BITSET">BITSET</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CONVERT">CONVERT</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DFLIPFLOP">DFLIPFLOP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DLATCH">DLATCH</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="EXTRACTBITS">EXTRACTBITS</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INTMUL">INTMUL</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="JKFLIPFLOP">JKFLIPFLOP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="LOGIC">LOGIC</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SHIFT">SHIFT </link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SRFLIPFLOP">SRFLIPFLOP</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

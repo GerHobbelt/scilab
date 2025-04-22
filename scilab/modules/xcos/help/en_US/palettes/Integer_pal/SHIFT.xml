@@ -500,15 +500,15 @@ spline at Last.s down 0.25 then left then left 1.125 then left then up 0.375 the
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_SHIFT">
+    <refsection role="see also" xml:id="Seealso_SHIFT">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BITSET">BITSET</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BITCLEAR">BITCLEAR</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

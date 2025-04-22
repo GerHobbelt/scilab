@@ -85,24 +85,24 @@
             The Demonstrations blocks palette contains blocks used in some Xcos demonstration diagrams.
         </para>
     </refsection>
-    <refsection id="Blocks_Demonstrationsblocks_pal" role="see also">
+    <refsection xml:id="Blocks_Demonstrationsblocks_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="AUTOMAT">AUTOMAT</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BOUNCE">BOUNCE</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BOUNCEXY">BOUNCEXY</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BPLATFORM">BPLATFORM</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PDE">PDE</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

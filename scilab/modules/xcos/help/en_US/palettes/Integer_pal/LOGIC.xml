@@ -332,21 +332,21 @@ xcos_simulate(scs_m, 4);
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_LOGIC">
+    <refsection role="see also" xml:id="Seealso_LOGIC">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BITSET">BITSET</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BITCLEAR">BITCLEAR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="LOGICAL_OP">LOGICAL_OP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="EXTRACTBITS">EXTRACTBITS</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

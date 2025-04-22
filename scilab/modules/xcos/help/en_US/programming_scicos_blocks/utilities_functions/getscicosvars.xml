@@ -206,7 +206,7 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="SeeAlso_getscicosvars" role="see also">
+    <refsection xml:id="SeeAlso_getscicosvars" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

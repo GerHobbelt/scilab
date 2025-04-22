@@ -274,9 +274,7 @@ legend(gca(), msprintf("m =%4.1f\n",m'),"out_upper_right");
                 <link linkend="percentk">%k</link>
             </member>
             <member>
-                <ulink url="https://researchspace.auckland.ac.nz/bitstream/handle/2292/5042/390.pdf">
-                Tee, Garry J.</ulink>: Continuous branches of inverses of the 12 Jacobi elliptic
-                functions for real argument”. 1997
+                <link xlink:href="https://researchspace.auckland.ac.nz/bitstream/handle/2292/5042/390.pdf">Tee, Garry J.: "Continuous branches of inverses of the 12 Jacobi elliptic functions for real argument” (1997).</link>
             </member>
 
 

@@ -55,15 +55,15 @@
         <para>In the Implicit palette, you can find blocks used to model implicit systems.</para>
     </refsection>
 
-    <refsection id="Blocks_Implicit_pal" role="see also">
+    <refsection xml:id="Blocks_Implicit_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CONSTRAINT_c">CONSTRAINT_c</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DIFF_f">DIFF_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

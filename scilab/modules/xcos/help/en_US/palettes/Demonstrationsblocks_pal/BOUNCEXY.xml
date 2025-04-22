@@ -224,7 +224,7 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="See_also_BOUNCEXY">
+    <refsection role="see also" xml:id="See_also_BOUNCEXY">
         <title>See also</title>
         <simplelist type="inline">
             <member>

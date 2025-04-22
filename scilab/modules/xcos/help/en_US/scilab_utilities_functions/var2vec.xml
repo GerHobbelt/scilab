@@ -99,9 +99,9 @@ b = var2vec(a)
    2.
 ]]></screen>
     </refsection>
-    <refsection id="SeeAlso_var2vec" role="see also">
+    <refsection xml:id="SeeAlso_var2vec" role="see also">
         <title>See also</title>
-        <simplelist>
+        <simplelist type="inline">
           <member>
             <link linkend="vec2var">vec2var</link>
           </member>

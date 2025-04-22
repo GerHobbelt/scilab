@@ -192,12 +192,12 @@ xcos_simulate(scs_m, 4);
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="Seealso_CLOCK_c">
+    <refsection role="see also" xml:id="Seealso_CLOCK_c">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="SampleCLK">SampleCLK</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

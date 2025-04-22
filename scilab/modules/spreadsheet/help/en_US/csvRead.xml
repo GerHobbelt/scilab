@@ -433,7 +433,7 @@ header = 2;
                 <link linkend="fscanfMat">fscanfMat</link>
             </member>
             <member>
-                <ulink url="https://www.php.net/manual/en/reference.pcre.pattern.syntax.php">Regular expressions: Syntax</ulink>
+                <link xlink:href="https://www.php.net/manual/en/reference.pcre.pattern.syntax.php">Regular expressions: Syntax</link>
             </member>
         </simplelist>
     </refsection>

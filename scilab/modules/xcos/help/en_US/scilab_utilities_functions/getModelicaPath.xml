@@ -83,9 +83,9 @@
 
         </programlisting>
     </refsection>
-    <refsection id="SeeAlso_getModelicaPath" role="see also">
+    <refsection xml:id="SeeAlso_getModelicaPath" role="see also">
         <title>See also</title>
-        <simplelist>
+        <simplelist type="inline">
           <member>
               <link linkend="MODELICA_USER_LIBS">MODELICA_USER_LIBS</link>
           </member>

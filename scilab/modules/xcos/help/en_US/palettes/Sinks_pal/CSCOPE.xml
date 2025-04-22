@@ -273,7 +273,7 @@
         <para/>
     </refsection>
 
-    <refsection id="Seealso_CSCOPE" role="see also">
+    <refsection xml:id="Seealso_CSCOPE" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

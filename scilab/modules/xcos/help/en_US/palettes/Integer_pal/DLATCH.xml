@@ -262,18 +262,18 @@ xcos_simulate(scs_m, 4);
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_DLATCH">
+    <refsection role="see also" xml:id="Seealso_DLATCH">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="DFLIPFLOP">DFLIPFLOP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SRFLIPFLOP">SRFLIPFLOP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="JKFLIPFLOP">JKFLIPFLOP</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

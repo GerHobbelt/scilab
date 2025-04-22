@@ -203,15 +203,15 @@ y = [1 0 0 0 0 ; 0 1 0 0 0 ; 0 0 1 0 0 ; 0 0 0 1 0 ; 0 0 0 0 1]
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_MATDIAG" role="see also">
+    <refsection xml:id="Seealso_MATDIAG" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="EXTTRI">EXTTRI</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="diag">diag</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

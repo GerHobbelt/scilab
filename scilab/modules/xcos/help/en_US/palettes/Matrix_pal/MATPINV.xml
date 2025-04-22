@@ -197,18 +197,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATPINV" role="see also">
+    <refsection xml:id="Seealso_MATPINV" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATINV">MATINV</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MATSING">MATSING</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="pinv">pinv</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

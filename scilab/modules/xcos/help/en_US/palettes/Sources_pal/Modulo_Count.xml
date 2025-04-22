@@ -221,18 +221,18 @@ xcos_simulate(scs_m, 4);
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_Modulo_Count" role="see also">
+    <refsection xml:id="Seealso_Modulo_Count" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="GENSQR_f">GENSQR_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SAWTOOTH_f">SAWTOOTH_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="Sigbuilder">Sigbuilder</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -97,7 +97,7 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="SeeAlso_scicosim" role="see also">
+    <refsection xml:id="SeeAlso_scicosim" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

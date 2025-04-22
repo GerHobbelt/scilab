@@ -239,15 +239,15 @@ y2 = [0.557 0.080 0.349 ; 0.330 -0.922 0.770 ; -0.762 0.379 0.533]
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATEIG" role="see also">
+    <refsection xml:id="Seealso_MATEIG" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATSING">MATSING</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="spec">spec</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -152,12 +152,12 @@
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_CURV_f" role="see also">
+    <refsection xml:id="Seealso_CURV_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="Sigbuilder">Sigbuilder</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

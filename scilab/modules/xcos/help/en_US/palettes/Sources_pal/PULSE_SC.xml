@@ -204,21 +204,21 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="Seealso_PULSE_SC">
+    <refsection role="see also" xml:id="Seealso_PULSE_SC">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="STEP_FUNCTION">STEP_FUNCTION</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="RAMP">RAMP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CURV_f">CURV_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="Sigbuilder">Sigbuilder</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

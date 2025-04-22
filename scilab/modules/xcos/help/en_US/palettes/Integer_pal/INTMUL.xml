@@ -332,15 +332,15 @@
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_INTMUL">
+    <refsection role="see also" xml:id="Seealso_INTMUL">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATMUL">MATMUL</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="EXTRACTBITS">EXTRACTBITS</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

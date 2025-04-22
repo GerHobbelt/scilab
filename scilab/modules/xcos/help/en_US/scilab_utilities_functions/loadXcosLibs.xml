@@ -36,7 +36,7 @@ exists("SUM_f")
 typeof(SUM_f)
 ]]></programlisting>
     </refsection>
-    <refsection id="SeeAlso_loadXcosLibs" role="see also">
+    <refsection xml:id="SeeAlso_loadXcosLibs" role="see also">
         <title>See Also</title>
         <simplelist type="inline">
             <member>

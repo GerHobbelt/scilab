@@ -224,7 +224,7 @@ C:\Path\to\another\working\dir2\clf.sci
                 <link linkend="xmlXPath">xmlXPath</link>
             </member>
             <member>
-                <ulink url="https://www.w3.org/TR/1999/REC-xpath-19991116/">XML path language</ulink>
+                <link xlink:href="https://www.w3.org/TR/1999/REC-xpath-19991116/">XML path language</link>
             </member>
             <member>
                 <link linkend="xmlRead">xmlRead</link>

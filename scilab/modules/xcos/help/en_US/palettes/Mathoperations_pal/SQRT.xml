@@ -183,7 +183,7 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_SQRT" role="see also">
+    <refsection xml:id="Seealso_SQRT" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

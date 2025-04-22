@@ -273,18 +273,18 @@
     </mediaobject>
   </refsection>
 -->
-    <refsection role="see also" id="Seealso_DFLIPFLOP">
+    <refsection role="see also" xml:id="Seealso_DFLIPFLOP">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="DLATCH">DLATCH</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SRFLIPFLOP">SRFLIPFLOP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="JKFLIPFLOP">JKFLIPFLOP</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

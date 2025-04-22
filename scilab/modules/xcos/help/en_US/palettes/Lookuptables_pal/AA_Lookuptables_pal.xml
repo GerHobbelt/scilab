@@ -64,18 +64,18 @@
             The lookup tables palette includes blocks that compute output approximations from inputs.
         </para>
     </refsection>
-    <refsection id="Blocks_Lookuptables_pal" role="see also">
+    <refsection xml:id="Blocks_Lookuptables_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="INTRP2BLK_f">INTRP2BLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INTRPLBLK_f">INTRPLBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="LOOKUP_f">LOOKUP_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

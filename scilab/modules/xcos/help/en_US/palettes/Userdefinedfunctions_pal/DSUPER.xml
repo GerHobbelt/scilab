@@ -127,12 +127,12 @@
         </itemizedlist>
     </refsection>
 
-    <refsection id="SeeAlso_DSUPER" role="see also">
+    <refsection xml:id="SeeAlso_DSUPER" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="SUPER_f">Super block</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

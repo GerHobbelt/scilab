@@ -74,7 +74,8 @@
             <member>
                 <link linkend="mex_convert_data"></link>
             </member>
-            <member><ulink url="https://www.mathworks.com/help/matlab/cc-matrix-library-api.html">Matlab C Matrix Library API</ulink>
+            <member>
+                <link xlink:href="https://www.mathworks.com/help/matlab/cc-matrix-library-api.html">Matlab C Matrix Library API</link>
             </member>
         </simplelist>
     </refsection>

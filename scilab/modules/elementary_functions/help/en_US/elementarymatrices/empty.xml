@@ -533,7 +533,7 @@ A([],:)
    0.   1.   Nan   Nan   Nan   Nan
 ]]></screen>
     </refsection>
-    <refsection role="see also" id="empty_seealso">
+    <refsection role="see also" xml:id="empty_seealso">
         <title>See also</title>
         <simplelist type="inline">
             <member>

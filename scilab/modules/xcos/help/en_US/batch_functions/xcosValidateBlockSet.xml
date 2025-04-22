@@ -47,7 +47,7 @@
       ]]></programlisting>
         </para>
     </refsection>
-    <refsection id="SeeAlso_xcosValidateBlockSet" role="see also">
+    <refsection xml:id="SeeAlso_xcosValidateBlockSet" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

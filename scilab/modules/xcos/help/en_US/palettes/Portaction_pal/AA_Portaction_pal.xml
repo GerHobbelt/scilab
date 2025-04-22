@@ -99,30 +99,30 @@
         <title>Description</title>
         <para>The Port &amp; Subsystem palette includes blocks for creating subsystems.</para>
     </refsection>
-    <refsection id="Blocks_Portaction_pal" role="see also">
+    <refsection xml:id="Blocks_Portaction_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CLKINV_f">CLKINV_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLKOUTV_f">CLKOUTV_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="IN_f">IN_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INIMPL_f">INIMPL_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="OUTIMPL_f">OUTIMPL_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="OUT_f">OUT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SUPER_f">SUPER_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

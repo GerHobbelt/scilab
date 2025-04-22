@@ -93,27 +93,27 @@
         </para>
     </refsection>
 
-    <refsection id="Blocks_ThermoHydraulics_pal" role="see also">
+    <refsection xml:id="Blocks_ThermoHydraulics_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="Bache">Bache</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PerteDP">PerteDP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PuitsP">PuitsP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SourceP">SourceP</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="VanneReglante">VanneReglante</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="Flowmeter">Flowmeter</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

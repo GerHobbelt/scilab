@@ -244,7 +244,7 @@
             The blocks of that palette do not have regular output ports.
         </para>
     </refsection>
-    <refsection id="Blocks_Sinks_pal" role="see also">
+    <refsection xml:id="Blocks_Sinks_pal" role="see also">
         <title>Blocks</title>
         <simplelist type="inline">
             <member>

@@ -253,21 +253,21 @@ B = [1 0 0 ; 4 5 0 ; 7 8 9 ; 10 11 12]
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_EXTTRI" role="see also">
+    <refsection xml:id="Seealso_EXTTRI" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="EXTRACT">EXTRACT</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="triu">triu</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="tril">tril</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="diag">diag</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

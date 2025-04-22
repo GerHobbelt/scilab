@@ -67,7 +67,7 @@
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                <link type="scilab" linkend="scilab.help/deff">deff</link>
+                <link linkend="deff">deff</link>
             </member>
         </simplelist>
     </refsection>
@@ -83,4 +83,3 @@
         </revhistory>
     </refsection>
 </refentry>
-

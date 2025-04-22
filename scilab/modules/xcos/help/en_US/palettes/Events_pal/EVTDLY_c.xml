@@ -35,7 +35,8 @@
             <imageobject>
                 <imagedata fileref="../../../../images/palettes/EVTDLY_c.png" align="center"/>
             </imageobject>
-        </inlinemediaobject>
+        </inlinemediaobject>
+
     </refsection>
     <refsection id="Contents_EVTDLY_c">
         <title>Contents</title>
@@ -196,12 +197,12 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_EVTDLY_c" role="see also">
+    <refsection xml:id="Seealso_EVTDLY_c" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CLOCK_c">CLOCK_c</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -156,7 +156,7 @@ class BasicExample {
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                Browse <link type="remote" linkend="javasci/javadoc/index.html">the documentation of Javasci v2.</link>
+                <link xlink:href="javasci/javadoc/index.html">Documentation of Javasci v2</link>
             </member>
             <member>
                 <link linkend="javasci">Javasci</link>

@@ -92,7 +92,7 @@
             are predefined m2sci constants.
         </para>
     </refsection>
-    <refsection role="see also">
+    <refsection>
         <title>Examples</title>
         <programlisting role="no-scilab-exec">
 Type(Double, Complex)

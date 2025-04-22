@@ -179,7 +179,7 @@
 		<para/>
     </refsection>
 
-    <refsection id="Seealso_ENDBLK" role="see also">
+    <refsection xml:id="Seealso_ENDBLK" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

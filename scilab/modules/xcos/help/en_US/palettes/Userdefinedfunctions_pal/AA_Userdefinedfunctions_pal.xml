@@ -120,36 +120,36 @@
             input.
         </para>
     </refsection>
-    <refsection id="Blocks_Userdefinedfunctions_pal" role="see also">
+    <refsection xml:id="Blocks_Userdefinedfunctions_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="c_block">c_block</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CBLOCK">CBLOCK</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="fortran_block">fortran_block</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="generic_block3">generic_block3</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MBLOCK">MBLOCK</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PDE">PDE</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="scifunc_block_m">scifunc_block_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SUPER_f">SUPER_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="TEXT_f">TEXT_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

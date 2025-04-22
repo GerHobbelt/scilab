@@ -395,7 +395,7 @@ myfun: Argument #1: Encoded integer of type (uint16) expected.
 myfun: Argument #3: The graphic handle is no longer valid.
 ]]></screen>
     </refsection>
-    <refsection role="see also" id="error_table_seealso">
+    <refsection role="see also" xml:id="error_table_seealso">
         <title>See also</title>
         <simplelist type="inline">
             <member>

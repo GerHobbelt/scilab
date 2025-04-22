@@ -151,7 +151,7 @@ counter
 
     ]]></programlisting>
     </refsection>
-    <refsection id="SeeAlso_scicos_simulate" role="see also">
+    <refsection xml:id="SeeAlso_scicos_simulate" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

@@ -61,8 +61,8 @@
             scs_m=xcosDiagramToScilab(filename),
         </programlisting>
     </refsection>
-    <refsection id="SeeAlso_xcosDiagramToScilab">
-        <title role="see also">See Also</title>
+    <refsection xml:id="SeeAlso_xcosDiagramToScilab" role="see also">
+        <title>See Also</title>
         <simplelist type="inline">
             <member>
                 <link linkend="xcos">xcos</link>

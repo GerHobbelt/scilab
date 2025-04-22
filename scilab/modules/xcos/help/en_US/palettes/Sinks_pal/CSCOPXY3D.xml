@@ -271,7 +271,7 @@
         </itemizedlist>
         <para/>
     </refsection>
-    <refsection id="Seealso_CSCOPXY3D" role="see also">
+    <refsection xml:id="Seealso_CSCOPXY3D" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

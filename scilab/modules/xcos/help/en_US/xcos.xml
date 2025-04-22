@@ -181,21 +181,21 @@ scs_m.objs($+1) = BIGSOM_f("define");
 xcos(scs_m);
  ]]></programlisting>
     </refsection>
-    <refsection id="SeeAlso_xcos" role="see also">
+    <refsection xml:id="SeeAlso_xcos" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="scicosim">xcossim</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="scicos_simulate">scicos_simulate</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="xcos_menu_entries">Menu entries</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="supported_compilers">Supported compilers</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

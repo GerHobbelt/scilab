@@ -35,7 +35,7 @@
             <imageobject>
                 <imagedata align="center" fileref="../../../../images/palettes/MATEXPM.png"/>
             </imageobject>
-        </inlinemediaobject>
+        </inlinemediaobject>
     </refsection>
     <refsection id="Contents_MATEXPM">
         <title>Contents</title>
@@ -204,15 +204,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATEXPM" role="see also">
+    <refsection xml:id="Seealso_MATEXPM" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATMUL">MATMUL</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="expm">expm</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

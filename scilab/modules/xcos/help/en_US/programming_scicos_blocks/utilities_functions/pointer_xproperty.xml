@@ -64,7 +64,7 @@
  ]]></programlisting>
         </para>
     </refsection>
-    <refsection id="SeeAlso_pointer_xproperty" role="see also">
+    <refsection xml:id="SeeAlso_pointer_xproperty" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

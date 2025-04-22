@@ -303,7 +303,7 @@ box "Field #N";
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_WRITEC_f" role="see also" >
+    <refsection xml:id="Seealso_WRITEC_f" role="see also" >
         <title>See also</title>
         <simplelist type="inline">
             <member>

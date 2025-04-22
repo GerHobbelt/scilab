@@ -214,14 +214,12 @@ C = [1 2 3 7 8; 4 5 6 9 10]
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_MATCATH">
+    <refsection xml:id="Seealso_MATCATH" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
-                <para>
-                    <link linkend="MATCATV">MATCATV - Vertical Concatenation (xcos Block)</link>
-                </para>
-            </listitem>
-        </itemizedlist>
+        <simplelist type="inline">
+            <member>
+                <link linkend="MATCATV">MATCATV - Vertical Concatenation (xcos Block)</link>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

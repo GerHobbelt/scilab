@@ -213,12 +213,12 @@ C = [1 2; 3 4; 5 6; 7 8; 9 10]
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATCATV">
+    <refsection xml:id="Seealso_MATCATV" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATCATH">MATCATH</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

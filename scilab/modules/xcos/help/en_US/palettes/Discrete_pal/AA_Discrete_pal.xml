@@ -127,39 +127,39 @@
             The Discrete time systems palette contains blocks for medeling discrete time systems.
         </para>
     </refsection>
-    <refsection id="Blocks_Discrete_pal" role="see also">
+    <refsection xml:id="Blocks_Discrete_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="AUTOMAT">AUTOMAT</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DELAY_f">DELAY_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DELAYV_f">DELAYV_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DLR">DLR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DLRADAPT_f">DLRADAPT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DLSS">DLSS</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DOLLAR_f">DOLLAR_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="REGISTER">REGISTER</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SAMPHOLD_m">SAMPHOLD_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="TCLSS">TCLSS</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

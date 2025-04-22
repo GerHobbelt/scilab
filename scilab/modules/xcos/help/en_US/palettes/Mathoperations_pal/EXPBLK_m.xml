@@ -35,7 +35,7 @@
             <imageobject>
                 <imagedata align="center" fileref="../../../../images/palettes/EXPBLK_m.png"/>
             </imageobject>
-        </inlinemediaobject>
+        </inlinemediaobject>
     </refsection>
     <refsection id="Contents_EXPBLK_m">
         <title>Contents</title>
@@ -175,18 +175,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_EXPBLK_m" role="see also">
+    <refsection xml:id="Seealso_EXPBLK_m" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="POWBLK_f">POWBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="LOGBLK_f">LOGBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SQRT">SQRT</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -55,21 +55,21 @@
             for signal processing applications.
         </para>
     </refsection>
-    <refsection id="Blocks_Signalprocessing_pal" role="see also">
+    <refsection xml:id="Blocks_Signalprocessing_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MCLOCK_f">MCLOCK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MFCLCK_f">MFCLCK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLKGotoTagVisibility">QUANT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SAMPHOLD_m">SAMPHOLD_m</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -215,15 +215,15 @@ y = [1 2 3 4 5 6]
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATRESH" role="see also">
+    <refsection xml:id="Seealso_MATRESH" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="EXTRACT">EXTRACT</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="matrix">matrix</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

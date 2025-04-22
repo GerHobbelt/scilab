@@ -61,18 +61,18 @@
             scs_m=scicosDiagramToScilab(filename),
         </programlisting>
     </refsection>
-    <refsection id="SeeAlso_scicosDiagramToScilab">
-        <title role="see also">See also</title>
-        <itemizedlist>
-            <listitem>
+    <refsection xml:id="SeeAlso_scicosDiagramToScilab" role="see also">
+        <title>See also</title>
+        <simplelist type="inline">
+            <member>
                 <link linkend="scicos_diagram">scicos_diagram</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="xcos">xcos</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="xcosDiagramToScilab">xcosDiagramToScilab</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

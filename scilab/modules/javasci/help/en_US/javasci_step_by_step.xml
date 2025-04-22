@@ -155,11 +155,11 @@ java -cp $(CLASSPATH):. -DSCI=$(SCI) -Djava.library.path=$(LIB_PATH) Example1
         ]]></programlisting>
     </refsection>
     <para>See build.bat for Windows in SCI/modules/javasci/examples/v2 directory.</para>
-    <refsection>
+    <refsection role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                Browse <link type="remote" linkend="javasci/javadoc/index.html">the documentation of Javasci v2.</link> (this will open the web browser).
+                <link xlink:href="javasci/javadoc/index.html">Documentation of Javasci v2</link>
             </member>
             <member>
                 <link linkend="compile_and_run_javasci_v2">Compile and run with Javasci v2</link>

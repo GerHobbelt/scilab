@@ -141,7 +141,7 @@ end
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="SeeAlso_steadycos" role="see also">
+    <refsection xml:id="SeeAlso_steadycos" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

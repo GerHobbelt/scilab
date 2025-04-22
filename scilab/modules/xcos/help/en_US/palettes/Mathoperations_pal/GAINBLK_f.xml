@@ -166,18 +166,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_GAINBLK_f" role="see also">
+    <refsection xml:id="Seealso_GAINBLK_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="PROD_f">PROD_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INVBLK">INVBLK</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PRODUCT">PRODUCT</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

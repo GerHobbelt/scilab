@@ -104,7 +104,7 @@
 ]]></screen>
     </refsection>
     <refsection role="see also">
-        <title></title>
+        <title>See also</title>
         <simplelist type="inline">
             <member>
                 <link linkend="xlfont">xlfont</link>
@@ -132,4 +132,3 @@
         </revhistory>
     </refsection>
 </refentry>
-

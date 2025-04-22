@@ -261,7 +261,7 @@ plot2d(y(2,:)) // second channel
                 <link linkend="mapsound">mapsound</link>
             </member>
             <member>
-                <ulink url="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">RIFF-wav encoding (p.56)</ulink>
+                <link xlink:href="http://www-mmsp.ece.mcgill.ca/Documents/AudioFormats/WAVE/Docs/riffmci.pdf">RIFF-wav encoding (p.56)</link>
             </member>
         </simplelist>
     </refsection>

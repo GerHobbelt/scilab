@@ -214,15 +214,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATDIV" role="see also">
+    <refsection xml:id="Seealso_MATDIV" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATBKSL">MATBKSL</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MATMUL">MATMUL</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

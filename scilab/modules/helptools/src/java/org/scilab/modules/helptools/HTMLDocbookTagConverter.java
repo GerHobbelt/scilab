@@ -1299,7 +1299,12 @@ public class HTMLDocbookTagConverter extends DocbookTagConverter implements Temp
     public String handleLink(final Map<String, String> attributes, final String contents) throws SAXException {
         String link = attributes.get("linkend");
         if (link == null) {
-            throw new SAXException("No linkend attribute in tag link");
+            String ulink = attributes.get("href"); // Docbook 5.0, <ulink> replaced by <link>
+            if (ulink == null) {
+                throw new SAXException("No linkend nor xlink:href attribute in tag link");
+            } else {
+                return encloseContents("a", new String[] {"href", ulink, "class", "ulink"}, contents);
+            }
         }
 
         String type = attributes.get("type");

@@ -76,24 +76,24 @@
         </para>
     </refsection>
 
-    <refsection id="Blocks_Zerocrossingdetection_pal" role="see also">
+    <refsection xml:id="Blocks_Zerocrossingdetection_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CLINDUMMY_f">CLINDUMMY_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="GENERAL_f">GENERAL_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="NEGTOPOS_f">NEGTOPOS_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="POSTONEG_f">POSTONEG_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="ZCROSS_f">ZCROSS_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -197,14 +197,14 @@ hl.fill_mode='on';
                 <link linkend="legend_properties">legend_properties</link>
             </member>
         </simplelist>
-        <refsection>
-            <title>History</title>
-            <revhistory>
-                <revision>
-                    <revnumber>2025.0.0</revnumber>
-                    <revremark>Tagged obsolete and will be removed in 2026.0.0.</revremark>
-                </revision>
-            </revhistory>
-        </refsection>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark>Tagged obsolete and will be removed in 2026.0.0.</revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

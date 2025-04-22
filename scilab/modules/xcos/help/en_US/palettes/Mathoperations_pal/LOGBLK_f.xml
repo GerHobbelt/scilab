@@ -177,18 +177,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_LOGBLK_f" role="see also">
+    <refsection xml:id="Seealso_LOGBLK_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="POWBLK_f">POWBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="EXPBLK_m">EXPBLK_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SQRT">SQRT</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

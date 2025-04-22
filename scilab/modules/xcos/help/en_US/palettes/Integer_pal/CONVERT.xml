@@ -299,12 +299,12 @@
         </itemizedlist>
     </refsection>
 
-    <refsection role="see also" id="Seealso_CONVERT">
+    <refsection role="see also" xml:id="Seealso_CONVERT">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="EXTRACTBITS">EXTRACTBITS</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

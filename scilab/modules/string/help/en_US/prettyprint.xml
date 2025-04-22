@@ -580,10 +580,10 @@ messagebox(["The table is:" ; "<br>" ; prettyprint(i16,"html","_")])
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                <ulink url="https://www.mathjax.org">MathJax</ulink>
+                <link xlink:href="https://www.mathjax.org">MathJax</link>
             </member>
             <member>
-                <ulink url="http://www.w3.org/1998/Math/MathML">MathML namespace</ulink>
+                <link xlink:href="http://www.w3.org/1998/Math/MathML">MathML namespace</link>
             </member>
             <member>
                 <link linkend="math_rendering_features_in_graphic">math_rendering_features_in_graphic</link>

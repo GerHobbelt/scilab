@@ -134,39 +134,39 @@
         <title>Description</title>
         <para>The Continuous time systems palette includes basic linear blocks .</para>
     </refsection>
-    <refsection id="Blocks_Continuous_pal" role="see also">
+    <refsection xml:id="Blocks_Continuous_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CLINDUMMY_f">CLINDUMMY_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLR">CLR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="CLSS">CLSS</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DERIV">DERIV</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INTEGRAL_f">INTEGRAL_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="INTEGRAL_m">INTEGRAL_m</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="PID">PID</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="TCLSS">TCLSS</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="TIME_DELAY">TIME_DELAY</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="VARIABLE_DELAY">VARIABLE_DELAY</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

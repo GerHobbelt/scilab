@@ -232,15 +232,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_IN_f" role="see also">
+    <refsection xml:id="Seealso_IN_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="OUT_f">OUT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SUPER_f">SUPER_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

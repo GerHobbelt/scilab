@@ -319,15 +319,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_SUMMATION" role="see also">
+    <refsection xml:id="Seealso_SUMMATION" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BIGSOM_f">BIGSOM_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SUM_f">SUM_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

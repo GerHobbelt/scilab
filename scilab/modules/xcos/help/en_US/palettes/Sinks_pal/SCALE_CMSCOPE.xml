@@ -304,14 +304,12 @@
             </inlinemediaobject>
         </link>
     </refsection>
-    <refsection id="Seealso_SCALE_CMSCOPE">
+    <refsection xml:id="Seealso_SCALE_CMSCOPE" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
-                <para>
-                    <link linkend="CMSCOPE">CMSCOPE - Multi display scope</link>
-                </para>
-            </listitem>
-        </itemizedlist>
+        <simplelist type="inline">
+            <member>
+                <link linkend="CMSCOPE">CMSCOPE - Multi display scope</link>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

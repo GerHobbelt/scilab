@@ -219,7 +219,7 @@
             </inlinemediaobject>
         </link>
     </refsection>
-    <refsection id="Seealso_BARXY" role="see also">
+    <refsection xml:id="Seealso_BARXY" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

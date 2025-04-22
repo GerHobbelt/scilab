@@ -101,30 +101,30 @@
             of their inputs.
         </para>
     </refsection>
-    <refsection id="Blocks_discontinuities_pal" role="see also">
+    <refsection xml:id="Blocks_discontinuities_pal" role="see also">
         <title>Blocks</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BACKLASH">BACKLASH</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DEADBAND">DEADBAND</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="DELAYV_f">DELAYV_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="HYSTHERESIS">HYSTHERESIS</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="RATELIMITER">RATELIMITER</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="QUANT_f">QUANT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SATURATION">SATURATION</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

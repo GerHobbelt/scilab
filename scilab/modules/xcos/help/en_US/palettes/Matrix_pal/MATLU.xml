@@ -191,15 +191,15 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATLU" role="see also">
+    <refsection xml:id="Seealso_MATLU" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
-                <link linkend="MATINV">MATINV)</link>
-            </listitem>
-            <listitem>
+        <simplelist type="inline">
+            <member>
+                <link linkend="MATINV">MATINV</link>
+            </member>
+            <member>
                 <link linkend="lu">lu</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

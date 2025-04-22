@@ -100,7 +100,7 @@ bode(sys);
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="SeeAlso_lincos" role="see also">
+    <refsection xml:id="SeeAlso_lincos" role="see also">
         <title>See Also</title>
         <simplelist type="inline">
             <member>

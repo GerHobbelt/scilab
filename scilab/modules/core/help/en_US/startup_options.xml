@@ -602,7 +602,7 @@ echo $? ]]></screen>
                 <link linkend="preferences">preferences</link>
             </member>
             <member>
-                <ulink url="http://texmacs.org/">TeXmacs</ulink>
+                <link xlink:href="http://texmacs.org/">TeXmacs</link>
             </member>
         </simplelist>
     </refsection>

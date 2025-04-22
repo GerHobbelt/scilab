@@ -227,12 +227,12 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_MATMAGPHI" role="see also">
+    <refsection xml:id="Seealso_MATMAGPHI" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATZREIM">MATZREIM</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

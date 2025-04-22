@@ -170,10 +170,10 @@
                 <link linkend="ilib_mex_build">ilib_mex_build</link>
             </member>
             <member>
-              <ulink url="https://www.mathworks.com/help/matlab/call-mex-files-1.html">MEX-files guide from Matlab</ulink>
+                <link xlink:href="https://www.mathworks.com/help/matlab/call-mex-files-1.html">MEX-files guide from Matlab</link>
             </member>
             <member>
-              <ulink url="https://www.gnu.org/software/octave/doc/interpreter/Mex_002dFiles.html">MEX-files in the GNU Octave manual</ulink>
+                <link xlink:href="https://www.gnu.org/software/octave/doc/interpreter/Mex_002dFiles.html">MEX-files in the GNU Octave manual</link>
             </member>
         </simplelist>
     </refsection>

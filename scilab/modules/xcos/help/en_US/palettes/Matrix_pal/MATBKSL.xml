@@ -213,15 +213,15 @@ x = [-4.504 -3.922;3.643 3.132;0.000 0.000]
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_MATBKSL" role="see also">
+    <refsection xml:id="Seealso_MATBKSL" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="MATDIV">MATDIV</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="MATMUL">MATMUL</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -656,7 +656,7 @@ setlanguage(in);
                 <link linkend="tbx_build_localization">tbx_build_localization</link>
             </member>
             <member>
-                <ulink url="https://www.gnu.org/software/gettext/">GNU gettext website</ulink>
+                <link xlink:href="https://www.gnu.org/software/gettext/">GNU gettext website</link>
             </member>
         </simplelist>
     </refsection>

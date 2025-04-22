@@ -157,18 +157,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_TANBLK_f" role="see also">
+    <refsection xml:id="Seealso_TANBLK_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="TrigFun">TrigFun</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="COSBLK_f">COSBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SINBLK_f">SINBLK_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

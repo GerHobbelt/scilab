@@ -606,18 +606,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="Seealso_EXTRACTBITS">
+    <refsection role="see also" xml:id="Seealso_EXTRACTBITS">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="BITSET">BITSET</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="BITCLEAR">BITCLEAR</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="LOGICAL_OP">LOGICAL_OP</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

@@ -990,18 +990,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection role="see also" id="Seealso_Menu_entries">
+    <refsection role="see also" xml:id="Seealso_Menu_entries">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="scicos_debug">scicos_debug</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="ode">ode</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="dae">dae</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

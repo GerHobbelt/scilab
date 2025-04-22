@@ -53,7 +53,7 @@ xcosAddToolsMenu("update block", "myUpdateFunction(blk, scs_m)");
 ]]></programlisting>
         </para>
     </refsection>
-    <refsection id="SeeAlso_xcosAddToolsMenu">
+    <refsection xml:id="SeeAlso_xcosAddToolsMenu" role="see also">
         <title>See Also</title>
         <simplelist type="inline">
             <member>

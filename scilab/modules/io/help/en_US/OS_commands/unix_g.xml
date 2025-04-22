@@ -140,7 +140,7 @@ DIR('SCI/etc')
                 <link linkend="powershell">powershell</link>
             </member>
             <member>
-                <ulink url="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">list of MS Windows exit codes</ulink>
+                <link xlink:href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">List of MS Windows exit codes</link>
             </member>
         </simplelist>
     </refsection>

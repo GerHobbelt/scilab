@@ -35,7 +35,7 @@
             <imageobject>
                 <imagedata fileref="../../../../images/palettes/COSBLK_f.png" align="center"/>
             </imageobject>
-        </inlinemediaobject>
+        </inlinemediaobject>
     </refsection>
     <refsection id="Contents_COSBLK_f">
         <title>Contents</title>
@@ -143,18 +143,18 @@
             </listitem>
         </itemizedlist>
     </refsection>
-    <refsection id="Seealso_COSBLK_f" role="see also">
+    <refsection xml:id="Seealso_COSBLK_f" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="TrigFun">TrigFun</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="SINBLK_f">SINBLK_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="TANBLK_f">TANBLK_f</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>

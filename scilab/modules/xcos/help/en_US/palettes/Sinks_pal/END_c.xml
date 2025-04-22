@@ -194,7 +194,7 @@
         </itemizedlist>
         <para/>
     </refsection>
-    <refsection id="Seealso_END_c" role="see also">
+    <refsection xml:id="Seealso_END_c" role="see also">
         <title>See also</title>
         <simplelist type="inline">
             <member>

@@ -48,9 +48,9 @@
         <title>Description</title>
         <para>This palette includes blocks used for annotations.</para>
     </refsection>
-    <refsection id="Blocks_Annotations_pal" role="see also">
+    <refsection xml:id="Blocks_Annotations_pal" role="see also">
         <title>Blocks</title>
-        <simplelist>
+        <simplelist type="inline">
             <member>
                 <link linkend="TEXT_f">TEXT_f</link>
             </member>

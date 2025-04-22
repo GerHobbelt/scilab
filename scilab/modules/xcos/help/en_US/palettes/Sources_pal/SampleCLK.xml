@@ -189,21 +189,21 @@
         </itemizedlist>
     </refsection>
 
-    <refsection id="Seealso_SampleCLK" role="see also">
+    <refsection xml:id="Seealso_SampleCLK" role="see also">
         <title>See also</title>
-        <itemizedlist>
-            <listitem>
+        <simplelist type="inline">
+            <member>
                 <link linkend="CLOCK_c">CLOCK_c</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="Counter">Counter</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="ESELECT_f">ESELECT_f</link>
-            </listitem>
-            <listitem>
+            </member>
+            <member>
                 <link linkend="M_freq">M_freq</link>
-            </listitem>
-        </itemizedlist>
+            </member>
+        </simplelist>
     </refsection>
 </refentry>
