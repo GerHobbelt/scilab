@@ -11,7 +11,7 @@
 
 function y = year(dt)
     arguments
-        st {mustBeA(x, ["datetime"])}
+        dt {mustBeA(dt, ["datetime"])}
     end
 
     y = dt.Year;
