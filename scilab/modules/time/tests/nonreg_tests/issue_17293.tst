@@ -30,7 +30,7 @@ assert_checkequal(datevec(d), [2024 1 1 0 0 0; 2024 12 15 0 0 0; 2024 1 15 0 0 0
 d = datetime("01.01.2024 12:50:45", "InputFormat", "dd.MM.yyyy HH:mm:ss");
 assert_checkalmostequal(datevec(d), [2024 1 1 12 50 45]);
 d = datetime(["01.01.2024 13:12:06" "15.01.2024 12:58:09"; "15.12.2024 07:12:45", "31.12.2024 02:36:05"], "InputFormat", "dd.MM.yyyy HH:mm:ss");
-assert_checkalmostequal(datevec(d), [2024 1 1 13 12 6.000001654029; 2024 12 15 7 12 45.0000013411; 2024 1 15 12 58 8.999995216727; 2024 12 31 2 36 4.999998360872]);
+assert_checkalmostequal(datevec(d), [2024 1 1 13 12 6; 2024 12 15 7 12 45; 2024 1 15 12 58 9; 2024 12 31 2 36 5]);
 
 dt = datetime("01.01.2024", "InputFormat", "dd.MM.yyyy");
 [y, m, d] = datevec(dt);
@@ -49,4 +49,4 @@ assert_checkequal(m, 1);
 assert_checkequal(d, 1);
 assert_checkequal(h, 12);
 assert_checkequal(mn, 50);
-assert_checkalmostequal(s, 44.99999955297);
+assert_checkalmostequal(s, 45);

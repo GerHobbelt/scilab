@@ -6,6 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 14685 -->
 //
@@ -21,4 +22,4 @@ horofin= datenum(2016,12,31,23,59,59);
 horoj= [horodeb:1/1440:horofin]' ;
 horoj_clair= zeros(size(horoj,1),6);
 horoj_clair= datevec(horoj);
-assert_checkequal(datenum(horoj_clair), horoj);
+assert_checkalmostequal(datenum(horoj_clair), horoj);

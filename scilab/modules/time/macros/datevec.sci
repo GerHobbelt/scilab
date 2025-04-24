@@ -40,7 +40,7 @@ function [Y,M,D,h,m,s] = datevec(N)
     // for the moment : hour, minute, second
     // =========================================================================
 
-    second = 86400*(N-floor(N));
+    [N, second] = %datetime_splitter(N)
     hour   = floor(second/3600);
     second = second - 3600*hour;
     minute = floor(second/60);
@@ -49,7 +49,6 @@ function [Y,M,D,h,m,s] = datevec(N)
     // Now, the year
     // =========================================================================
 
-    N    = floor(N);
     Year = floor(N/365.2425);
 
     temp = N - (365.0*Year + ceil(0.25*Year)- ceil(0.01*Year) + ceil(0.0025*Year));

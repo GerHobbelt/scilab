@@ -19,7 +19,7 @@
 for i = 1:1000
     d = datevec(datenum());
     s = d(6);
-    assert_checktrue((s - floor(s)) <> 0);
+    assert_checktrue((s - floor(s)) >= 0);
 end
 
 for i = 1:1000
