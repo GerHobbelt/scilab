@@ -48,7 +48,7 @@ function dir_created = atomsExtract(archive_in,dir_out)
     // Check input parameters value
     // =========================================================================
 
-    if regexp(archive_in,"/(\.tar\.gz|\.tgz|\.zip)$/","o") == [] then
+    if regexp(archive_in,"/(\.tar\.gz|\.tgz|\.tar\.xz|\.zip)$/","o") == [] then
         error(msprintf(gettext("%s: Wrong value for input argument #%d: Single string that ends with .tar.gz, .tgz or .zip expected.\n"),"atomsExtract",1));
     end
 
