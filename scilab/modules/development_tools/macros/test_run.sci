@@ -337,6 +337,7 @@ endfunction
 function status = test_module(_params)
     name = splitModule(_params.moduleName);
 
+    _params.copySCIHOME = %f;
     if with_module(name(1)) then
         // It's a scilab internal module
         module.path = pathconvert(SCI + "/modules/" + name(1), %F);
@@ -345,7 +346,10 @@ function status = test_module(_params)
         tmp = atomsGetInstalled();
         tmp = tmp(tmp(:,1)==name(1),:)($,4)
         module.path = pathconvert(tmp, %F, %T);
+        // set flags to load it properly
         Autoloaded = or(name(1)==atomsAutoloadList())
+        // will copy toolbox, its dependency and the auto loaded list 
+        _params.copySCIHOME = strindex(tmp, "SCIHOME") == 1;
     elseif isdir(name(1)) then
         // It's an external module
         module.path = pathconvert(name(1), %F);
@@ -477,7 +481,7 @@ function status = test_module(_params)
     end
 
     if isdef("Autoloaded", "l") & ~Autoloaded
-        atomsAutoloadAdd(name(1))
+        atomsAutoloadAdd(name(1), "user")
     end
     tic();
     for i = 1:test_count
@@ -560,7 +564,7 @@ function status = test_module(_params)
     testsuite.time=status.totalTime;
 
     if isdef("Autoloaded", "l") & ~Autoloaded
-        atomsAutoloadDel(name(1))
+        atomsAutoloadDel(name(1), "user")
     end
 
     clearglobal TICTOC;
@@ -814,6 +818,19 @@ function status = test_single(_module, _testPath, _testName)
         scihome = SCIHOME;
     else
         scihome = TMPDIR + filesep() + "scihome_" + _testName;
+        while isdir(scihome) do
+            scihome = sprintf("%s%s%s_%s_%d", TMPDIR, filesep(), "scihome", _testName, getdate("s"));
+        end
+
+        if _module.copySCIHOME then
+            [st, err] = copyfile("SCIHOME", scihome);
+            if st <> 1 then
+                status.id = 9;
+                status.message = "Error copying SCIHOME directory";
+                status.details = err;
+                return;
+            end
+        end
     end
 
     //build real test file
@@ -903,6 +920,7 @@ function status = test_single(_module, _testPath, _testName)
     "diary(''" + tmp_dia + "'');";
     "printf(''%s\n'',TMPDIR1);";
     "printf(''%s\n'',TMPDIR2);";
+    "printf(''%s\n'',SCIHOME);";
     "// <-- HEADER END -->"
     ];
 

@@ -95,10 +95,10 @@ ScilabVersion: >= 5.0
 Depends: ~ toolbox_4V6 any
 Date: 2023-02-14 23:42:00
 windows64Name: toolbox_5V6_1.0-1.bin.x64.windows.zip
-windows64Md5: 7a72998eb3558ef1dd7b0643ea3991b6
+windows64Md5: 697139c32a2690b5080769e6325bd4ac
 windows64Url: file://TMPDIR/scene10/toolbox_5V6_1.0-1.bin.x64.windows.zip
 linux64Name: toolbox_5V6_1.0-1.bin.x64.windows.zip
-linux64Md5: 7a72998eb3558ef1dd7b0643ea3991b6
+linux64Md5: 697139c32a2690b5080769e6325bd4ac
 linux64Url: file://TMPDIR/scene10/toolbox_5V6_1.0-1.bin.x64.windows.zip
 // =============================================================================
 Toolbox: toolbox_6V6
