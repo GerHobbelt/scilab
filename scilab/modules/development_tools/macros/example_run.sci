@@ -94,8 +94,14 @@ function boolStatus = example_run(modulesName, functionsName, helpLanguage, vara
                 end
             end
         end
-
+        
         testDir=fullfile(TMPDIR,tempModuleName)
+        if isdir(moduleName) & isfile(fullfile(moduleName, "loader.sce"))
+            // Forward local loader.sce for test_run to load TBX
+            loader_path = pathconvert(fullfile(moduleName, "loader.sce"), %f)
+            mputl("exec(""" + loader_path + """)", fullfile(testDir, "loader.sce"))
+        end
+
         if rhs > 3 then
             boolStatus = test_run(testDir, [], varargin(:))
         else
