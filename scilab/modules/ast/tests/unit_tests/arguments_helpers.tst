@@ -341,6 +341,32 @@ assert_checkerror("foo([])", [], 999);
 assert_checkerror("foo([1 2; 3 4])", [], 999);
 clear foo;
 
+// mustBeRow
+function foo(a)
+    arguments
+        a {mustBeRow}
+    end
+endfunction
+
+foo(1:2);
+assert_checkerror("foo([])", [], 999);
+assert_checkerror("foo([1 2; 3 4])", [], 999);
+assert_checkerror("foo([1;2;3;4])", [], 999);
+clear foo;
+
+// mustBeColumn
+function foo(a)
+    arguments
+        a {mustBeColumn}
+    end
+endfunction
+
+foo([1;2]);
+assert_checkerror("foo([])", [], 999);
+assert_checkerror("foo([1 2; 3 4])", [], 999);
+assert_checkerror("foo([1 2 3 4])", [], 999);
+clear foo;
+
 // mustBeMember
 function foo(a, b)
     arguments
@@ -403,7 +429,7 @@ clear foo;
 
 function foo(a, b, c)
     arguments
-        a 
+        a
         b {mustBeInRange(b, a, c)}
         c
     end

@@ -231,6 +231,16 @@
                 <td><code>mustBeVector(x)</code></td>
             </tr>
             <tr>
+                <td xml:id="mustBeRow">mustBeRow(value)</td>
+                <td><literal>value</literal> must be a row vector</td>
+                <td><code>mustBeRow(x)</code></td>
+            </tr>
+            <tr>
+                <td xml:id="mustBeColumn">mustBeColumn(value)</td>
+                <td><literal>value</literal> must be a column vector</td>
+                <td><code>mustBeColumn(x)</code></td>
+            </tr>
+            <tr>
                 <td xml:id="mustBeSquare">mustBeSquare(value)</td>
                 <td><literal>value</literal> must be a square matrix</td>
                 <td><code>mustBeSquare(x)</code></td>

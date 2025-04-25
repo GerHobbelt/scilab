@@ -799,6 +799,16 @@ bool mustBeVector(types::typed_list& x)
     return x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->isVector();
 }
 
+bool mustBeRow(types::typed_list& x)
+{
+    return x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->getDims() == 2 && x[0]->getAs<types::GenericType>()->getDimsArray()[0] == 1;
+}
+
+bool mustBeColumn(types::typed_list& x)
+{
+    return x[0]->isGenericType() && x[0]->getAs<types::GenericType>()->getDims() == 2 && x[0]->getAs<types::GenericType>()->getDimsArray()[1] == 1;
+}
+
 bool mustBeSquare(types::typed_list& x)
 {
     if (x[0]->isGenericType() == false)
@@ -1054,6 +1064,8 @@ std::map<std::wstring, std::tuple<std::function<int(types::typed_list&)>, std::v
     {L"mustBeScalar", {mustBeScalar, {1}}},
     {L"mustBeScalarOrEmpty", {mustBeScalarOrEmpty, {1}}},
     {L"mustBeVector", {mustBeVector, {1}}},
+    {L"mustBeRow", {mustBeRow, {1}}},
+    {L"mustBeColumn", {mustBeColumn, {1}}},
     {L"mustBeSquare", {mustBeSquare, {1}}},
     {L"mustBeMember", {mustBeMember, {2}}},
     {L"mustBeInRange", {mustBeInRange, {3, 4}}},
@@ -1091,6 +1103,8 @@ std::map<std::wstring, std::tuple<std::string, int>> errorValidators = {
     {L"mustBeScalar", {"%s: Wrong type for input argument #%d: Must be a scalar.\n", 2}},
     {L"mustBeScalarOrEmpty", {"%s: Wrong type for input argument #%d: Must be a scalar or empty.\n", 2}},
     {L"mustBeVector", {"%s: Wrong type for input argument #%d: Must be a vector.\n", 2}},
+    {L"mustBeRow", {"%s: Wrong type for input argument #%d: Must be a row vector.\n", 2}},
+    {L"mustBeColumn", {"%s: Wrong type for input argument #%d: Must be a column vector.\n", 2}},
     {L"mustBeSquare", {"%s: Wrong type for input argument #%d: Must be a square matrix.\n", 2}},
     {L"mustBeMember", {"%s: Wrong type for input argument #%d: Must be member of %s.\n", 3}},
     {L"mustBeInRange", {"%s: Wrong value for input argument #%d: Must be in range [%s, %s].\n", 4}},
