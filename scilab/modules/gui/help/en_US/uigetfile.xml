@@ -104,17 +104,9 @@
     </refsection>
     <refsection>
         <title>Comments</title>
-        <para>On Windows, java component used by uigetfile browse also .zip
-            archive then it is very slow with big .zip files.
-        </para>
-        <para>To disable, this feature:</para>
-        <para>if getos() == 'Windows' then unix("REGSVR32 /u %WINDIR%\System32\zipfldr.dll")
-            ;end
-        </para>
-        <para>To re-enable,</para>
-        <para>if getos() == 'Windows' then unix("REGSVR32 %WINDIR%\System32\zipfldr.dll")
-            ;end
-        </para>
+        <para>On Windows, Java component used by uigetfile browses also .zip archives then it is very slow with big .zip files.</para>
+        <para>To disable this feature: use <literal>regedit</literal> to rename <literal>HKEY_CLASSES_ROOT\SystemFileAssociations\.zip\CLSID</literal> key to <literal>HKEY_CLASSES_ROOT\SystemFileAssociations\.zip\CLSID.bak</literal>.</para>
+        <para>To re-enable it: use <literal>regedit</literal> to rename <literal>HKEY_CLASSES_ROOT\SystemFileAssociations\.zip\CLSID.bak</literal> key to <literal>HKEY_CLASSES_ROOT\SystemFileAssociations\.zip\CLSID</literal>.</para>
     </refsection>
     <refsection>
         <title>Examples</title>

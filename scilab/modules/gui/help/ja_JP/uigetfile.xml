@@ -118,22 +118,6 @@
         </para>
     </refsection>
     <refsection>
-        <title>コメント</title>
-        <para>
-            Windowsでは, uigetfileで使用されるjava要素は
-            .zipアーカイブもブラウズするため,
-            大きな.zipファイルの場合は非常に遅くなります.
-        </para>
-        <para>この機能を無効にするには以下のようにします:</para>
-        <para>if getos() == 'Windows' then unix("REGSVR32 /u %WINDIR%\System32\zipfldr.dll")
-            ;end
-        </para>
-        <para>再度有効にするには以下のようにします,</para>
-        <para>if getos() == 'Windows' then unix("REGSVR32 %WINDIR%\System32\zipfldr.dll")
-            ;end
-        </para>
-    </refsection>
-    <refsection>
         <title>例</title>
         <programlisting role="example">
             uigetfile(["*.bin"; "*.sce"; "*.cos*"])
