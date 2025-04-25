@@ -38,6 +38,7 @@ import javax.swing.ListCellRenderer;
 import javax.swing.UIManager;
 import javax.swing.border.Border;
 
+import org.scilab.modules.commons.OS;
 import org.scilab.modules.commons.gui.FindIconHelper;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
 import org.scilab.modules.gui.SwingViewObject;
@@ -111,8 +112,11 @@ public class SwingScilabPopupMenu extends JComboBox implements SwingViewObject, 
         };
 
         setRenderer(listRenderer);
-        /* Bug 3635 fixed: allow arrow keys to browse items */
-        putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        /* Bug #3635 fix: allow arrow keys to browse items */
+        /* Seems that this works by default on macOS and activating this have side effects, see https://gitlab.com/scilab/scilab/-/issues/17250 */
+        if (OS.get() != OS.MAC) {
+            putClientProperty("JComboBox.isTableCellEditor", Boolean.TRUE);
+        }
         defaultActionListener = new ActionListener() {
             public void actionPerformed(ActionEvent e) {
                 Double scilabIndices = (double) getUserSelectedIndex();
