@@ -29,7 +29,7 @@
         xml:id="JKFLIPFLOP" xml:lang="en_US">
     <refnamediv>
         <refname>JKFLIPFLOP</refname>
-        <refpurpose id="Purpose_JKFLIPFLOP">JK flip-flop</refpurpose>
+        <refpurpose>JK flip-flop</refpurpose>
     </refnamediv>
     <refsection>
         <title>Block Screenshot</title>

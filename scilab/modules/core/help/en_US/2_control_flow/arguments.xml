@@ -6,8 +6,7 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="arguments">
     <refnamediv>
         <refname>arguments</refname>
-        <refpurpose>keyword to check function arguments</refpurpose>
-        <refpurpose>Arguments block must be the expression in the function.</refpurpose>
+        <refpurpose>keyword to check function arguments. Arguments block must be the expression in the function.</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>

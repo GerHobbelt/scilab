@@ -17,6 +17,7 @@
         xmlns:scilab="http://www.scilab.org" xml:id="codechecking_criteria" xml:lang="en">
     <refnamediv>
         <refname>Scilab code-checking criteria</refname>
+        <refpurpose>This page lists information about Scilab code linting.</refpurpose>
     </refnamediv>
     <refsection>
         <title>Table of contents</title>

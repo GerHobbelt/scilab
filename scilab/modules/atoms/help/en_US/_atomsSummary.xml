@@ -19,6 +19,7 @@
           xml:lang="en" xml:id="atoms">
     <refnamediv>
         <refname>Functions Summary</refname>
+        <refpurpose>This page lists ATOMS related functions.</refpurpose>
     </refnamediv>
     <!-- ===================================================================== -->
     <!-- Install/Remove/Update modules -->

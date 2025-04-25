@@ -18,8 +18,7 @@
           xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook"
           xmlns:scilab="http://www.scilab.org"
           xml:id="console" xml:lang="en">
-    <refnamediv xml:id="shortcuts"></refnamediv>
-    <refnamediv>
+    <refnamediv xml:id="shortcuts">
         <refname>console</refname>
         <refpurpose>Keyboard shortcuts predefined in the console window</refpurpose>
     </refnamediv>

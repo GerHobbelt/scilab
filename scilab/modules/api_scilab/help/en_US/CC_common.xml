@@ -19,7 +19,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="api_common" xml:lang="en">
     <refnamediv>
         <refname>API common functions</refname>
-        <para>This page lists all the functions to get information about Scilab native objects.</para>
+        <refpurpose>This page lists all the functions to get information about Scilab native objects.</refpurpose>
     </refnamediv>
     <refsection id="api_common_scilab_getVar">
       <literal>

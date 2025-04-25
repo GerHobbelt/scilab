@@ -24,10 +24,7 @@
 
     <refnamediv>
         <refname>mexlib</refname>
-
-        <refpurpose>
-            Mexlib provides a C MEX API for Scilab. This module is based on the <ulink url="https://en.wikipedia.org/wiki/MEX_file">MEX specification</ulink>.
-        </refpurpose>
+        <refpurpose>Mexlib provides a C MEX API for Scilab. This module is based on the <link xlink:href="https://en.wikipedia.org/wiki/MEX_file">MEX specification</link>.</refpurpose>
     </refnamediv>
 
     <refsection>

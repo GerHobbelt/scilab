@@ -2,8 +2,7 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="testmatrix">
     <refnamediv>
         <refname>testmatrix</refname>
-        <refpurpose>generate special matrices, such as Hilbert, Frank</refpurpose>
-        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="magic">magic</link>, <link linkend="invhilb">invhilb</link> or <link linkend="frank">frank</link> instead.</emphasis></refpurpose>
+        <refpurpose>generate special matrices, such as Hilbert, Frank... <emphasis role="bold">This function is obsolete. Please use <link linkend="magic">magic</link>, <link linkend="invhilb">invhilb</link> or <link linkend="frank">frank</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>

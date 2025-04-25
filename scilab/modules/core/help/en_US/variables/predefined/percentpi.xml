@@ -17,11 +17,10 @@
           xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns5="http://www.w3.org/1999/xhtml"
           xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook"
           xmlns:scilab="http://www.scilab.org" xml:id="percentpi" xml:lang="en">
-    <refnamediv>
+    <refnamediv xml:id="pi">
         <refname>%pi</refname>
         <refpurpose>ratio of circle's circumference to its diameter</refpurpose>
     </refnamediv>
-    <refnamediv xml:id="pi"/>
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>%pi</synopsis>

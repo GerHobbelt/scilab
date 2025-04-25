@@ -19,8 +19,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="api_list" xml:lang="en">
     <refnamediv>
         <refname>API list-type functions</refname>
-        <para>This page lists all the functions to manipulate Scilab native lists.</para>
-        <para></para>
+        <refpurpose>This page lists all the functions to manipulate Scilab native lists.</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <refsection id="api_list_scilab_createList">

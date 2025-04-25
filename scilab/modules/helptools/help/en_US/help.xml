@@ -18,8 +18,7 @@
           xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="help">
     <refnamediv>
         <refname>help</refname>
-        <refpurpose>queries and displays help pages in the Scilab help browser</refpurpose>
-        <refpurpose><emphasis role="bold">This function is obsolete. Please use <link linkend="doc">doc</link> instead.</emphasis></refpurpose>
+        <refpurpose>Queries and displays help pages in the Scilab help browser. <emphasis role="bold">This function is obsolete. Please use <link linkend="doc">doc</link> instead.</emphasis></refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>

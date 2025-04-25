@@ -14,8 +14,10 @@
  *
  -->
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns4="http://www.w3.org/1999/xhtml" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:id="api_types" xml:lang="en">
-    <refname>API types</refname>
-    <para>This page lists all types used by API Scilab.</para>
+    <refnamediv>
+        <refname>API types</refname>
+        <refpurpose>This page lists all types used by API Scilab.</refpurpose>
+    </refnamediv>
     <refsection id="api_types_scilabEnv">
         <refname>scilabEnv</refname>
         <refpurpose>This a pointer of internal information provided by Scilab engine, you just have to forwarding it to API function.</refpurpose>

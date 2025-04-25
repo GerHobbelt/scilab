@@ -19,8 +19,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="startup_options" xml:lang="en">
     <refnamediv>
         <refname>scilab</refname>
-            <refpurpose>runs Scilab in interactive or batch mode with command line options
-        </refpurpose>
+        <refpurpose>runs Scilab in interactive or batch mode with command line options.</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -310,13 +309,13 @@ evstr(a(i+2))*2
                         further details.
                     </para>
                     <para>
-                        The actual Scilab binary file executed when using the "-nw" option is
+                        The actual Scilab binary file executed when using the "-nw" option is:
                         <itemizedlist>
                             <listitem>
-                                on Windows: <literal>WScilex-cli.exe</literal>.
+                                on Windows: <literal xml:id="wscilex-cli">WScilex-cli.exe</literal>.
                             </listitem>
                             <listitem>
-                                on Linux and MacOS: <literal>scilab-adv-cli</literal>
+                                on Linux and MacOS: <literal xml:id="scilab-adv-cli">scilab-adv-cli</literal>
                                 (Scilab Advanced Command Line Interpreter).
                             </listitem>
                         </itemizedlist>
@@ -344,10 +343,10 @@ evstr(a(i+2))*2
                         provided:
                         <itemizedlist>
                             <listitem>
-                                Windows: <literal>Scilex.exe</literal>.
+                                Windows: <literal xml:id="scilex">Scilex.exe</literal>.
                             </listitem>
                             <listitem>
-                                Others: <literal>scilab-cli</literal> (Scilab Command Line Interpreter).
+                                Others: <literal xml:id="scilab-cli">scilab-cli</literal> (Scilab Command Line Interpreter).
                             </listitem>
                         </itemizedlist>
                     </para>
@@ -395,6 +394,11 @@ evstr(a(i+2))*2
                 </listitem>
             </varlistentry>
         </variablelist>
+        <para>
+            <note>
+                On Windows, if neither <literal>"-nw"</literal> nor <literal>"-nwni"/"-nogui"</literal> options are given, then the <literal xml:id="wscilex">WScilex.exe</literal> binary is executed.
+            </note>
+        </para>
     </refsection>
     <refsection role="arguments">
         <title>Additional options for Unix/Linux and Mac OS X</title>
@@ -670,10 +674,4 @@ echo $? ]]></screen>
             </revision>
         </revhistory>
     </refsection>
-    <!--add some kewywords -->
-    <refnamediv xml:id="wscilex"></refnamediv>
-    <refnamediv xml:id="wscilex-cli"></refnamediv>
-    <refnamediv xml:id="scilex"></refnamediv>
-    <refnamediv xml:id="scilab-cli"></refnamediv>
-    <refnamediv xml:id="scilab-adv-cli"></refnamediv>
 </refentry>

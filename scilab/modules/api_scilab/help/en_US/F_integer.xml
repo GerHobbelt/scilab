@@ -19,8 +19,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="api_integer" xml:lang="en">
     <refnamediv>
         <refname>API integer functions</refname>
-        <para>This page lists all the functions to manipulate Scilab native objects containing integers</para>
-        <para></para>
+        <refpurpose>This page lists all the functions to manipulate Scilab native objects containing integers</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <refsection id="api_integer_scilab_getIntegerPrecision">

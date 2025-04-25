@@ -10,33 +10,27 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns3="http://www.w3.org/1999/xhtml" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" version="5.0-subset Scilab" xml:id="hours" xml:lang="en">
     <refnamediv>
         <refname>hours</refname>
-        <refpurpose>convert reals in hours (duration)</refpurpose>
-        <refpurpose>convert hours in reals</refpurpose>
+        <refpurpose>convert reals in hours (duration) / convert hours (duration) in reals</refpurpose>
     </refnamediv>
     <refnamediv xml:id="minutes">
         <refname>minutes</refname>
-        <refpurpose>convert reals in minutes (duration)</refpurpose>
-        <refpurpose>convert minutes in reals</refpurpose>
+        <refpurpose>convert reals in minutes (duration) / convert minutes (duration) in reals</refpurpose>
     </refnamediv>
     <refnamediv xml:id="seconds">
         <refname>seconds</refname>
-        <refpurpose>convert reals in seconds (duration)</refpurpose>
-        <refpurpose>convert seconds in reals</refpurpose>
+        <refpurpose>convert reals in seconds (duration) / convert seconds (duration) in reals</refpurpose>
     </refnamediv>
     <refnamediv xml:id="milliseconds">
         <refname>milliseconds</refname>
-        <refpurpose>convert reals in milliseconds (duration)</refpurpose>
-        <refpurpose>convert milliseconds in reals</refpurpose>
+        <refpurpose>convert reals in milliseconds (duration) / convert milliseconds (duration) in reals</refpurpose>
     </refnamediv>
     <refnamediv xml:id="days">
         <refname>days</refname>
-        <refpurpose>convert reals in days (duration)</refpurpose>
-        <refpurpose>convert days in reals</refpurpose>
+        <refpurpose>convert reals in days (duration) / convert days (duration) in reals</refpurpose>
     </refnamediv>
     <refnamediv xml:id="years">
         <refname>years</refname>
-        <refpurpose>convert reals in years (duration)</refpurpose>
-        <refpurpose>convert years in reals</refpurpose>
+        <refpurpose>convert reals in years (duration) / convert years (duration) in reals</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>

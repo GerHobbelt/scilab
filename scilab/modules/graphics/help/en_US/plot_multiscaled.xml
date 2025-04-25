@@ -19,8 +19,6 @@
         <refname>multiscaled plots</refname>
         <refpurpose>How to set several axes for one curve or for curves with distinct scales</refpurpose>
     </refnamediv>
-    <refnamediv xml:id="plotyy"/>
-    <refnamediv xml:id="yyaxis"/>
     <refsection>
         <title>Description</title>
         <para>
@@ -53,8 +51,9 @@
                 <listitem>
                     <para>
                     We want to overplot several curves sharing the same X abscissae but according
-                    to distinct uncorrelated Y scales. Then, one or several overlaying axes will
-                    be set using <link linkend="newaxes">newaxes</link>().
+                    to distinct uncorrelated Y scales, as <literal xml:id="plotyy">plotyy</literal>
+                    and <literal xml:id="yyaxis">yyaxis</literal> functions in MATLAB (R).
+                    Then, one or several overlaying axes will be set using <link linkend="newaxes">newaxes</link>().
                     </para>
                 </listitem>
             </orderedlist>
