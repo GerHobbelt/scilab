@@ -20,7 +20,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="fsolve" xml:lang="en">
     <refnamediv>
         <refname>fsolve</refname>
-        <refpurpose>find a zero of a system of n nonlinear functions</refpurpose>
+        <refpurpose>find a zero of a system of non-linear equations - find f(x) = 0</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -94,12 +94,12 @@
     </refsection>
     <refsection>
         <title>Description</title>
-        <para>find a zero of a system of n nonlinear functions in n variables by a
-            modification of the powell hybrid method. Jacobian may be provided.
+        <para>Find a zero of a system of n nonlinear functions in n variables by a
+            modification of the Powell's hybrid method (Jacobian may be provided):
         </para>
-        <programlisting role=""><![CDATA[
-0 = fct(x) w.r.t x.
- ]]></programlisting>
+        <para>
+            <latex><![CDATA[$f(x)=0$]]></latex> w.r.t. <latex><![CDATA[$x$]]></latex> where <latex><![CDATA[$f:R^n \rightarrow R^n$]]></latex>
+        </para>
         <para>
             <literal>fct</literal> is an "external". This external returns
             <literal>v=fct(x)</literal> given <literal>x</literal>.

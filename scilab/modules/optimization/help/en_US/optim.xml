@@ -18,7 +18,7 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:ns3="http://www.w3.org/1999/xhtml" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org"  xml:id="optim" xml:lang="en">
     <refnamediv>
         <refname>optim</refname>
-        <refpurpose>non-linear optimization routine</refpurpose>
+        <refpurpose>non-linear optimization - find minimum of f(x)</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -546,10 +546,12 @@
     </refsection>
     <refsection>
         <title>Description</title>
-        <para>This function solves unconstrained nonlinear optimization
-            problems:
+        <para>
+            This function solves unconstrained nonlinear optimization problems:
         </para>
-        <screen>min f(x)</screen>
+        <para>
+            find the minimum of <latex><![CDATA[$F(x)$]]></latex> w.r.t. <latex><![CDATA[$x$]]></latex> where <latex><![CDATA[$F:R^n\rightarrow R$]]></latex>
+        </para>
         <para>
             where <literal>x</literal> is a vector and <literal>f(x)</literal>
             is a function that returns a scalar. This function can also solve bound
