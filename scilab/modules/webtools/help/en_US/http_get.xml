@@ -157,7 +157,12 @@
                 <term>status</term>
                 <listitem>
                     <para>
-                        HTTP response code.
+                        HTTP response code as described in the <literal>RFC 9110</literal>. Values 
+                        in <literal>[100:199]</literal> are Informational responses,
+                        in <literal>[200:299]</literal> are Successful responses,
+                        in <literal>[300:399]</literal> are Redirection messages (if you did not set <literal>follow</literal>),
+                        in <literal>[400:499]</literal> are Client errors,
+                    and in <literal>[500:599]</literal> are Server errors.
                     </para>
                 </listitem>
             </varlistentry>
