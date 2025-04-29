@@ -17,9 +17,17 @@ function %table_p(t)
 
     res = [];
     current_len = 0;
-    l = lines();
-    l(2) = 50;
     col_s = 1
+    l = lines();
+    // l == [10 0] => potentially lines(0,0)
+    nbcolsdefault = 10;    
+    
+    if l(1) > nbcolsdefault & l(2) == 0 then
+        // display max 50 rows of t. 
+        // if the number of rows is greater than 50, 
+        // displays the first three lines of t and the last three separated by ...
+        l(2) = 50;
+    end
 
     nb_rows = size(t, 1);
     rowNames = t.props.rowNames;
@@ -27,8 +35,8 @@ function %table_p(t)
     if rowNames <> [] then
         variableNames = ["" variableNames];
     end
-
-    if nb_rows > l(2) then
+    
+    if l(2) <> 0 & nb_rows > 6 & nb_rows > l(2) then
         output = [rowNames([1:3, nb_rows-2:nb_rows], 1) string(t([1:3, nb_rows-2:nb_rows], :))];
     else
         output = [rowNames string(t)];
@@ -41,19 +49,23 @@ function %table_p(t)
         max_len = max(max_len, len, 3);
 
         current_len = current_len + max_len + 3;
-        if current_len >= l(1) then
-            printf("         column %d to %d\n", col_s, c - 1);
-            if mode() > 1
-                printf("\n");
+        if l(1) > nbcolsdefault & current_len >= l(1) then
+            if c == 1 then
+                l(1) == nbcolsdefault
+            else
+                printf("         column %d to %d\n", col_s, c - 1);
+                if mode() > 1
+                    printf("\n");
+                end
+                res = strcat(res, "", "c");
+                mprintf("%s\n", res);
+                if mode() > 1
+                    printf("\n");
+                end
+                res = [];
+                col_s = c;
+                current_len = max_len + 3;
             end
-            res = strcat(res, "", "c");
-            mprintf("%s\n", res);
-            if mode() > 1
-                printf("\n");
-            end
-            res = [];
-            col_s = c;
-            current_len = max_len + 3;
         end
     
         shift = floor((max_len - len) / 2);
@@ -69,7 +81,7 @@ function %table_p(t)
             f = sprintf("   %%-%ds\\n", max_len);
         end
 
-        if l(2) <> 0 && nb_rows > l(2) then
+        if l(2) <> 0 && nb_rows > 6 && nb_rows > l(2) then
             left = floor((max_len-3)/2);
             subres = sprintf(f, [header ; separator ; "" ; output(1:3, c)]);
             subres($+1) = "   " + sprintf("%*s", -max_len, sprintf("%*s", left+3, "..."));
@@ -80,12 +92,12 @@ function %table_p(t)
         end
     end
 
-    if col_s <> 1 then
+    if l(1) > nbcolsdefault & col_s <> 1 then
         printf("         column %d to %d\n", col_s, c);
         if mode() > 1
             mprintf("\n");
         end
-    end
+    end    
 
     res = strcat(res, "", "c");
     mprintf("%s\n", res);
