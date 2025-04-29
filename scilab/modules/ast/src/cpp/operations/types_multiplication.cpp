@@ -24,6 +24,7 @@
 #include "operations.hxx"
 
 #include <Eigen/Sparse>
+#include <Eigen/Dense>
 
 extern "C"
 {
@@ -37,6 +38,59 @@ extern "C"
 
 
 using namespace types;
+
+// define arrays on operation functions
+static intmul_function pIntMulfunction[types::InternalType::IdLast][types::InternalType::IdLast] = {NULL};
+static std::wstring op = L"*";
+
+void fillIntMulFunction(){
+#define scilab_fill_intmul(id1, id2, func, typeIn1, typeIn2, typeOut) \
+    pIntMulfunction[types::InternalType::Id##id1][types::InternalType::Id##id2] = (intmul_function) & intmul_##func<typeIn1, typeIn2, typeOut>
+
+    //Matrix * Matrix
+    scilab_fill_intmul(Int8, Int8,   M_M, Int8, Int8, Int8);
+    scilab_fill_intmul(UInt8, UInt8,  M_M, UInt8, UInt8, UInt8);
+    scilab_fill_intmul(Int16, Int16,  M_M, Int16, Int16, Int16);
+    scilab_fill_intmul(UInt16, UInt16, M_M, UInt16, UInt16, UInt16);
+    scilab_fill_intmul(Int32, Int32,  M_M, Int32, Int32, Int32);
+    scilab_fill_intmul(UInt32, UInt32, M_M, UInt32, UInt32, UInt32);
+    scilab_fill_intmul(Int64, Int64,  M_M, Int64, Int64, Int64);
+    scilab_fill_intmul(UInt64, UInt64, M_M, UInt64, UInt64, UInt64);
+
+
+    // Matrix * Scalar
+    scilab_fill_intmul(Int8, ScalarInt8,   M_S, Int8, Int8, Int8);
+    scilab_fill_intmul(UInt8, ScalarUInt8,  M_S, UInt8, UInt8, UInt8);
+    scilab_fill_intmul(Int16, ScalarInt16,  M_S, Int16, Int16, Int16);
+    scilab_fill_intmul(UInt16, ScalarUInt16, M_S, UInt16, UInt16, UInt16);
+    scilab_fill_intmul(Int32, ScalarInt32,  M_S, Int32, Int32, Int32);
+    scilab_fill_intmul(UInt32, ScalarUInt32, M_S, UInt32, UInt32, UInt32);
+    scilab_fill_intmul(Int64, ScalarInt64,  M_S, Int64, Int64, Int64);
+    scilab_fill_intmul(UInt64, ScalarUInt64, M_S, UInt64, UInt64, UInt64);
+
+
+    // Scalar * Matrix
+    scilab_fill_intmul(ScalarInt8, Int8,   S_M, Int8, Int8, Int8);
+    scilab_fill_intmul(ScalarUInt8, UInt8,  S_M, UInt8, UInt8, UInt8);
+    scilab_fill_intmul(ScalarInt16, Int16,  S_M, Int16, Int16, Int16);
+    scilab_fill_intmul(ScalarUInt16, UInt16, S_M, UInt16, UInt16, UInt16);
+    scilab_fill_intmul(ScalarInt32, Int32,  S_M, Int32, Int32, Int32);
+    scilab_fill_intmul(ScalarUInt32, UInt32, S_M, UInt32, UInt32, UInt32);
+    scilab_fill_intmul(ScalarInt64, Int64,  S_M, Int64, Int64, Int64);
+    scilab_fill_intmul(ScalarUInt64, UInt64, S_M, UInt64, UInt64, UInt64);
+
+
+    // Scalar * Scalar
+    scilab_fill_intmul(ScalarInt8, ScalarInt8,   S_S, Int8, Int8, Int8);
+    scilab_fill_intmul(ScalarUInt8, ScalarUInt8,  S_S, UInt8, UInt8, UInt8);
+    scilab_fill_intmul(ScalarInt16, ScalarInt16,  S_S, Int16, Int16, Int16);
+    scilab_fill_intmul(ScalarUInt16, ScalarUInt16, S_S, UInt16, UInt16, UInt16);
+    scilab_fill_intmul(ScalarInt32, ScalarInt32,  S_S, Int32, Int32, Int32);
+    scilab_fill_intmul(ScalarUInt32, ScalarUInt32, S_S, UInt32, UInt32, UInt32);
+    scilab_fill_intmul(ScalarInt64, ScalarInt64,  S_S, Int64, Int64, Int64);
+    scilab_fill_intmul(ScalarUInt64, ScalarUInt64, S_S, UInt64, UInt64, UInt64);
+}
+
 
 InternalType *GenericTimes(InternalType *_pLeftOperand, InternalType *_pRightOperand)
 {
@@ -69,6 +123,26 @@ InternalType *GenericTimes(InternalType *_pLeftOperand, InternalType *_pRightOpe
         }
 
         return pResult;
+    }
+
+    /*
+    ** INT * INT
+    */
+    if (_pLeftOperand->isInt() && _pRightOperand->isInt())
+    {
+        intmul_function intmul = pIntMulfunction[_pLeftOperand->getId()][_pRightOperand->getId()];
+        if (intmul)
+        {
+            pResult = intmul(_pLeftOperand, _pRightOperand);
+            if (pResult)
+            {
+                return pResult;
+            }
+            else
+            {
+                throw ast::InternalError(errorMultiplySize(_pLeftOperand->getAs<GenericType>(), _pRightOperand->getAs<GenericType>()));
+            }
+        }
     }
 
     /*
@@ -1282,4 +1356,82 @@ int MultiplySparseByDouble(Sparse *_pSparse, Double*_pDouble, GenericType** _pOu
     *_pOut = pOut;
 
     return 0;
+}
+
+
+template<class T, class U, class O>
+InternalType* intmul_M_M2(T* _pL, U* _pR)
+{
+    if (_pR->getRows() != _pL->getCols())
+    {
+        return nullptr;
+    }
+
+    O* pOut = new O(_pL->getRows(), _pR->getCols());
+
+    typename T::type* l = _pL->get();
+    typename U::type* r = _pR->get();
+    typename O::type* o = pOut->get();
+
+    for (int i = 0; i < _pL->getRows(); ++i)
+    {
+        for (int j = 0; j < _pR->getCols(); ++j)
+        {
+            o[i + j * _pL->getRows()] = 0;
+            for (int k = 0; k < _pL->getCols(); ++k)
+            {
+                o[i + j * _pL->getRows()] += l[i + k * _pL->getRows()] * r[k + j * _pR->getRows()];
+            }
+        }
+    }
+
+    return pOut;
+}
+
+template<class T, class U, class O>
+InternalType* intmul_M_M(T* _pL, U* _pR)
+{
+    if (_pL->getDims() > 2 || _pR->getDims() > 2)
+    {
+        return nullptr;
+    }
+
+    if (_pR->getRows() != _pL->getCols())
+    {
+        return nullptr;
+    }
+
+    O* pOut = new O(_pL->getRows(), _pR->getCols());
+    Eigen::Map<const Eigen::Matrix<typename T::type, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>> int1Map(_pL->get(), _pL->getRows(), _pL->getCols());
+    Eigen::Map<const Eigen::Matrix<typename U::type, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>> int2Map(_pR->get(), _pR->getRows(), _pR->getCols());
+    Eigen::Map<Eigen::Matrix<typename O::type, Eigen::Dynamic, Eigen::Dynamic, Eigen::ColMajor>> intOutMap(pOut->get(), _pL->getRows(), _pR->getCols());
+    intOutMap = int1Map * int2Map;
+    return pOut;
+}
+
+template<class T, class U, class O>
+InternalType* intmul_M_S(T* _pL, U* _pR)
+{
+    O* pOut = new O(_pL->getDims(), _pL->getDimsArray());
+    typename T::type* l = _pL->get();
+    typename O::type* o = pOut->get();
+    typename O::type r = _pR->get(0);
+    for (int i = 0; i < _pL->getSize(); ++i)
+    {
+        o[i] = l[i] * r;
+    }
+
+    return pOut;
+}
+
+template<class T, class U, class O>
+InternalType* intmul_S_M(T* _pL, U* _pR)
+{
+    return intmul_M_S<U, T, O>(_pR, _pL);
+}
+
+template<class T, class U, class O>
+InternalType* intmul_S_S(T* _pL, U* _pR)
+{
+    return new O(_pL->get(0) * _pR->get(0));
 }

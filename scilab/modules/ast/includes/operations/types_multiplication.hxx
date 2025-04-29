@@ -20,6 +20,17 @@
 #include "polynom.hxx"
 #include "sparse.hxx"
 
+void fillIntMulFunction();
+typedef types::InternalType* (*intmul_function)(types::InternalType*, types::InternalType*);
+
+#define DECLARE_INTMUL_PROTO(x) template<class T, class U, class O> \
+types::InternalType* x(T* _pL, U* _pR)
+DECLARE_INTMUL_PROTO(intmul_M_M);
+DECLARE_INTMUL_PROTO(intmul_S_S);
+DECLARE_INTMUL_PROTO(intmul_M_S);
+DECLARE_INTMUL_PROTO(intmul_S_M);
+
+
 int MultiplyDoubleByDouble(types::Double* _pDouble1, types::Double* _pDouble2, types::Double** _pDoubleOut);
 int MultiplyDoubleByPoly(types::Double* _pDouble, types::Polynom* _pPoly, types::Polynom** _pPolyOut);
 int MultiplyPolyByDouble(types::Polynom* _pPoly, types::Double* _pDouble, types::Polynom **_pPolyOut);
