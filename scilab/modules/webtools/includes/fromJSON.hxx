@@ -30,16 +30,16 @@ extern "C"
 
 class StepAny {
 public:
-    StepAny(): type(ScilabType::ScilabNull), container(nullptr), isArray(true),
+    StepAny(): type(ScilabType::ScilabNull), container(nullptr), isArray(true), hasField(false),
         flat_size(0), dim(0), dims_size({0}), dims_array({0}), field(L"") {}
 
     StepAny(ScilabType t, types::InternalType* pIT, int i, int d, std::vector<int> ds, std::vector<int> da, std::wstring f):
-        type(t), container(pIT), isArray(true), flat_size(i), dim(d), dims_size(ds), dims_array(da), field(f) {}
+        type(t), container(pIT), isArray(true), hasField(false), flat_size(i), dim(d), dims_size(ds), dims_array(da), field(f) {}
 
-    StepAny(ScilabType t): type(t), container(nullptr),  isArray(true),
+    StepAny(ScilabType t): type(t), container(nullptr), isArray(true), hasField(false),
         flat_size(0), dim(0), dims_size({0}), dims_array({0}), field(L"") {}
 
-    StepAny(types::InternalType* pIT, bool idx = 0): container(pIT), isArray(true),
+    StepAny(types::InternalType* pIT, bool idx = 0): container(pIT), isArray(true), hasField(false),
         flat_size(idx), dim(0), dims_size({0}), dims_array({0}), field(L"")
     {
         type = pIT->getType();
@@ -56,6 +56,7 @@ public:
     ScilabType type;
     types::InternalType* container;
     bool isArray;
+    bool hasField;
     int flat_size;
     int dim;
     std::vector<int> dims_size;

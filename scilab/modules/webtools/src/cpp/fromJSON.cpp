@@ -198,7 +198,7 @@ bool sax_json_scilab::start_array()
     // root: [... ||
     // new array element of a struct field: { "f": [...
     // new array element of a List: [1, "e", [...
-    if(m_steps.empty() || m_steps.top()->field != L"" || m_steps.top()->type == ScilabType::ScilabList)
+    if(m_steps.empty() || m_steps.top()->hasField || m_steps.top()->type == ScilabType::ScilabList)
     {
         m_steps.push(new StepAny());
         return true;
@@ -290,7 +290,7 @@ bool sax_json_scilab::start_object()
     // root struct: { ...
     // non array struct: "field": { ...
     // struct as list element: [1, {...
-    if(m_steps.empty() || m_steps.top()->field != L"" || m_steps.top()->type == ScilabType::ScilabList)
+    if(m_steps.empty() || m_steps.top()->hasField || m_steps.top()->type == ScilabType::ScilabList)
     {
         m_steps.push(new Step<types::SingleStruct*>(ScilabType::ScilabStruct));
         m_steps.top()->isArray = false;
@@ -347,6 +347,7 @@ bool sax_json_scilab::end_object()
 
         // go to next struct
         current->field = L"";
+        current->hasField = false;
         return true;
     }
 
@@ -389,6 +390,8 @@ bool sax_json_scilab::key(std::string& val)
     auto current = static_cast<Step<types::SingleStruct*>*>(m_steps.top());
     current->array[current->flat_size - 1]->addField(wField);
     current->field = wField;
+    current->hasField = true;
+
     return true;
 }
 

@@ -59,6 +59,13 @@ expected = list([st,st], list(st, st));
 expected(2)(1).path = null();
 computed = fromJSON("[[{""array"":[1,2,3],""bool"":true,""path"":"""+SCI+"""},{""array"":[1,2,3],""bool"":true,""path"":"""+SCI+"""}],[{""array"":[1,2,3],""bool"":true},{""array"":[1,2,3],""bool"":true,""path"":"""+SCI+"""}]]");
 assert_checkequal(computed, expected);
+// empty field name
+expected = struct("", 42);
+computed = fromJSON("{"""":42}");
+assert_checkequal(computed, expected);
+expected = struct("", struct("value",42));
+computed = fromJSON("{"""":{""value"":42}}");
+assert_checkequal(computed, expected);
 
 // null
 assert_checkequal(fromJSON("[null, 1, 2]"), [%nan, 1, 2]);
