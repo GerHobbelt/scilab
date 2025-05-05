@@ -32,6 +32,7 @@ data.sp = sparse([1 2 3]);
 data.spb = sparse([1 2 3] > 1);
 data.st0 = struct();
 data.st = struct("a", [1 2 3]);
+data.st2 = struct("", [1 2 3]);
 data.ST = [struct("a", [1 2 3]) struct("a", [1 2 3]) struct("a", [1 2 3])];
 data.ST0 = [struct() struct() struct()];
 data.h = plot(1:10);
@@ -76,6 +77,8 @@ data.tlist1 = tlist(["t1", "x"], 1);
 data.mlist1 = mlist(["t1", "x"], 2);
 data.tlist2 = tlist(["t2", "x"], 1);
 data.mlist2 = mlist(["t2", "x"], 2);
+data.tlist3 = tlist(["t3", ""], 1);
+data.mlist3 = mlist(["t3", ""], 2);
 
 function %t1_p(x), disp("test");end
 function %t2_p(x), disp("test");end

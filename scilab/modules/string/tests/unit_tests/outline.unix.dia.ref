@@ -30,6 +30,7 @@ data.sp = sparse([1 2 3]);
 data.spb = sparse([1 2 3] > 1);
 data.st0 = struct();
 data.st = struct("a", [1 2 3]);
+data.st2 = struct("", [1 2 3]);
 data.ST = [struct("a", [1 2 3]) struct("a", [1 2 3]) struct("a", [1 2 3])];
 data.ST0 = [struct() struct() struct()];
 data.h = plot(1:10);
@@ -72,6 +73,8 @@ data.tlist1 = tlist(["t1", "x"], 1);
 data.mlist1 = mlist(["t1", "x"], 2);
 data.tlist2 = tlist(["t2", "x"], 1);
 data.mlist2 = mlist(["t2", "x"], 2);
+data.tlist3 = tlist(["t3", ""], 1);
+data.mlist3 = mlist(["t3", ""], 2);
 function %t1_p(x), disp("test");end
 function %t2_p(x), disp("test");end
 function s = %t2_outline(x, verbose), s = "t2 outline";end
@@ -199,6 +202,10 @@ end
   a = [1,2,3]
   [struct] with fields:
   a = [1,2,3]
+ ans = [struct] with fields:
+   = [1,2,3]
+  [struct] with fields:
+   = [1,2,3]
  ans = [1x3 struct] with fields:
   a
   [1x3 struct] with fields:
@@ -607,6 +614,12 @@ Hello world
  ans = t2 outline
   "test"
   "test"
+ ans = (t3 tlist) with fields:
+   = 1
+   = 1
+ ans = (t3 mlist) with fields:
+   = 2
+   = 2
 data
  data = [struct] with fields:
   d0 = []
@@ -640,6 +653,8 @@ data
   st0: [0x0 struct] with no field
   st: [struct] with fields:
       a = [1,2,3]
+  st2: [struct] with fields:
+       = [1,2,3]
   ST: [1x3 struct] with fields:
       a
   ST0: [0x0 struct] with no field
@@ -674,3 +689,7 @@ data
       x = 2
   tlist2: t2 outline
   mlist2: t2 outline
+  tlist3: (t3 tlist) with fields:
+       = 1
+  mlist3: (t3 mlist) with fields:
+       = 2

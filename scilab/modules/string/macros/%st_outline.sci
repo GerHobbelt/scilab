@@ -10,12 +10,11 @@
 
 function s=%st_outline(x, verbose)
     s = %type_dims_outline(x,typeStr="struct",forceDims=size(x,"*")~=1);
-    if verbose == 1
-        if isempty(fieldnames(x))
+    if verbose == 1 then
+        if fieldnames(x) == [] then
             s = s + " with no field";
         else
-            s = s + " with fields:";        
+            s = s + " with fields:";
         end
     end
-    
 endfunction

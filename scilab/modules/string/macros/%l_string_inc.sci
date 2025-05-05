@@ -19,7 +19,7 @@ function t = %l_string_inc(x, level)
 
     fmt = "%s";
 
-    if type(x) == 15 || (isstruct(x) == %f && (isempty(fieldnames(x)) && length(x)>0))
+    if type(x) == 15 || (isstruct(x) == %f && (fieldnames(x) == [] && length(x)>0))
         fields = 1:length(x);
     else
         fields = fieldnames(x)(:)';        
@@ -71,7 +71,7 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
         end
     elseif or(type(value) == [16,17]) & ~isdef("%"+typeof(value)+"_outline")
         head = %tlist_outline(value, verb);
-        if level > 0 & ~isempty(fieldnames(value))
+        if level > 0 & fieldnames(value) <> []
             str = blanks(4) + %l_string_inc(value, level-1);
         end        
     elseif or(type(value) == [1,2,4,5,6,8,10]) || iscell(value)
