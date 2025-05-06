@@ -13,7 +13,7 @@ RestoreExitButton
 ClosePipeInfo
 pipeSpawnOut
 pipeSpawnErr
-CreateOuput
+CreateOutput
 spawncommand
 DetectDetachProcessInCommandLine
 DetectStartInCommandLine

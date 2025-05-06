@@ -12,43 +12,160 @@
 *
 */
 
-/*--------------------------------------------------------------------------*/
-/* Interface with system C function */
-/*--------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
-#ifdef _MSC_VER
-#include "spawncommand.h"
-#else
+#include <string.h>
+#include <unistd.h>
 #include <sys/wait.h>
 #include "sci_malloc.h"
-#endif
+#include "Thread_Wrapper.h"
+#include "os_string.h"
 #include "charEncoding.h"
 #include "systemc.h"
-/*--------------------------------------------------------------------------*/
-int systemc(char *command, int *stat)
+#include "scilabWrite.hxx"
+
+#define LF_STR '\n'
+typedef struct pipeinfo
 {
-#ifdef _MSC_VER
-    *stat = CallWindowsShell(command);
-#else
-    int status = system(command);
-    /* provide exit value of the child */
-    *stat = WEXITSTATUS(status);
-#endif
-    return  0;
-}
-/*--------------------------------------------------------------------------*/
-int systemcW(wchar_t* _pstCommand, int *stat)
+    int pipe;
+    char* buffer;
+} pipeinfo;
+
+static void* readOutput(void* data)
 {
-#ifdef _MSC_VER
-    *stat = CallWindowsShellW(_pstCommand);
-#else
-    char* pstTemp = wide_string_to_UTF8(_pstCommand);
-    int status = system(pstTemp);
-    FREE(pstTemp);
-    /* provide exit value of the child */
-    *stat = WEXITSTATUS(status);
-#endif
-    return  0;
+    pipeinfo* pi = (pipeinfo*)data;
+    char buffer[2048];
+    FILE* file = fdopen(pi->pipe, "r");
+    if (file == NULL)
+    {
+        return NULL;
+    }
+
+    char* msg = (char*)MALLOC(2048*2);
+    memset(msg, 0, 2048*2);
+    while (fgets(buffer, sizeof(buffer), file) != NULL)
+    {
+        strcat(msg, buffer);
+    }
+
+    pi->buffer = msg;
+    fclose(file);
+    return NULL;
 }
-/*--------------------------------------------------------------------------*/
+
+int splitstring(char* output, char*** splited)
+{
+    int outlines = 0;
+    char* pointer = output;
+    while (pointer = strchr(pointer, LF_STR))
+    {
+        outlines++;
+        pointer++;
+    }
+
+    *splited = (char**)malloc(outlines * sizeof(char*));
+    memset(*splited, 0x00, sizeof(char*) * outlines);
+
+    for(int i = 0; i < outlines; i++)
+    {
+        pointer = strchr(output, LF_STR);
+        (*splited)[i] = output;
+        if(pointer)
+        {
+            *pointer = '\0';
+        }
+
+        size_t len = strlen(output);
+        output += len + 1;
+    }
+
+    return outlines;
+}
+
+int spawncommand(wchar_t* _pstCommand, BOOL bOutput, char** stdoutstr, char** stderrstr)
+{
+    int stdout_pipe[2] = {0};
+    int stderr_pipe[2] = {0};
+    pid_t pid;
+    int status = 0;
+
+    if (bOutput && (pipe(stdout_pipe) == -1 || pipe(stderr_pipe) == -1))
+    {
+        return -1;
+    }
+
+    pid = fork();
+    if (pid == -1)
+    {
+        return -1;
+    }
+
+    char* cmd = wide_string_to_UTF8(_pstCommand);
+    if (pid == 0)
+    {
+        // executed by the child process
+        if(bOutput)
+        {
+            // close read end of stdout/stderr pipe
+            close(stdout_pipe[0]);
+            close(stderr_pipe[0]);
+
+            // redirect to pipe
+            dup2(stdout_pipe[1], STDOUT_FILENO);
+            dup2(stderr_pipe[1], STDERR_FILENO);
+
+            // close write end of stdout/stderr pipe
+            close(stdout_pipe[1]);
+            close(stderr_pipe[1]);
+        }
+
+        // execute the command
+        execl("/bin/sh", "sh", "-c", cmd, (char *)NULL);
+
+        // if this code runs it because the execution has failed
+        // exit the child process
+        exit(EXIT_FAILURE);
+    }
+
+    FREE(cmd);
+
+    // executed by the parent process (pid is the child pid)
+    if(bOutput)
+    {
+        // close write end of stdout/stderr pipe
+        close(stdout_pipe[1]);
+        close(stderr_pipe[1]);
+
+        // if detach, do not get output ?
+        // spawn threads for each output
+        pipeinfo piOut = {stdout_pipe[0], NULL};
+        __threadId threadStdOut;
+        __threadKey keyStdOut;
+        __CreateThreadWithParams(&threadStdOut, &keyStdOut, &readOutput, &piOut);
+
+        pipeinfo piErr = {stderr_pipe[0], NULL};
+        __threadId threadStdErr;
+        __threadKey keyStdErr;
+        __CreateThreadWithParams(&threadStdErr, &keyStdErr, &readOutput, &piErr);
+
+        waitpid(pid, &status, 0);
+
+        // in case of detached command, do not wait for outputs
+        if(piOut.buffer || piErr.buffer)
+        {
+            __WaitThreadDie(threadStdOut);
+            __WaitThreadDie(threadStdErr);
+            *stdoutstr = piOut.buffer;
+            *stderrstr = piErr.buffer;
+        }
+    }
+
+    waitpid(pid, &status, 0);
+    if (WIFEXITED(status))
+    {
+        return WEXITSTATUS(status);
+    }
+
+    // error if the child did not terminate normally
+    return -1;
+}

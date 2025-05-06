@@ -79,5 +79,8 @@
     <None Include="core_f_Import.def">
       <Filter>Libraries Dependencies</Filter>
     </None>
+    <None Include="..\c\Scilab_Windows_Import.def">
+      <Filter>Libraries Dependencies</Filter>
+    </None>
   </ItemGroup>
 </Project>

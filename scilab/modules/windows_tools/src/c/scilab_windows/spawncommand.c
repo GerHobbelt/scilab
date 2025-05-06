@@ -255,7 +255,7 @@ int GetNumberOfLines(char *lines)
     return NumberOfLines;
 }
 /*--------------------------------------------------------------------------*/
-char **CreateOuput(pipeinfo *pipe, BOOL DetachProcess)
+char **CreateOutput(pipeinfo *pipe, BOOL DetachProcess)
 {
     char **OuputStrings = NULL;
     if (pipe)

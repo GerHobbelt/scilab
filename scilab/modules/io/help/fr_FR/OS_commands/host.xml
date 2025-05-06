@@ -27,10 +27,13 @@
         <refpurpose>alias de host()</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
-        <title>Séquence d'appel</title>
         <synopsis>status = host(commands)</synopsis>
+        <synopsis>[status, stdout] = host(commands)</synopsis>
+        <synopsis>[status, stdout, stderr] = host(commands)</synopsis>
         <para/>
         <synopsis>status = unix(commands)</synopsis>
+        <synopsis>[status, stdout] = unix(commands)</synopsis>
+        <synopsis>[status, stdout, stderr] = unix(commands)</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -60,6 +63,22 @@
                     <note>
                        Sous Windows, 0 est le plus souvent retourné en cas d'exécution sans erreur.
                     </note>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>stdout</term>
+                <listitem>
+                    <para>
+                        Chaîne de caractère qui contient la sortie standard de la commande exécutée.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>stderr</term>
+                <listitem>
+                    <para>
+                        Chaîne de caractère qui contient la sortie d'erreur de la commande exécutée.
+                    </para>
                 </listitem>
             </varlistentry>
         </variablelist>

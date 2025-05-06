@@ -178,14 +178,14 @@ int sci_dos(char *fname, void* pvApiCtx)
         {
             /* StdErr will be "Output" */
             *StatusExit = FALSE;
-            Output = CreateOuput(&pipeSpawnErr, DetachProcessOption);
+            Output = CreateOutput(&pipeSpawnErr, DetachProcessOption);
             numberoflines = pipeSpawnErr.NumberOfLines;
         }
         else
         {
             /* StdOut will be "Output" */
             *StatusExit = TRUE;
-            Output = CreateOuput(&pipeSpawnOut, DetachProcessOption);
+            Output = CreateOutput(&pipeSpawnOut, DetachProcessOption);
             numberoflines = pipeSpawnOut.NumberOfLines;
         }
     }
@@ -208,14 +208,14 @@ int sci_dos(char *fname, void* pvApiCtx)
             DeleteFile(FileTMPDir);
             /* StdOut will be "Output" */
             *StatusExit = TRUE;
-            Output = CreateOuput(&pipeSpawnOut, DetachProcessOption);
+            Output = CreateOutput(&pipeSpawnOut, DetachProcessOption);
             numberoflines = pipeSpawnOut.NumberOfLines;
         }
         else
         {
             /* StdErr will be "Output" */
             *StatusExit = FALSE;
-            Output = CreateOuput(&pipeSpawnErr, DetachProcessOption);
+            Output = CreateOutput(&pipeSpawnErr, DetachProcessOption);
             numberoflines = pipeSpawnErr.NumberOfLines;
         }
     }

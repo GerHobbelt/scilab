@@ -22,16 +22,27 @@
 
 extern "C"
 {
+#ifdef _MSC_VER
+#include "spawncommand.h"
+#else
 #include "systemc.h"
+#endif
+
 #include "localization.h"
 #include "Scierror.h"
 }
 
 types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
-    if (in.size() != 1)
+    if (in.size() < 1 || in.size() > 2)
     {
-        Scierror(77, _("%s: Wrong number of input argument(s): %d expected.\n"), "host", 1);
+        Scierror(77, _("%s: Wrong number of input argument(s): %d to %d expected.\n"), "host", 1, 2);
+        return types::Function::Error;
+    }
+
+    if (_iRetCount > 3)
+    {
+        Scierror(78, _("%s: Wrong number of output argument(s): %d to %d expected.\n"), "host", 1, 3);
         return types::Function::Error;
     }
 
@@ -45,9 +56,86 @@ types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, typ
 
     wchar_t* pstCommand = pIT->getAs<types::String>()->get(0);
 
-    int stat = 0;
-    systemcW(pstCommand, &stat);
+    char** output = NULL;
+    char** error = NULL;
+    int outlines = 0;
+    int errlines = 0;
+#ifdef _MSC_VER
+    double stat = (double)spawncommand(pstCommand, FALSE);
+    if(_iRetCount > 1)
+    {
+        output = CreateOutput(&pipeSpawnOut, FALSE);
+        outlines = pipeSpawnOut.NumberOfLines;
+        if(_iRetCount == 3)
+        {
+            error = CreateOutput(&pipeSpawnErr, FALSE);
+            errlines = pipeSpawnErr.NumberOfLines;
+        }
+    }
+#else
+    char* stdoutstr = nullptr;
+    char* stderrstr = nullptr;
+    BOOL bOutput = _iRetCount > 1 ? TRUE : FALSE;
+    int stat = spawncommand(pstCommand, bOutput, &stdoutstr, &stderrstr);
+    if(bOutput && stdoutstr && stderrstr)
+    {
+        outlines = splitstring(stdoutstr, &output);
+        errlines = splitstring(stderrstr, &error);
+    }
+#endif
 
     out.push_back(new types::Double(stat));
+    if (_iRetCount > 1)
+    {
+        types::String* pStr = nullptr;
+        if (outlines && output[0] != NULL)
+        {
+            pStr = new types::String(outlines, 1);
+            pStr->set(output);
+            out.push_back(pStr);
+        }
+        else
+        {
+            out.push_back(new types::String(""));
+        }
+
+        if (_iRetCount == 3)
+        {
+            if (errlines && error[0] != NULL)
+            {
+                pStr = new types::String(errlines, 1);
+                pStr->set(error);
+                out.push_back(pStr);
+            }
+            else
+            {
+                out.push_back(new types::String(""));
+            }
+        }
+    }
+
+#ifdef _MSC_VER
+    ClosePipeInfo(pipeSpawnOut);
+    ClosePipeInfo(pipeSpawnErr);
+
+    for(int i = 0; i < outlines; i++)
+    {
+        if (output[i])
+        {
+            FREE(output[i]);
+        }
+    }
+
+    for(int i = 0; i < errlines; i++)
+    {
+        if (error[i])
+        {
+            FREE(error[i]);
+        }
+    }
+#else
+    FREE(stdoutstr);
+    FREE(stderrstr);
+#endif
     return types::Function::OK;
 }

@@ -29,8 +29,12 @@
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>status = host(commands)</synopsis>
+        <synopsis>[status, stdout] = host(commands)</synopsis>
+        <synopsis>[status, stdout, stderr] = host(commands)</synopsis>
         <para/>
         <synopsis>status = unix(commands)</synopsis>
+        <synopsis>[status, stdout] = unix(commands)</synopsis>
+        <synopsis>[status, stdout, stderr] = unix(commands)</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -60,6 +64,22 @@
                     <note>
                        With Windows, 0 is most often returned in case of successful execution.
                     </note>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>stdout</term>
+                <listitem>
+                    <para>
+                        String that contains the standard output of the executed command.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>stderr</term>
+                <listitem>
+                    <para>
+                        String that contains the standard error of the executed command.
+                    </para>
                 </listitem>
             </varlistentry>
         </variablelist>

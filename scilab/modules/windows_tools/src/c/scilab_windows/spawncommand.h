@@ -69,7 +69,7 @@ SCILAB_WINDOWS_IMPEXP BOOL DetectStartInCommandLine(wchar_t* command);
 * @param[in] DetachProcess
 * @return output
 */
-SCILAB_WINDOWS_IMPEXP char **CreateOuput(pipeinfo *pipe, BOOL DetachProcess);
+SCILAB_WINDOWS_IMPEXP char **CreateOutput(pipeinfo *pipe, BOOL DetachProcess);
 
 /**
 * Close pipe
