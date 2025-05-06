@@ -30,7 +30,7 @@
              plot(t,real(z),t,imag(z))
              legend("real(z)","imag(z)");
              ]]></programlisting>
-             <scilab:image>
+             <scilab:image><![CDATA[
                  function out = crhs(t,y)
                      out = 10*exp(2*%i*%pi*t)*y;
                  endfunction
@@ -38,7 +38,7 @@
                  plot(t,real(z),t,imag(z))
                  legend("real(z)","imag(z)");
                  gcf().axes_size(2)=300  
-             </scilab:image>
+             ]]></scilab:image>
          </para>
     </refsection>
     <refsection role="example">
@@ -75,7 +75,7 @@
     plot(t,dydmu)
     title("$\frac{\partial y}{\partial \mu}(t,y)$")
     ]]></programlisting>
-    <scilab:image>
+    <scilab:image><![CDATA[
         function dydt = vdp(t,y,mu)
             dydt = [y(2,:)
                     mu*(1-y(1,:).*y(1,:)).*y(2,:)-y(1,:)];
@@ -93,8 +93,8 @@
         plot(t,dydmu)
         title("$\frac{\partial y}{\partial \mu}$")
         gcf().axes_size(2)=300  
-        gcf().axes_size(1)=800  
-    </scilab:image>
+        gcf().axes_size(1)=800
+    ]]></scilab:image>
 </para>
 
 <refsection role="see also">

@@ -84,9 +84,9 @@ x=linspace(-2*%pi,2*%pi,100)';
 // utilizando cores existentes
 e=plot2d(x,[sin(x),cos(x)],style=[color("red"),color("green")]);
 // novas cores adicionadas ao mapa de core
-e(1).foreground=color("purple"); e(2).foreground=color("navy blue");
+e(2).foreground=color("purple"); e(1).foreground=color("navy blue");
 // utilizando valores RGB
-e(1).foreground=color(255,128,128);
+e(2).foreground=color(255,128,128);
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

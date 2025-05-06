@@ -67,7 +67,7 @@
             cmap = [];
             for i = 0:ncm-1
                 indices = [indices ; (1:100)+i*100];
-                execstr("cols = "+cm(i+1)+"colormap(100);");
+                execstr("cols = "+cm(i+1)+"(100);");
                 cmap = [cmap ; cols];
             end
             f = gcf();
@@ -78,7 +78,7 @@
             gca().grid_position = "foreground";
             title(_("Available swatches: #colormap(100)"), "fontsize", 4);
             xlabel(_("Colors indices in [1,100]"), "fontsize", 3);
-            gca().y_ticks = tlist(["ticks" "locations" "labels"],16:-1:1,cm);
+            gca().y_ticks = tlist(["ticks" "locations" "labels"],ncm:-1:1,cm);
             set(gca(), "font_size", 2, "sub_ticks",[4 0], "margins", [0.12 0.05 0.08 0.08]);
             gcf().axes_size = [650 650];
         </scilab:image>
