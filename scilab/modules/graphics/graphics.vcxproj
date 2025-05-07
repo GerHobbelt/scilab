@@ -247,6 +247,7 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="sci_gateway\c\sci_color.c" />
     <ClCompile Include="sci_gateway\c\sci_light.c" />
     <ClCompile Include="sci_gateway\c\sci_name2rgb.c" />
+    <ClCompile Include="src\cpp\addColors.cpp" />
     <ClCompile Include="src\cpp\get_tag_property.cpp" />
     <ClCompile Include="src\cpp\set_data_property.cpp" />
     <ClCompile Include="src\cpp\ContourOnMesh.cpp" />

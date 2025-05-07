@@ -568,7 +568,8 @@ am__objects_1 = src/c/libscigraphics_algo_la-GetCommandArg.lo \
 	src/c/libscigraphics_algo_la-name2rgb.lo \
 	src/c/libscigraphics_algo_la-addColor.lo \
 	src/c/libscigraphics_algo_la-DllmainGraphics.lo
-am__objects_2 = src/cpp/libscigraphics_algo_la-get_tag_property.lo \
+am__objects_2 = src/cpp/libscigraphics_algo_la-addColors.lo \
+	src/cpp/libscigraphics_algo_la-get_tag_property.lo \
 	src/cpp/libscigraphics_algo_la-set_data_property.lo \
 	src/cpp/libscigraphics_algo_la-ContourOnMesh.lo
 am_libscigraphics_algo_la_OBJECTS = $(am__objects_1) $(am__objects_2)
@@ -1100,6 +1101,7 @@ am__depfiles_remade =  \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_box_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_state_property.Plo \
 	src/cpp/$(DEPDIR)/libscigraphics_algo_la-ContourOnMesh.Plo \
+	src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Plo \
 	src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Plo \
 	src/cpp/$(DEPDIR)/libscigraphics_algo_la-set_data_property.Plo \
 	src/nographics/$(DEPDIR)/libscigraphics_disable_la-nographics.Plo
@@ -1901,6 +1903,7 @@ GRAPHICS_C_SOURCES = \
     src/c/DllmainGraphics.c
 
 GRAPHICS_CXX_SOURCES = \
+    src/cpp/addColors.cpp \
     src/cpp/get_tag_property.cpp \
     src/cpp/set_data_property.cpp \
     src/cpp/ContourOnMesh.cpp
@@ -3360,6 +3363,8 @@ src/cpp/$(am__dirstamp):
 src/cpp/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) src/cpp/$(DEPDIR)
 	@: > src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libscigraphics_algo_la-addColors.lo: src/cpp/$(am__dirstamp) \
+	src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscigraphics_algo_la-get_tag_property.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscigraphics_algo_la-set_data_property.lo:  \
@@ -4030,6 +4035,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_box_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_state_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigraphics_algo_la-ContourOnMesh.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigraphics_algo_la-set_data_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/nographics/$(DEPDIR)/libscigraphics_disable_la-nographics.Plo@am__quote@ # am--include-marker
@@ -7112,6 +7118,13 @@ src/c/getHandleProperty/libscigraphics_algo_la-get_border_property.lo: src/c/get
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_border_property.lo `test -f 'src/c/getHandleProperty/get_border_property.cpp' || echo '$(srcdir)/'`src/c/getHandleProperty/get_border_property.cpp
 
+src/cpp/libscigraphics_algo_la-addColors.lo: src/cpp/addColors.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscigraphics_algo_la-addColors.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Tpo -c -o src/cpp/libscigraphics_algo_la-addColors.lo `test -f 'src/cpp/addColors.cpp' || echo '$(srcdir)/'`src/cpp/addColors.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Tpo src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/addColors.cpp' object='src/cpp/libscigraphics_algo_la-addColors.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscigraphics_algo_la-addColors.lo `test -f 'src/cpp/addColors.cpp' || echo '$(srcdir)/'`src/cpp/addColors.cpp
+
 src/cpp/libscigraphics_algo_la-get_tag_property.lo: src/cpp/get_tag_property.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscigraphics_algo_la-get_tag_property.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Tpo -c -o src/cpp/libscigraphics_algo_la-get_tag_property.lo `test -f 'src/cpp/get_tag_property.cpp' || echo '$(srcdir)/'`src/cpp/get_tag_property.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Tpo src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Plo
@@ -7873,6 +7886,7 @@ distclean: distclean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_state_property.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-ContourOnMesh.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-set_data_property.Plo
 	-rm -f src/nographics/$(DEPDIR)/libscigraphics_disable_la-nographics.Plo
@@ -8363,6 +8377,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_box_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_zoom_state_property.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-ContourOnMesh.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-addColors.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-get_tag_property.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigraphics_algo_la-set_data_property.Plo
 	-rm -f src/nographics/$(DEPDIR)/libscigraphics_disable_la-nographics.Plo

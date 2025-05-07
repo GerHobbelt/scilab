@@ -33,7 +33,6 @@ int checkValues(double* pdblValues, int iRows)
     {
         if ((checkValue(pdblValues[i]) && checkValue(pdblValues[i + iRows]) && checkValue(pdblValues[i + iRows * 2])) == 0)
         {
-            sciprint("%d %f %f %f\n", i, pdblValues[i], pdblValues[i + iRows], pdblValues[i + iRows * 2]);
             return 0;
         }
     }
@@ -96,14 +95,7 @@ int sci_addcolor(char *fname, void* pvApiCtx)
     }
 
     allocMatrixOfDouble(pvApiCtx, 2, 1, iRows, &pdblReturnColor);
-    for (i = 0 ; i < iRows ; i++)
-    {
-        color[0] = pdblColor[i];
-        color[1] = pdblColor[i + iRows];
-        color[2] = pdblColor[i + iRows * 2];
-
-        pdblReturnColor[i] = addColor(iCurrentFigure, color);
-    }
+    addColors(iCurrentFigure, pdblColor, iRows, &pdblReturnColor);
 
     AssignOutputVariable(pvApiCtx, 1) = 2;
     ReturnArguments(pvApiCtx);

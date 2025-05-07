@@ -26,5 +26,6 @@
 ** _pdblColor[3] : [R,G,B] color
 */
 GRAPHICS_IMPEXP int addColor(int _iFig, double* _pdblColor);
+GRAPHICS_IMPEXP void addColors(int _iFig, double* _pdblNewColors, int colors, double** indexes);
 
 #endif /* !__ADDCOLOR_H__ */

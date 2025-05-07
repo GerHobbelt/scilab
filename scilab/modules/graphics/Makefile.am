@@ -412,6 +412,7 @@ GRAPHICS_C_SOURCES = \
     src/c/DllmainGraphics.c
 
 GRAPHICS_CXX_SOURCES = \
+    src/cpp/addColors.cpp \
     src/cpp/get_tag_property.cpp \
     src/cpp/set_data_property.cpp \
     src/cpp/ContourOnMesh.cpp
