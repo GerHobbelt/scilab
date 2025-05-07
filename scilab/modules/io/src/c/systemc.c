@@ -31,6 +31,9 @@ typedef struct pipeinfo
     char* buffer;
 } pipeinfo;
 
+static pipeinfo piOut = {0, NULL};
+static pipeinfo piErr = {0, NULL};
+
 static void* readOutput(void* data)
 {
     pipeinfo* pi = (pipeinfo*)data;
@@ -138,12 +141,12 @@ int spawncommand(wchar_t* _pstCommand, BOOL bOutput, char** stdoutstr, char** st
 
         // if detach, do not get output ?
         // spawn threads for each output
-        pipeinfo piOut = {stdout_pipe[0], NULL};
+        piOut.pipe = stdout_pipe[0];
         __threadId threadStdOut;
         __threadKey keyStdOut;
         __CreateThreadWithParams(&threadStdOut, &keyStdOut, &readOutput, &piOut);
 
-        pipeinfo piErr = {stderr_pipe[0], NULL};
+        piErr.pipe = stderr_pipe[0];
         __threadId threadStdErr;
         __threadKey keyStdErr;
         __CreateThreadWithParams(&threadStdErr, &keyStdErr, &readOutput, &piErr);

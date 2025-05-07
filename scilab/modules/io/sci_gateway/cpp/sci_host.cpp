@@ -136,6 +136,8 @@ types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, typ
 #else
     FREE(stdoutstr);
     FREE(stderrstr);
+    FREE(output);
+    FREE(error);
 #endif
     return types::Function::OK;
 }
