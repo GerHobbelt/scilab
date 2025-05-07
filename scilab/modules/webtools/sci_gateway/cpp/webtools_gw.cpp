@@ -10,10 +10,6 @@
 #include "context.hxx"
 
 #define MODULE_NAME L"webtools"
-extern "C"
-{
-#include "gw_webtools.h"
-}
 
 int WebtoolsModule::Load()
 {

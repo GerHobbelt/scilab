@@ -107,7 +107,7 @@
                         строка: фрагмент (например: <emphasis role="italic">#chapter1</emphasis>)
                     </para>
                     <para>
-                        Фрагмент, также называемый якорем, используется для создания 
+                        Фрагмент, также называемый якорем, используется для создания
                         закладок внутри HTML-документа.
                     </para>
                 </listitem>
@@ -117,13 +117,7 @@
 
     <refsection>
         <title>Описание</title>
-
         <para>Разделяет ссылку URL на составляющие.</para>
-
-        <para>
-            Эта функция основана на <ulink url="http://xmlsoft.org/html/libxml-uri.html#xmlParseURI">библиотеке libxml2 (в частности, функции xmlParseURI)</ulink>.
-        </para>
-
     </refsection>
 
     <refsection>

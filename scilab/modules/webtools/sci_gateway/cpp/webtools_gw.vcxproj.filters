@@ -12,9 +12,6 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\src\c\DllmainWebtools_gw.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="gateway_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -51,16 +48,13 @@
     <ClCompile Include="sci_url_encode.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\c\sci_url_split.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="sciCurl.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\src\cpp\webtools.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="webtools_gw.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\c\DllmainWebtools.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="sci_url_split.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -69,12 +63,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="gateway_tools.hxx">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="../../includes\gw_webtools.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="sciCurl.hxx">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\includes\webtools.h">

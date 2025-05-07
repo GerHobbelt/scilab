@@ -111,13 +111,7 @@
 
     <refsection>
         <title>Description</title>
-
         <para>Split an URL by component </para>
-
-        <para>
-            This function is based on the <ulink url="http://xmlsoft.org/html/libxml-uri.html#xmlParseURI">libxml2 library (in particular, the function xmlParseURI)</ulink>.
-        </para>
-
     </refsection>
 
     <refsection>

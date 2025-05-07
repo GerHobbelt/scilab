@@ -104,12 +104,6 @@
     <refsection>
         <title>説明</title>
         <para>URLを要素毎に分解します. </para>
-        <para>
-            この関数は <ulink url="http://xmlsoft.org/html/libxml-uri.html#xmlParseURI">libxml2ライブラリ
-                (特に, 関数 xmlParseURI)
-            </ulink>
-            に基づいています.
-        </para>
     </refsection>
     <refsection>
         <title>例</title>

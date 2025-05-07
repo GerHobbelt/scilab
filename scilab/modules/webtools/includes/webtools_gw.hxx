@@ -47,6 +47,7 @@ CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_toJSON, WEBTOOLS_GW_IMPEXP);
 CPP_OPT_GATEWAY_PROTOTYPE_EXPORT(sci_fromJSON, WEBTOOLS_GW_IMPEXP);
 CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_encode, WEBTOOLS_GW_IMPEXP);
 CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_decode, WEBTOOLS_GW_IMPEXP);
+CPP_GATEWAY_PROTOTYPE_EXPORT(sci_url_split, WEBTOOLS_GW_IMPEXP);
 
 types::Function::ReturnValue sci_http_put_post(types::typed_list& in, types::optional_list& opt, int _iRetCount, types::typed_list& out, const char* fname);
 

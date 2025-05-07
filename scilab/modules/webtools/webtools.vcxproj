@@ -198,7 +198,9 @@
     <ClInclude Include="includes\dynlib_webtools.h" />
     <ClInclude Include="includes\fromJSON.hxx" />
     <ClInclude Include="includes\json.hxx" />
+    <ClInclude Include="includes\sciCurl.hxx" />
     <ClInclude Include="includes\toJSON.hxx" />
+    <ClInclude Include="includes\url_tools.hxx" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="webtools.rc" />
@@ -206,7 +208,11 @@
   <ItemGroup>
     <ClCompile Include="src\cpp\fromJSON.cpp" />
     <ClCompile Include="src\cpp\json.cpp" />
+    <ClCompile Include="src\cpp\sciCurl.cpp" />
     <ClCompile Include="src\cpp\toJSON.cpp" />
+    <ClCompile Include="src\cpp\url_tools.cpp" />
+    <ClCompile Include="src\cpp\webtools.cpp" />
+    <ClCompile Include="src\c\DllmainWebtools.c" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\ast\ast.vcxproj">
@@ -217,6 +223,12 @@
     </ProjectReference>
     <ProjectReference Include="..\localization\src\localization.vcxproj">
       <Project>{ecffeb0c-1eda-45ee-9a10-b18143852e17}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\output_stream\src\c\output_stream.vcxproj">
+      <Project>{a5911cd7-f8e8-440c-a23e-4843a0636f3a}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\preferences\src\c\preferences.vcxproj">
+      <Project>{7b893e9f-d032-44de-9b71-197a29c4989b}</Project>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

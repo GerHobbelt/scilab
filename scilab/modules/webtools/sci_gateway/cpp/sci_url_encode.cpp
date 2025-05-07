@@ -11,11 +11,11 @@
  *
  */
 
-#include <curl/curl.h>
 #include "webtools_gw.hxx"
 #include "function.hxx"
 #include "string.hxx"
 #include "double.hxx"
+#include "url_tools.hxx"
 
 extern "C"
 {
@@ -63,15 +63,17 @@ types::Function::ReturnValue sci_url_encode(types::typed_list &in, int _iRetCoun
     for (int i = 0; i < pOut->getSize(); ++i)
     {
         char* s = wide_string_to_UTF8(w[i]);
-        char* o = curl_easy_escape(NULL, s, static_cast<int>(strlen(s)));
-        if (o == NULL)
+        std::string o;
+        int ret = url_encode(s, o);
+        FREE(s);
+        if (ret != 0)
         {
-            Scierror(999, _("%s: Unable to encode URI.\n"), fname);
+            delete pOut;
+            Scierror(999, _("%s: Error while encoding the URL.\n"), fname);
             return types::Function::Error;
         }
 
-        pOut->set(i, o);
-        curl_free(o);
+        pOut->set(i, o.data());
     }
 
     out.push_back(pOut);

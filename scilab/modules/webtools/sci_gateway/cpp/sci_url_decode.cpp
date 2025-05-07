@@ -11,12 +11,11 @@
  *
  */
 
-#include <regex>
-#include <curl/curl.h>
 #include "double.hxx"
 #include "function.hxx"
 #include "string.hxx"
 #include "webtools_gw.hxx"
+#include "url_tools.hxx"
 
 extern "C"
 {
@@ -70,37 +69,25 @@ types::Function::ReturnValue sci_url_decode(types::typed_list& in, int _iRetCoun
         }
 
         char* c = wide_string_to_UTF8(w[i]);
-        std::string s(c);
-
-        //check validity of encoded string
-        std::regex r("%(.{2})");
-        std::regex_token_iterator<std::string::iterator> rend;
-
-        std::regex_token_iterator<std::string::iterator> a(s.begin(), s.end(), r);
-        while (a != rend)
+        std::string o;
+        int ret = url_decode(c, o);
+        FREE(c);
+        switch (ret)
         {
-            std::string res(*a);
-            std::regex e("%[a-fA-F0-9]{2}");
-            std::smatch match;
-            std::regex_match(res, match, e);
-            if (match.size() == 0)
+            case -2:
             {
                 Scierror(999, _("%s: Argument #%d(%d): Wrong character encoding.\n"), fname, 1, i + 1);
                 return types::Function::Error;
             }
-            a++;
+
+            case -1:
+            {
+                Scierror(999, _("%s: Unable to decode URI.\n"), fname);
+                return types::Function::Error;
+            }
         }
 
-        char* o = curl_easy_unescape(NULL, c, static_cast<int>(strlen(c)), NULL);
-        FREE(c);
-        if (o == NULL)
-        {
-            Scierror(999, _("%s: Unable to decode URI.\n"), fname);
-            return types::Function::Error;
-        }
-
-        pOut->set(i, o);
-        curl_free(o);
+        pOut->set(i, o.data());
     }
 
     out.push_back(pOut);

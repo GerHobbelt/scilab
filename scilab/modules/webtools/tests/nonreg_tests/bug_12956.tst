@@ -6,6 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 12956 -->
 //
@@ -16,11 +17,5 @@
 // url_split with no protocol in URL provokes an access violation exception
 // originally splitURL
 // No protocol
-[proto, server, path, query, username, port, frag] = url_split("www.scilab.org");
-assert_checkequal(proto, "");
-assert_checkequal(server, "");
-assert_checkequal(path, "www.scilab.org");
-assert_checkequal(query, "");
-assert_checkequal(username, "");
-assert_checkequal(port, int32(0));
-assert_checkequal(frag, "");
+
+assert_checkerror("url_split(""www.scilab.org"")", [], 999);

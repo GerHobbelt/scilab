@@ -5,16 +5,15 @@
 
 
 WEBTOOLS_C_SOURCES = \
-    src/c/DllmainWebtools_gw.c
+    src/c/DllmainWebtools.c
 
 WEBTOOLS_CPP_SOURCES = \
     src/cpp/webtools.cpp \
     src/cpp/json.cpp \
     src/cpp/fromJSON.cpp \
-    src/cpp/toJSON.cpp
-
-GATEWAY_C_SOURCES = \
-    sci_gateway/c/sci_url_split.c
+    src/cpp/toJSON.cpp \
+    src/cpp/url_tools.cpp \
+    src/cpp/sciCurl.cpp
 
 GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_http_get.cpp \
@@ -26,10 +25,10 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_http_upload.cpp \
     sci_gateway/cpp/sci_url_encode.cpp \
     sci_gateway/cpp/sci_url_decode.cpp \
+    sci_gateway/cpp/sci_url_split.cpp \
     sci_gateway/cpp/sci_toJSON.cpp \
     sci_gateway/cpp/sci_fromJSON.cpp \
     sci_gateway/cpp/gateway_tools.cpp \
-    sci_gateway/cpp/sciCurl.cpp \
     sci_gateway/cpp/webtools_gw.cpp
 
 libsciwebtools_la_CPPFLAGS= \
@@ -63,7 +62,7 @@ noinst_LTLIBRARIES = libsciwebtools-algo.la
 libsciwebtools_algo_la_LDFLAGS = $(CURL_LIBS)
 libsciwebtools_algo_la_SOURCES = $(WEBTOOLS_CPP_SOURCES) $(WEBTOOLS_C_SOURCES)
 
-libsciwebtools_la_SOURCES = $(GATEWAY_CPP_SOURCES) $(GATEWAY_C_SOURCES)
+libsciwebtools_la_SOURCES = $(GATEWAY_CPP_SOURCES)
 libsciwebtools_la_LIBADD = libsciwebtools-algo.la
 
 # For the code check (splint)

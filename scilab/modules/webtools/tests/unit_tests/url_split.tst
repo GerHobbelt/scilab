@@ -6,12 +6,15 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
+
 //url_split originally splitURL
 
 [a,b,c,d]=url_split("https://www.scilab.org");
 assert_checkequal(a, "https");
 assert_checkequal(b, "www.scilab.org");
-assert_checkequal(c, "");
+assert_checkequal(c, "/");
 assert_checkequal(d, "");
 
 [a,b,c,d]=url_split("https://www.scilab.org/");
@@ -41,7 +44,7 @@ assert_checkequal(d, "");
 [a,b,c,d]=url_split("https://encrypted.google.com");
 assert_checkequal(a, "https");
 assert_checkequal(b, "encrypted.google.com");
-assert_checkequal(c, "");
+assert_checkequal(c, "/");
 assert_checkequal(d, "");
 
 [a,b,c,d,e,f,g]=url_split("https://plop:ae@encrypted.google.com:443/full/path?query=true#myFragment");
@@ -54,25 +57,10 @@ assert_checkequal(f, int32(443)); // port
 assert_checkequal(g, "myFragment"); // fragment
 
 // Badly formatted URL
-assert_checkerror("url_split(''http://plop@ae:sylvestre.ledru.info:80'');", [], 999);
+assert_checkerror("url_split(''http://plop@ae:scilab.org:80'');", [], 999);
 
 // No protocol
-[proto, server, path, query, username, port, frag] = url_split("www.scilab.org");
-assert_checkequal(proto, "");
-assert_checkequal(server, "");
-assert_checkequal(path, "www.scilab.org");
-assert_checkequal(query, "");
-assert_checkequal(username, "");
-assert_checkequal(port, int32(0));
-assert_checkequal(frag, "");
+assert_checkerror("url_split(""www.scilab.org"")", [], 999);
 
 // Relative URL
-[proto, server, path, query, username, port, frag] = url_split("./index.html");
-assert_checkequal(proto, "");
-assert_checkequal(server, "");
-assert_checkequal(path, "./index.html");
-assert_checkequal(query, "");
-assert_checkequal(username, "");
-assert_checkequal(port, int32(0));
-assert_checkequal(frag, "");
-
+assert_checkerror("url_split(""./index.html"")", [], 999);
