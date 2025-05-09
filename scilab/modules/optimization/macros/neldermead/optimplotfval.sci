@@ -40,10 +40,12 @@ function optimplotfval ( x , optimValues , state )
         opfvh.children.x_label.text = "Iteration";
         opfvh.children.y_label.text = "Function value";
         opfvh.children.title.text = msprintf ( "Current Function Value: %e", optimValues.fval )
+        opfvh.children.children.children.line_style = 3;
         opfvh.children.children.children.mark_mode = "on";
-        opfvh.children.children.children.mark_style = 5;
+        opfvh.children.children.children.mark_style = 0;
         opfvh.children.children.children.mark_size = 10;
-        opfvh.children.children.children.mark_background = 6;
+        opfvh.children.children.children.mark_foreground = 2;
+        opfvh.children.children.children.mark_background = 2;
     else
         opfvh = get ( "optimplotfval" );
         gg = opfvh.children.children;

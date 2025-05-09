@@ -36,41 +36,37 @@ function optimplotx ( x , optimValues , state )
     if ( state == "init" ) then
         // Initialize
         opfvh = scf();
-        nbvar = length(x)
-        bar ( 1:nbvar , x );
-        gg = gce();
-        gg.children.background = 9;
-        opfvh.tag = "optimplotx";
-        opfvh.children.x_label.text = msprintf ( "Number of variables: %d" , nbvar );
-        opfvh.children.y_label.text = "Current point";
-        opfvh.children.title.text = msprintf ( "Current Point" );
+        nbvar = size(x, '*')
+        for i = 1:nbvar
+            subplot(nbvar, 1, i);
+            e = plot(0, x(i))
+            e.tag = "optimplotx_"+string(i);
+            e.line_style = 3;
+            e.mark_mode = "on";
+            e.mark_style = 0;
+            e.mark_size = 10;
+            e.mark_foreground = 2 + i;
+            e.mark_background = 2 + i;
+            e.foreground = 2 + i;
+            e.parent.parent.x_label.text = "Iteration";
+            e.parent.parent.y_label.text = "x(" + string(i) + ")";
+        end
     else
-        opfvh = get ( "optimplotx" );
         nbvar = length(x)
-        gg = opfvh.children.children;
-        for ivar = 1:nbvar
-            gg.children.data(ivar,2) = x(ivar);
+        for i = 1:nbvar
+            e = get("optimplotx_"+string(i));
+            e.data($+1,1:2) = [optimValues.iteration, x(i)]
+            // Compute new bounds
+            itermin = 0;
+            itermax = optimValues.iteration;
+            xmin = min(e.data(:,2));
+            xmax = max(e.data(:,2));
+            // Update bounds
+            e.parent.parent.data_bounds = [
+                itermin xmin
+                itermax xmax
+            ];
         end
-        xmin = 0;
-        ymin = min(x);
-        xmax = nbvar+1;
-        ymax = max(x);
-        // A small trick, for a nicer display
-        if ( ( ymin > 0.0 ) & ( ymax > 0.0 ) ) then
-            ymin = 0.0
-        elseif ( ( ymin < 0.0 ) & ( ymax < 0.0 ) ) then
-            ymax = 0.0
-        end
-        if ( ymax > 0 ) then
-            ymax = ymax * 1.1
-        end
-        if ( ymin < 0 ) then
-            ymin = ymin * 1.1
-        end
-        opfvh.children.data_bounds = [
-        xmin ymin
-        xmax ymax
-        ];
     end
 endfunction
 
