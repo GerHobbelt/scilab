@@ -272,4 +272,15 @@ getenv TEST
             </member>
         </simplelist>
     </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revdescription>
+                    Retourne la sortie standard et la sortie d'erreur.
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

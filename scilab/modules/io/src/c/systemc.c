@@ -44,10 +44,18 @@ static void* readOutput(void* data)
         return NULL;
     }
 
-    char* msg = (char*)MALLOC(2048*2);
-    memset(msg, 0, 2048*2);
+    size_t msg_size = 4096;
+    char* msg = (char*)MALLOC(msg_size);
+    memset(msg, 0, msg_size);
+    size_t current_size = 0;
     while (fgets(buffer, sizeof(buffer), file) != NULL)
     {
+        current_size += strlen(buffer);
+        if(current_size > msg_size)
+        {
+            msg_size += 2048;
+            msg = (char*)realloc(msg, msg_size * sizeof(char));
+        }
         strcat(msg, buffer);
     }
 

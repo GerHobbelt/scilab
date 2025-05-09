@@ -264,4 +264,15 @@ getenv TEST
             </member>
         </simplelist>
     </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revdescription>
+                    Returns standard output and standard error.
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>
