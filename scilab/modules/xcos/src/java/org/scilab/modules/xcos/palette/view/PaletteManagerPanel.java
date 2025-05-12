@@ -497,7 +497,7 @@ public class PaletteManagerPanel extends JSplitPane {
             }
 
             int ctrl_down = Toolkit.getDefaultToolkit().getMenuShortcutKeyMaskEx();
-            if ((e.getModifiersEx() | ctrl_down) == ctrl_down) {
+            if ((e.getModifiersEx() & ctrl_down) == ctrl_down) {
                 if (e.getWheelRotation() < 0) {
                     PaletteManagerView.get().getPanel().zoomIn();
                 } else if (e.getWheelRotation() > 0) {
