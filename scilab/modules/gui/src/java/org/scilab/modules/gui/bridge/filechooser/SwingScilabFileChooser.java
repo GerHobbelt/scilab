@@ -168,8 +168,9 @@ public class SwingScilabFileChooser extends JFileChooser implements SimpleFileCh
         }
 
         int returnValue = 0;
-        if (maskSize > 0) {
-            setFileFilter(getChoosableFileFilters()[maskSize]);
+        FileFilter[] filters = getChoosableFileFilters();
+        if (0 < maskSize && maskSize < filters.length) {
+            setFileFilter(filters[maskSize]);
         }
         if (this.dialogType == JFileChooser.SAVE_DIALOG) {
             returnValue = this.showSaveDialog(parentFrame);
