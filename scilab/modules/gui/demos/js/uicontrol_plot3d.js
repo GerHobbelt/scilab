@@ -17,7 +17,7 @@ $( document ).ready(() => {
     })
 
     $(`input[type="range"]`).on('input', () => {
-        toScilab({type: "update", data: getGuiValues()});
+        toScilab({type: "updateonlyangle", data: getGuiValues()});
     })
 
     toScilab({type: "init", data: []})
