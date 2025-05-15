@@ -168,7 +168,7 @@ function varargout = stackedplot(varargin)
                     end
                     
                     [a,b] = members(varnames, names);
-                    if a == 0 then
+                    if or(a == 0) then
                         err = %t;
                     end
                 end
@@ -418,8 +418,8 @@ function varargout = stackedplot(varargin)
         if yLabels <> [] then
             if combineMatchingNames then
                 ytext = yLabels(i);
-            else
-                ytext = yLabels(info(1).var - 1);
+            else                
+                ytext = yLabels(modulo(i-1, size(yLabels, "*")) + 1);
             end
         else
             ytext = list2vec(info.ylabel);
@@ -430,18 +430,20 @@ function varargout = stackedplot(varargin)
         m = max(m, max(length(yy)))
 
         clear yy;
+        t = "";
+        if legendLabels <> "" then
+            t = legendLabels(list2vec(info.ts))';
+        end
 
-        if size(info, "*") > 1 | legendLabels <> "" then
-            t = "";
-            if size(ytext, "*") > 1 then
-                if legendLabels <> "" then
-                    t = legendLabels(list2vec(info.ts))' + " - ";
-                end
-                hl = legend(t + ytext)
-            else
-                t = list2vec(info.ylabel);
-                hl = legend(t)
+        if size(info, "*") > 1 then
+            if t <> "" then
+                t = t + " - ";
             end
+            t = t + list2vec(info.ylabel);
+        end
+
+        if t <> "" then
+            hl = legend(t)
             hl.line_width = 0.03;
             hl.font_size = 2
         end
