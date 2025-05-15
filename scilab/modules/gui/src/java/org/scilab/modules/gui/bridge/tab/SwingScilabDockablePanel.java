@@ -345,7 +345,7 @@ public class SwingScilabDockablePanel extends View implements SimpleTab, FocusLi
 
             public int canClose() {
                 String closeRequestFcn = (String) GraphicController.getController().getProperty(getId(), __GO_CLOSEREQUESTFCN__);
-                if (!closeRequestFcn.equals("")) {
+                if (closeRequestFcn != null && closeRequestFcn.equals("") == false) {
                     String closeCommand = "if exists(\"gcbo\") then %oldgcbo = gcbo; end;"
                                           + "gcbo = getcallbackobject(" + getId() + ");"
                                           + closeRequestFcn + ";fire_closing_finished();"

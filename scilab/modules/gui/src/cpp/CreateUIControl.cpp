@@ -50,6 +50,7 @@ void initStyleMap()
     styleMap["tab"] = __GO_UI_TAB__;
     styleMap["layer"] = __GO_UI_LAYER__;
     styleMap["spinner"] = __GO_UI_SPINNER__;
+    styleMap["browser"] = __GO_UI_BROWSER__;
     init = true;
 }
 

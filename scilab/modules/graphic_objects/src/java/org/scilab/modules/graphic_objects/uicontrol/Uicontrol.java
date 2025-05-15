@@ -31,7 +31,10 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BACKGROUNDCOLOR__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BORDER_POSITION__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BORDER_PREFERREDSIZE__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BROWSER__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_CHECKBOX__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_DATA__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_DEBUG__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_EDIT__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_ENABLE__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_FONTANGLE__;
@@ -494,6 +497,10 @@ public class Uicontrol extends GraphicObject {
     private Boolean titleScroll = false;
     private TitlePositionType titlePosition = TitlePositionType.TOP;
 
+    /** browser properties */
+    private Boolean debug = false;
+    private String data = "";
+
     private EventHandler eventHandler;
 
     /**
@@ -551,7 +558,9 @@ public class Uicontrol extends GraphicObject {
         ICON,
         EVENTHANDLER,
         EVENTHANDLERENABLE,
-        FOCUS
+        FOCUS,
+        DATA,
+        DEBUG
     };
 
     /**
@@ -572,7 +581,8 @@ public class Uicontrol extends GraphicObject {
         TABGROUP,
         TAB,
         LAYER,
-        SPINNER
+        SPINNER,
+        BROWSER
     };
 
     /**
@@ -635,6 +645,8 @@ public class Uicontrol extends GraphicObject {
                 return __GO_UI_LAYER__;
             case SPINNER:
                 return __GO_UI_SPINNER__;
+            case BROWSER:
+                return __GO_UI_BROWSER__;
             default :
                 return -1;
         }
@@ -675,6 +687,8 @@ public class Uicontrol extends GraphicObject {
                 return UicontrolStyle.LAYER;
             case __GO_UI_SPINNER__:
                 return UicontrolStyle.SPINNER;
+            case __GO_UI_BROWSER__:
+                return UicontrolStyle.BROWSER;
             default :
                 return null;
         }
@@ -796,6 +810,10 @@ public class Uicontrol extends GraphicObject {
                 return UicontrolProperty.EVENTHANDLERENABLE;
             case __GO_UI_FOCUS__:
                 return UicontrolProperty.FOCUS;
+            case __GO_UI_DATA__:
+                return UicontrolProperty.DATA;
+            case __GO_UI_DEBUG__:
+                return UicontrolProperty.DEBUG;
             default :
                 return super.getPropertyFromName(propertyName);
         }
@@ -905,6 +923,10 @@ public class Uicontrol extends GraphicObject {
             return getEventHandler();
         } else if (property == UicontrolProperty.EVENTHANDLERENABLE) {
             return getEventHandlerEnable();
+        } else if (property == UicontrolProperty.DATA) {
+            return getData();
+        } else if (property == UicontrolProperty.DEBUG) {
+            return getDebug();
         } else {
             return super.getProperty(property);
         }
@@ -1013,6 +1035,10 @@ public class Uicontrol extends GraphicObject {
                 return setEventHandlerEnable((Boolean) value);
             case FOCUS:
                 return UpdateStatus.Success;
+            case DATA:
+                return setData((String) value);
+            case DEBUG:
+                return setDebug((Boolean) value);
             default:
                 return super.setProperty(property, value);
         }
@@ -1770,14 +1796,14 @@ public class Uicontrol extends GraphicObject {
         } else {
             setFontName(getDefaultFontName());
         }
-        
+
         if(getDefaultFontSize() == 0) {
             setFontSize(font.getSize());
         } else {
             setFontSize(getDefaultFontSize());
         }
-        
-        
+
+
         if(getDefaultFontAngle().equals("")) {
             if (font.isItalic()) {
                 setFontAngle("italic");
@@ -1787,8 +1813,8 @@ public class Uicontrol extends GraphicObject {
         } else {
             setFontAngle(getDefaultFontAngle());
         }
-        
-        
+
+
         if(getDefaultFontWeight().equals("")) {
             if (font.isBold()) {
                 setFontWeight("bold");
@@ -1798,7 +1824,7 @@ public class Uicontrol extends GraphicObject {
         } else {
             setFontWeight(getDefaultFontWeight());
         }
-        
+
         if(getDefaultFontUnits().equals("") == false) {
             setFontUnits(getDefaultFontUnits());
         }
@@ -1889,6 +1915,32 @@ public class Uicontrol extends GraphicObject {
 
     public static String getDefaultFontUnits() {
         return defaultFontUnits;
+    }
+
+    public String getData() {
+        return data;
+    }
+
+    public UpdateStatus setData(String value) {
+        //if (data.equals(value)) {
+        //    return UpdateStatus.NoChange;
+        //}
+
+        data = value;
+        return UpdateStatus.Success;
+    }
+
+    public Boolean getDebug() {
+        return debug;
+    }
+
+    public UpdateStatus setDebug(Boolean status) {
+        if (debug.equals(status)) {
+            return UpdateStatus.NoChange;
+        }
+
+        debug = status;
+        return UpdateStatus.Success;
     }
 
 }

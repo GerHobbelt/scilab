@@ -432,4 +432,8 @@
 #define __GO_NUM_MARK_BACKGROUNDS__ 410
 #define __GO_UI_FOCUS__ 411
 
+#define __GO_UI_BROWSER__ 412
+#define __GO_UI_DATA__ 413
+#define __GO_UI_DEBUG__ 414
+
 #endif /* !__GRAPHIC_OBJECT_PROPERTIES_H__ */

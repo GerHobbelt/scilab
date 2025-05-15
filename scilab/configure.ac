@@ -967,6 +967,16 @@ if test "$with_javasci" != no -o "$with_gui" != no -o "$enable_build_help" != no
 
         if test "$with_gui" != no; then
 
+                # GSON (from https://github.com/google/gson)
+                AC_JAVA_CHECK_JAR([gson],[com.google.gson.JsonObject],[Scilab Embedded browser - A Java serialization/deserialization library to convert Java Objects into JSON and back])
+                GSON=$PACKAGE_JAR_FILE
+                AC_SUBST(GSON)
+
+                # JCEF (from https://github.com/jcefmaven/jcefmaven/releases)
+                AC_JAVA_CHECK_JAR([jcef],[org.cef.CefApp],[Scilab Embedded browser - Java Chromium Embedded Framework])
+                JCEF=$PACKAGE_JAR_FILE
+                AC_SUBST(JCEF)
+                
                 # Jakarta Activation (Run dependency)
                 # Do not look for jakarta.activation.spi.MimeTypeRegistry here since it will detect jakarta.activation-api.jar
                 # Checked before activation.jar to avoid false detection

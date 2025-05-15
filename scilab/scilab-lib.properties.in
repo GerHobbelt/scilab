@@ -63,6 +63,11 @@ antlr.jar=@ANTLR@
 ; To build the export through the Java
 avalon-framework.jar=@AVALON_FRAMEWORK@
 
+; webview jcef
+jcef.jar=@JCEF@
+gson.jar=@GSON@
+
+
 library.src.path=src/java/
 
 library.scirenderer.dir=${modules.dir}/scirenderer/${build.jar.dir}/

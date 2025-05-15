@@ -73,5 +73,7 @@
     <gateway name="sci_figure"                      function="figure"                   type="0" />
     <gateway name="sci_saveGui"                     function="saveGui"                  type="0" />
     <gateway name="sci_loadGui"                     function="loadGui"                  type="0" />
+    <gateway name="sci_openDevtools"                function="openDevtools"             type="1" />
+    <gateway name="sci_getBrowserCookies"           function="getBrowserCookies"        type="1" />
 
 </module>

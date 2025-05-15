@@ -855,7 +855,6 @@ struct UicontrolHandle
         //tab
         m.emplace_back("title_position", std::vector<int>({SAVE_LOAD, __GO_UI_TITLE_POSITION__, jni_int}));
 
-
         m.emplace_back("groupname", std::vector<int>({SAVE_LOAD, __GO_UI_GROUP_NAME__, jni_string}));
         m.emplace_back("icon", std::vector<int>({SAVE_LOAD, __GO_UI_ICON__, jni_string}));
 

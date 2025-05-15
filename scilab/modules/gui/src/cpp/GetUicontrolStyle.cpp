@@ -55,6 +55,8 @@ const char *IntToStyle(int _iStyle)
             return "layer";
         case __GO_UI_SPINNER__ :
             return "spinner";
+        case __GO_UI_BROWSER__:
+            return "browser";
     }
 
     return NULL;

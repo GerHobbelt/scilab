@@ -13,10 +13,13 @@ function subdemolist = demo_gateway()
     add_demo("GUI", demopath + "gui.dem.gateway.sce");
 
     subdemolist = [_("Dialogs"), "dialogs/dialogs.dem.gateway.sce" ; ..
-    _("Uicontrols 1"), "uicontrol.dem.sce" ];
+    _("Uicontrol components"), "uicontrol.dem.sce" ];
 
     subdemolist = [ subdemolist ;
-    _("Uicontrols 2"), "uicontrol_plot3d.dem.sce" ];
+    _("Uicontrol + plot3d"), "uicontrol_plot3d.dem.sce" ];
+
+    subdemolist = [ subdemolist ;
+    _("HTML + plot3d"), "uicontrol_plot3dHTML.dem.sce" ];
 
     subdemolist = [ subdemolist ;
     _("Uicontrols with LaTeX/MathML"),  "uicontrol_LaTeX.dem.sce" ];
@@ -37,7 +40,10 @@ function subdemolist = demo_gateway()
     _("Uicontrols messagebox-like"),  "uicontrol_messagebox.dem.sce" ];
 
     subdemolist = [ subdemolist ;
-    _("UIcontrols Game of Dice"),  "uicontrol_dice_game.dem.sce" ];
+    _("UIcontrols Game of Dice (HTML)"),  "uicontrol_dice_game_html.dem.sce" ];
+
+    subdemolist = [ subdemolist ;
+    _("Pathfinding A *(HTML)"),  "uicontrol_astar.dem.sce" ];
 
     subdemolist(:, 2) = demopath + subdemolist(:, 2);
 endfunction

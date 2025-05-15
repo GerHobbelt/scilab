@@ -37,6 +37,7 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UIMENU__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UIPARENTMENU__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BACKGROUNDCOLOR__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_BROWSER__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_CHECKBOX__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_CHECKED__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_UI_EDIT__;
@@ -134,6 +135,7 @@ import org.scilab.modules.gui.bridge.uiimage.SwingScilabUiImage;
 import org.scilab.modules.gui.bridge.uitable.SwingScilabUiTable;
 import org.scilab.modules.gui.bridge.waitbar.SwingScilabWaitBar;
 import org.scilab.modules.gui.bridge.window.SwingScilabWindow;
+import org.scilab.modules.gui.bridge.browser.SwingScilabBrowser;
 import org.scilab.modules.gui.console.ScilabConsole;
 import org.scilab.modules.gui.ged.Inspector;
 import org.scilab.modules.gui.menubar.MenuBar;
@@ -224,7 +226,7 @@ public final class SwingView implements GraphicView {
     }
 
     private enum UielementType {
-        Console, CheckBox, Edit, Spinner, Frame, Figure, Axes, Image, ListBox, PopupMenu, Progressbar, PushButton, RadioButton, Slider, Table, Text, Uimenu, UiParentMenu, UiChildMenu, UiCheckedMenu, UiContextMenu, Waitbar, Tab, Layer
+        Console, CheckBox, Edit, Spinner, Frame, Figure, Axes, Image, ListBox, PopupMenu, Progressbar, PushButton, RadioButton, Slider, Table, Text, Uimenu, UiParentMenu, UiChildMenu, UiCheckedMenu, UiContextMenu, Waitbar, Tab, Layer, Browser
     }
 
     private static class TypedObject {
@@ -276,7 +278,6 @@ public final class SwingView implements GraphicView {
 
     @Override
     public void createObject(Integer id) {
-
         int objectType = (Integer) GraphicController.getController().getProperty(id, __GO_TYPE__);
 
         if (managedTypes.contains(objectType) == false) {
@@ -358,6 +359,8 @@ public final class SwingView implements GraphicView {
                 return UielementType.Tab;
             case __GO_UI_LAYER__:
                 return UielementType.Layer;
+            case __GO_UI_BROWSER__:
+                return UielementType.Browser;
         }
         return null;
     }
@@ -617,6 +620,11 @@ public final class SwingView implements GraphicView {
                 SwingScilabLayer layer = new SwingScilabLayer();
                 layer.setId(id);
                 return layer;
+            case Browser:
+                SwingScilabBrowser browser = new SwingScilabBrowser();
+                browser.setId(id);
+                return browser;
+
             default:
                 System.err.println("[SwingView] Unmanaged Creation type !!!");
                 return null;

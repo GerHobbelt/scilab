@@ -61,6 +61,7 @@ GUI_IMPEXP int SetUiobjectForegroundColor(void* _pvCtx, int iObjUID, void* _pvDa
 GUI_IMPEXP int SetConsoleShowHiddenHandles(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol ) ;
 GUI_IMPEXP int SetConsoleShowHiddenProperties(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol ) ;
 GUI_IMPEXP int SetConsoleUseDeprecatedLF(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol);
+GUI_IMPEXP int SetUicontrolDebug(void* _pvCtx, int iObjUID, void* _pvData, int valueType, int nbRow, int nbCol);
 
 const char *IntToStyle(int _iStyle);
 #endif /* __SET_UICONTROL_H__ */

@@ -27,7 +27,9 @@
 
 #include "types.hxx"
 #include "double.hxx"
+#include "string.hxx"
 #include "int.hxx"
+#include "json.hxx"
 
 extern "C"
 {
@@ -320,8 +322,6 @@ int set_data_property(void* _pvCtx, int iObjUID, void* _pvData, int valueType, i
                 }
                 else
                 {
-                    Scierror(202, _("%s: Wrong size for input argument #%d: The number of rows must be a multiple of 3.\n"), "data", 1);
-                    return 1;
                 }
             }
             else if ((ImageType)imagetype == MATPLOT_RGBA)
@@ -353,7 +353,22 @@ int set_data_property(void* _pvCtx, int iObjUID, void* _pvData, int valueType, i
 
         setGraphicObjectProperty(iObjUID, __GO_DATA_MODEL_MATPLOT_IMAGE_DATA__, pvData, jni_double_vector, iRows * iCols);
     }
-    else  /* F.Leray 02.05.05 : "data" case for others (using sciGetPoint routine inside GetProperty.c) */
+    else if (type == __GO_UICONTROL__)
+    {
+        getGraphicObjectProperty(iObjUID, __GO_STYLE__, jni_int, (void**)&piType);
+        if (type != __GO_UI_BROWSER__)
+        {
+            Scierror(999, _("'%s' property does not exist for this handle.\n"), "Data");
+            return SET_PROPERTY_ERROR;
+        }
+
+        types::InternalType* pIT = (types::InternalType*)_pvData;
+
+        std::string json = toJSON(pIT);
+        setGraphicObjectProperty(iObjUID, __GO_UI_DATA__, json.data(), jni_string, 1);
+        return SET_PROPERTY_SUCCEED;
+    }
+    else /* F.Leray 02.05.05 : "data" case for others (using sciGetPoint routine inside GetProperty.c) */
     {
         if (((types::InternalType*)_pvData)->isDouble() == false)
         {

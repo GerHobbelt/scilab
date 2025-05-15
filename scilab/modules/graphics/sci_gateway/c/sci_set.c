@@ -371,6 +371,12 @@ int sci_set(char *fname, void *pvApiCtx)
             iCols3 = -1;   /*unused */
             iType3 = -1;
         }
+        else if (stricmp(pstProperty, "debug") == 0)
+        {
+            Scierror(999, _("%s: Unable to set \'%s\' property after initialization.\n"), fname, pstProperty);
+            freeAllocatedSingleString(pstProperty);
+            return 1;
+        }
         else
         {
             sciErr = getVarType(pvApiCtx, piAddr3, &iType3);

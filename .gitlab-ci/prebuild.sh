@@ -77,6 +77,8 @@ BWIDGET_VERSION=1.9.16
 ZLIB_VERSION=1.2.11
 XZ_VERSION=5.4.4
 JOGL_VERSION=2.5.0
+JCEF_VERSION=99c2f7a9c74b # jcef-99c2f7a+cef-127.3.1+g6cbb30e+chromium-127.0.6533.100
+CEF_VERSION=127.3.1+g6cbb30e+chromium-127.0.6533.100
 OPENXLSX_VERSION=0.3.2
 LIBARCHIVE_VERSION=3.7.1
 RAPIDJSON_VERSION=24b5e7a
@@ -117,6 +119,8 @@ make_versions() {
     echo "ZLIB_VERSION          = $ZLIB_VERSION"
     echo "XZ_VERSION            = $XZ_VERSION"
     echo "JOGL_VERSION          = $JOGL_VERSION"
+    echo "JCEF_VERSION          = $JCEF_VERSION"
+    echo "CEF_VERSION           = $CEF_VERSION"
     echo "OPENXLSX_VERSION      = $OPENXLSX_VERSION"
     echo "LIBARCHIVE_VERSION    = $LIBARCHIVE_VERSION"
     echo "RAPIDJSON_VERSION     = $RAPIDJSON_VERSION"
@@ -158,6 +162,9 @@ download_dependencies() {
     [ ! -f jcpp-v$JOGL_VERSION.tar.xz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/jcpp-v$JOGL_VERSION.tar.xz
     [ ! -f jogl-v$JOGL_VERSION.tar.xz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/jogl-v$JOGL_VERSION.tar.xz
 
+    [ ! -f chromiumembedded-java-cef-$JCEF_VERSION.zip ] && curl -L -o chromiumembedded-java-cef-$JCEF_VERSION.zip https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/chromiumembedded-java-cef-$JCEF_VERSION.zip
+    [ ! -f cef_binary_${CEF_VERSION}_linux64.tar.bz2 ] && curl -L -o cef_binary_${CEF_VERSION}_linux64.tar.bz2 https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/cef_binary_${CEF_VERSION//\+/%2B}_linux64.tar.bz2
+
     [ ! -f OpenXLSX-$OPENXLSX_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/OpenXLSX-$OPENXLSX_VERSION.tar.gz
 
     # This archive contains .jar and directories that have been copied from Scilab prerequirements
@@ -197,6 +204,7 @@ make_all() {
     build_ant
     build_gluegen
     build_jogl
+    build_jcef
     build_openblas
     build_eigen
     build_zlib
@@ -413,7 +421,7 @@ make_jar() {
     cd thirdparty || exit 1
     unzip "$DOWNLOADDIR/thirdparty.zip"
     # remove .jar already managed
-    rm gluegen*.jar jogl*.jar
+    rm gluegen*.jar jogl*.jar jcef*.jar
     # Copy all JARs from thirdparty.zip
     # JAR versions are enforced to trigger a prerequirement rebuild on upgrade
     cp -a -t "$JAVATHIRDPARTYDIR"           \
@@ -446,6 +454,7 @@ make_jar() {
         freehep-graphicsio-2.4.jar          \
         freehep-graphicsio-emf-2.4.jar      \
         freehep-io-2.2.2.jar                \
+        gson-2.10.1.jar                     \
         guava-33.2.0-jre.jar                \
         httpclient5-5.1.3.jar               \
         httpcore5-5.1.3.jar                 \
@@ -1043,6 +1052,36 @@ build_jogl() {
     cd "$BUILDDIR/jogl-v$JOGL_VERSION" || exit 1
     cp -a -t "$INSTALLROOTDIR/lib/thirdparty" build/lib/libjogl_desktop.so build/lib/libnativewindow_awt.so build/lib/libnativewindow_drm.so build/lib/libnativewindow_x11.so build/lib/libnewt_drm.so build/lib/libnewt_head.so
     cp -a build/jar/jogl-all.jar "$INSTALLROOTDIR/thirdparty"
+}
+
+build_jcef() {
+    # Java Chromium Embedded Framework
+    #  - ship prebuild CEF libraries
+    #  - build its Java JNI lib and JARs
+
+    cd "$BUILDDIR" || exit 1
+
+    unzip "$DOWNLOADDIR/chromiumembedded-java-cef-$JCEF_VERSION.zip"
+    tar -xjf "$DOWNLOADDIR/cef_binary_${CEF_VERSION}_linux64.tar.bz2" -C "chromiumembedded-java-cef-$JCEF_VERSION/third_party/cef/"
+    cd chromiumembedded-java-cef-$JCEF_VERSION || exit 1
+
+    # compile C JNI
+    mkdir -p build || exit 1
+    cd build || exit 1
+    cmake .. -DCMAKE_INSTALL_PREFIX="$INSTALL_DIR" \
+        -D CMAKE_BUILD_TYPE=Release \
+        -G "Unix Makefiles"
+    cmake --build . --parallel --config Release
+    cd .. || exit 1
+
+    # compile Java
+    sh tools/compile.sh linux64
+    sh tools/make_jar.sh linux64
+
+    # package to prerequirements
+    mkdir -p "$INSTALLROOTDIR/lib/thirdparty/jcef/"
+    cp -a build/native/Release/* "$INSTALLROOTDIR/lib/thirdparty/jcef/"
+    cp -a out/linux64/jcef.jar "$INSTALLROOTDIR/thirdparty/jcef-$JCEF_VERSION.jar"
 }
 
 build_openxlsx() {

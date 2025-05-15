@@ -59,6 +59,8 @@
 
         <dependency org="com.formdev" name="flatlaf" rev="3.4.1" conf="*->master"/>
 
+        <dependency org="com.google.code.gson" name="gson" rev="2.10.1" conf="*->default"/>
+
         <!-- Not mandatory for ./configure running without failure  -->
         <dependency org="org.eclipse.jdt" name="ecj" rev="3.37.0" conf="*->default"/>
         <dependency org="com.puppycrawl.tools" name="checkstyle" rev="10.17.0" conf="*->master"/>

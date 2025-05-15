@@ -139,6 +139,9 @@
             <listitem>
                 <para>Text: a text control (generally static).</para>
             </listitem>
+            <listitem>
+                <para>Browser: an embedded <link linkend="browser">browser</link>.</para>
+            </listitem>
         </itemizedlist>
     </refsection>
     <refsection>
@@ -228,6 +231,9 @@ matrix(ut.string,size(table))
             <member>
                 <link linkend="math_rendering_features_in_graphic">LaTeX and MathML</link>
             </member>
+            <member>
+                <link linkend="browser">browser</link>
+            </member>
         </simplelist>
     </refsection>
     <refsection>
@@ -250,6 +256,12 @@ matrix(ut.string,size(table))
                     <para>
                         Uicontrols handles display is now limited to properties used by Java rendering (See <link linkend="console_properties">console properties</link>).
                     </para>
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2025.1.0</revnumber>
+                <revremark>
+                    Uicontrol "Browser" added.
                 </revremark>
             </revision>
         </revhistory>

@@ -37,6 +37,11 @@ $SCILAB : scilab path (SCI in Scilab)
     <option value="--add-opens=java.base/jdk.internal.loader=ALL-UNNAMED"/>
     <option value="--add-opens=java.base/java.lang.reflect=ALL-UNNAMED"/>
 
+    <!-- Needed by JCEF on macOS -->
+    <option value="--add-opens=java.desktop/sun.awt=ALL-UNNAMED" os="macosx"/>
+    <option value="--add-opens=java.desktop/sun.lwawt=ALL-UNNAMED" os="macosx"/>
+    <option value="--add-opens=java.desktop/sun.lwawt.macosx=ALL-UNNAMED" os="macosx"/>
+
     <option value="-Djava.util.logging.config.file=$SCILAB/etc/logging.properties"/>
 
     <!-- Set Java Heap space to 256mb -->

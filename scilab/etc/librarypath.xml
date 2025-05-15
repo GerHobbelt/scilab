@@ -20,13 +20,16 @@
     <!-- SCILAB BINARY VERSION -->
 
     <path value="$SCILAB/lib/thirdparty"/>
+    <path value="$SCILAB/lib/thirdparty/jcef"/>
     <path value="$SCILAB/bin"/>
+    <path value="$SCILAB/bin/jcef"/>
     <path value="$SCILAB/lib/scilab"/>
 
     <!-- DEPENDENCIES -->
 
     <!-- Scilab provided thirdparties  -->
     <path value="$SCILAB/../../lib/thirdparty/"/>
+    <path value="$SCILAB/../../lib/thirdparty/jcef/"/>
 
     <!-- System provided libraries -->
     <!-- Default path to the JNI classes under some Linux (JoGL under Debian for example) -->

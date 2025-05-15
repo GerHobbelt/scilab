@@ -32,13 +32,3 @@ types::InternalType* fromJSON(const std::string& s)
     std::string err;
     return fromJSON(s, err);
 }
-
-std::string toJSON2(types::InternalType* it, std::string& err, int indent, bool allowNanAndInf)
-{
-    return toJSON(it, err, indent, allowNanAndInf);
-}
-
-std::string toJSON2(types::InternalType* it, int indent)
-{
-    return toJSON(it, indent);
-}

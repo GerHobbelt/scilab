@@ -79,7 +79,9 @@ static const char* propertiesNames[] =
     "title_position",
     "title_scroll",
     "scrollable",
-    "icon"
+    "icon",
+    "debug",
+    "data"
 };
 /*--------------------------------------------------------------------------*/
 static int style_property = -1;

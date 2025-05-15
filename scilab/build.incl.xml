@@ -63,6 +63,8 @@
         <!-- Not use at build time but used for unitary tests -->
         <pathelement location="${library.javasci.dir}/${library.javasci.name}"/>
         <pathelement location="${library.javasci.dir}/${library.javasci-v1.name}"/>
+        <pathelement location="${gson.jar}"/>
+        <pathelement location="${jcef.jar}"/>
         <pathelement location="${commons-logging.jar}"/>
         <pathelement location="${flexdock.jar}"/>
         <pathelement location="${gluegen2.jar}"/>

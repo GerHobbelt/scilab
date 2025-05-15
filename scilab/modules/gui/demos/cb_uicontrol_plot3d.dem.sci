@@ -40,7 +40,7 @@ function uicontrol_plot3d()
     end
 
     fakeframe_height = 10;
-    
+
 
     // New menu
     h = uimenu(demo_plot3d, ...
@@ -48,7 +48,7 @@ function uicontrol_plot3d()
 
     uimenu(h, ...
         "label"     , gettext("Close"), ...
-        "callback"  , "demo_plot3d=findobj(""figure_id"",100001);delete(demo_plot3d);", ...
+        "callback"  , "demo_plot3d=findobj(""figure_id"",100002);delete(demo_plot3d);", ...
         "tag"       , "close_menu");
 
     demo_viewCode(SCI+ "/modules/gui/demos/cb_uicontrol_plot3d.dem.sci");

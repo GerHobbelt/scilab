@@ -433,4 +433,8 @@ public class GraphicObjectProperties {
     public static final int __GO_NUM_MARK_BACKGROUNDS__ = 410;
     public static final int __GO_UI_FOCUS__ = 411;
 
+    /* UI BROWSER */
+    public static final int __GO_UI_BROWSER__ = 412;
+    public static final int __GO_UI_DATA__ = 413;
+    public static final int __GO_UI_DEBUG__ = 414;
 }

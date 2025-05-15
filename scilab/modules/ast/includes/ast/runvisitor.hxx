@@ -46,6 +46,7 @@ public:
         _resultVect.push_back(nullptr);
         _result = nullptr;
         _isLambda = false;
+        _lambaResult = nullptr;
         m_bSingleResult = true;
         m_pAns = symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"ans"));
     }

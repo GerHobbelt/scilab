@@ -23,8 +23,9 @@ mkl
 refblas
 fftw
 openBLAS
+jcef/
 
-# linux 
+# linux
 loader.sce
 *.jar
 cachedir

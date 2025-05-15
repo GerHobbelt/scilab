@@ -1260,6 +1260,7 @@ GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GRAPHICS_ENABLE = @GRAPHICS_ENABLE@
 GREP = @GREP@
+GSON = @GSON@
 GUAVA = @GUAVA@
 GUI_ENABLE = @GUI_ENABLE@
 HAVE_CXX17 = @HAVE_CXX17@
@@ -1297,6 +1298,7 @@ JAVA_JNI_LIBS = @JAVA_JNI_LIBS@
 JAXB_API = @JAXB_API@
 JAXB_IMPL = @JAXB_IMPL@
 JAXB_RUNTIME = @JAXB_RUNTIME@
+JCEF = @JCEF@
 JDB = @JDB@
 JEUCLID_CORE = @JEUCLID_CORE@
 JGRAPHX = @JGRAPHX@
@@ -1999,6 +2001,7 @@ libscigraphics_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/threads/includes/ \
     -I$(top_srcdir)/modules/console/includes/ \
     -I$(top_srcdir)/modules/dynamic_link/includes \
+    -I$(top_srcdir)/modules/webtools/includes \
     $(TCL_INC_PATH) \
     $(TK_INC_PATH) \
     $(AM_CPPFLAGS)

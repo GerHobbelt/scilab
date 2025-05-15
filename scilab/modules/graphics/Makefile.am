@@ -508,6 +508,7 @@ libscigraphics_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/threads/includes/ \
     -I$(top_srcdir)/modules/console/includes/ \
     -I$(top_srcdir)/modules/dynamic_link/includes \
+    -I$(top_srcdir)/modules/webtools/includes \
     $(TCL_INC_PATH) \
     $(TK_INC_PATH) \
     $(AM_CPPFLAGS)

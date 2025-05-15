@@ -59,7 +59,6 @@ GUI_IMPEXP void* GetConsoleShowHiddenProperties(void* _pvCtx, int iObjUID);
 GUI_IMPEXP void* GetUicontrolRelief(void* _pvCtx, int iObjUID);
 GUI_IMPEXP void* GetConsoleUseDeprecatedLF(void* _pvCtx, int iObjUID);
 GUI_IMPEXP void* GetUicontrolTooltipString(void* _pvCtx, int iObjUID);
-
-const char *IntToStyle(int _iStyle);
+GUI_IMPEXP void* GetUicontrolDebug(void* _pvCtx, int iObjUID);
 
 #endif /* __GET_UICONTROL_H__ */

@@ -267,6 +267,8 @@ am__objects_2 = src/cpp/libscigui_algo_la-InitializeGUI.lo \
 	src/cpp/libscigui_algo_la-GetUicontrolSnapToTicks.lo \
 	src/cpp/libscigui_algo_la-SetUicontrolIcon.lo \
 	src/cpp/libscigui_algo_la-GetUicontrolIcon.lo \
+	src/cpp/libscigui_algo_la-SetUicontrolDebug.lo \
+	src/cpp/libscigui_algo_la-GetUicontrolDebug.lo \
 	src/cpp/libscigui_algo_la-SetConsoleShowHiddenHandles.lo \
 	src/cpp/libscigui_algo_la-GetConsoleShowHiddenHandles.lo \
 	src/cpp/libscigui_algo_la-UnitsConversion.lo \
@@ -348,7 +350,8 @@ am__objects_5 = sci_gateway/cpp/libscigui_la-sci_printsetupbox.lo \
 	sci_gateway/cpp/libscigui_la-sci_uigetcolor.lo \
 	sci_gateway/cpp/libscigui_la-sci_ClipBoard.lo \
 	sci_gateway/cpp/libscigui_la-sci_x_mdialog.lo \
-	sci_gateway/cpp/libscigui_la-sci_x_dialog.lo
+	sci_gateway/cpp/libscigui_la-sci_x_dialog.lo \
+	sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo
 am_libscigui_la_OBJECTS = $(am__objects_4) $(am__objects_5)
 libscigui_la_OBJECTS = $(am_libscigui_la_OBJECTS)
 @GUI_TRUE@am_libscigui_la_rpath = -rpath $(pkglibdir)
@@ -396,6 +399,7 @@ am__depfiles_remade =  \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_datatipremove.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_displaytree.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_fire_closing_finished.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getinstalledlookandfeels.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getlookandfeel.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_helpbrowser.Plo \
@@ -441,6 +445,7 @@ am__depfiles_remade =  \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetConsoleShowHiddenHandles.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetScreenProperty.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolBackgroundColor.Plo \
+	src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontAngle.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontName.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontSize.Plo \
@@ -469,6 +474,7 @@ am__depfiles_remade =  \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-InitializeGUI.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolBackgroundColor.Plo \
+	src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontAngle.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontName.Plo \
 	src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontSize.Plo \
@@ -666,6 +672,7 @@ GMSGFMT = @GMSGFMT@
 GMSGFMT_015 = @GMSGFMT_015@
 GRAPHICS_ENABLE = @GRAPHICS_ENABLE@
 GREP = @GREP@
+GSON = @GSON@
 GUAVA = @GUAVA@
 GUI_ENABLE = @GUI_ENABLE@
 HAVE_CXX17 = @HAVE_CXX17@
@@ -703,6 +710,7 @@ JAVA_JNI_LIBS = @JAVA_JNI_LIBS@
 JAXB_API = @JAXB_API@
 JAXB_IMPL = @JAXB_IMPL@
 JAXB_RUNTIME = @JAXB_RUNTIME@
+JCEF = @JCEF@
 JDB = @JDB@
 JEUCLID_CORE = @JEUCLID_CORE@
 JGRAPHX = @JGRAPHX@
@@ -920,6 +928,7 @@ libscigui_la_root_DATA = license.txt
 #### gui : init scripts ####
 libscigui_la_etcdir = $(mydatadir)/etc
 libscigui_la_etc_DATA = \
+	etc/error.html \
 	etc/gui.quit \
 	etc/gui.start \
 	etc/graphics_menubar.xml \
@@ -930,6 +939,7 @@ libscigui_la_etc_DATA = \
 	etc/flexdock-themes.xml \
 	etc/integratedConfiguration.xml \
 	etc/simpleConfiguration.xml \
+	etc/ScilabBrowser.js \
 	etc/XConfiguration-colors.xml \
 	etc/XConfiguration-colors.xsl \
 	etc/XConfiguration-font.xml \
@@ -1020,6 +1030,8 @@ GUI_CXX_SOURCES = \
     src/cpp/GetUicontrolSnapToTicks.cpp \
     src/cpp/SetUicontrolIcon.cpp \
     src/cpp/GetUicontrolIcon.cpp \
+    src/cpp/SetUicontrolDebug.cpp \
+    src/cpp/GetUicontrolDebug.cpp \
     src/cpp/SetConsoleShowHiddenHandles.cpp \
     src/cpp/GetConsoleShowHiddenHandles.cpp \
     src/cpp/UnitsConversion.cpp \
@@ -1108,7 +1120,8 @@ GATEWAY_CXX_SOURCES = \
     sci_gateway/cpp/sci_uigetcolor.cpp \
     sci_gateway/cpp/sci_ClipBoard.cpp \
     sci_gateway/cpp/sci_x_mdialog.cpp \
-    sci_gateway/cpp/sci_x_dialog.cpp
+    sci_gateway/cpp/sci_x_dialog.cpp \
+    sci_gateway/cpp/sci_getBrowserCookies.cpp
 
 libscigui_la_CPPFLAGS = \
     -I$(srcdir)/includes/ \
@@ -1135,6 +1148,7 @@ libscigui_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/string/includes/ \
     -I$(top_srcdir)/modules/commons/src/jni/ \
     -I$(top_srcdir)/modules/dynamic_link/includes \
+    -I$(top_srcdir)/modules/webtools/includes \
     $(JAVA_JNI_INCLUDE) \
     $(AM_CPPFLAGS)
 
@@ -1643,6 +1657,10 @@ src/cpp/libscigui_algo_la-SetUicontrolIcon.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscigui_algo_la-GetUicontrolIcon.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libscigui_algo_la-SetUicontrolDebug.lo:  \
+	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
+src/cpp/libscigui_algo_la-GetUicontrolDebug.lo:  \
+	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscigui_algo_la-SetConsoleShowHiddenHandles.lo:  \
 	src/cpp/$(am__dirstamp) src/cpp/$(DEPDIR)/$(am__dirstamp)
 src/cpp/libscigui_algo_la-GetConsoleShowHiddenHandles.lo:  \
@@ -1859,6 +1877,9 @@ sci_gateway/cpp/libscigui_la-sci_x_mdialog.lo:  \
 sci_gateway/cpp/libscigui_la-sci_x_dialog.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
+sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo:  \
+	sci_gateway/cpp/$(am__dirstamp) \
+	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 
 libscigui.la: $(libscigui_la_OBJECTS) $(libscigui_la_DEPENDENCIES) $(EXTRA_libscigui_la_DEPENDENCIES) 
 	$(AM_V_CXXLD)$(CXXLINK) $(am_libscigui_la_rpath) $(libscigui_la_OBJECTS) $(libscigui_la_LIBADD) $(LIBS)
@@ -1909,6 +1930,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_datatipremove.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_displaytree.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_fire_closing_finished.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getinstalledlookandfeels.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getlookandfeel.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_helpbrowser.Plo@am__quote@ # am--include-marker
@@ -1954,6 +1976,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetConsoleShowHiddenHandles.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetScreenProperty.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolBackgroundColor.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontAngle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontName.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontSize.Plo@am__quote@ # am--include-marker
@@ -1982,6 +2005,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-InitializeGUI.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolBackgroundColor.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontAngle.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontName.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontSize.Plo@am__quote@ # am--include-marker
@@ -2726,6 +2750,20 @@ src/cpp/libscigui_algo_la-GetUicontrolIcon.lo: src/cpp/GetUicontrolIcon.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscigui_algo_la-GetUicontrolIcon.lo `test -f 'src/cpp/GetUicontrolIcon.cpp' || echo '$(srcdir)/'`src/cpp/GetUicontrolIcon.cpp
 
+src/cpp/libscigui_algo_la-SetUicontrolDebug.lo: src/cpp/SetUicontrolDebug.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscigui_algo_la-SetUicontrolDebug.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Tpo -c -o src/cpp/libscigui_algo_la-SetUicontrolDebug.lo `test -f 'src/cpp/SetUicontrolDebug.cpp' || echo '$(srcdir)/'`src/cpp/SetUicontrolDebug.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Tpo src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/SetUicontrolDebug.cpp' object='src/cpp/libscigui_algo_la-SetUicontrolDebug.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscigui_algo_la-SetUicontrolDebug.lo `test -f 'src/cpp/SetUicontrolDebug.cpp' || echo '$(srcdir)/'`src/cpp/SetUicontrolDebug.cpp
+
+src/cpp/libscigui_algo_la-GetUicontrolDebug.lo: src/cpp/GetUicontrolDebug.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscigui_algo_la-GetUicontrolDebug.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Tpo -c -o src/cpp/libscigui_algo_la-GetUicontrolDebug.lo `test -f 'src/cpp/GetUicontrolDebug.cpp' || echo '$(srcdir)/'`src/cpp/GetUicontrolDebug.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Tpo src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/GetUicontrolDebug.cpp' object='src/cpp/libscigui_algo_la-GetUicontrolDebug.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/libscigui_algo_la-GetUicontrolDebug.lo `test -f 'src/cpp/GetUicontrolDebug.cpp' || echo '$(srcdir)/'`src/cpp/GetUicontrolDebug.cpp
+
 src/cpp/libscigui_algo_la-SetConsoleShowHiddenHandles.lo: src/cpp/SetConsoleShowHiddenHandles.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/libscigui_algo_la-SetConsoleShowHiddenHandles.lo -MD -MP -MF src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Tpo -c -o src/cpp/libscigui_algo_la-SetConsoleShowHiddenHandles.lo `test -f 'src/cpp/SetConsoleShowHiddenHandles.cpp' || echo '$(srcdir)/'`src/cpp/SetConsoleShowHiddenHandles.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Tpo src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Plo
@@ -3104,6 +3142,13 @@ sci_gateway/cpp/libscigui_la-sci_x_dialog.lo: sci_gateway/cpp/sci_x_dialog.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscigui_la-sci_x_dialog.lo `test -f 'sci_gateway/cpp/sci_x_dialog.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_x_dialog.cpp
 
+sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo: sci_gateway/cpp/sci_getBrowserCookies.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Tpo -c -o sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo `test -f 'sci_gateway/cpp/sci_getBrowserCookies.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_getBrowserCookies.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Tpo sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/sci_getBrowserCookies.cpp' object='sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigui_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscigui_la-sci_getBrowserCookies.lo `test -f 'sci_gateway/cpp/sci_getBrowserCookies.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_getBrowserCookies.cpp
+
 mostlyclean-libtool:
 	-rm -f *.lo
 
@@ -3375,6 +3420,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_datatipremove.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_displaytree.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_fire_closing_finished.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getinstalledlookandfeels.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getlookandfeel.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_helpbrowser.Plo
@@ -3420,6 +3466,7 @@ distclean: distclean-am
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetConsoleShowHiddenHandles.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetScreenProperty.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolBackgroundColor.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontAngle.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontName.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontSize.Plo
@@ -3448,6 +3495,7 @@ distclean: distclean-am
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-InitializeGUI.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolBackgroundColor.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontAngle.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontName.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontSize.Plo
@@ -3569,6 +3617,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_datatipremove.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_displaytree.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_fire_closing_finished.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getBrowserCookies.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getinstalledlookandfeels.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_getlookandfeel.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscigui_la-sci_helpbrowser.Plo
@@ -3614,6 +3663,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetConsoleShowHiddenHandles.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetScreenProperty.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolBackgroundColor.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolDebug.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontAngle.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontName.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-GetUicontrolFontSize.Plo
@@ -3642,6 +3692,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-InitializeGUI.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetConsoleShowHiddenHandles.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolBackgroundColor.Plo
+	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolDebug.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontAngle.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontName.Plo
 	-rm -f src/cpp/$(DEPDIR)/libscigui_algo_la-SetUicontrolFontSize.Plo

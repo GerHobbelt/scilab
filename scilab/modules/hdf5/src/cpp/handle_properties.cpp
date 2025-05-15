@@ -914,6 +914,14 @@ static int import_handle_uicontrol(hid_t dataset, int parent, int version)
     setGraphicObjectProperty(uic, __GO_UI_VALUE__, value, jni_double_vector, row * col);
     delete[] value;
 
+
+    //debug
+    int debug = 0;
+    if (getHandleBool(dataset, "debug", &debug) != -1)
+    {
+        setGraphicObjectProperty(uic, __GO_UI_DEBUG__, &debug, jni_bool, 1);
+    }
+    
     closeList6(dataset);
     return uic;
 }
@@ -2676,6 +2684,15 @@ static bool export_handle_uicontrol(hid_t parent, int uid, hid_t xfer_plist_id)
     {
         hid_t ub = openList6(parent, "border", g_SCILAB_CLASS_HANDLE);
         export_handle_border(ub, border, xfer_plist_id);
+    }
+
+    {
+        // debug
+        int debug = 0;
+        ret = getHandleBoolProperty(uid, __GO_UI_DEBUG__, &debug);
+        dims[0] = 1;
+        dims[1] = 1;
+        writeBooleanMatrix6(parent, "debug", 2, dims, &debug, xfer_plist_id);
     }
 
     closeList6(parent);

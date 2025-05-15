@@ -63,7 +63,9 @@ antlr.jar=${thirdparty.dir}/antlr4-runtime-4.13.1.jar
 ; To build the export through the Java
 avalon-framework.jar=${thirdparty.dir}/avalon-framework-4.1.4.jar
 
-;library.src.path=src/java/
+; webview jcef
+jcef.jar=${thirdparty.dir}/jcef-127.3.1.jar
+gson.jar=${thirdparty.dir}/gson-2.10.1.jar
 
 library.scirenderer.dir=${modules.dir}/scirenderer/${build.jar.dir}/
 library.scirenderer.src.dir=${modules.dir}/scirenderer/${library.src.path}

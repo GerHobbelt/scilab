@@ -384,6 +384,19 @@ void* get_data_property(void* _pvCtx, int iObjUID)
             return getgrayplotdata(iObjUID);
         case __GO_MATPLOT__ :
             return getmatplotdata(iObjUID);
+        case __GO_UICONTROL__:
+        {
+            getGraphicObjectProperty(iObjUID, __GO_STYLE__, jni_int, (void**)&piType);
+            if ((type != __GO_UI_BROWSER__))
+            {
+                Scierror(999, _("'%s' property does not exist for this handle.\n"), "Debug");
+                return NULL;
+            }
+
+            char* data = NULL;
+            getGraphicObjectProperty(iObjUID, __GO_UI_DATA__, jni_string, (void**)&data);
+            return sciReturnString(data);
+        }
         case __GO_DATATIP__ :
             return get_tip_data_property(_pvCtx, iObjUID);
         default :

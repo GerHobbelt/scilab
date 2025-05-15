@@ -61,6 +61,7 @@ import org.scilab.modules.graphic_objects.figure.Figure;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
 import org.scilab.modules.gui.SwingView;
 import org.scilab.modules.gui.SwingViewObject;
+import org.scilab.modules.gui.bridge.browser.SwingScilabBrowser;
 import org.scilab.modules.gui.bridge.canvas.SwingScilabCanvas;
 import org.scilab.modules.gui.bridge.canvas.SwingScilabCanvasImpl;
 import org.scilab.modules.gui.bridge.console.SwingScilabConsole;
@@ -1372,8 +1373,24 @@ public class CallScilabBridge {
             ClosingOperationsManager.removeFromDunnoList((SwingScilabDockablePanel) view);
         }
     }
-    
+
     public static void registerSwingView() {
         SwingView.registerSwingView();
+    }
+
+    public static void browserDebug(int uicontrolUID) {
+        SwingViewObject uicontrol = SwingView.getFromId(uicontrolUID);
+        if (uicontrol instanceof SwingScilabBrowser) {
+            ((SwingScilabBrowser) uicontrol).openDebug(false);
+        }
+    }
+
+    public static String getBrowserCookies(int uicontrolUID) {
+        SwingViewObject uicontrol = SwingView.getFromId(uicontrolUID);
+        if (uicontrol instanceof SwingScilabBrowser) {
+            return ((SwingScilabBrowser) uicontrol).getCookies();
+        }
+
+        return "";
     }
 }

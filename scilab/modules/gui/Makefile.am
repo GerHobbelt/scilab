@@ -28,6 +28,7 @@ libscigui_la_root_DATA =  license.txt
 #### gui : init scripts ####
 libscigui_la_etcdir = $(mydatadir)/etc
 libscigui_la_etc_DATA = \
+	etc/error.html \
 	etc/gui.quit \
 	etc/gui.start \
 	etc/graphics_menubar.xml \
@@ -38,6 +39,7 @@ libscigui_la_etc_DATA = \
 	etc/flexdock-themes.xml \
 	etc/integratedConfiguration.xml \
 	etc/simpleConfiguration.xml \
+	etc/ScilabBrowser.js \
 	etc/XConfiguration-colors.xml \
 	etc/XConfiguration-colors.xsl \
 	etc/XConfiguration-font.xml \
@@ -128,6 +130,8 @@ GUI_CXX_SOURCES = \
     src/cpp/GetUicontrolSnapToTicks.cpp \
     src/cpp/SetUicontrolIcon.cpp \
     src/cpp/GetUicontrolIcon.cpp \
+    src/cpp/SetUicontrolDebug.cpp \
+    src/cpp/GetUicontrolDebug.cpp \
     src/cpp/SetConsoleShowHiddenHandles.cpp \
     src/cpp/GetConsoleShowHiddenHandles.cpp \
     src/cpp/UnitsConversion.cpp \
@@ -224,7 +228,8 @@ GATEWAY_CXX_SOURCES = \
     sci_gateway/cpp/sci_uigetcolor.cpp \
     sci_gateway/cpp/sci_ClipBoard.cpp \
     sci_gateway/cpp/sci_x_mdialog.cpp \
-    sci_gateway/cpp/sci_x_dialog.cpp
+    sci_gateway/cpp/sci_x_dialog.cpp \
+    sci_gateway/cpp/sci_getBrowserCookies.cpp
 
 libscigui_la_CPPFLAGS = \
     -I$(srcdir)/includes/ \
@@ -251,6 +256,7 @@ libscigui_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/string/includes/ \
     -I$(top_srcdir)/modules/commons/src/jni/ \
     -I$(top_srcdir)/modules/dynamic_link/includes \
+    -I$(top_srcdir)/modules/webtools/includes \
     $(JAVA_JNI_INCLUDE) \
     $(AM_CPPFLAGS)
 

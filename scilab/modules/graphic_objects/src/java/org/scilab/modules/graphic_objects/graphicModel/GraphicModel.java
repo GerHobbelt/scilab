@@ -57,6 +57,7 @@ import org.scilab.modules.graphic_objects.uicontrol.tab.Tab;
 import org.scilab.modules.graphic_objects.uicontrol.table.Table;
 import org.scilab.modules.graphic_objects.uicontrol.uiimage.UiImage;
 import org.scilab.modules.graphic_objects.uicontrol.uitext.UiText;
+import org.scilab.modules.graphic_objects.uicontrol.browser.Browser;
 import org.scilab.modules.graphic_objects.uimenu.Uimenu;
 import org.scilab.modules.graphic_objects.vectfield.Champ;
 import org.scilab.modules.graphic_objects.vectfield.Segs;
@@ -338,6 +339,9 @@ public final class GraphicModel {
             case FRAME_SCROLLABLE:
                 createdObject = new Frame();
                 ((Frame)createdObject).setScrollable(true);
+                break;
+            case BROWSER:
+                createdObject = new Browser();
                 break;
             default:
                 createdObject = null;

@@ -214,5 +214,11 @@
         </method>
         <method name="registerSwingView" returnType="void" modifier="static">
         </method>
+        <method name="browserDebug" returnType="void" modifier="static">
+            <parameter type="int" name="objUID"/>
+        </method>
+        <method name="getBrowserCookies" returnType="String" modifier="static">
+            <parameter type="int" name="objUID"/>
+        </method>
     </object>
 </package>

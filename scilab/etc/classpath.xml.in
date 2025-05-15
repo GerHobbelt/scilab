@@ -39,6 +39,9 @@ The option is "disableUnderMode" and can be:
 <path value="@JAVAFX_BASE@"/>
 <path value="@JAVAFX_SWING@"/>
 <path value="@JAVAFX_GRAPHICS@"/>
+<path value="@JCEF@"/>
+<path value="@GSON@"/>
+
 <!-- Load when needed -->
 
 <!-- EMF export -->

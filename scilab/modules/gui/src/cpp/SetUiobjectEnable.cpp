@@ -25,7 +25,7 @@ int SetUiobjectEnable(void* _pvCtx, int iObjUID, void* _pvData, int valueType, i
     int b = (int)FALSE;
     BOOL status = FALSE;
 
-    b = tryGetBooleanValueFromStack(_pvData, valueType, nbRow, nbCol, const_cast < char *>("Enable"));
+    b = tryGetBooleanValueFromStack(_pvData, valueType, nbRow, nbCol, const_cast<char*>("Enable"));
 
     if (b == NOT_A_BOOLEAN_VALUE)
     {
@@ -40,7 +40,7 @@ int SetUiobjectEnable(void* _pvCtx, int iObjUID, void* _pvData, int valueType, i
     }
     else
     {
-        Scierror(999, const_cast < char *>(_("'%s' property does not exist for this handle.\n")), "Enable");
+        Scierror(999, const_cast<char*>(_("'%s' property does not exist for this handle.\n")), "Enable");
 
         return SET_PROPERTY_ERROR;
     }

@@ -27,11 +27,9 @@ import org.scilab.modules.graphic_objects.graphicObject.GraphicObject;
 import org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties;
 import org.scilab.modules.graphic_objects.graphicObject.GraphicObject.Type;
 import org.scilab.modules.graphic_objects.polyline.Polyline;
-import org.scilab.modules.graphic_objects.graphicView.FlattenTreeView;
 import org.scilab.modules.graphic_objects.graphicView.GedTreeView;
 import org.scilab.modules.graphic_objects.graphicView.GraphicView;
 import org.scilab.modules.graphic_objects.graphicView.GuiLogView;
-import org.scilab.modules.graphic_objects.graphicView.LogView;
 
 /**
  * GraphicController class

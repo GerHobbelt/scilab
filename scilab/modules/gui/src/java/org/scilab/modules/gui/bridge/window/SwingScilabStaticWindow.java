@@ -39,7 +39,7 @@ public class SwingScilabStaticWindow extends SwingScilabWindow {
         addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 String closeRequestFcn = (String) GraphicController.getController().getProperty(panel.getId(), __GO_CLOSEREQUESTFCN__);
-                if (!closeRequestFcn.equals("")) {
+                if (closeRequestFcn != null && closeRequestFcn.equals("") == false) {
                     String closeCommand = "if exists(\"gcbo\") then %oldgcbo = gcbo; end;" + "gcbo = getcallbackobject(" + panel.getId() + ");" + closeRequestFcn
                                           + ";if exists(\"%oldgcbo\") then gcbo = %oldgcbo; else clear gcbo; end;";
                     InterpreterManagement.requestScilabExec(closeCommand);

@@ -15,8 +15,10 @@
  *
  */
 
+#include <string>
 extern "C"
 {
+#include "FileExist.h"
 #include "SetUicontrol.h"
 }
 
@@ -106,6 +108,20 @@ int SetUicontrolString(void* _pvCtx, int iObjUID, void* _pvData, int valueType, 
 
                 return SET_PROPERTY_SUCCEED;
             }
+            break;
+        }
+        case __GO_UI_BROWSER__:
+        {
+            std::string url = *((char**)_pvData);
+            if (url.length() != 0 && url.find("://") == std::string::npos) //local path
+            {
+                if (FileExist(url.c_str()) == FALSE)
+                {
+                    Scierror(999, const_cast<char*>(_("Wrong value for '%s' property: file \'%s\' does not exist.\n")), "String", url.c_str());
+                    return SET_PROPERTY_ERROR;
+                }
+            }
+
             break;
         }
         default:

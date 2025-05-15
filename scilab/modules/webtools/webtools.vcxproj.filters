@@ -10,6 +10,9 @@
     <Filter Include="Resource Files">
       <UniqueIdentifier>{e0bc1a3e-eff0-4d06-85ab-228653dc7a23}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries Dependencies">
+      <UniqueIdentifier>{c4ae4d6d-36c1-42a3-b7b0-ca55fc207e69}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="includes\dynlib_webtools.h">
@@ -58,5 +61,10 @@
     <ClCompile Include="src\cpp\url_tools.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="core_Import.def">
+      <Filter>Libraries Dependencies</Filter>
+    </None>
   </ItemGroup>
 </Project>

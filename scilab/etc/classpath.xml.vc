@@ -39,6 +39,8 @@ The option is "disableUnderMode" and can be:
     <path value="$SCILAB/thirdparty/javafx.base.jar"/>
     <path value="$SCILAB/thirdparty/javafx.graphics.jar"/>
     <path value="$SCILAB/thirdparty/javafx.swing.jar"/>
+    <path value="$SCILAB/thirdparty/jcef-127.3.1.jar"/>
+    <path value="$SCILAB/thirdparty/gson-2.10.1.jar"/>
 
     <!-- Load when needed -->
 
@@ -100,7 +102,7 @@ The option is "disableUnderMode" and can be:
 
     <!-- java.lang.NoClassDefFoundError: jakarta/activation/MimetypesFileTypeMap -->
     <!-- java.lang.RuntimeException: Provider for jakarta.activation.spi.MimeTypeRegistryProvider cannot be found -->
-    <path value="$SCILAB/thirdparty/jakarta.activation-2.0.1.jar" load="onUse"> 
+    <path value="$SCILAB/thirdparty/jakarta.activation-2.0.1.jar" load="onUse">
         <load on="documentationGeneration"/>
     </path>
 
