@@ -1,6 +1,6 @@
 /*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-*  Copyright (C) 2025 - Dassault Systemes S.E. - Cedric DELAMARRE
+*  Copyright (C) 2025 - Dassault Systèmes S.E. - Cédric DELAMARRE
 *  Copyright (C) 2016 - Scilab Enterprises - Antoine ELIAS
 *  Copyright (C) 2012 - 2016 - Scilab Enterprises
 *

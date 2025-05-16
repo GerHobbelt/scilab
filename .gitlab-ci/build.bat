@@ -1,6 +1,6 @@
 REM Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-REM Copyright (C) Dassault Systemes - 2022 - Clement DAVID
-REM Copyright (C) Dassault Systemes - 2022 - Cedric DELAMARRE
+REM Copyright (C) 2022 - Dassault Systèmes S.E. - Clément DAVID
+REM Copyright (C) 2022 - Dassault Systèmes S.E. - Cédric DELAMARRE
 REM
 REM Builder script for building Scilab on Windows
 REM

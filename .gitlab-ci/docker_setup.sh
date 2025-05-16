@@ -1,7 +1,7 @@
 #!/bin/sh
 #
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2022-2024 - Clement DAVID
+# Copyright (C) 2022-2024 - Dassault Systèmes S.E. - Clément DAVID
 #
 # Helper script to build all Linux images
 #

@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2023 - 3DS - Bruno JOFRET
+ * Copyright (C) 2023 - Dassault Systèmes S.E. - Bruno JOFRET
  *
  * This file is released under the 3-clause BSD license. See COPYING-BSD.
  *

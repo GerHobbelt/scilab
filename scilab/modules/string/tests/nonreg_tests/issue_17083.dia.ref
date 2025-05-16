@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - 3DS - Cédric DELAMARRE
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Cédric DELAMARRE
 //
 // <-- Non-regression test for bug 17083 -->
 //

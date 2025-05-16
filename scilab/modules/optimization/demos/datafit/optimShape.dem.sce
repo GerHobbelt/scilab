@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - Dassault Systemes - Bruno JOFRET
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Bruno JOFRET
 //
 // This file is released under the 3-clause BSD license. See COPYING-BSD.
 function demo_optimshape()

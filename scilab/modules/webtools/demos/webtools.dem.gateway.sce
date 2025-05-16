@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - Dassault Systèmes - Clément DAVID
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Clément DAVID
 //
 // This file is released under the 3-clause BSD license. See COPYING-BSD.
 

@@ -2,7 +2,7 @@
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2011-2012 - Scilab Enterprises - Clement DAVID
  * Copyright (C) 2016-2017 - FOSSEE IIT Bombay - Dipti Ghosalkar
- * Copyright (C) 2024 - Dassault Systèmes - Clément DAVID
+ * Copyright (C) 2024 - Dassault Systèmes S.E. - Clément DAVID
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,

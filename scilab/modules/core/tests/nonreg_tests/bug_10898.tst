@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - 3DS - Cedric Delamarre
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Cédric Delamarre
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================

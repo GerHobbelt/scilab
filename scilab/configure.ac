@@ -5,7 +5,7 @@
 # Copyright (C) DIGITEO - 2009 - Pierre MARECHAL <pierre.marechal@scilab.org>
 # Copyright (C) Scilab Enterprises - 2014 - Clement DAVID <clement.david@scilab-enterprises.com>
 # Copyright (C) ESI Group - 2018 - Clement DAVID <clement.david@scilab-enterprises.com>
-# Copyright (C) Dassault Systèmes - 2023 - Clement DAVID <clement.david@3ds.com>
+# Copyright (C) 2023 - Dassault Systèmes S.E. - Clément DAVID
 #
 # Copyright (C) 2012 - 2016 - Scilab Enterprises
 #

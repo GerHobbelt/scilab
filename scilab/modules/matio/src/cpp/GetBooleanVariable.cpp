@@ -1,6 +1,6 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) 2023 - 3DS - Vincent COUVERT
+ * Copyright (C) 2023 - Dassault Systèmes S.E. - Vincent COUVERT
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.

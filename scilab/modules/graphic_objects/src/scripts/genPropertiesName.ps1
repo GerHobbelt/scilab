@@ -1,5 +1,5 @@
 <# Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-## Copyright (C) 2022 - Dassault Systemes - Clement DAVID
+## Copyright (C) 2022 - Dassault Systèmes S.E. - Clément DAVID
 ##
 ## This file is hereby licensed under the terms of the GNU GPL v2.0,
 ## pursuant to article 5.3.4 of the CeCILL v.2.1.

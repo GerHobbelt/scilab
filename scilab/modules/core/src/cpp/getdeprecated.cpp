@@ -1,6 +1,10 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) 2024 - Dassault Systemes S.E. - Cedric DELAMARRE
+ * Copyright (C) 2024 - Dassault Systèmes S.E. - Cédric DELAMARRE
+ *
+ * For more information, see the COPYING file which you should have received
+ * along with this program.
+ *
  */
 
 #include "context.hxx"

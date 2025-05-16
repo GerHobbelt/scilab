@@ -1,6 +1,6 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2008 - INRIA - Pierre MARECHAL <pierre.marechal@scilab.org>
-// Copyright (C) 2024 - Dassault Systemes - Vincent COUVERT
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Vincent COUVERT
 //
 // Copyright (C) 2012 - 2016 - Scilab Enterprises
 //

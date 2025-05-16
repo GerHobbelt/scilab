@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - 3DS - Antoine ELIAS
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Antoine ELIAS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================

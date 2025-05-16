@@ -2,7 +2,7 @@
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2014-2016 - Scilab Enterprises - Clement DAVID
  * Copyright (C) 2017 - ESI Group - Clement DAVID
- * Copyright (C) 2023-2024 - Dassault Systèmes - Clement DAVID
+ * Copyright (C) 2023-2024 - Dassault Systèmes S.E. - Clément DAVID
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *

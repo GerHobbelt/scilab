@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 #
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2022 - Clement DAVID
-# Copyright (C) Dassault Systemes - 2023 - Cedric DELAMARRE
+# Copyright (C) 2022 - Dassault Systèmes S.E. - Clément DAVID
+# Copyright (C) 2023 - Dassault Systèmes S.E. - Cédric DELAMARRE
 #
 #
 # Execute module tests for a module name ${TEST}, download and install

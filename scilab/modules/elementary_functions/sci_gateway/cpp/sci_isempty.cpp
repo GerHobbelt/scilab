@@ -1,7 +1,7 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *
- * Copyright (C) 2024 - Dassault System S.E. - Cedric DELAMARRE 
+ * Copyright (C) 2024 - Dassault System S.E. - Cédric DELAMARRE 
  * 
  * For more information, see the COPYING file which you should have received
  * along with this program.

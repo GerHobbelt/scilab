@@ -1,6 +1,6 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - Dassault Systemes - Cedric DELAMARRE
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Cédric DELAMARRE
 //
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->

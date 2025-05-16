@@ -1,7 +1,7 @@
 // =============================================================================
 // Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - 3DS - Adeline CARNIS adeline.carnis@3ds.com
-// Copyright (C) 2023 - 3DS - Antoine ELIAS antoine.elias@3ds.com
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Adeline CARNIS
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Antoine ELIAS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================

@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 #
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2022 - Clement DAVID
+# Copyright (C) 2022 - Dassault Systèmes S.E. - Clément DAVID
 #
 #
 # Builder script for building linux version.

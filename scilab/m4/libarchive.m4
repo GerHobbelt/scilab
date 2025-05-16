@@ -1,6 +1,6 @@
 dnl
 dnl Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-dnl Copyright (C) Dassault Systèmes - 2023 - Clément DAVID
+dnl Copyright (C) 2023 - Dassault Systèmes S.E. - Clément DAVID
 dnl
 dnl
 dnl libarchive  - https://www.libarchive.org detection

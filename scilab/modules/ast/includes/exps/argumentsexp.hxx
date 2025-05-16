@@ -1,6 +1,6 @@
 /*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- *  Copyright (C) 2023-2023 - Dassault Systemes - Bruno JOFRET
+ *  Copyright (C) 2023-2023 - Dassault Systèmes S.E. - Bruno JOFRET
  *
  */
 

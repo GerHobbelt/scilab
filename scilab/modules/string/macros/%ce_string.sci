@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - 3DS - Antoine ELIAS
+// Copyright (C) 2023 - Dassault Systèmes S.E. - Antoine ELIAS
 // Copyright (C) 2024 - UTC - Stéphane MOTTELET
 //
 // This file is hereby licensed under the terms of the GNU GPL v2.0,

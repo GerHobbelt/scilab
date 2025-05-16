@@ -1,6 +1,6 @@
 // Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2022 - 3DS - Adeline CARNIS
-// Copyright (C) 2022 - 3DS - Antoine ELIAS
+// Copyright (C) 2022 - Dassault Systèmes S.E. - Adeline CARNIS
+// Copyright (C) 2022 - Dassault Systèmes S.E. - Antoine ELIAS
 //
 // This file is hereby licensed under the terms of the GNU GPL v2.0,
 // pursuant to article 5.3.4 of the CeCILL v.2.1.

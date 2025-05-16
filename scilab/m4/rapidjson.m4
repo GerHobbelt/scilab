@@ -1,7 +1,7 @@
 dnl
 dnl Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 dnl
-dnl Copyright (C) 2025 Dassault Systèmes S.E.
+dnl Copyright (C) 2025 - Dassault Systèmes S.E.
 dnl
 dnl AC_RAPIDJSON
 dnl ------------------------------------------------------

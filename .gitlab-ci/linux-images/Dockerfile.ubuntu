@@ -1,5 +1,5 @@
 # Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-# Copyright (C) Dassault Systemes - 2023 - Clement DAVID
+# Copyright (C) 2023 - Dassault Systèmes S.E. - Clément DAVID
 #
 #
 # This Dockerfile describe the configuration of a Linux Ubuntu image base system

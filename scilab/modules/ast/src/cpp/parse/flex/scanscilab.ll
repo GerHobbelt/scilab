@@ -5,7 +5,7 @@
  * Copyright (C) 2008-2012 - Scilab Enterprises - Bruno JOFRET
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  * Copyright (C) 2018 - Dirk Reusch, Kybernetik Dr. Reusch
- * Copyright (C) 2023 - Dassault Systemes - Bruno JOFRET
+ * Copyright (C) 2023 - Dassault Systèmes S.E. - Bruno JOFRET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.

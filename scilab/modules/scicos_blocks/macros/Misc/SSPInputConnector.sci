@@ -1,6 +1,6 @@
 //
 // Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) - 2024 - Dassault Systèmes - Clément David
+// Copyright (C) - 2024 - Dassault Systèmes S.E. - Clément David
 //
 // This file must be used under the terms of the CeCILL.
 // This source file is licensed as described in the file COPYING, which
