@@ -134,16 +134,20 @@
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-atomsRepositoryAdd('https://scene1.test.atoms.scilab.org');
-atomsInstall("toolbox_1");
+// Load the test repository
+exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce", -1);
+repository = atomsCreateTestRepository("scene10");
+
+atomsInstall("toolbox_1V6");
 
 atomsAutoloadList('user')
 atomsAutoloadList('allusers')
 atomsAutoloadList('all')
 
-atomsRemove("toolbox_1");
-atomsRepositoryDel('https://scene1.test.atoms.scilab.org');
- ]]></programlisting>
+// Cleaning
+atomsRemove("toolbox_1V6");
+atomsRepositoryDel(repository);
+        ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
     <!-- See also -->

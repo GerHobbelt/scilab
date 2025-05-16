@@ -46,7 +46,7 @@
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
 atomsSystemUpdate();
-]]></programlisting>
+        ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
     <!-- Authors -->

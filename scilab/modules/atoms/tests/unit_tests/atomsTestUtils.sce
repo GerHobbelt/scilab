@@ -7,7 +7,13 @@
 
 load("SCI/modules/atoms/macros/atoms_internals/lib")
 
-function atomsLoadTestScene(name)
+// Used in tests
+function repository = atomsLoadTestScene(name, overwriteExisting, addRepository)
+    arguments
+        name
+        overwriteExisting = %T
+        addRepository = %T
+    end
     select name
     case "scene10"
         archives = [
@@ -24,7 +30,9 @@ function atomsLoadTestScene(name)
             "toolbox_2V6_1.0-1.bin.zip",
             "toolbox_2V6_2.0-1.bin.zip",
             "toolbox_2V6_2.1-1.bin.zip",
+            "toolbox_3V6_1.0-1.bin.zip",
             "toolbox_4V6_1.0-1.bin.zip",
+            "toolbox_4V6_1.1-2.bin.zip",
             "toolbox_5V6_1.0-1.bin.x64.windows.zip"]
     case "scene12"
         archives = [
@@ -38,10 +46,25 @@ function atomsLoadTestScene(name)
         error(msprintf(_("atomsLoadTestScene: Unknown scene: %s."), name));
     end
     repository = atomsCreateLocalRepositoryFromDescription(SCI+"/modules/atoms/tests/unit_tests/" + name + ".DESCRIPTION", name);
-    atomsRepositorySetOfl(repository);
-    for iFile = 1:size(archives, "*")
-        copyfile(SCI + "/modules/atoms/tests/unit_tests/" + archives(iFile), TMPDIR + "/" + name + "/");
+    if overwriteExisting then
+        atomsRepositorySetOfl(repository);
+    else
+        if addRepository then
+            atomsRepositoryAdd(repository);
+        end
     end
+    for iFile = 1:size(archives, "*")
+        [status, message] = copyfile(SCI + "/modules/atoms/tests/unit_tests/" + archives(iFile), TMPDIR + "/" + name + "/");
+    end
+endfunction
+
+// Used in documentation examples
+function repository = atomsCreateTestRepository(name, addRepository)
+    arguments
+        name
+        addRepository = %T
+    end
+    repository = atomsLoadTestScene(name, %F, addRepository)
 endfunction
 
 function filePath = atomsCreateLocalRepositoryFromDescription(descriptionFile, name)

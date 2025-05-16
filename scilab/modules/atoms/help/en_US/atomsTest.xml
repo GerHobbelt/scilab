@@ -88,17 +88,19 @@
             <emphasis role="strong">Example #1</emphasis>:
             Run all tests of a module.
         </para>
-        <programlisting role="example">
-            // Display some additional information
-            atomsSetConfig("Verbose","True");
+        <programlisting role="example"><![CDATA[
+// Display some additional information
+atomsSetConfig("Verbose","True");
 
-            // Get the list of loaded modules:
-            atomsGetLoaded()
+// Get the list of loaded modules:
+atomsGetLoaded()
 
-            // Assuming that the <literal>"apifun"</literal> module is installed,
-            // run all its tests:
-            atomsTest("toolbox_1")
-        </programlisting>
+// Assuming that the "apifun" module is installed,
+// run all its tests:
+if atomsIsInstalled("apifun") then
+    atomsTest("apifun");
+end
+        ]]></programlisting>
         <screen>--> atomsTest("apifun")
     TMPDIR = /var/folders/z+/SCI_TMP_17720_kcOsmV
 
@@ -159,9 +161,11 @@
             <emphasis role="strong">Example #2</emphasis>:
             Running only one given test:
         </para>
-        <programlisting role="example">
-            atomsTest("apifun", "expandvar")
-        </programlisting>
+        <programlisting role="example"><![CDATA[
+if atomsIsInstalled("apifun") then
+    atomsTest("apifun", "expandvar")
+end
+        ]]></programlisting>
         <screen>
 --> atomsTest apifun expandvar
     TMPDIR = /var/folders/z+/SCI_TMP_17720_kcOsmV
@@ -185,9 +189,11 @@
             Let's use the wildcard <literal>"*"</literal> to easily select
             a subset of all tests, and run them:
         </para>
-        <programlisting role="example">
-            atomsTest("apifun", "bu*")
-        </programlisting>
+        <programlisting role="example"><![CDATA[
+if atomsIsInstalled("apifun") then
+    atomsTest("apifun", "bu*")
+end
+        ]]></programlisting>
         <screen>
 --> atomsTest apifun bu*
     TMPDIR = /var/folders/z+/SCI_TMP_17720_kcOsmV

@@ -185,12 +185,16 @@
     </refsection>
     <refsection>
         <title>Examples</title>
-        <programlisting role="example">// Display extra-information
-            atomsSetConfig("Verbose","True")
+        <programlisting role="example"><![CDATA[
+// Display extra-information
+atomsSetConfig("Verbose","True")
 
-            // Disable autoload system
-            atomsSetConfig("autoload","False")
-        </programlisting>
+// Disable autoload system
+atomsSetConfig("autoload","False")
+
+// Enable autoload system
+atomsSetConfig("autoload","True")
+        ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>See also</title>

@@ -129,7 +129,7 @@ atomsGetInstalledPath(["toolbox_7", "1"])   // not this version => "" (not found
 atomsGetInstalledPath(["toolbox_7", "1.0"]) // version found
 
 atomsRemove("toolbox_7V6");
- ]]></programlisting>
+        ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>See also</title>

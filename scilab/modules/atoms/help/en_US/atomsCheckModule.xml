@@ -56,9 +56,12 @@
     </refsection>
     <refsection>
         <title>Example</title>
-        <programlisting role="example">  atomsCheckModule("scibench")
-            atomsCheckModule(["apifun" "scibench"],%t)
-        </programlisting>
+        <programlisting role="example"><![CDATA[
+try
+    atomsCheckModule("scibench")
+    atomsCheckModule(["apifun" "scibench"],%t)
+end
+        ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>See also</title>

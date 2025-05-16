@@ -67,8 +67,8 @@
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
 atomsList();
-atomsList("Data Analysis And Statistics");
- ]]></programlisting>
+atomsList("Data Analysis");
+        ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
     <!-- See also -->

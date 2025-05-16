@@ -122,8 +122,10 @@ function varargout = atomsRepositoryList(section)
     // =========================================================================
     if argn(1) > 0 then
         varargout = list(repositories)
-    else
+    elseif repositories <> []
         mprintf("%s\n", strcat(justify(repositories,"l"), "   ", "c"))
+    else
+        mprintf(_("No repositories found."))
     end
 
 endfunction

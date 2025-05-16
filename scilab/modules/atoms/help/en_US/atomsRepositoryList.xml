@@ -106,14 +106,19 @@
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-atomsRepositoryAdd('https://scene1.test.atoms.scilab.org');
+// Create the test repository
+exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce", -1);
+repository = atomsCreateTestRepository("scene10", %F);
+
 atomsRepositoryList()
 atomsRepositoryList('all')
 atomsRepositoryList('official')
 atomsRepositoryList('allusers')
 atomsRepositoryList('user')
-atomsRepositoryDel('https://scene1.test.atoms.scilab.org');
- ]]></programlisting>
+
+// Cleaning
+atomsRepositoryDel(repository);
+        ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
     <!-- See also -->

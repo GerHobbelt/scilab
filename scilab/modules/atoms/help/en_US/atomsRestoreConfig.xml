@@ -45,10 +45,23 @@
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
+// Get original setting & save configuration
+v = atomsGetConfig("offline")
 atomsSaveConfig(%T);
-deletefile(atomsPath("system","user")+"config");
+
+// Overwrite setting
+if v == "False" then
+    atomsSetConfig("offline", "True");
+else
+    atomsSetConfig("offline", "False");
+end
+// Check setting has changed
+atomsGetConfig("offline")
+
+// Restore config & check that setting is back to original value
 atomsRestoreConfig();
-]]></programlisting>
+atomsGetConfig("offline")
+        ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
     <!-- See also -->

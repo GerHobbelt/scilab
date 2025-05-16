@@ -79,8 +79,24 @@ ScilabVersion: >= 5.0
 Depends: >= toolbox_2V6 2.0
 Date: 2023-02-14 23:42:00
 binary64Name: toolbox_3V6_1.0-1.bin.zip
-binary64Md5: 1a93663dbabbf714a725f9d03c077607
+binary64Md5: ebbde25c5d4265f1f6f84d9ef3e00319
 binary64Url: file://TMPDIR/scene11/toolbox_3V6_1.0-1.bin.zip
+// =============================================================================
+Toolbox: toolbox_4V6
+Title: Toolbox Test 4 for Scilab
+Summary: I'm Toolbox 4 1.0 for Scilab
+Version: 1.0-1
+Author: Me
+Maintainer: You
+Category: AtomsTest
+Entity: MyMajorCompany
+License: Test
+ScilabVersion: >= 5.0
+Depends: < toolbox_2V6 2.0
+Date: 2023-02-14 23:42:00
+binary64Name: toolbox_4V6_1.0-1.bin.zip
+binary64Md5: 4b8f32b4697a910992552c04463e1f5e
+binary64Url: file://TMPDIR/scene11/toolbox_4V6_1.0-1.bin.zip
 // =============================================================================
 Toolbox: toolbox_4V6
 Title: Toolbox Test 4 for Scilab

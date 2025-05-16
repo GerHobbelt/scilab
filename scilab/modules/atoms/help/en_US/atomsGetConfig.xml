@@ -186,9 +186,10 @@
     </refsection>
     <refsection>
         <title>Examples</title>
-        <programlisting role="example">// Get value of verbose parameter
-            atomsGetConfig("Verbose")
-        </programlisting>
+        <programlisting role="example"><![CDATA[
+// Get value of verbose parameter
+atomsGetConfig("Verbose")
+        ]]></programlisting>
     </refsection>
     <refsection>
         <title>History</title>
