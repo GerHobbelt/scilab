@@ -1888,19 +1888,6 @@ public class XcosDiagram extends ScilabGraph {
         }
 
         /*
-         * If the file exists, ask for confirmation if this is not the previously saved file
-         */
-        if (writeFile.exists() && !writeFile.equals(getSavedFile())) {
-            final boolean overwrite = ScilabModalDialog.show(XcosTab.get(this), XcosMessages.OVERWRITE_EXISTING_FILE, XcosMessages.XCOS, IconType.QUESTION_ICON,
-                                      ButtonType.YES_NO) == AnswerOption.YES_OPTION;
-
-            if (!overwrite) {
-                info(XcosMessages.EMPTY_INFO);
-                return false;
-            }
-        }
-
-        /*
          * Really save the data
          */
         try {

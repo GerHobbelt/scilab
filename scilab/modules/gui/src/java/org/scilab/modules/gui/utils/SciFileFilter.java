@@ -117,6 +117,11 @@ public class SciFileFilter extends FileFilter {
             //If the mask description is filled
             //we use those descriptions given by the user
             this.description = maskdescription;
+            // generate a valid extension in case of a simple mask
+            if (fileMask.matches("\\*\\.[a-z]+"))
+            {
+                this.extensions = new String[]{ fileMask.substring(2) };
+            }
         }
 
         // Create a regexp
