@@ -5,10 +5,6 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
-// <-- CLI SHELL MODE -->
-//
-// <-- INTERACTIVE TEST -->
-//
 // <-- Non-regression test for bug 8830 -->
 //
 // <-- GitLab URL -->
@@ -19,6 +15,10 @@
 
 // Create a C code to use call_scilab:
 
+#ifdef _MSC_VER
+#pragma comment(lib, "call_scilab.lib")
+#endif
+
 #include <stdio.h>
 #include <stdlib.h>
 #include "call_scilab.h" /* Provide functions to call Scilab engine */
@@ -26,6 +26,8 @@
 /*------------------------------------------------------------*/
 int main(void)
 {
+    DisableInteractiveMode();
+
 #ifdef _MSC_VER
     if (StartScilab(NULL, NULL, 0) == FALSE)
 #else
@@ -36,7 +38,10 @@ int main(void)
         return -1;
     }
 
-    SendScilabJob("failedMyCurrentJob=%pi*3/0");
+    SendScilabJob("error(\"my own error\")");
+    char* msg = getLastErrorMessageSingle();
+    printf("%s\n", msg);
+    free(msg);
 
     if (TerminateScilab(NULL) == FALSE)
     {

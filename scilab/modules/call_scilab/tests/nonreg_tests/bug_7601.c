@@ -5,10 +5,6 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
-// <-- CLI SHELL MODE -->
-//
-// <-- INTERACTIVE TEST -->
-//
 // <-- Non-regression test for bug 7601 -->
 //
 // <-- GitLab URL -->
@@ -18,6 +14,10 @@
 // call_scilab C functions did not check if engine is started.
 
 // Create a C code to use call_scilab:
+
+#ifdef _MSC_VER
+#pragma comment(lib, "call_scilab.lib")
+#endif
 
 #include <stdlib.h>
 #include <stdio.h>

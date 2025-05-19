@@ -4,10 +4,6 @@
 // This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
-// <-- CLI SHELL MODE -->
-//
-// <-- INTERACTIVE TEST -->
-//
 // <-- Non-regression test for bug 11394 -->
 //
 // <-- GitLab URL -->
@@ -20,13 +16,11 @@
 
 #ifdef _MSC_VER
 #pragma comment(lib, "call_scilab.lib")
-#pragma comment(lib, "libscilab.lib")
 #endif
 /*--------------------------------------------------------------------------*/
 #include <stdio.h>
 #include <stdlib.h>
 #include "call_scilab.h"
-#include "configvariable_interface.h"
 /*--------------------------------------------------------------------------*/
 int main(void)
 {

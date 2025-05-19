@@ -280,12 +280,11 @@ am__DEPENDENCIES_1 =
 am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @NEED_JAVA_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
 scilab_bin_DEPENDENCIES = $(top_builddir)/modules/libscilab.la \
-	$(top_builddir)/modules/libscilab-cli.la $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_2) \
-	$(am__DEPENDENCIES_1) $(am__append_7) $(am__append_8) \
-	$(top_builddir)/modules/libscilab.la $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_3)
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) $(am__append_7) \
+	$(am__append_8) $(top_builddir)/modules/libscilab.la \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
+	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
 scilab_bin_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
 	$(LIBTOOLFLAGS) --mode=link $(CXXLD) $(AM_CXXFLAGS) \
 	$(CXXFLAGS) $(scilab_bin_LDFLAGS) $(LDFLAGS) -o $@
@@ -952,10 +951,10 @@ scilab_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \
 # lapack at the beginning of the order of the link. This caused some issues with the overload of the
 # xerbla function
 scilab_bin_LDADD = $(top_builddir)/modules/libscilab.la \
-	$(top_builddir)/modules/libscilab-cli.la $(OPENMPI_LIBS) \
-	$(XML_LIBS) $(COMMON_LIBS) $(FLIBS) $(am__append_7) \
-	$(am__append_8) $(top_builddir)/modules/libscilab.la \
-	$(BLAS_LIBS) $(LAPACK_LIBS) $(FLIBS) $(am__append_13)
+	$(OPENMPI_LIBS) $(XML_LIBS) $(COMMON_LIBS) $(FLIBS) \
+	$(am__append_7) $(am__append_8) \
+	$(top_builddir)/modules/libscilab.la $(BLAS_LIBS) \
+	$(LAPACK_LIBS) $(FLIBS) $(am__append_13)
 
 # Match scilab -nwni (ie command line without graphics)
 scilab_cli_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \

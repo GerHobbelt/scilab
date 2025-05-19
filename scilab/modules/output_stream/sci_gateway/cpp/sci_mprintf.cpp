@@ -96,6 +96,10 @@ types::Callable::ReturnValue sci_mprintf(types::typed_list &in, int _iRetCount, 
     if (iNewLine)
     {
         scilabForcedWriteW(L"\n");
+        if (ConfigVariable::flushStream())
+        {
+            fflush(NULL);
+        }
     }
 
     FREE(pwstOutput);

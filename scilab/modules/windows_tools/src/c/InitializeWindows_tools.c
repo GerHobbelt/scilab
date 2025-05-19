@@ -28,7 +28,7 @@ BOOL InitializeWindows_tools(void)
     if ( (hScilab) && IsFromC() )
     {
         /* force redirect stdout, stderr in console */
-        freopen("CONOUT$", "wb", stdout); /* redirect stdout --> CONOUT$*/
+        //freopen("CONOUT$", "wb", stdout); /* redirect stdout --> CONOUT$*/
     }
     return bOK;
 }

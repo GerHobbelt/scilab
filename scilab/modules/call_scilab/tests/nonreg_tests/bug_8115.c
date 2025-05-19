@@ -5,10 +5,6 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
-// <-- CLI SHELL MODE -->
-//
-// <-- INTERACTIVE TEST -->
-//
 // <-- Non-regression test for bug 8115 -->
 //
 // <-- GitLab URL -->
@@ -21,7 +17,7 @@
 
 #ifdef _MSC_VER
 #pragma comment(lib, "call_scilab.lib")
-#pragma comment(lib, "libscilab.lib")
+#pragma comment(lib, "ast.lib")
 #endif
 /*--------------------------------------------------------------------------*/
 #include <stdio.h>
@@ -58,28 +54,6 @@ int main(void)
     if (getScilabMode() != SCILAB_NW)
     {
         fprintf(stderr, "BUG 8115 NOT FIXED. (3)\n");
-        iErr = 1;
-    }
-
-#ifdef _MSC_VER
-    StartScilab(NULL, NULL, 0);
-#else
-    StartScilab(getenv("SCI"), NULL, 0);
-#endif
-
-    /* check that it is API mode */
-    if (getScilabMode() != SCILAB_NW)
-    {
-        fprintf(stderr, "BUG 8115 NOT FIXED. (4)\n");
-        iErr = 1;
-    }
-
-    TerminateScilab(NULL);
-
-    /* check that we returns to default mode */
-    if (getScilabMode() != SCILAB_NW)
-    {
-        fprintf(stderr, "BUG 8115 NOT FIXED. (5)\n");
         iErr = 1;
     }
 

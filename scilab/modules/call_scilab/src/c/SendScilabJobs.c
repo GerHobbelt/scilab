@@ -43,7 +43,6 @@ static int ExecuteJob(char* job, char** msg, char** stack, int mode)
     if (getCallScilabEngineState() == CALL_SCILAB_ENGINE_STOP)
     {
         fprintf(stderr, mode == 0 ? "SendScilabJob: call_scilab engine is not started.\n" : "ExecScilabCommand: call_scilab engine is not started.\n");
-        fprintf(stderr, "SendScilabJob: call_scilab engine is not started.\n");
         return -1;
     }
 

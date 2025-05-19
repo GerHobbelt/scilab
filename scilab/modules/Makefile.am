@@ -230,7 +230,7 @@ endif
 
 # Core modules
 
-libscilab_la_LIBADD =
+libscilab_la_LIBADD = $(ENGINE_LIBS)
 
 if GUI
 # Force the libscijvm to be linked first. Under Debian, this avoid some reordering issues during the link
@@ -238,8 +238,6 @@ libscilab_la_LIBADD += $(top_builddir)/modules/jvm/libscijvm.la $(GUI_LIBS)
 else
 libscilab_la_LIBADD += $(NO_GUI_LIBS)
 endif
-
-libscilab_la_LIBADD += libscilab-cli.la
 
 # Core modules
 libscilab_la_LIBADD += $(OTHER_LIBS) $(EXTERNAL_LIBS)

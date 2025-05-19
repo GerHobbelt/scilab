@@ -393,7 +393,11 @@ make_binary_directory() {
     # The mandatory libraries are the ones documented in the Linux Standard
     # Base 5.0 .
 
-    # 1. Strip libraries (exporting the debuginfo to another file) to
+    #
+    # use patchelf to cleanup and setup easy way to link against Scilab
+    # 
+
+    # 1. strip libraries (exporting the debuginfo to another file) to
     # reduce file size and thus startup time
     # 2. remove rpath as LD_LIBRARY_PATH is set on the startup script
     find "$LIBTHIRDPARTYDIR" -name '*.so*' -type f -not -name '*.debug'| while read -r file ;
@@ -404,6 +408,21 @@ make_binary_directory() {
 
         patchelf --remove-rpath "$file"
     done
+    # 3. add runpath dependency for thirdparty libs
+    # shellcheck disable=SC2016
+    find lib/thirdparty/*.so* -type f -exec patchelf \
+        --set-rpath '$ORIGIN:$ORIGIN/redist' \
+        {} \;
+    # 3. add runpath dependency for thirdparty/redist libs
+    # shellcheck disable=SC2016
+    find lib/thirdparty/redist/*.so* -type f -exec patchelf \
+        --set-rpath '$ORIGIN' \
+        {} \;
+    # 4. patchelf the JVM libs
+    # shellcheck disable=SC2016
+    patchelf --set-rpath '$ORIGIN:$ORIGIN/server' java/jre/lib/libjava.so
+    # shellcheck disable=SC2016
+    patchelf --set-rpath '$ORIGIN' java/jre/lib/server/libjvm.so
 }
 
 make_jar() {

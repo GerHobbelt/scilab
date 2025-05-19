@@ -99,7 +99,6 @@ scilab_bin_SOURCES = modules/startup/src/cpp/scilab.cpp
 # libraries explicitly unless we link with -Wl,--copy-dt-needed-entries
 scilab_bin_LDADD 	= \
 			$(top_builddir)/modules/libscilab.la \
-			$(top_builddir)/modules/libscilab-cli.la \
 			$(OPENMPI_LIBS) $(XML_LIBS) \
 			$(COMMON_LIBS) $(FLIBS)
 
