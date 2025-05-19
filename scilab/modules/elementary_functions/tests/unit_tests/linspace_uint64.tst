@@ -103,7 +103,7 @@ assert_checkequal((d-d(1))', int64([0 1]));
 n = 11;
 a = linspace(int64(2)^62-1, int64(1), n)'
 d = diff(a($:-1:1),1,1);
-assert_checkequal((d-d(1))', int64([0 0 0 1 0 0 1 0 0 1]));
+assert_checkequal((d-d(1))', int64([0 0 0 0 1 0 0 0 0 1]));
 n = 137;
 a = linspace(int64(2)^62-1, int64(1), n)';
 d = diff(a($:-1:1),1,1);
