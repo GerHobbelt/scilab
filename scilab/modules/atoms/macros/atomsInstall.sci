@@ -166,6 +166,21 @@ function result = atomsInstall(packages,section)
 
         if ~ isempty(regexp(this_package,"/(\.tar\.gz|\.tgz|\.zip)$/","o")) then
 
+            // try to download file only when a protocol is given
+            try
+                [proto, _, path]=url_split(this_package);
+                if proto <> "" && path <> "" then
+                    [_, fname, ext] = fileparts(path);
+                    archive_path = fullfile(TMPDIR, fname + ext);
+                    [_, code] = http_get(this_package, archive_path);
+                    if code < 300 then
+                        this_package = archive_path;
+                    end
+                end
+            catch
+                lasterror();
+            end
+
             if fileinfo( this_package ) then
                 error(msprintf(gettext("%s: The file ''%s'' does not exist or is not read accessible.\n"),"atomsInstall",this_package));
             end
