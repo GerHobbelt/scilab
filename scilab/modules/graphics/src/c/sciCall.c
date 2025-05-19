@@ -527,7 +527,7 @@ void ObjmatplotImage (void * z      ,
 /*------------------------------------------------
  *  Matplot1
  *-----------------------------------------------*/
-void Objmatplot1 (double    z[],
+void Objmatplot1 (void * z,
                   int * n1 ,
                   int * n2 ,
                   double xrect[], int plottype)

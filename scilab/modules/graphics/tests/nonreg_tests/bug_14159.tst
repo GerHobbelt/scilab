@@ -4,7 +4,10 @@
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
-
+//
+// <-- TEST WITH GRAPHIC -->
+// <-- NO CHECK REF -->
+//
 // <-- Non-regression test for bug 14159 -->
 //
 // <-- GitLab URL -->
@@ -13,5 +16,5 @@
 // <-- Short Description -->
 // Matplot crashes Scilab on boolean input
 
-errmsg = msprintf(_("%s: Wrong type for input argument #%d: A real or integer expected.\n"), "Matplot", 1);
+errmsg = msprintf(_("%s: Wrong type for input argument #%d: A real or integer array expected.\n"), "Matplot", 1);
 assert_checkerror("Matplot(%f)", errmsg);

@@ -46,7 +46,7 @@ GRAPHICS_IMPEXP void Objmatplot(double z[], int* n1, int* n2, char strflag[], do
 
 GRAPHICS_IMPEXP void ObjmatplotImage(void * z, int* n1, int* n2, char strflag[], double brect[], int aaint[], BOOL flagNax, int plottype);
 
-GRAPHICS_IMPEXP void Objmatplot1(double z[], int* n1, int* n2, double xrect[], int plottype);
+GRAPHICS_IMPEXP void Objmatplot1(void * z, int* n1, int* n2, double xrect[], int plottype);
 
 GRAPHICS_IMPEXP void Objplot3d(char* fname, int* isfac, int* izcol, double x[], double y[], double z[], double* zcol, int* m, int* n, double* theta, double* alpha, char* legend, int* iflag, double* ebox, int* m1, int* n1, int* m2, int* n2, int* m3, int* n3, int* m3n, int* n3n);
 
