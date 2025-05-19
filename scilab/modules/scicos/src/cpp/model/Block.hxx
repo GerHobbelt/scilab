@@ -143,7 +143,7 @@ class Block : public BaseObject
 {
   public:
     Block() : BaseObject(BLOCK), m_parentDiagram(ScicosID()), m_interfaceFunction(), m_geometry(),
-              m_exprs(), m_name(), m_description(), m_label(), m_style(), m_nzcross(), m_nmode(), m_equations(), m_uid(),
+              m_exprs(), m_name(), m_description(), m_label(), m_style(), m_nzcross(), m_nmode(), m_equations(), m_ssp_annotation(), m_uid(),
               m_sim(), m_in(), m_out(), m_ein(), m_eout(), m_parameters(), m_parameter(), m_state(), m_color(), m_properties(), m_debugLevel(), m_context(), m_parentBlock(ScicosID()),
               m_children(), m_portReference(ScicosID())
     {
@@ -156,7 +156,7 @@ class Block : public BaseObject
         m_color = {-1, 1};
     }
     Block(const Block& o) : BaseObject(BLOCK), m_parentDiagram(o.m_parentDiagram), m_interfaceFunction(o.m_interfaceFunction), m_geometry(o.m_geometry),
-                            m_exprs(o.m_exprs), m_name(o.m_name), m_description(o.m_description), m_label(o.m_label), m_style(o.m_style), m_nzcross(o.m_nzcross), m_nmode(o.m_nmode), m_equations(o.m_equations), m_uid(o.m_uid),
+                            m_exprs(o.m_exprs), m_name(o.m_name), m_description(o.m_description), m_label(o.m_label), m_style(o.m_style), m_nzcross(o.m_nzcross), m_nmode(o.m_nmode), m_equations(o.m_equations), m_ssp_annotation(o.m_ssp_annotation), m_uid(o.m_uid),
                             m_sim(o.m_sim), m_in(o.m_in), m_out(o.m_out), m_ein(o.m_ein), m_eout(o.m_eout), m_parameters(o.m_parameters), m_parameter(o.m_parameter), m_state(o.m_state), m_color(o.m_color), m_properties(o.m_properties), m_debugLevel(o.m_debugLevel), m_context(o.m_context), m_parentBlock(o.m_parentBlock),
                             m_children(o.m_children), m_portReference(o.m_portReference) {}
 
@@ -491,6 +491,22 @@ class Block : public BaseObject
         }
 
         m_equations = data;
+        return SUCCESS;
+    }
+
+    void getSSPAnnotation(std::vector<std::string>& data) const
+    {
+        data = m_ssp_annotation;
+    }
+
+    update_status_t setSSPAnnotation(const std::vector<std::string>& data)
+    {
+        if (data == m_ssp_annotation)
+        {
+            return NO_CHANGES;
+        }
+
+        m_ssp_annotation = data;
         return SUCCESS;
     }
 
@@ -940,6 +956,7 @@ class Block : public BaseObject
     std::vector<int> m_nzcross;
     std::vector<int> m_nmode;
     std::vector<double> m_equations;
+    std::vector<std::string> m_ssp_annotation;
     std::string m_uid;
 
     Descriptor m_sim;

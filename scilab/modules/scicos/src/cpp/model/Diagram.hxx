@@ -32,13 +32,13 @@ namespace model
 class Diagram : public BaseObject
 {
   public:
-    Diagram() : BaseObject(DIAGRAM), m_name("Untitled"), m_path(), m_properties(), m_debugLevel(), m_context(), m_children(), m_version("scicos4.4")
+    Diagram() : BaseObject(DIAGRAM), m_name("Untitled"), m_path(), m_properties(), m_debugLevel(), m_context(), m_children(), m_version("scicos4.4"), m_ssp_annotation()
     {
         m_color = {-1, 1};
     }
 
     Diagram(const Diagram& o) : BaseObject(DIAGRAM), m_name(o.m_name), m_path(o.m_path), m_color(o.m_color), m_properties(o.m_properties),
-                                m_debugLevel(o.m_debugLevel), m_context(o.m_context), m_children(o.m_children), m_version(o.m_version){};
+                                m_debugLevel(o.m_debugLevel), m_context(o.m_context), m_children(o.m_children), m_version(o.m_version), m_ssp_annotation(o.m_ssp_annotation) {};
 
   private:
     friend class ::org_scilab_modules_scicos::Model;
@@ -419,6 +419,54 @@ class Diagram : public BaseObject
         return SUCCESS;
     }
 
+    void getSSPAnnotation(std::vector<std::string>& data) const
+    {
+        data = m_ssp_annotation;
+    }
+
+    update_status_t setSSPAnnotation(const std::vector<std::string>& data)
+    {
+        if (data == m_ssp_annotation)
+        {
+            return NO_CHANGES;
+        }
+
+        m_ssp_annotation = data;
+        return SUCCESS;
+    }
+
+    void getGlobalXMLNS(std::vector<std::string>& data) const
+    {
+        data = m_global_xmlns;
+    }
+
+    update_status_t setGlobalXMLNS(const std::vector<std::string>& data)
+    {
+        if (data == m_global_xmlns)
+        {
+            return NO_CHANGES;
+        }
+
+        m_global_xmlns = data;
+        return SUCCESS;
+    }
+
+    void getGlobalSSPAnnotation(std::vector<std::string>& data) const
+    {
+        data = m_global_ssp_annotation;
+    }
+
+    update_status_t setGlobalSSPAnnotation(const std::vector<std::string>& data)
+    {
+        if (data == m_global_ssp_annotation)
+        {
+            return NO_CHANGES;
+        }
+
+        m_global_ssp_annotation = data;
+        return SUCCESS;
+    }
+
   private:
     std::string m_name;
     std::string m_description;
@@ -441,6 +489,10 @@ class Diagram : public BaseObject
     std::vector<Datatype*> m_datatypes;
 
     std::string m_version;
+
+    std::vector<std::string> m_ssp_annotation;
+    std::vector<std::string> m_global_xmlns;
+    std::vector<std::string> m_global_ssp_annotation;
 };
 
 } /* namespace model */

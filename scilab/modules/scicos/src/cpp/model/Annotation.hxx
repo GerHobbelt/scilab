@@ -32,10 +32,10 @@ class Annotation: public BaseObject
 {
 public:
     Annotation(): BaseObject(ANNOTATION), m_parentDiagram(ScicosID()), m_parentBlock(ScicosID()), m_geometry{0, 0, 2, 1},
-        m_description("Text"), m_font("2"), m_font_size("1"), m_style(""), m_relatedTo(ScicosID()), m_uid()
+        m_description("Text"), m_font("2"), m_font_size("1"), m_style(""), m_relatedTo(ScicosID()), m_ssp_annotation(), m_uid()
     {};
     Annotation(const Annotation& o) : BaseObject(ANNOTATION), m_parentDiagram(o.m_parentDiagram), m_parentBlock(o.m_parentBlock), m_geometry(o.m_geometry),
-        m_description(o.m_description), m_font(o.m_font), m_font_size(o.m_font_size), m_style(o.m_style), m_relatedTo(o.m_relatedTo), m_uid(o.m_uid)
+        m_description(o.m_description), m_font(o.m_font), m_font_size(o.m_font_size), m_style(o.m_style), m_relatedTo(o.m_relatedTo), m_ssp_annotation(o.m_ssp_annotation), m_uid(o.m_uid)
     {};
 
 private:
@@ -175,6 +175,22 @@ private:
         return SUCCESS;
     }
 
+    void getSSPAnnotation(std::vector<std::string>& data) const
+    {
+        data = m_ssp_annotation;
+    }
+
+    update_status_t setSSPAnnotation(const std::vector<std::string>& data)
+    {
+        if (data == m_ssp_annotation)
+        {
+            return NO_CHANGES;
+        }
+
+        m_ssp_annotation = data;
+        return SUCCESS;
+    }
+
     void getUID(std::string& data) const
     {
         data = m_uid;
@@ -201,6 +217,7 @@ private:
     std::string m_font_size;
     std::string m_style;
     ScicosID m_relatedTo;
+    std::vector<std::string> m_ssp_annotation;
     std::string m_uid;
 };
 

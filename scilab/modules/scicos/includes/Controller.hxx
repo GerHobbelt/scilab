@@ -2,6 +2,7 @@
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2014-2016 - Scilab Enterprises - Clement DAVID
  * Copyright (C) 2017 - ESI Group - Clement DAVID
+ * Copyright (C) 2025 - Dassault Systèmes S.E. - Clément DAVID
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -238,10 +239,16 @@ private:
     /*
      * per instance data, for performance reasons
      */
+    
+    // temporary, shared storage with Controller
     std::string _strShared;
+    // temporary, shared storage with Controller
     std::vector<double> _vecDblShared;
+    // temporary, shared storage with Controller
     std::vector<int> _vecIntShared;
+    // temporary, shared storage with Controller
     std::vector<std::string> _vecStrShared;
+    // temporary, shared storage with Controller
     std::vector<ScicosID> _vecIDShared;
 
     /*

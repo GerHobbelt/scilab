@@ -16,21 +16,22 @@
  */
 
 #include <algorithm>
+#include <cstring> // for memcpy
 #include <string>
 #include <vector>
-#include <cstring> // for memcpy
 
 #include "Model.hxx"
 #include "utilities.hxx"
 
-#include "model/BaseObject.hxx"
 #include "model/Annotation.hxx"
-#include "model/Diagram.hxx"
+#include "model/BaseObject.hxx"
 #include "model/Block.hxx"
+#include "model/Diagram.hxx"
 #include "model/Link.hxx"
 #include "model/Port.hxx"
 
-extern "C" {
+extern "C"
+{
 #include "sci_types.h"
 }
 
@@ -121,6 +122,8 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 return o->setSimFunctionApi(v);
             case DEBUG_LEVEL:
                 return o->setDebugLevel(v);
+            case IPAR:
+                return o->setIpar({v});
             default:
                 break;
         }
@@ -295,7 +298,7 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 }
             }
 #endif /* SANITY CHECK */
-            return o->setSourcePort(v);
+                return o->setSourcePort(v);
             case DESTINATION_PORT:
 #if SANITY_CHECK
             {
@@ -307,7 +310,7 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 }
             }
 #endif /* SANITY CHECK */
-            return o->setDestinationPort(v);
+                return o->setDestinationPort(v);
             default:
                 break;
         }
@@ -320,12 +323,17 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
             case SOURCE_BLOCK:
                 return o->setSourceBlock(v);
             case CONNECTED_SIGNALS:
-                return o->setConnectedSignals(std::vector<ScicosID> (1, v));
+                return o->setConnectedSignals(std::vector<ScicosID>(1, v));
             default:
                 break;
         }
     }
     return FAIL;
+}
+
+update_status_t Model::setObjectProperty(model::BaseObject* object, object_properties_t p, model::BaseObject* v)
+{
+    return setObjectProperty(object, p, v->id());
 }
 
 update_status_t Model::setObjectProperty(model::BaseObject* object, object_properties_t p, std::string v)
@@ -376,7 +384,7 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 exprs.push_back(1);
                 // Adding the '\0' byte to the length
                 size_t len = v.length() + 1;
-                exprs.push_back(len);
+                exprs.push_back((int)len);
                 int offset_cur = static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double));
                 // resize
                 size_t size = exprs.size();
@@ -602,8 +610,15 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
     }
     else if (k == LINK)
     {
+        model::Link* o = static_cast<model::Link*>(baseObject);
         switch (p)
         {
+            case COLOR:
+                if (v.size() != 1)
+                {
+                    return FAIL;
+                }
+                return o->setColor(v[0]);
             default:
                 break;
         }
@@ -685,8 +700,11 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
 
     if (k == ANNOTATION)
     {
+        model::Annotation* o = static_cast<model::Annotation*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                return o->setSSPAnnotation(v);
             default:
                 break;
         }
@@ -699,7 +717,9 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
             case EXPRS:
             {
                 if (v.empty())
-                    {return FAIL;}
+                {
+                    return FAIL;
+                }
 
                 std::vector<double> exprs;
                 // var2vec enconding for scalar string:
@@ -710,28 +730,30 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 //  * utf8 content \0 terminated
                 exprs.push_back(sci_strings);
                 exprs.push_back(2);
-                exprs.push_back((int) v.size());
+                exprs.push_back((int)v.size());
                 exprs.push_back(1);
 
                 // Adding the '\0' byte to the lengths and compute the needed size
                 size_t content_offset_idx = exprs.size();
                 size_t len = v[0].length() + 1;
-                exprs.push_back(static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double)));
+                int len_as_double = static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double));
+                exprs.push_back(len_as_double);
                 for (size_t i = 1; i < v.size(); ++i)
                 {
                     size_t len = v[i].length() + 1;
-                    exprs.push_back(exprs.back() + static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double)));
+                    size_t len_as_double = static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double));
+                    exprs.push_back(exprs.back() + len_as_double);
                 }
                 // resize
                 size_t header_size = exprs.size();
-                exprs.resize(header_size + (size_t) exprs.back());
+                exprs.resize(header_size + (size_t)exprs.back());
                 // assign utf8 content
                 double* data = exprs.data() + header_size;
-                memcpy(data, v[0].data(), v[0].size() * sizeof(char));
+                memcpy(data, v[0].data(), v[0].length() * sizeof(char));
                 for (size_t i = 1; i < v.size(); ++i)
                 {
-                    data = exprs.data() + header_size + (size_t) exprs[content_offset_idx + i - 1];
-                    memcpy(data, v[i].data(), v[i].size() * sizeof(char));
+                    data = exprs.data() + header_size + (size_t)exprs[content_offset_idx + i - 1];
+                    memcpy(data, v[i].data(), v[i].length() * sizeof(char));
                 }
                 return o->setExprs(exprs);
             }
@@ -749,6 +771,8 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 return o->setNamedParametersEncodings(v);
             case PARAMETER_VALUE:
                 return o->setNamedParametersValues(v);
+            case SSP_ANNOTATION:
+                return o->setSSPAnnotation(v);
             default:
                 break;
         }
@@ -772,22 +796,34 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 return o->setNamedParametersEncodings(v);
             case PARAMETER_VALUE:
                 return o->setNamedParametersValues(v);
+            case SSP_ANNOTATION:
+                return o->setSSPAnnotation(v);
+            case GLOBAL_XMLNS:
+                return o->setGlobalXMLNS(v);
+            case GLOBAL_SSP_ANNOTATION:
+                return o->setGlobalSSPAnnotation(v);
             default:
                 break;
         }
     }
     else if (k == LINK)
     {
+        model::Link* o = static_cast<model::Link*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                return o->setSSPAnnotation(v);
             default:
                 break;
         }
     }
     else if (k == PORT)
     {
+        model::Port* o = static_cast<model::Port*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                return o->setSSPAnnotation(v);
             default:
                 break;
         }
@@ -898,18 +934,18 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
 
                     ScicosID parentDiagram = ScicosID();
                     getObjectProperty(o, PARENT_DIAGRAM, parentDiagram);
-                    ScicosID parentParentDiagram  = ScicosID();
+                    ScicosID parentParentDiagram = ScicosID();
                     getObjectProperty(parent, BLOCK, PARENT_DIAGRAM, parentParentDiagram);
                     if (parentDiagram != parentParentDiagram)
                     {
                         abort();
                     }
-                    
+
                     // Check port connections
                     if (c->kind() == BLOCK)
                     {
                         std::vector<ScicosID> ports;
-                        for (object_properties_t prop : { INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS } )
+                        for (object_properties_t prop : {INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS})
                         {
                             getObjectProperty(c, prop, ports);
                             for (ScicosID port : ports)
@@ -987,12 +1023,12 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                     {
                         abort();
                     }
-                    
+
                     // Check port connections
                     if (c->kind() == BLOCK)
                     {
                         std::vector<ScicosID> ports;
-                        for (object_properties_t prop : { INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS } )
+                        for (object_properties_t prop : {INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS})
                         {
                             getObjectProperty(c, prop, ports);
                             for (ScicosID port : ports)
@@ -1064,6 +1100,17 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
     return FAIL;
 }
 
+update_status_t Model::setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<model::BaseObject*>& v)
+{
+    std::vector<ScicosID> ids;
+    ids.reserve(v.size());
+
+    for (size_t i = 0; i < v.size(); i++)
+    {
+        ids[i] = v[i]->id();
+    }
+
+    return setObjectProperty(object, p, ids);
+}
+
 } /* namespace org_scilab_modules_scicos */
-
-

@@ -17,9 +17,11 @@
 #define LOGGERVIEW_HXX_
 
 #include <cwchar>
+#include <functional>
 #include <string>
 #include <sstream>
 
+#include "model/BaseObject.hxx"
 #include "View.hxx"
 #include "utilities.hxx"
 
@@ -51,19 +53,45 @@ public:
     static const wchar_t* toString(enum LogLevel level);
     static const std::string toDisplay(enum LogLevel level);
 
+    // get global LogLevel
+    inline
     enum LogLevel getLevel() const
     {
         return m_level;
     }
+    // get global LogLevel
+    inline
     void setLevel(enum LogLevel level)
     {
         this->m_level = level;
+    }
+    // reset ScicosID numbering to the lastObject value for following logs
+    inline
+    void setLastObject(ScicosID lastObject)
+    {
+        this->m_lastObject = lastObject;
+    }
+    // transform an object to a logging number
+    inline
+    size_t id(model::BaseObject* o) const
+    {
+        return id(o->id());
+    }
+    // transform an object id to a logging number
+    inline
+    size_t id(ScicosID id) const
+    {
+        if (id >= m_lastObject)
+            return id - m_lastObject;
+        return id;
     }
 
     void log(enum LogLevel level, const std::stringstream& msg);
     void log(enum LogLevel level, const std::string& msg);
     void log(enum LogLevel level, const char* msg, ...);
     void log(enum LogLevel level, const wchar_t* msg, ...);
+    void log(enum LogLevel level, const std::function <std::string(void)> format_fun);
+    void log(enum LogLevel level, const std::function <void(std::stringstream& msg)> format_fun);
 
     /*
      * Implement the Logger as a View
@@ -78,7 +106,13 @@ public:
 
 private:
     enum LogLevel m_level;
+    ScicosID m_lastObject;
 };
+
+// helper function to render model::BaseObject kind
+std::ostream& operator<<(std::ostream& os, kind_t k);
+// helper function to render model properties
+std::ostream& operator<<(std::ostream& os, object_properties_t p);
 
 } /* namespace org_scilab_modules_scicos */
 

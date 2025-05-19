@@ -68,11 +68,12 @@ o = TEXT_f("set", o)
 Xcos info:    objectCreated( 2 , ANNOTATION )
 Xcos info:    objectCloned( 1 , 2 , ANNOTATION )
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , DESCRIPTION ) : NO_CHANGES
-Xcos trace:   propertyUpdated( 2 , ANNOTATION , FONT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , FONT_SIZE ) : NO_CHANGES
-Xcos trace:   propertyUpdated( 2 , ANNOTATION , UID ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 2 , ANNOTATION , FONT ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , STYLE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 2 , ANNOTATION , UID ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , GEOMETRY ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 2 , ANNOTATION , SSP_ANNOTATION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , PARENT_DIAGRAM ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , PARENT_BLOCK ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , ANNOTATION , RELATED_TO ) : NO_CHANGES

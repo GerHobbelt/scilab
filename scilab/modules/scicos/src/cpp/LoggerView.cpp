@@ -14,10 +14,9 @@
  */
 
 #include <algorithm>
-#include <cwchar>
 #include <cstdarg>
 #include <cstdio>
-#include <string>
+#include <cwchar>
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -29,17 +28,17 @@ extern "C"
 #include "Sciwarning.h"
 }
 
-#include "LoggerView.hxx"
 #include "Controller.hxx"
+#include "LoggerView.hxx"
 
 namespace org_scilab_modules_scicos
 {
 
 static const bool USE_SCILAB_WRITE = true;
 
-LoggerView::LoggerView() :
-    View(), m_level(LOG_WARNING)
+LoggerView::LoggerView() : View(), m_level(LOG_WARNING), m_lastObject(ScicosID())
 {
+    m_lastObject = 0;
 }
 
 LoggerView::~LoggerView()
@@ -47,23 +46,23 @@ LoggerView::~LoggerView()
 }
 
 static std::wstring levelTable[] =
-{
-    L"TRACE",
-    L"DEBUG",
-    L"INFO",
-    L"WARNING",
-    L"ERROR",
-    L"FATAL",
+    {
+        L"TRACE",
+        L"DEBUG",
+        L"INFO",
+        L"WARNING",
+        L"ERROR",
+        L"FATAL",
 };
 
 static std::string displayTable[] =
-{
-    "Xcos trace:   ",
-    "Xcos debug:   ",
-    "Xcos info:    ",
-    "Xcos warning: ",
-    "Xcos error:   ",
-    "Xcos fatal:   ",
+    {
+        "Xcos trace:   ",
+        "Xcos debug:   ",
+        "Xcos info:    ",
+        "Xcos warning: ",
+        "Xcos error:   ",
+        "Xcos fatal:   ",
 };
 
 enum LogLevel LoggerView::indexOf(const wchar_t* name)
@@ -134,7 +133,7 @@ void LoggerView::log(enum LogLevel level, const char* msg, ...)
         const int N = 1024;
         std::vector<char> buffer(N);
         char* str = buffer.data();
-        
+
         va_list opts;
         va_start(opts, msg);
         vsnprintf(str, N, msg, opts);
@@ -158,7 +157,6 @@ void LoggerView::log(enum LogLevel level, const char* msg, ...)
                 // report to the console
                 scilabForcedWrite(msg.data());
             }
-
         }
         else
         {
@@ -195,8 +193,26 @@ void LoggerView::log(enum LogLevel level, const wchar_t* msg, ...)
     }
 }
 
+void LoggerView::log(enum LogLevel level, const std::function<std::string(void)> format_fun)
+{
+    if (level >= this->m_level)
+    {
+        log(level, format_fun());
+    }
+}
+
+void LoggerView::log(enum LogLevel level, const std::function<void(std::stringstream& msg)> format_fun)
+{
+    if (level >= this->m_level)
+    {
+        std::stringstream msg;
+        format_fun(msg);
+        log(level, msg);
+    }
+}
+
 // generated with :
-// awk ' $2 == "//!<" {sub(",","", $1); print "case " $1 ":\n    os << \"" $1 "\";\n    break;" }' ~/work/branches/master/scilab/modules/scicos/includes/utilities.hxx
+// awk ' $2 == "//!<" {sub(",","", $1); print "case " $1 ":\n    os << \"" $1 "\";\n    break;" }' modules/scicos/includes/utilities.hxx
 
 std::ostream& operator<<(std::ostream& os, update_status_t u)
 {
@@ -238,55 +254,57 @@ std::ostream& operator<<(std::ostream& os, kind_t k)
     return os;
 }
 
-
 std::ostream& operator<<(std::ostream& os, object_properties_t p)
 {
     switch (p)
     {
-        case PARENT_DIAGRAM:
-            os << "PARENT_DIAGRAM";
+        case AUTHOR:
+            os << "AUTHOR";
             break;
-        case GEOMETRY:
-            os << "GEOMETRY";
+        case CHILDREN:
+            os << "CHILDREN";
+            break;
+        case COLOR:
+            os << "COLOR";
+            break;
+        case CONNECTED_SIGNALS:
+            os << "CONNECTED_SIGNALS";
+            break;
+        case CONTROL_POINTS:
+            os << "CONTROL_POINTS";
+            break;
+        case COPYRIGHT:
+            os << "COPYRIGHT";
+            break;
+        case DATATYPE_COLS:
+            os << "DATATYPE_COLS";
+            break;
+        case DATATYPE_ROWS:
+            os << "DATATYPE_ROWS";
+            break;
+        case DATATYPE_TYPE:
+            os << "DATATYPE_TYPE";
+            break;
+        case DATATYPE:
+            os << "DATATYPE";
+            break;
+        case DEBUG_LEVEL:
+            os << "DEBUG_LEVEL";
             break;
         case DESCRIPTION:
             os << "DESCRIPTION";
             break;
-        case FONT:
-            os << "FONT";
+        case DESTINATION_PORT:
+            os << "DESTINATION_PORT";
             break;
-        case FONT_SIZE:
-            os << "FONT_SIZE";
+        case DIAGRAM_CONTEXT:
+            os << "DIAGRAM_CONTEXT";
             break;
-        case RELATED_TO:
-            os << "RELATED_TO";
+        case DSTATE:
+            os << "DSTATE";
             break;
-        case INTERFACE_FUNCTION:
-            os << "INTERFACE_FUNCTION";
-            break;
-        case SIM_FUNCTION_NAME:
-            os << "SIM_FUNCTION_NAME";
-            break;
-        case SIM_FUNCTION_API:
-            os << "SIM_FUNCTION_API";
-            break;
-        case SIM_SCHEDULE:
-            os << "SIM_SCHEDULE";
-            break;
-        case SIM_BLOCKTYPE:
-            os << "SIM_BLOCKTYPE";
-            break;
-        case SIM_DEP_UT:
-            os << "SIM_DEP_UT";
-            break;
-        case EXPRS:
-            os << "EXPRS";
-            break;
-        case INPUTS:
-            os << "INPUTS";
-            break;
-        case OUTPUTS:
-            os << "OUTPUTS";
+        case EQUATIONS:
+            os << "EQUATIONS";
             break;
         case EVENT_INPUTS:
             os << "EVENT_INPUTS";
@@ -294,154 +312,160 @@ std::ostream& operator<<(std::ostream& os, object_properties_t p)
         case EVENT_OUTPUTS:
             os << "EVENT_OUTPUTS";
             break;
-        case STATE:
-            os << "STATE";
-            break;
-        case DSTATE:
-            os << "DSTATE";
-            break;
-        case ODSTATE:
-            os << "ODSTATE";
-            break;
-        case NZCROSS:
-            os << "NZCROSS";
-            break;
-        case NMODE:
-            os << "NMODE";
-            break;
-        case PARAMETER_NAME:
-            os << "PARAMETER_NAME";
-            break;
-        case PARAMETER_DESCRIPTION:
-            os << "PARAMETER_DESCRIPTION";
-            break;
-        case PARAMETER_UNIT:
-            os << "PARAMETER_UNIT";
-            break;
-        case PARAMETER_TYPE:
-            os << "PARAMETER_TYPE";
-            break;
-        case PARAMETER_ENCODING:
-            os << "PARAMETER_ENCODING";
-            break;
-        case PARAMETER_VALUE:
-            os << "PARAMETER_VALUE";
-            break;
-        case RPAR:
-            os << "RPAR";
-            break;
-        case IPAR:
-            os << "IPAR";
-            break;
-        case OPAR:
-            os << "OPAR";
-            break;
-        case EQUATIONS:
-            os << "EQUATIONS";
-            break;
-        case UID:
-            os << "UID";
-            break;
-        case PARENT_BLOCK:
-            os << "PARENT_BLOCK";
-            break;
-        case CHILDREN:
-            os << "CHILDREN";
-            break;
-        case PORT_REFERENCE:
-            os << "PORT_REFERENCE";
-            break;
-        case STYLE:
-            os << "STYLE";
-            break;
-        case LABEL:
-            os << "LABEL";
-            break;
-        case DESTINATION_PORT:
-            os << "DESTINATION_PORT";
-            break;
-        case SOURCE_PORT:
-            os << "SOURCE_PORT";
-            break;
-        case CONTROL_POINTS:
-            os << "CONTROL_POINTS";
-            break;
-        case THICK:
-            os << "THICK";
-            break;
-        case COLOR:
-            os << "COLOR";
-            break;
-        case KIND:
-            os << "KIND";
-            break;
-        case DATATYPE:
-            os << "DATATYPE";
-            break;
-        case DATATYPE_ROWS:
-            os << "DATATYPE_ROWS";
-            break;
-        case DATATYPE_COLS:
-            os << "DATATYPE_COLS";
-            break;
-        case DATATYPE_TYPE:
-            os << "DATATYPE_TYPE";
-            break;
-        case FIRING:
-            os << "FIRING";
-            break;
-        case SOURCE_BLOCK:
-            os << "SOURCE_BLOCK";
-            break;
-        case PORT_KIND:
-            os << "PORT_KIND";
-            break;
-        case IMPLICIT:
-            os << "IMPLICIT";
-            break;
-        case PORT_NUMBER:
-            os << "PORT_NUMBER";
-            break;
-        case CONNECTED_SIGNALS:
-            os << "CONNECTED_SIGNALS";
-            break;
-        case NAME:
-            os << "NAME";
-            break;
-        case PATH:
-            os << "PATH";
-            break;
-        case AUTHOR:
-            os << "AUTHOR";
+        case EXPRS:
+            os << "EXPRS";
             break;
         case FILE_VERSION:
             os << "FILE_VERSION";
             break;
-        case COPYRIGHT:
-            os << "COPYRIGHT";
+        case FIRING:
+            os << "FIRING";
             break;
-        case LICENSE:
-            os << "LICENSE";
+        case FONT_SIZE:
+            os << "FONT_SIZE";
             break;
-        case GENERATION_TOOL:
-            os << "GENERATION_TOOL";
+        case FONT:
+            os << "FONT";
             break;
         case GENERATION_DATE:
             os << "GENERATION_DATE";
             break;
+        case GENERATION_TOOL:
+            os << "GENERATION_TOOL";
+            break;
+        case GEOMETRY:
+            os << "GEOMETRY";
+            break;
+        case GLOBAL_SSP_ANNOTATION:
+            os << "GLOBAL_SSP_ANNOTATION";
+            break;
+        case GLOBAL_XMLNS:
+            os << "GLOBAL_XMLNS";
+            break;
+        case IMPLICIT:
+            os << "IMPLICIT";
+            break;
+        case INPUTS:
+            os << "INPUTS";
+            break;
+        case INTERFACE_FUNCTION:
+            os << "INTERFACE_FUNCTION";
+            break;
+        case IPAR:
+            os << "IPAR";
+            break;
+        case KIND:
+            os << "KIND";
+            break;
+        case LABEL:
+            os << "LABEL";
+            break;
+        case LICENSE:
+            os << "LICENSE";
+            break;
+        case NAME:
+            os << "NAME";
+            break;
+        case NMODE:
+            os << "NMODE";
+            break;
+        case NZCROSS:
+            os << "NZCROSS";
+            break;
+        case ODSTATE:
+            os << "ODSTATE";
+            break;
+        case OPAR:
+            os << "OPAR";
+            break;
+        case OUTPUTS:
+            os << "OUTPUTS";
+            break;
+        case PARAMETER_DESCRIPTION:
+            os << "PARAMETER_DESCRIPTION";
+            break;
+        case PARAMETER_ENCODING:
+            os << "PARAMETER_ENCODING";
+            break;
+        case PARAMETER_NAME:
+            os << "PARAMETER_NAME";
+            break;
+        case PARAMETER_TYPE:
+            os << "PARAMETER_TYPE";
+            break;
+        case PARAMETER_UNIT:
+            os << "PARAMETER_UNIT";
+            break;
+        case PARAMETER_VALUE:
+            os << "PARAMETER_VALUE";
+            break;
+        case PARENT_BLOCK:
+            os << "PARENT_BLOCK";
+            break;
+        case PARENT_DIAGRAM:
+            os << "PARENT_DIAGRAM";
+            break;
+        case PATH:
+            os << "PATH";
+            break;
+        case PORT_KIND:
+            os << "PORT_KIND";
+            break;
+        case PORT_NUMBER:
+            os << "PORT_NUMBER";
+            break;
+        case PORT_REFERENCE:
+            os << "PORT_REFERENCE";
+            break;
         case PROPERTIES:
             os << "PROPERTIES";
             break;
-        case DEBUG_LEVEL:
-            os << "DEBUG_LEVEL";
+        case RELATED_TO:
+            os << "RELATED_TO";
             break;
-        case DIAGRAM_CONTEXT:
-            os << "CONTEXT";
+        case RPAR:
+            os << "RPAR";
+            break;
+        case SIM_BLOCKTYPE:
+            os << "SIM_BLOCKTYPE";
+            break;
+        case SIM_DEP_UT:
+            os << "SIM_DEP_UT";
+            break;
+        case SIM_FUNCTION_API:
+            os << "SIM_FUNCTION_API";
+            break;
+        case SIM_FUNCTION_NAME:
+            os << "SIM_FUNCTION_NAME";
+            break;
+        case SIM_SCHEDULE:
+            os << "SIM_SCHEDULE";
+            break;
+        case SOURCE_BLOCK:
+            os << "SOURCE_BLOCK";
+            break;
+        case SOURCE_PORT:
+            os << "SOURCE_PORT";
+            break;
+        case SSP_ANNOTATION:
+            os << "SSP_ANNOTATION";
+            break;
+        case STATE:
+            os << "STATE";
+            break;
+        case STYLE:
+            os << "STYLE";
+            break;
+        case THICK:
+            os << "THICK";
+            break;
+        case UID:
+            os << "UID";
             break;
         case VERSION_NUMBER:
             os << "VERSION_NUMBER";
             break;
-        default:
+        case MAX_OBJECT_PROPERTIES:
             os << "";
             break;
     }
@@ -451,35 +475,35 @@ std::ostream& operator<<(std::ostream& os, object_properties_t p)
 void LoggerView::objectCreated(const ScicosID& uid, kind_t k)
 {
     std::stringstream ss;
-    ss << "objectCreated" << "( " << uid << " , " << k << " )" << '\n';
+    ss << "objectCreated" << "( " << id(uid) << " , " << k << " )" << '\n';
     log(LOG_INFO, ss);
 }
 
 void LoggerView::objectReferenced(const ScicosID& uid, kind_t k, unsigned refCount)
 {
     std::stringstream ss;
-    ss << "objectReferenced" << "( " << uid << " , " << k << " ) : " << refCount << '\n';
+    ss << "objectReferenced" << "( " << id(uid) << " , " << k << " ) : " << refCount << '\n';
     log(LOG_TRACE, ss);
 }
 
 void LoggerView::objectUnreferenced(const ScicosID& uid, kind_t k, unsigned refCount)
 {
     std::stringstream ss;
-    ss << "objectUnreferenced" << "( " << uid << " , " << k << " ) : " << refCount << '\n';
+    ss << "objectUnreferenced" << "( " << id(uid) << " , " << k << " ) : " << refCount << '\n';
     log(LOG_TRACE, ss);
 }
 
 void LoggerView::objectDeleted(const ScicosID& uid, kind_t k)
 {
     std::stringstream ss;
-    ss << "objectDeleted" << "( " << uid << " , " << k << " )" << '\n';
+    ss << "objectDeleted" << "( " << id(uid) << " , " << k << " )" << '\n';
     log(LOG_INFO, ss);
 }
 
 void LoggerView::objectCloned(const ScicosID& uid, const ScicosID& cloned, kind_t k)
 {
     std::stringstream ss;
-    ss << "objectCloned" << "( " << uid << " , " << cloned << " , " << k << " )" << '\n';
+    ss << "objectCloned" << "( " << id(uid) << " , " << cloned << " , " << k << " )" << '\n';
     log(LOG_INFO, ss);
 }
 
@@ -493,7 +517,7 @@ inline int indexOf(ScicosID id, const std::vector<ScicosID>& content)
     const auto& it = std::find(content.begin(), content.end(), id);
     if (it == content.end())
         return -1;
-    return (int) std::distance(content.begin(), it);
+    return (int)std::distance(content.begin(), it);
 };
 
 /* Scilab-like connected port  */
@@ -517,7 +541,7 @@ static inline std::string to_string_port(Controller& controller, ScicosID uid, k
     {
         return "";
     }
-    
+
     ScicosID parent = ScicosID();
     kind_t parentKind = BLOCK;
     controller.getObjectProperty(uid, k, PARENT_BLOCK, parent);
@@ -538,7 +562,7 @@ static inline std::string to_string_port(Controller& controller, ScicosID uid, k
     std::vector<ScicosID> sourceBlockPorts;
     int portIndex;
     object_properties_t port;
-    for (object_properties_t ports : { INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS })
+    for (object_properties_t ports : {INPUTS, OUTPUTS, EVENT_INPUTS, EVENT_OUTPUTS})
     {
         controller.getObjectProperty(sourceBlock, BLOCK, ports, sourceBlockPorts);
         portIndex = indexOf(endID, sourceBlockPorts) + 1;
@@ -565,7 +589,7 @@ static inline std::string to_string_port(Controller& controller, ScicosID uid, k
     else if (port == EVENT_OUTPUTS && p == DESTINATION_PORT)
         startOrEnd = 0;
 
-    return "[" + std::to_string(indexOf(sourceBlock, children)+1) + " " + std::to_string(portIndex) + " " + std::to_string(startOrEnd) + "]";
+    return "[" + std::to_string(indexOf(sourceBlock, children) + 1) + " " + std::to_string(portIndex) + " " + std::to_string(startOrEnd) + "]";
 };
 
 /* Scilab-like connected link  */
@@ -592,7 +616,7 @@ static inline std::string to_string_link(Controller& controller, ScicosID uid, k
     // display path
     std::vector<ScicosID> children;
     controller.getObjectProperty(diagram, DIAGRAM, CHILDREN, children);
-    
+
     std::stringstream ss;
     ss << "LoggerView " << uid;
     ss << " scs_m.objs(";
@@ -602,7 +626,7 @@ static inline std::string to_string_link(Controller& controller, ScicosID uid, k
         controller.getObjectProperty(*it, BLOCK, CHILDREN, children);
     }
     ss << indexOf(uid, children) + 1 << ") ";
-    
+
     // display connection
     ss << " = scicos_link(";
     ss << "from=" << to_string_port(controller, uid, k, SOURCE_PORT);
@@ -613,11 +637,10 @@ static inline std::string to_string_link(Controller& controller, ScicosID uid, k
     return ss.str();
 };
 
-
 void LoggerView::propertyUpdated(const ScicosID& uid, kind_t k, object_properties_t p, update_status_t u)
 {
     std::stringstream ss;
-    ss << "propertyUpdated" << "( " << uid << " , " << k << " , " << p << " ) : " << u;
+    ss << "propertyUpdated" << "( " << id(uid) << " , " << k << " , " << p << " ) : " << u;
 
     // DEBUG Controller controller;
     // DEBUG
@@ -630,7 +653,7 @@ void LoggerView::propertyUpdated(const ScicosID& uid, kind_t k, object_propertie
     // DEBUG         ss << " [ " << end[0];
     // DEBUG         for (auto it = end.begin() + 1; it != end.end(); ++it)
     // DEBUG             ss << " , " << *it;
-// DEBUG 
+    // DEBUG
     // DEBUG         ss << " ]";
     // DEBUG     }
     // DEBUG     else
@@ -638,7 +661,7 @@ void LoggerView::propertyUpdated(const ScicosID& uid, kind_t k, object_propertie
     // DEBUG         ss << " []";
     // DEBUG     }
     // DEBUG }
-// DEBUG 
+    // DEBUG
     // DEBUG if (p == SOURCE_PORT || p == DESTINATION_PORT || p == SOURCE_BLOCK)
     // DEBUG {
     // DEBUG     ScicosID end;
@@ -647,7 +670,6 @@ void LoggerView::propertyUpdated(const ScicosID& uid, kind_t k, object_propertie
     // DEBUG }
 
     ss << '\n';
-    
 
     if (u == NO_CHANGES)
     {

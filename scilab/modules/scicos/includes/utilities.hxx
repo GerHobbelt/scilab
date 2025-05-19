@@ -28,9 +28,9 @@ typedef long long ScicosID;
  */
 enum update_status_t
 {
-    SUCCESS,        //!< Property updated with new values
-    NO_CHANGES,     //!< Property unchanged
-    FAIL            //!< Update failed
+    SUCCESS,    //!< Property updated with new values
+    NO_CHANGES, //!< Property unchanged
+    FAIL        //!< Update failed
 };
 
 /**
@@ -40,11 +40,11 @@ enum update_status_t
  */
 enum kind_t
 {
-    BLOCK,          //!< model::Block object
-    DIAGRAM,        //!< model::Diagram object
-    LINK,           //!< model::Link object
-    ANNOTATION,     //!< model::Annotation object
-    PORT            //!< model::Port object
+    BLOCK,      //!< model::Block object
+    DIAGRAM,    //!< model::Diagram object
+    LINK,       //!< model::Link object
+    ANNOTATION, //!< model::Annotation object
+    PORT        //!< model::Port object
 };
 
 /**
@@ -54,73 +54,76 @@ enum kind_t
  */
 enum object_properties_t
 {
-    PARENT_DIAGRAM,     //!< model::*::parentDiagram value (used to locate the diagram layer)
-    PARENT_BLOCK,       //!< model::*::parentBlock value (used to locate the upper layer in case of SuperBlocks hierarchy)
-    GEOMETRY,           //!< model::Annotation::geometry or model::Block::geometry value
-    NAME,               //!< model::Diagram::name, model::Block::name, model::Port::name
-    DESCRIPTION,        //!< model::Annotation::description, model::Diagram::description text
-    FONT,               //!< model::Annotation::description font
-    FONT_SIZE,          //!< model::Annotation::description font size
-    RELATED_TO,         //!< model::Annotation::relatedTo
-    INTERFACE_FUNCTION, //!< model::Block::interfaceFunction value
-    SIM_FUNCTION_NAME,  //!< model::Descriptor::functionName value (stored into model::Block::sim)
-    SIM_FUNCTION_API,   //!< model::Descriptor::functionApi value (stored into model::Block::sim)
-    SIM_SCHEDULE,       //!< model::Descriptor::schedulingProperties value (stored into model::Block::sim)
-    SIM_BLOCKTYPE,      //!< model::Descriptor::blocktype value (stored into model::Block::sim)
-    SIM_DEP_UT,         //!< model::Descriptor::dep_ut value (stored into model::Block::sim)
-    EXPRS,              //!< model::Block::exprs value
-    INPUTS,             //!< model::Block::in value
-    OUTPUTS,            //!< model::Block::out value
-    EVENT_INPUTS,       //!< model::Block::ein value
-    EVENT_OUTPUTS,      //!< model::Block::eout value
-    STATE,              //!< model::Block::state value
-    DSTATE,             //!< model::Block::dstate value
-    ODSTATE,            //!< model::Block::odstate value
-    NZCROSS,            //!< model::Block::nzcross value
-    NMODE,              //!< model::Block::nmode value
-    PARAMETER_NAME,     //!< model::Block::m_parameters generic parameter name
+    AUTHOR,                //!< model::Diagram::author value
+    CHILDREN,              //!< model::Block::children for superblocks or model::Diagram::children value
+    COLOR,                 //!< model::Link & Block & Diagram::color value
+    CONNECTED_SIGNALS,     //!< model::Port::connectedSignals value
+    CONTROL_POINTS,        //!< model::Link::controlPoints value
+    COPYRIGHT,             //!< model::Diagram::copyright value
+    DATATYPE_COLS,         //!< model::Port::dataType adapter helper
+    DATATYPE_ROWS,         //!< model::Port::dataType adapter helper
+    DATATYPE_TYPE,         //!< model::Port::dataType adapter helper
+    DATATYPE,              //!< model::Port::dataType value
+    DEBUG_LEVEL,           //!< model::Diagram::debug_level value
+    DESCRIPTION,           //!< model::Annotation::description, model::Diagram::description text
+    DESTINATION_PORT,      //!< model::Link::destinationPort value
+    DIAGRAM_CONTEXT,       //!< model::Diagram::context value
+    DSTATE,                //!< model::Block::dstate value
+    EQUATIONS,             //!< model::Block::equations value
+    EVENT_INPUTS,          //!< model::Block::ein value
+    EVENT_OUTPUTS,         //!< model::Block::eout value
+    EXPRS,                 //!< model::Block::exprs value
+    FILE_VERSION,          //!< model::Diagram::file_version value
+    FIRING,                //!< model::Port::firing value
+    FONT_SIZE,             //!< model::Annotation::description font size
+    FONT,                  //!< model::Annotation::description font
+    GENERATION_DATE,       //!< model::Diagram::generation_date value
+    GENERATION_TOOL,       //!< model::Diagram::generation_tool value
+    GEOMETRY,              //!< model::Annotation::geometry or model::Block::geometry value
+    GLOBAL_SSP_ANNOTATION, //!< Global SSP annotation coming from other tools for the main SystemStructureDescription
+    GLOBAL_XMLNS,          //!< Global XML namespaces coming from other tools for the main SystemStructureDescription
+    IMPLICIT,              //!< model::Port::implicit value
+    INPUTS,                //!< model::Block::in value
+    INTERFACE_FUNCTION,    //!< model::Block::interfaceFunction value
+    IPAR,                  //!< model::Block::ipar value
+    KIND,                  //!< model::Link::kind value
+    LABEL,                 //!< model::Block & Port & Link::label or id value
+    LICENSE,               //!< model::Diagram::license value
+    NAME,                  //!< model::Diagram::name, model::Block::name, model::Port::name
+    NMODE,                 //!< model::Block::nmode value
+    NZCROSS,               //!< model::Block::nzcross value
+    ODSTATE,               //!< model::Block::odstate value
+    OPAR,                  //!< model::Block::opar value
+    OUTPUTS,               //!< model::Block::out value
     PARAMETER_DESCRIPTION, //!< model::Block::m_parameters generic parameter description
-    PARAMETER_UNIT,     //!< model::Block::m_parameters generic parameter unit
-    PARAMETER_TYPE,     //!< model::Block::m_parameters generic parameter type
-    PARAMETER_ENCODING, //!< model::Block::m_parameters generic parameter encoding
-    PARAMETER_VALUE,    //!< model::Block::m_parameters generic parameter value
-    RPAR,               //!< model::Block::rpar value
-    IPAR,               //!< model::Block::ipar value
-    OPAR,               //!< model::Block::opar value
-    EQUATIONS,          //!< model::Block::equations value
-    UID,                //!< model::Block::uid value
-    CHILDREN,           //!< model::Block::children for superblocks or model::Diagram::children value
-    PORT_REFERENCE,     //!< model::Block::portReference value
-    STYLE,              //!< model::Block & Port::style value
-    LABEL,              //!< model::Block & Port & Link::label or id value
-    DESTINATION_PORT,   //!< model::Link::destinationPort value
-    SOURCE_PORT,        //!< model::Link::sourcePort value
-    CONTROL_POINTS,     //!< model::Link::controlPoints value
-    THICK,              //!< model::Link::thick value
-    COLOR,              //!< model::Link & Block & Diagram::color value
-    KIND,               //!< model::Link::kind value
-    DATATYPE,           //!< model::Port::dataType value
-    DATATYPE_ROWS,      //!< model::Port::dataType adapter helper
-    DATATYPE_COLS,      //!< model::Port::dataType adapter helper
-    DATATYPE_TYPE,      //!< model::Port::dataType adapter helper
-    FIRING,             //!< model::Port::firing value
-    SOURCE_BLOCK,       //!< model::Port::sourceBlock value
-    PORT_KIND,          //!< model::Port::kind value
-    IMPLICIT,           //!< model::Port::implicit value
-    PORT_NUMBER,        //!< model::Port::portNumber value
-    CONNECTED_SIGNALS,  //!< model::Port::connectedSignals value
-    PATH,               //!< model::Diagram::title file path value
-    AUTHOR,             //!< model::Diagram::author value
-    FILE_VERSION,       //!< model::Diagram::file_version value
-    COPYRIGHT,          //!< model::Diagram::copyright value
-    LICENSE,            //!< model::Diagram::license value
-    GENERATION_TOOL,    //!< model::Diagram::generation_tool value
-    GENERATION_DATE,    //!< model::Diagram::generation_date value
-    PROPERTIES,         //!< model::Diagram::tol & tf values
-    DEBUG_LEVEL,        //!< model::Diagram::debug_level value
-    DIAGRAM_CONTEXT,    //!< model::Diagram::context value
-    VERSION_NUMBER,     //!< model::Diagram::version value
-    MAX_OBJECT_PROPERTIES //!< last valid value of the object_properties_t enum
+    PARAMETER_ENCODING,    //!< model::Block::m_parameters generic parameter encoding
+    PARAMETER_NAME,        //!< model::Block::m_parameters generic parameter name
+    PARAMETER_TYPE,        //!< model::Block::m_parameters generic parameter type
+    PARAMETER_UNIT,        //!< model::Block::m_parameters generic parameter unit
+    PARAMETER_VALUE,       //!< model::Block::m_parameters generic parameter value
+    PARENT_BLOCK,          //!< model::*::parentBlock value (used to locate the upper layer in case of SuperBlocks hierarchy)
+    PARENT_DIAGRAM,        //!< model::*::parentDiagram value (used to locate the diagram layer)
+    PATH,                  //!< model::Diagram::title file path value
+    PORT_KIND,             //!< model::Port::kind value
+    PORT_NUMBER,           //!< model::Port::portNumber value
+    PORT_REFERENCE,        //!< model::Block::portReference value
+    PROPERTIES,            //!< model::Diagram::tol & tf values
+    RELATED_TO,            //!< model::Annotation::relatedTo
+    RPAR,                  //!< model::Block::rpar value
+    SIM_BLOCKTYPE,         //!< model::Descriptor::blocktype value (stored into model::Block::sim)
+    SIM_DEP_UT,            //!< model::Descriptor::dep_ut value (stored into model::Block::sim)
+    SIM_FUNCTION_API,      //!< model::Descriptor::functionApi value (stored into model::Block::sim)
+    SIM_FUNCTION_NAME,     //!< model::Descriptor::functionName value (stored into model::Block::sim)
+    SIM_SCHEDULE,          //!< model::Descriptor::schedulingProperties value (stored into model::Block::sim)
+    SOURCE_BLOCK,          //!< model::Port::sourceBlock value
+    SOURCE_PORT,           //!< model::Link::sourcePort value
+    SSP_ANNOTATION,        //!< SSP annotation coming from other tools
+    STATE,                 //!< model::Block::state value
+    STYLE,                 //!< model::Block & Port::style value
+    THICK,                 //!< model::Link::thick value
+    UID,                   //!< model::Block::uid value
+    VERSION_NUMBER,        //!< model::Diagram::version value
+    MAX_OBJECT_PROPERTIES  //!< last valid value of the object_properties_t enum
 };
 
 /**
@@ -138,7 +141,7 @@ enum portKind
 /**
  * Helper to convert a Property to a Port kind.
  */
-inline int port_from_property(object_properties_t p)
+constexpr int port_from_property(object_properties_t p)
 {
     switch (p)
     {
@@ -155,11 +158,10 @@ inline int port_from_property(object_properties_t p)
     }
 }
 
-
 /**
  * Helper to convert a Port kind to a Property.
  */
-inline object_properties_t property_from_port(enum portKind p)
+constexpr object_properties_t property_from_port(enum portKind p)
 {
     switch (p)
     {
@@ -176,5 +178,44 @@ inline object_properties_t property_from_port(enum portKind p)
     }
 }
 
+/**
+ * Helper to switch from outputs ports to input ports and vice-versa.
+ */
+constexpr object_properties_t opposite_property(object_properties_t prop)
+{
+    switch (prop)
+    {
+        case INPUTS:
+            return OUTPUTS;
+        case OUTPUTS:
+            return INPUTS;
+        case EVENT_INPUTS:
+            return EVENT_OUTPUTS;
+        case EVENT_OUTPUTS:
+            return EVENT_INPUTS;
+        default:
+            return MAX_OBJECT_PROPERTIES;
+    }
+}
+
+/**
+ * Helper to switch from outputs ports to input ports and vice-versa.
+ */
+constexpr enum portKind opposite_port(enum portKind p)
+{
+    switch (p)
+    {
+        case PORT_IN:
+            return PORT_OUT;
+        case PORT_OUT:
+            return PORT_IN;
+        case PORT_EIN:
+            return PORT_EOUT;
+        case PORT_EOUT:
+            return PORT_EIN;
+        default:
+            return PORT_UNDEF;
+    }
+}
 
 #endif /* UTILITIES_HXX_ */

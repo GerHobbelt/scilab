@@ -273,8 +273,13 @@ public:
             return true;
         if (m_rows > d.m_rows)
             return false;
+
+        if (m_columns < d.m_columns)
+            return true;
+        if (m_columns > d.m_columns)
+            return false;
         
-        return m_columns < d.m_columns;
+        return m_unit < d.m_unit;
     }
 };
 

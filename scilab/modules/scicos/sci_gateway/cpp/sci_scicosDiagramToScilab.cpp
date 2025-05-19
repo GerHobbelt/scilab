@@ -15,6 +15,8 @@
 /*--------------------------------------------------------------------------*/
 #include "Controller.hxx"
 #include "view_scilab/Adapters.hxx"
+#include "LoggerView.hxx"
+#include "controller_helpers.hxx"
 #include "XMIResource.hxx"
 #include "SSPResource.hxx"
 
@@ -31,6 +33,7 @@ extern "C"
 #include "sci_malloc.h"
 #include "localization.h"
 #include "getFullFilename.h"
+#include "Sciwarning.h"
 #include "Scierror.h"
 }
 /*--------------------------------------------------------------------------*/
@@ -133,6 +136,12 @@ static types::InternalType* importFile(char const* file)
     // create a diagram
     org_scilab_modules_scicos::Controller controller;
     ScicosID uid = controller.createObject(DIAGRAM);
+    
+    auto logger = get_or_allocate_logger();
+    logger->log(LOG_DEBUG, [&](std::stringstream& msg){
+        msg << "Importing file " << file << " and reset logger to " << uid << "\n";
+        logger->setLastObject(uid);
+    });
 
     size_t fLen = strlen(file);
     int ret = -1;
@@ -184,18 +193,41 @@ static bool exportFile(int index, char const* file, types::InternalType* type)
         Scierror(999, _("%s: Unable to save \"%s\" .\n"), funname, file);
         return false;
     }
-    if (strcmp(&file[fLen - 4], ".ssp") == 0 && SSPResource(o->id()).save(file) != 0)
+    
+    const char* file_ext = &file[fLen - 4];
+    if (strcmp(file_ext, ".ssp") == 0)
     {
-        Scierror(999, _("%s: Unable to save \"%s\" .\n"), funname, file);
-        return false;
+        auto status = SSPResource(o->id()).save(file);
+        if (status.error())
+        {
+            Sciwarning("SSP failed with %s", status.report().c_str());
+            Scierror(999, _("%s: Unable to save \"%s\" .\n"), funname, file);
+            return false;
+        }
     }
-    else if (strcmp(&file[fLen - 4], ".xmi") == 0 && XMIResource(o->id()).save(file) < 0)
+    else if (strcmp(file_ext, ".xmi") == 0)
     {
-        Scierror(999, _("%s: Unable to save \"%s\" .\n"), funname, file);
+        if (XMIResource(o->id()).save(file) < 0)
+        {
+            Scierror(999, _("%s: Unable to save \"%s\" .\n"), funname, file);
+            return false;
+        }
+    }
+    else if (strcmp(file_ext, ".dot") == 0)
+    {
+        // only used for debugging purpose
+        auto status = SSPResource(o->id()).export_to_dot(file);
+        if (status.error())
+        {
+            Scierror(999, _("%s: Unable to save \"%s\" .\n%s\n"), funname, file, status.report().c_str());
+            return false;
+        }
+    }
+    else
+    {
+        Scierror(999, _("%s: Unable to save \"%s\", unsupported extension.\n"), funname, file);
         return false;
-
     }
 
     return true;
 }
-/*--------------------------------------------------------------------------*/

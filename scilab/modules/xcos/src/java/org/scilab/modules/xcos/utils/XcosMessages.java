@@ -269,7 +269,7 @@ public final class XcosMessages {
     public static final String ALL_SUPPORTED_FORMATS = Messages.gettext("All supported formats");
     public static final String FILE_COSF = Messages.gettext("Scicos file");
     public static final String FILE_COS = FILE_COSF;
-    public static final String FILE_SSP = Messages.gettext("Xcos (ssp zip) file");
+    public static final String FILE_SSP = Messages.gettext("Xcos SSP file");
     public static final String FILE_XCOS = Messages.gettext("Xcos file");
     public static final String FILE_ZCOS = Messages.gettext("Xcos (zip) file");
     public static final String FILE_XMI = Messages.gettext("XMI (Eclipse EMF) file");

@@ -279,26 +279,31 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
                 o->getSimBlocktype(v);
                 return true;
             case EXPRS:
-                {
-                    std::vector<double> exprs;
-                    o->getExprs(exprs);
-                    
-                    //  * type
-                    //  * number of dims
-                    //  * scalar 1x1
-                    //  * string length
-                    //  * utf8 content \0 terminated
-                    if (exprs.size() < 6) return false;
-                    if (exprs[0] != sci_strings) return false;
-                    if (exprs[1] < 2) return false;
-                    if (exprs[2] < 1) return false;
-                    if (exprs[3] < 1) return false;
-                    size_t len = (size_t)exprs[4] * sizeof(double) / sizeof(char);
-                    
-                    char* data = (char*) &(exprs[5]);
-                    v.assign((char*) data, len);
-                    return true;
-                }
+            {
+                std::vector<double> exprs;
+                o->getExprs(exprs);
+
+                //  * type
+                //  * number of dims
+                //  * scalar 1x1
+                //  * string length
+                //  * utf8 content \0 terminated
+                if (exprs.size() < 6)
+                    return false;
+                if (exprs[0] != sci_strings)
+                    return false;
+                if (exprs[1] < 2)
+                    return false;
+                if (exprs[2] < 1)
+                    return false;
+                if (exprs[3] < 1)
+                    return false;
+                size_t len = (size_t)exprs[4] * sizeof(double) / sizeof(char);
+
+                char* data = (char*)&(exprs[5]);
+                v.assign((char*)data, len);
+                return true;
+            }
             case STYLE:
                 o->getStyle(v);
                 return true;
@@ -492,6 +497,21 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
     return false;
 }
 
+bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, model::BaseObject*& v) const
+{
+    ScicosID id;
+    if (getObjectProperty(object, p, id))
+    {
+        v = getObject(id);
+        return v != nullptr;
+    }
+    else
+    {
+        v = nullptr;
+        return false;
+    }
+}
+
 bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<double>& v) const
 {
     model::BaseObject* baseObject = object;
@@ -642,8 +662,13 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
     }
     else if (k == LINK)
     {
+        model::Link* o = static_cast<model::Link*>(baseObject);
         switch (p)
         {
+            case COLOR:
+                v.resize(1);
+                o->getColor(v[0]);
+                return true;
             default:
                 break;
         }
@@ -726,8 +751,12 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
 
     if (k == ANNOTATION)
     {
+        model::Annotation* o = static_cast<model::Annotation*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                o->getSSPAnnotation(v);
+                return true;
             default:
                 break;
         }
@@ -741,35 +770,50 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
                 o->getContext(v);
                 return true;
             case EXPRS:
+            {
+                v.clear();
+
+                std::vector<double> exprs;
+                o->getExprs(exprs);
+
+                // empty matrix encoded by var2vec()
+                if (exprs == std::vector<double>({1, 2, 0, 0, 0}))
                 {
-                    std::vector<double> exprs;
-                    o->getExprs(exprs);
-                    
-                    //  * type
-                    //  * number of dims
-                    //  * scalar 1x1
-                    //  * strings offset in double
-                    //  * utf8 content \0 terminated
-                    if (exprs.size() < 6) return false;
-                    if (exprs[0] != sci_strings) return false;
-                    if (exprs[1] < 2) return false;
-                    if (exprs[2] < 1) return false;
-                    if (exprs[3] < 1) return false;
-                    
-                    size_t N = (size_t) (exprs[2] * exprs[3]);
-                    v.resize(N);
-                    size_t len = (size_t)exprs[4] * sizeof(double) / sizeof(char);
-                    char* data = (char*) &(exprs[4+N]);
-                    v[0].assign(data, len);
-                    for (size_t i = 1; i < N; ++i)
-                    {
-                        size_t offset = (size_t) exprs[4+i-1];
-                        len = ((size_t)exprs[4+i] - (size_t)exprs[4+i-1]) * sizeof(double) / sizeof(char);
-                        data = (char*) &(exprs[4 + N + offset]);
-                        v[i].assign(data, len);
-                    }
                     return true;
                 }
+
+                //  * type
+                //  * number of dims
+                //  * scalar 1x1
+                //  * strings offset in double
+                //  * utf8 content \0 terminated
+                if (exprs.size() < 6)
+                    return false;
+                if (exprs[0] != sci_strings)
+                    return false;
+                if (exprs[1] < 2)
+                    return false;
+                if (exprs[2] < 1)
+                    return false;
+                if (exprs[3] < 1)
+                    return false;
+
+                size_t N = (size_t)(exprs[2] * exprs[3]);
+                v.resize(N);
+                size_t len = (size_t)exprs[4] * sizeof(double) / sizeof(char);
+                char* data = (char*)&(exprs[4 + N]);
+                v[0].reserve(len);
+                v[0].assign(data);
+                for (size_t i = 1; i < N; ++i)
+                {
+                    size_t offset = (size_t)exprs[4 + i - 1];
+                    len = ((size_t)exprs[4 + i] - (size_t)exprs[4 + i - 1]) * sizeof(double) / sizeof(char);
+                    data = (char*)&(exprs[4 + N + offset]);
+                    v[i].reserve(len);
+                    v[i].assign(data);
+                }
+                return true;
+            }
             case PARAMETER_NAME:
                 o->getNamedParameters(v);
                 return true;
@@ -787,6 +831,9 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
                 return true;
             case PARAMETER_VALUE:
                 o->getNamedParametersValues(v);
+                return true;
+            case SSP_ANNOTATION:
+                o->getSSPAnnotation(v);
                 return true;
             default:
                 break;
@@ -818,22 +865,39 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
             case PARAMETER_VALUE:
                 o->getNamedParametersValues(v);
                 return true;
+            case SSP_ANNOTATION:
+                o->getSSPAnnotation(v);
+                return true;
+            case GLOBAL_XMLNS:
+                o->getGlobalXMLNS(v);
+                return true;
+            case GLOBAL_SSP_ANNOTATION:
+                o->getGlobalSSPAnnotation(v);
+                return true;
             default:
                 break;
         }
     }
     else if (k == LINK)
     {
+        model::Link* o = static_cast<model::Link*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                o->getSSPAnnotation(v);
+                return true;
             default:
                 break;
         }
     }
     else if (k == PORT)
     {
+        model::Port* o = static_cast<model::Port*>(baseObject);
         switch (p)
         {
+            case SSP_ANNOTATION:
+                o->getSSPAnnotation(v);
+                return true;
             default:
                 break;
         }
@@ -915,6 +979,24 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
         }
     }
     return false;
+}
+
+bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<model::BaseObject*>& v) const
+{
+    v.clear();
+
+    std::vector<ScicosID> ids;
+    if (!getObjectProperty(object, p, ids))
+    {
+        return false;
+    }
+
+    v.insert(v.begin(), ids.size(), nullptr);
+    for (size_t i = 0; i < ids.size(); i++)
+    {
+        v[i] = getObject(ids[i]);
+    }
+    return true;
 }
 
 } /* namespace org_scilab_modules_scicos */

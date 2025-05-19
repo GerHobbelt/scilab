@@ -31,13 +31,13 @@ namespace model
 class Port: public BaseObject
 {
 public:
-    Port() : BaseObject(PORT), m_uid(), m_dataType(0), m_sourceBlock(ScicosID()), m_kind(PORT_UNDEF), m_implicit(false),
-        m_style(), m_name(), m_description(), m_unit(), m_firing(0)
+    Port() : BaseObject(PORT), m_uid(), m_dataType(nullptr), m_sourceBlock(ScicosID()), m_kind(PORT_UNDEF), m_implicit(false),
+        m_style(), m_name(), m_description(), m_unit(), m_firing(0), m_connectedSignals(), m_ssp_annotation()
     {
         m_connectedSignals = {ScicosID()};
     }
     Port(const Port& o) : BaseObject(PORT), m_uid(o.m_uid), m_dataType(o.m_dataType), m_sourceBlock(o.m_sourceBlock), m_kind(o.m_kind), m_implicit(o.m_implicit),
-        m_style(o.m_style), m_name(o.m_name), m_description(o.m_description), m_unit(o.m_unit), m_firing(0), m_connectedSignals(o.m_connectedSignals) {};
+        m_style(o.m_style), m_name(o.m_name), m_description(o.m_description), m_unit(o.m_unit), m_firing(0), m_connectedSignals(o.m_connectedSignals), m_ssp_annotation(o.m_ssp_annotation) {};
 
 private:
     friend class ::org_scilab_modules_scicos::Model;
@@ -80,7 +80,7 @@ private:
 
     void getDataType(std::vector<int>& v) const
     {
-        if (m_dataType == 0)
+        if (m_dataType == nullptr)
         {
             // By default, size is set to [-1,1] and type to real (1)
             v.resize(3, 1);
@@ -108,7 +108,7 @@ private:
             return NO_CHANGES;
         }
 
-        this->m_dataType = model->flyweight(datatype);
+        this->m_dataType = model->flyweight(std::move(datatype));
         return SUCCESS;
     }
 
@@ -322,6 +322,22 @@ private:
         return SUCCESS;
     }
 
+    void getSSPAnnotation(std::vector<std::string>& data) const
+    {
+        data = m_ssp_annotation;
+    }
+
+    update_status_t setSSPAnnotation(const std::vector<std::string>& data)
+    {
+        if (data == m_ssp_annotation)
+        {
+            return NO_CHANGES;
+        }
+
+        m_ssp_annotation = data;
+        return SUCCESS;
+    }
+
 private:
     std::string m_uid;
     Datatype* m_dataType;
@@ -335,6 +351,8 @@ private:
     double m_firing;
 
     std::vector<ScicosID> m_connectedSignals;
+
+    std::vector<std::string> m_ssp_annotation;
 };
 
 } /* namespace model */

@@ -1,6 +1,6 @@
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) 2023 - Dassault Systèmes S.E. - Clément DAVID
+ * Copyright (C) 2023-2025 - Dassault Systèmes S.E. - Clément DAVID
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -16,17 +16,20 @@
 #include <cstdlib> // for atoi and atof
 #include <cstring> // for strcmp and strchr
 #include <string>
+#include <string_view>
 #include <vector>
 
 #include <filesystem>
 
 #include "SSPResource.hxx"
-#include "base64.hxx"
-#include "utilities.hxx"
 #include "expandPathVariable.h"
+#include "scicos_base64.hxx"
+#include "utilities.hxx"
 
 // units are stored in the model without being mapped on the Controller yet
+#include "LoggerView.hxx"
 #include "Model.hxx"
+#include "controller_helpers.hxx"
 #include "model/Block.hxx"
 #include "model/Diagram.hxx"
 
@@ -96,8 +99,7 @@ struct State
 
     struct archive_entry* ac;
 
-    State() : ar(archive_read_new()), ext(archive_write_disk_new()), ac(archive_entry_new())
-    { };
+    State() : ar(archive_read_new()), ext(archive_write_disk_new()), ac(archive_entry_new()) {};
 
     ~State()
     {
@@ -151,134 +153,47 @@ int ioclose(void* context)
     return 0;
 };
 
-}; // namespace
-
-/*
- * Intern strings to speedup comparaison, this table can be generated from the SSP XSD file.
- */
-void SSPResource::internPredefinedStrings(xmlTextReaderPtr reader)
+std::string interface_function(enum portKind kind, bool isImplicit, bool isMainDiagram)
 {
-    constXcosNames[e_A] = xmlTextReaderConstString(reader, BAD_CAST("A"));
-    constXcosNames[e_Annotation] = xmlTextReaderConstString(reader, BAD_CAST("Annotation"));
-    constXcosNames[e_Annotations] = xmlTextReaderConstString(reader, BAD_CAST("Annotations"));
-    constXcosNames[e_acausal] = xmlTextReaderConstString(reader, BAD_CAST("acausal"));
-    constXcosNames[e_any] = xmlTextReaderConstString(reader, BAD_CAST("any"));
-    constXcosNames[e_application_x_fmu_sharedlibrary] = xmlTextReaderConstString(reader, BAD_CAST("application/x-fmu-sharedlibrary"));
-    constXcosNames[e_application_x_scilab_xcos] = xmlTextReaderConstString(reader, BAD_CAST("application/x-scilab-xcos"));
-    constXcosNames[e_application_x_ssp_definition] = xmlTextReaderConstString(reader, BAD_CAST("application/x-ssp-definition"));
-    constXcosNames[e_application_x_ssp_package] = xmlTextReaderConstString(reader, BAD_CAST("application/x-ssp-package"));
-    constXcosNames[e_text_x_modelica] = xmlTextReaderConstString(reader, BAD_CAST("text/x-modelica"));
-    constXcosNames[e_author] = xmlTextReaderConstString(reader, BAD_CAST("author"));
-    constXcosNames[e_BaseUnit] = xmlTextReaderConstString(reader, BAD_CAST("BaseUnit"));
-    constXcosNames[e_Binary] = xmlTextReaderConstString(reader, BAD_CAST("Binary"));
-    constXcosNames[e_Boolean] = xmlTextReaderConstString(reader, BAD_CAST("Boolean"));
-    constXcosNames[e_BooleanMappingTransformation] = xmlTextReaderConstString(reader, BAD_CAST("BooleanMappingTransformation"));
-    constXcosNames[e_calculatedParameter] = xmlTextReaderConstString(reader, BAD_CAST("calculatedParameter"));
-    constXcosNames[e_cd] = xmlTextReaderConstString(reader, BAD_CAST("cd"));
-    constXcosNames[e_component] = xmlTextReaderConstString(reader, BAD_CAST("component"));
-    constXcosNames[e_Component] = xmlTextReaderConstString(reader, BAD_CAST("Component"));
-    constXcosNames[e_Connection] = xmlTextReaderConstString(reader, BAD_CAST("Connection"));
-    constXcosNames[e_ConnectionGeometry] = xmlTextReaderConstString(reader, BAD_CAST("ConnectionGeometry"));
-    constXcosNames[e_Connections] = xmlTextReaderConstString(reader, BAD_CAST("Connections"));
-    constXcosNames[e_Connector] = xmlTextReaderConstString(reader, BAD_CAST("Connector"));
-    constXcosNames[e_ConnectorGeometry] = xmlTextReaderConstString(reader, BAD_CAST("ConnectorGeometry"));
-    constXcosNames[e_Connectors] = xmlTextReaderConstString(reader, BAD_CAST("Connectors"));
-    constXcosNames[e_copyright] = xmlTextReaderConstString(reader, BAD_CAST("copyright"));
-    constXcosNames[e_CoSimulation] = xmlTextReaderConstString(reader, BAD_CAST("CoSimulation"));
-    constXcosNames[e_DefaultExperiment] = xmlTextReaderConstString(reader, BAD_CAST("DefaultExperiment"));
-    constXcosNames[e_description] = xmlTextReaderConstString(reader, BAD_CAST("description"));
-    constXcosNames[e_dictionary] = xmlTextReaderConstString(reader, BAD_CAST("dictionary"));
-    constXcosNames[e_DictionaryEntry] = xmlTextReaderConstString(reader, BAD_CAST("DictionaryEntry"));
-    constXcosNames[e_ElementGeometry] = xmlTextReaderConstString(reader, BAD_CAST("ElementGeometry"));
-    constXcosNames[e_Elements] = xmlTextReaderConstString(reader, BAD_CAST("Elements"));
-    constXcosNames[e_endConnector] = xmlTextReaderConstString(reader, BAD_CAST("endConnector"));
-    constXcosNames[e_endElement] = xmlTextReaderConstString(reader, BAD_CAST("endElement"));
-    constXcosNames[e_Enumeration] = xmlTextReaderConstString(reader, BAD_CAST("Enumeration"));
-    constXcosNames[e_EnumerationMappingTransformation] = xmlTextReaderConstString(reader, BAD_CAST("EnumerationMappingTransformation"));
-    constXcosNames[e_Enumerations] = xmlTextReaderConstString(reader, BAD_CAST("Enumerations"));
-    constXcosNames[e_factor] = xmlTextReaderConstString(reader, BAD_CAST("factor"));
-    constXcosNames[e_fileversion] = xmlTextReaderConstString(reader, BAD_CAST("fileversion"));
-    constXcosNames[e_generationDateAndTime] = xmlTextReaderConstString(reader, BAD_CAST("generationDateAndTime"));
-    constXcosNames[e_generationTool] = xmlTextReaderConstString(reader, BAD_CAST("generationTool"));
-    constXcosNames[e_GraphicalElements] = xmlTextReaderConstString(reader, BAD_CAST("GraphicalElements"));
-    constXcosNames[e_iconFixedAspectRatio] = xmlTextReaderConstString(reader, BAD_CAST("iconFixedAspectRatio"));
-    constXcosNames[e_iconFlip] = xmlTextReaderConstString(reader, BAD_CAST("iconFlip"));
-    constXcosNames[e_iconRotation] = xmlTextReaderConstString(reader, BAD_CAST("iconRotation"));
-    constXcosNames[e_iconSource] = xmlTextReaderConstString(reader, BAD_CAST("iconSource"));
-    constXcosNames[e_id] = xmlTextReaderConstString(reader, BAD_CAST("id"));
-    constXcosNames[e_implementation] = xmlTextReaderConstString(reader, BAD_CAST("implementation"));
-    constXcosNames[e_inout] = xmlTextReaderConstString(reader, BAD_CAST("inout"));
-    constXcosNames[e_input] = xmlTextReaderConstString(reader, BAD_CAST("input"));
-    constXcosNames[e_Integer] = xmlTextReaderConstString(reader, BAD_CAST("Integer"));
-    constXcosNames[e_IntegerMappingTransformation] = xmlTextReaderConstString(reader, BAD_CAST("IntegerMappingTransformation"));
-    constXcosNames[e_Item] = xmlTextReaderConstString(reader, BAD_CAST("Item"));
-    constXcosNames[e_K] = xmlTextReaderConstString(reader, BAD_CAST("K"));
-    constXcosNames[e_kg] = xmlTextReaderConstString(reader, BAD_CAST("kg"));
-    constXcosNames[e_kind] = xmlTextReaderConstString(reader, BAD_CAST("kind"));
-    constXcosNames[e_license] = xmlTextReaderConstString(reader, BAD_CAST("license"));
-    constXcosNames[e_LinearTransformation] = xmlTextReaderConstString(reader, BAD_CAST("LinearTransformation"));
-    constXcosNames[e_m] = xmlTextReaderConstString(reader, BAD_CAST("m"));
-    constXcosNames[e_MapEntry] = xmlTextReaderConstString(reader, BAD_CAST("MapEntry"));
-    constXcosNames[e_MappingEntry] = xmlTextReaderConstString(reader, BAD_CAST("MappingEntry"));
-    constXcosNames[e_mime_type] = xmlTextReaderConstString(reader, BAD_CAST("mime-type"));
-    constXcosNames[e_ModelExchange] = xmlTextReaderConstString(reader, BAD_CAST("ModelExchange"));
-    constXcosNames[e_mol] = xmlTextReaderConstString(reader, BAD_CAST("mol"));
-    constXcosNames[e_name] = xmlTextReaderConstString(reader, BAD_CAST("name"));
-    constXcosNames[e_Note] = xmlTextReaderConstString(reader, BAD_CAST("Note"));
-    constXcosNames[e_offset] = xmlTextReaderConstString(reader, BAD_CAST("offset"));
-    constXcosNames[e_output] = xmlTextReaderConstString(reader, BAD_CAST("output"));
-    constXcosNames[e_parameter] = xmlTextReaderConstString(reader, BAD_CAST("parameter"));
-    constXcosNames[e_Parameter] = xmlTextReaderConstString(reader, BAD_CAST("Parameter"));
-    constXcosNames[e_ParameterBinding] = xmlTextReaderConstString(reader, BAD_CAST("ParameterBinding"));
-    constXcosNames[e_ParameterBindings] = xmlTextReaderConstString(reader, BAD_CAST("ParameterBindings"));
-    constXcosNames[e_ParameterMapping] = xmlTextReaderConstString(reader, BAD_CAST("ParameterMapping"));
-    constXcosNames[e_Parameters] = xmlTextReaderConstString(reader, BAD_CAST("Parameters"));
-    constXcosNames[e_ParameterSet] = xmlTextReaderConstString(reader, BAD_CAST("ParameterSet"));
-    constXcosNames[e_ParameterValues] = xmlTextReaderConstString(reader, BAD_CAST("ParameterValues"));
-    constXcosNames[e_pointsX] = xmlTextReaderConstString(reader, BAD_CAST("pointsX"));
-    constXcosNames[e_pointsY] = xmlTextReaderConstString(reader, BAD_CAST("pointsY"));
-    constXcosNames[e_prefix] = xmlTextReaderConstString(reader, BAD_CAST("prefix"));
-    constXcosNames[e_rad] = xmlTextReaderConstString(reader, BAD_CAST("rad"));
-    constXcosNames[e_Real] = xmlTextReaderConstString(reader, BAD_CAST("Real"));
-    constXcosNames[e_rotation] = xmlTextReaderConstString(reader, BAD_CAST("rotation"));
-    constXcosNames[e_s] = xmlTextReaderConstString(reader, BAD_CAST("s"));
-    constXcosNames[e_SignalDictionaries] = xmlTextReaderConstString(reader, BAD_CAST("SignalDictionaries"));
-    constXcosNames[e_SignalDictionary] = xmlTextReaderConstString(reader, BAD_CAST("SignalDictionary"));
-    constXcosNames[e_SignalDictionaryReference] = xmlTextReaderConstString(reader, BAD_CAST("SignalDictionaryReference"));
-    constXcosNames[e_source] = xmlTextReaderConstString(reader, BAD_CAST("source"));
-    constXcosNames[e_sourceBase] = xmlTextReaderConstString(reader, BAD_CAST("sourceBase"));
-    constXcosNames[e_SSD] = xmlTextReaderConstString(reader, BAD_CAST("SSD"));
-    constXcosNames[e_startConnector] = xmlTextReaderConstString(reader, BAD_CAST("startConnector"));
-    constXcosNames[e_startElement] = xmlTextReaderConstString(reader, BAD_CAST("startElement"));
-    constXcosNames[e_startTime] = xmlTextReaderConstString(reader, BAD_CAST("startTime"));
-    constXcosNames[e_stopTime] = xmlTextReaderConstString(reader, BAD_CAST("stopTime"));
-    constXcosNames[e_String] = xmlTextReaderConstString(reader, BAD_CAST("String"));
-    constXcosNames[e_suppressUnitConversion] = xmlTextReaderConstString(reader, BAD_CAST("suppressUnitConversion"));
-    constXcosNames[e_System] = xmlTextReaderConstString(reader, BAD_CAST("System"));
-    constXcosNames[e_SystemGeometry] = xmlTextReaderConstString(reader, BAD_CAST("SystemGeometry"));
-    constXcosNames[e_SystemStructureDescription] = xmlTextReaderConstString(reader, BAD_CAST("SystemStructureDescription"));
-    constXcosNames[e_target] = xmlTextReaderConstString(reader, BAD_CAST("target"));
-    constXcosNames[e_text] = xmlTextReaderConstString(reader, BAD_CAST("text"));
-    constXcosNames[e_type] = xmlTextReaderConstString(reader, BAD_CAST("type"));
-    constXcosNames[e_unit] = xmlTextReaderConstString(reader, BAD_CAST("unit"));
-    constXcosNames[e_Unit] = xmlTextReaderConstString(reader, BAD_CAST("Unit"));
-    constXcosNames[e_Units] = xmlTextReaderConstString(reader, BAD_CAST("Units"));
-    constXcosNames[e_value] = xmlTextReaderConstString(reader, BAD_CAST("value"));
-    constXcosNames[e_version] = xmlTextReaderConstString(reader, BAD_CAST("version"));
-    constXcosNames[e_x] = xmlTextReaderConstString(reader, BAD_CAST("x"));
-    constXcosNames[e_x1] = xmlTextReaderConstString(reader, BAD_CAST("x1"));
-    constXcosNames[e_x2] = xmlTextReaderConstString(reader, BAD_CAST("x2"));
-    constXcosNames[e_y] = xmlTextReaderConstString(reader, BAD_CAST("y"));
-    constXcosNames[e_y1] = xmlTextReaderConstString(reader, BAD_CAST("y1"));
-    constXcosNames[e_y2] = xmlTextReaderConstString(reader, BAD_CAST("y2"));
+    std::string interfaceBlock[] = {"", "OUT_f", "IN_f", "CLKOUTV_f", "CLKINV_f"};
 
-    xcosNamespaceUri = xmlTextReaderConstString(reader, BAD_CAST("org.scilab.modules.xcos"));
-    xmlnsSSC = xmlTextReaderConstString(reader, BAD_CAST("http://ssp-standard.org/SSP1/SystemStructureCommon"));
-    xmlnsSSB = xmlTextReaderConstString(reader, BAD_CAST("http://ssp-standard.org/SSP1/SystemStructureSignalDictionary"));
-    xmlnsSSD = xmlTextReaderConstString(reader, BAD_CAST("http://ssp-standard.org/SSP1/SystemStructureDescription"));
-    xmlnsSSV = xmlTextReaderConstString(reader, BAD_CAST("http://ssp-standard.org/SSP1/SystemStructureParameterValues"));
-    xmlnsSSM = xmlTextReaderConstString(reader, BAD_CAST("http://ssp-standard.org/SSP1/SystemStructureParameterMapping"));
-};
+    if (isImplicit)
+    {
+        interfaceBlock[PORT_IN] = "INIMPL_f";
+        interfaceBlock[PORT_OUT] = "OUTIMPL_f";
+    }
+
+    if (isMainDiagram)
+    {
+        // corner case, this is implemented as fake subsystem
+        interfaceBlock[PORT_IN] = "SSPOutputConnector";
+        interfaceBlock[PORT_OUT] = "SSPInputConnector";
+    }
+
+    return interfaceBlock[kind];
+}
+
+std::string simulation_function(enum portKind kind, bool isImplicit, bool isMainDiagram)
+{
+    std::string simulationFunction[] = {"", "output", "input", "output", "input"};
+
+    if (isImplicit)
+    {
+        simulationFunction[PORT_OUT] = "outimpl";
+        simulationFunction[PORT_IN] = "inimpl";
+    }
+
+    if (isMainDiagram)
+    {
+        // corner case, this is implemented as fake subsystem
+        simulationFunction[PORT_IN] = "csuper";
+        simulationFunction[PORT_OUT] = "csuper";
+    }
+
+    return simulationFunction[kind];
+}
+
+}; /* anonymous namespace */
 
 int SSPResource::load(const char* uri)
 {
@@ -365,8 +280,7 @@ int SSPResource::load(const char* uri)
                 {
                     sciprint("Document %s does not validate\n", uri);
                 }
-                xmlNodePtr curNode = xmlTextReaderCurrentNode(reader);
-                int line = xmlGetLineNo(curNode);
+                int line = xmlGetLineNo(xmlTextReaderCurrentNode(reader));
                 xmlFreeTextReader(reader);
                 if (ret < 0)
                 {
@@ -433,6 +347,66 @@ static std::string to_string(const xmlChar* xmlStr)
 }
 
 /*
+ * return the remanining string if the prefix is found, nullptr otherwise
+ */
+template<std::size_t N>
+constexpr const xmlChar* starts_with(const xmlChar* str, char const (&prefix)[N])
+{
+    if (str == nullptr)
+    {
+        return nullptr;
+    }
+
+    // will get inlined with a constexpr prefix and do per character comparison
+    if ((*(char*)str) != *prefix)
+    {
+        return nullptr;
+    }
+
+    return starts_with<N - 1>(str + 1, (const char (&)[N - 1])(*(prefix + 1)));
+}
+template<>
+constexpr const xmlChar* starts_with<1>(const xmlChar* str, char const (&prefix)[1])
+{
+    if (str == nullptr)
+    {
+        return nullptr;
+    }
+
+    // char is the remaining string
+    return str;
+}
+
+// equals_to():  return true if the string is equal to the value, false otherwise
+template<std::size_t N>
+constexpr bool equals_to(const xmlChar* str, char const (&value)[N])
+{
+    // will get inlined with a constexpr prefix and do per character comparison
+    if (str == nullptr)
+    {
+        return false;
+    }
+
+    if ((*(char*)str) != *value)
+    {
+        return false;
+    }
+
+    return equals_to<N - 1>(str + 1, (const char (&)[N - 1])(*(value + 1)));
+}
+template<>
+constexpr bool equals_to<1>(const xmlChar* str, char const (&value)[1])
+{
+    if (str == nullptr)
+    {
+        return false;
+    }
+
+    // str is at the end, check its null terminator
+    return *str == '\0';
+}
+
+/*
  * Convert an XML UTF-8 string to a model int
  */
 static int to_int(const xmlChar* xmlStr)
@@ -452,10 +426,10 @@ static bool to_boolean(const xmlChar* xmlStr)
 {
     if (xmlStr == nullptr)
     {
-        return 0;
+        return false;
     }
 
-    return xmlStrcmp(xmlStr, (const xmlChar*)"true") == 0;
+    return equals_to(xmlStr, "true");
 }
 
 /*
@@ -475,16 +449,41 @@ int SSPResource::loadSystemStructureDescription(xmlTextReaderPtr reader, model::
 {
     assert(o->kind() == DIAGRAM);
 
+    std::vector<std::string> namespaces;
+
     // iterate on attributes
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        const xmlChar* value = xmlTextReaderConstValue(reader);
+
+        // record XML namespaces used for annotations
+        const xmlChar* xmlns_ = starts_with(attribute, "xmlns:");
+        if (xmlns_ != nullptr)
         {
-            continue;
+            if (equals_to(xmlns_, "ssc") ||
+                equals_to(xmlns_, "ssb") ||
+                equals_to(xmlns_, "ssd") ||
+                equals_to(xmlns_, "ssv") ||
+                equals_to(xmlns_, "ssm") ||
+                equals_to(xmlns_, "xcos"))
+            {
+                // used namespaces, will always be added on saving
+                continue;
+            }
+            else
+            {
+                // namespace from other tools, store now and add on saving
+                std::string ns{to_string(attribute)};
+                ns.append("=");
+                ns.append(to_string(value));
+                namespaces.emplace_back(ns);
+                continue;
+            }
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_version:
@@ -584,6 +583,12 @@ int SSPResource::loadSystemStructureDescription(xmlTextReaderPtr reader, model::
         }
     }
 
+    // set the global XML namespaces
+    if (controller.setObjectProperty(o, GLOBAL_XMLNS, namespaces) == FAIL)
+    {
+        return -1;
+    }
+
     return 1;
 }
 
@@ -595,20 +600,25 @@ int SSPResource::loadSystem(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_name:
             {
-                std::string name = to_string(xmlTextReaderConstValue(reader));
-                if (controller.setObjectProperty(o, NAME, name) == FAIL)
+                auto v = xmlTextReaderConstValue(reader);
+                temporaryComponentName = to_string(v);
+                if (starts_with(v, "#") == nullptr)
                 {
-                    return -1;
+                    // the name has been set by the user, preserve it
+                    if (controller.setObjectProperty(o, NAME, temporaryComponentName) == FAIL)
+                    {
+                        return -1;
+                    }
                 }
                 break;
             }
@@ -632,6 +642,111 @@ int SSPResource::loadSystem(xmlTextReaderPtr reader, model::BaseObject* o)
     return 1;
 }
 
+int SSPResource::updateSystem(model::BaseObject* o)
+{
+    //
+    // relocate the IOBlock according to the Geometry
+    //
+    auto [x1, y1, x2, y2] = bounds.back();
+
+    // helper lambda function
+    auto set_ioblock_geometry = [this, x1, y1, x2, y2](const Reference& ioBlock)
+    {
+        std::vector<double> absoluteGeom = {0, 0, 40, 20};
+
+        // x
+        absoluteGeom[0] = (x1 + ioBlock.x * (x2 - x1) + 10) * ASPECT_RATIO;
+        // y
+        absoluteGeom[1] = ((1.0 - ioBlock.y) * (y2 - y1) - 10 - y2) * ASPECT_RATIO;
+
+        if (controller.setObjectProperty(ioBlock.block, GEOMETRY, absoluteGeom) == FAIL)
+        {
+            sciprint("unable to set SystemGeometry\n");
+            return -1;
+        }
+
+        return 0;
+    };
+
+    auto r_layer = references.back();
+    if (references.size() == 1)
+    {
+        // position main System's connectors
+        for (std::vector<Reference>::iterator ioBlock = r_layer.begin(); ioBlock != r_layer.end() && ioBlock->element == ""; ++ioBlock)
+        {
+            int ret = set_ioblock_geometry(*ioBlock);
+            if (ret)
+            {
+                return ret;
+            }
+        }
+    }
+    else
+    {
+        // set some properties on connectors after layer loading completed
+        auto& r_parent_layer = *(references.rbegin() + 1);
+        auto parent_it = r_parent_layer.rbegin();
+        for (auto it = r_layer.rbegin(); it != r_layer.rend(); it++)
+        {
+            int ret = set_ioblock_geometry(*it);
+            if (ret)
+            {
+                return ret;
+            }
+            if (copy_property<std::vector<int>>(parent_it->port, it->port, DATATYPE) == FAIL)
+            {
+                return FAIL;
+            }
+        }
+    }
+
+    // translate y-axis on blocks and links according to the SystemGeometry
+    // y-axis should already be inverted
+    std::vector<ScicosID> children;
+    controller.getObjectProperty(o, CHILDREN, children);
+    for (ScicosID id : children)
+    {
+        model::BaseObject* child = controller.getBaseObject(id);
+        switch (child->kind())
+        {
+            case BLOCK:
+            {
+                std::vector<double> geom;
+                controller.getObjectProperty(child, GEOMETRY, geom);
+                geom[0] = geom[0] - x1;
+                geom[1] = geom[1] + y2;
+                controller.setObjectProperty(child, GEOMETRY, geom);
+                break;
+            }
+            case LINK:
+            {
+                std::vector<double> points;
+                controller.getObjectProperty(child, CONTROL_POINTS, points);
+                for (size_t i = 1; i < points.size(); i += 2)
+                {
+                    points[i - 1] = points[i - 1] - x1;
+                    points[i] = points[i] + y2;
+                }
+                controller.setObjectProperty(child, CONTROL_POINTS, points);
+                break;
+            }
+            case ANNOTATION:
+            {
+                std::vector<double> geom;
+                controller.getObjectProperty(child, GEOMETRY, geom);
+                geom[0] = geom[0] - x1;
+                geom[1] = geom[1] + y2;
+                controller.setObjectProperty(child, GEOMETRY, geom);
+                break;
+            }
+            default:
+                break;
+        }
+    }
+
+    return 1;
+}
+
 int SSPResource::loadDefaultExperiment(xmlTextReaderPtr reader, model::BaseObject* o)
 {
     assert(o->kind() == DIAGRAM);
@@ -643,12 +758,12 @@ int SSPResource::loadDefaultExperiment(xmlTextReaderPtr reader, model::BaseObjec
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_startTime:
@@ -680,20 +795,128 @@ int SSPResource::loadDefaultExperiment(xmlTextReaderPtr reader, model::BaseObjec
     return 1;
 }
 
-int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* o)
+int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* parent)
+{
+    int ret;
+    model::BaseObject* innerBlock = nullptr;
+    model::BaseObject* innerPort = nullptr;
+    model::BaseObject* outterPort = nullptr;
+    model::BaseObject* port = nullptr;
+
+    auto& r_layer = references.back();
+    bool isMainDiagram = references.size() == 1;
+    if (isMainDiagram)
+    {
+        innerBlock = controller.createBaseObject(BLOCK);
+        controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
+        innerPort = controller.createBaseObject(PORT);
+        controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
+
+        std::vector<ScicosID> children;
+        controller.getObjectProperty(parent, CHILDREN, children);
+        children.push_back(innerBlock->id());
+        controller.setObjectProperty(parent, CHILDREN, children);
+
+        r_layer.emplace_back(Reference("", "", innerBlock, innerPort));
+
+        processed_push(reader, innerPort);
+        port = innerPort;
+    }
+    else
+    {
+        auto& r_parent_layer = *(references.rbegin() + 1);
+
+        outterPort = controller.createBaseObject(PORT);
+        controller.setObjectProperty(outterPort, SOURCE_BLOCK, parent);
+
+        innerBlock = controller.createBaseObject(BLOCK);
+        controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
+        controller.setObjectProperty(innerBlock, PARENT_BLOCK, parent->id());
+        innerPort = controller.createBaseObject(PORT);
+        controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
+
+        std::vector<ScicosID> children;
+        controller.getObjectProperty(parent, CHILDREN, children);
+        children.push_back(innerBlock->id());
+        controller.setObjectProperty(parent, CHILDREN, children);
+
+        r_parent_layer.emplace_back(Reference(temporaryComponentName, "", parent, outterPort));
+        r_layer.emplace_back(Reference("", "", innerBlock, innerPort));
+
+        processed_push(reader, outterPort);
+        port = outterPort;
+    }
+
+    ret = loadConnectorContent(reader, port);
+    if (ret != 1)
+    {
+        sciprint("unable to set Connector\n");
+        return ret;
+    }
+
+    enum portKind kind;
+    controller.getObjectProperty(port, PORT_KIND, (int&)kind);
+    bool isImplicit;
+    controller.getObjectProperty(port, IMPLICIT, isImplicit);
+
+    if (innerPort != nullptr && innerPort != port)
+    {
+        // sync port information to the inner block
+        copy_property<bool>(port, innerPort, IMPLICIT);
+        if (controller.setObjectProperty(innerPort, PORT_KIND, opposite_port(kind)) == FAIL)
+        {
+            sciprint("unable to set Connector on innerPort\n");
+            return -1;
+        }
+    }
+
+    // set innerBlock data
+    if (innerBlock != nullptr)
+    {
+        portKind innerKind = opposite_port(kind);
+        std::vector<ScicosID> ports = {innerPort->id()};
+        controller.setObjectProperty(innerBlock, property_from_port(innerKind), ports);
+
+        // this is the connector block, loaded as I/O block inside the inner layer
+        copy_property<std::string>(port, innerBlock, NAME);
+        copy_property<std::string>(port, innerBlock, DESCRIPTION);
+
+        controller.setObjectProperty(innerBlock, INTERFACE_FUNCTION, interface_function(innerKind, isImplicit, isMainDiagram));
+        controller.setObjectProperty(innerBlock, SIM_FUNCTION_NAME, simulation_function(innerKind, isImplicit, isMainDiagram));
+        controller.setObjectProperty(innerBlock, STYLE, interface_function(innerKind, isImplicit, isMainDiagram));
+    }
+
+    // refresh the outter connector to connect it later
+    if (!isMainDiagram)
+    {
+        std::string portName;
+        controller.getObjectProperty(outterPort, NAME, portName);
+
+        auto& r_parent_layer = *(references.rbegin() + 1);
+        r_parent_layer.back().connector = portName;
+        r_parent_layer.back().kind = kind;
+    }
+
+    return ret;
+}
+
+int SSPResource::loadConnectorContent(xmlTextReaderPtr reader, model::BaseObject* o)
 {
     assert(o->kind() == PORT);
+
+    // reset Dimension count, see loadDimension
+    dimensionCount = 0;
 
     // iterate on attributes
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_id:
@@ -722,7 +945,7 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* o)
                 {
                     return -1;
                 }
-                references.back().connector = name;
+                references.back().back().connector = name;
                 break;
             }
 
@@ -730,12 +953,12 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* o)
             {
                 // input / output / inout are interned
                 const xmlChar* kind = xmlTextReaderConstString(reader, xmlTextReaderConstValue(reader));
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), kind);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), kind);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
 
                 enum portKind port = PORT_UNDEF;
                 bool isImplicit = false;
@@ -770,6 +993,7 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* o)
                 {
                     return -1;
                 }
+                references.back().back().kind = port;
                 break;
             }
 
@@ -779,10 +1003,16 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* o)
         }
     }
 
+    LoggerView* logger = get_or_allocate_logger();
+    logger->log(LOG_DEBUG, [&](std::stringstream& msg)
+    {
+        const auto& r = references.back().back();
+        msg << "block " << logger->id(r.block) << " port " << logger->id(r.port) << " named " << r.element << " " << r.connector << "\n";
+    });
     return 1;
 }
 
-int SSPResource::loadReal(xmlTextReaderPtr reader, model::BaseObject* o)
+int SSPResource::loadReal(xmlTextReaderPtr reader, org_scilab_modules_scicos::model::BaseObject* o, enum xcosNames name)
 {
     assert(o->kind() == PORT || o->kind() == BLOCK || o->kind() == DIAGRAM);
 
@@ -807,15 +1037,25 @@ int SSPResource::loadReal(xmlTextReaderPtr reader, model::BaseObject* o)
             if (xmlTextReaderMoveToFirstAttribute(reader) > 0)
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 if (current == e_unit)
                 {
-                    if (controller.setObjectProperty(o, PARAMETER_UNIT, to_string(xmlTextReaderConstValue(reader))) == FAIL)
+                    std::string unit = to_string(xmlTextReaderConstValue(reader));
+                    // put the unit on the outter port
+                    if (controller.setObjectProperty(o, PARAMETER_UNIT, unit) == FAIL)
                     {
                         return -1;
                     }
                 }
+            }
+
+            // set the same on the innerPort
+            if (references.back().size() > 1 && references.back().back().port != o)
+            {
+                model::BaseObject* innerPort = references.back().back().port;
+                copy_property(o, innerPort, DATATYPE, _vecIntShared);
+                copy_property(o, innerPort, PARAMETER_UNIT, _strShared);
             }
             break;
         }
@@ -845,12 +1085,12 @@ int SSPResource::loadReal(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_value:
@@ -897,7 +1137,7 @@ int SSPResource::loadReal(xmlTextReaderPtr reader, model::BaseObject* o)
     return 1;
 }
 
-int SSPResource::loadInteger(xmlTextReaderPtr reader, model::BaseObject* o)
+int SSPResource::loadInteger(xmlTextReaderPtr reader, model::BaseObject* o, enum xcosNames name)
 {
     assert(o->kind() == PORT || o->kind() == BLOCK);
 
@@ -945,12 +1185,12 @@ int SSPResource::loadInteger(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_value:
@@ -1030,12 +1270,12 @@ int SSPResource::loadBoolean(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_value:
@@ -1117,12 +1357,12 @@ int SSPResource::loadString(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_value:
@@ -1203,12 +1443,12 @@ int SSPResource::loadEnumeration(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_value:
@@ -1290,12 +1530,12 @@ int SSPResource::loadBinary(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_source: // fallthrough
@@ -1344,6 +1584,90 @@ int SSPResource::loadBinary(xmlTextReaderPtr reader, model::BaseObject* o)
     return 1;
 }
 
+int SSPResource::loadDimension(xmlTextReaderPtr reader, model::BaseObject* o)
+{
+    assert(o->kind() == PORT);
+
+    // as been reset on loadConnector
+    dimensionCount++;
+
+    int sz = 1;
+
+    // iterate on attributes
+    for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
+    {
+        const xmlChar* attribute = xmlTextReaderConstName(reader);
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
+        {
+            continue;
+        }
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
+        switch (current)
+        {
+            case e_size:
+            {
+                sz = to_int(xmlTextReaderConstValue(reader));
+                break;
+            }
+
+            default:
+                // ignore other parameters
+                break;
+        }
+    }
+
+    object_properties_t p;
+    switch (dimensionCount)
+    {
+        case 1:
+            p = DATATYPE_ROWS;
+            break;
+        case 2:
+            p = DATATYPE_COLS;
+            break;
+        default:
+            // unable to decode or used dimension higher than 2
+            return -1;
+    }
+
+    if (controller.setObjectProperty(o, p, sz) == FAIL)
+    {
+        return -1;
+    }
+
+    return 1;
+}
+
+int SSPResource::loadClock(xmlTextReaderPtr reader, model::BaseObject* o)
+{
+    assert(o->kind() == PORT);
+
+    // set the type as Clock
+    enum portKind kind;
+    if (!controller.getObjectProperty(o, PORT_KIND, (int&)kind))
+    {
+        return -1;
+    }
+
+    if (kind == PORT_IN)
+    {
+        if (controller.setObjectProperty(o, PORT_KIND, PORT_EIN) == FAIL)
+        {
+            return -1;
+        }
+    }
+    else if (kind == PORT_OUT)
+    {
+        if (controller.setObjectProperty(o, PORT_KIND, PORT_EOUT) == FAIL)
+        {
+            return -1;
+        }
+    }
+
+    return 1;
+}
+
 int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
 {
     assert(o->kind() == BLOCK || o->kind() == DIAGRAM);
@@ -1365,7 +1689,7 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
     // store into processed if there is children
     if (!xmlTextReaderIsEmptyElement(reader))
     {
-        processed.push_back(link);
+        processed_push(reader, link);
     }
 
     std::string startElement;
@@ -1377,13 +1701,13 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
 
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_startElement:
@@ -1428,11 +1752,12 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
     }
 
     // resolve linkage with available references
-    auto startIT = std::find_if(references.rbegin(), references.rend(), [&startElement, &startConnector](const Reference& r)
+    auto r_layer = references.back();
+    auto startIT = std::find_if(r_layer.rbegin(), r_layer.rend(), [&startElement, &startConnector](const Reference& r)
                                 { return r.element == startElement && r.connector == startConnector; });
-    if (startIT == references.rend())
+    if (startIT == r_layer.rend())
     {
-        sciprint("unable to decode Connection - startConnector reference\n");
+        sciprint("unable to decode Connection - startConnector reference for startElement=\"%s\" startConnector=\"%s\"\n", startElement.c_str(), startConnector.c_str());
         return -1;
     }
 
@@ -1447,11 +1772,11 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
         return -1;
     }
 
-    auto endIT = std::find_if(references.rbegin(), references.rend(), [&endElement, &endConnector](const Reference& r)
+    auto endIT = std::find_if(r_layer.rbegin(), r_layer.rend(), [&endElement, &endConnector](const Reference& r)
                               { return r.element == endElement && r.connector == endConnector; });
-    if (endIT == references.rend())
+    if (endIT == r_layer.rend())
     {
-        sciprint("unable to decode Connection - endConnector reference\n");
+        sciprint("unable to decode Connection - endConnector reference for endElement=\"%s\" endConnector=\"%s\"\n", endElement.c_str(), endConnector.c_str());
         return -1;
     }
 
@@ -1466,6 +1791,13 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
         return -1;
     }
 
+    // verbose for debugging
+    LoggerView* logger = get_or_allocate_logger();
+    logger->log(LOG_DEBUG, [&](std::stringstream& msg) {
+        msg << "connect link " << logger->id(link);
+        msg << " : from " << logger->id(startIT->port) << " - to " << logger->id(endIT->port) << "\n";
+    });
+
     return 1;
 }
 
@@ -1473,42 +1805,39 @@ int SSPResource::loadSystemGeometry(xmlTextReaderPtr reader, model::BaseObject* 
 {
     assert(o->kind() == DIAGRAM || o->kind() == BLOCK);
 
-    // read values
-    double x1 = 0;
-    double y1 = 0;
-    double x2 = 0;
-    double y2 = 0;
+    // update in place, will be processed at system exit
+    auto& systemGeom = bounds.back();
 
     // iterate on attributes
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_x1:
             {
-                x1 = to_double(xmlTextReaderConstValue(reader));
+                systemGeom.x1 = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
             case e_y1:
             {
-                y1 = to_double(xmlTextReaderConstValue(reader));
+                systemGeom.y1 = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
             case e_x2:
             {
-                x2 = to_double(xmlTextReaderConstValue(reader));
+                systemGeom.x2 = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
             case e_y2:
             {
-                y2 = to_double(xmlTextReaderConstValue(reader));
+                systemGeom.y2 = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
 
@@ -1516,114 +1845,6 @@ int SSPResource::loadSystemGeometry(xmlTextReaderPtr reader, model::BaseObject* 
                 break;
         }
     }
-
-    //
-    // relocate the IOBlock according to the Geometry
-    //
-
-    // helper lambda function
-    auto set_ioblock_geometry = [this, x1, y1, x2, y2](const Reference& ioBlock)
-    {
-        std::vector<double> absoluteGeom = {0, 0, 40, 20};
-
-        // x
-        absoluteGeom[0] = (x1 + ioBlock.x * (x2 - x1)  + 10) * ASPECT_RATIO;
-        // y
-        absoluteGeom[1] = ((1.0 - ioBlock.y) * (y2 - y1)  - 10 - y2) * ASPECT_RATIO;
-
-        if (controller.setObjectProperty(ioBlock.block, GEOMETRY, absoluteGeom) == FAIL)
-        {
-            sciprint("unable to set SystemGeometry\n");
-            return -1;
-        }
-
-        return 0;
-    };
-
-    std::vector<Reference>::reverse_iterator it = references.rbegin();
-    // go up to the System Connector definition
-    while (it != references.rend() && it->element != "")
-    {
-        it++;
-    }
-    // look for each connector
-    std::vector<Reference>::reverse_iterator ioBlock = it;
-    std::vector<Reference>::reverse_iterator outter = it + 1;
-    while (outter != references.rend() && outter->connector == ioBlock->connector)
-    {
-        int ret = set_ioblock_geometry(*ioBlock);
-        if (ret)
-        {
-            return ret;
-        }
-        if (copy_property<std::vector<int>>(outter->port, ioBlock->port, DATATYPE) == FAIL)
-        {
-            return FAIL;
-        }
-
-
-        outter += 2;
-        ioBlock += 2;
-    }
-    // position main System's connectors
-    if (o->kind() == DIAGRAM)
-    {
-        for (std::vector<Reference>::iterator ioBlock = references.begin(); ioBlock != references.end() && ioBlock->element == ""; ++ioBlock)
-        {
-            int ret = set_ioblock_geometry(*ioBlock);
-            if (ret)
-            {
-                return ret;
-            }
-        }
-    }
-
-    // translate y-axis on blocks and links according to the SystemGeometry
-    // y-axis should already be inverted
-    std::vector<ScicosID> children;
-    controller.getObjectProperty(o, CHILDREN, children);
-    for (ScicosID id : children)
-    {
-        model::BaseObject* child = controller.getBaseObject(id);
-        switch (child->kind())
-        {
-            case BLOCK:
-            {
-                std::vector<double> geom;
-                controller.getObjectProperty(child, GEOMETRY, geom);
-                geom[0] = geom[0] - x1;
-                geom[1] = geom[1] + y2;
-                controller.setObjectProperty(child, GEOMETRY, geom);
-                break;
-            }
-            case LINK:
-            {
-                std::vector<double> points;
-                controller.getObjectProperty(child, CONTROL_POINTS, points);
-                for (size_t i = 1; i < points.size(); i += 2)
-                {
-                    points[i-1] = points[i-1] - x1;
-                    points[i] = points[i] + y2;
-                }
-                controller.setObjectProperty(child, CONTROL_POINTS, points);
-                break;
-            }
-            case ANNOTATION:
-            {
-                std::vector<double> geom;
-                controller.getObjectProperty(child, GEOMETRY, geom);
-                geom[0] = geom[0] - x1;
-                geom[1] = geom[1] + y2;
-                controller.setObjectProperty(child, GEOMETRY, geom);
-                break;
-            }
-            default:
-                break;
-        }
-    }
-
-    // reorder and assign port indexes
-    assignPortIndexes(o);
 
     return 1;
 }
@@ -1639,24 +1860,25 @@ int SSPResource::loadConnectorGeometry(xmlTextReaderPtr reader, model::BaseObjec
     }
     else
     {
-        port = references.back().port;
+        port = references.back().back().port;
     }
 
     // in SSP coordinates
     double x = 1.05;
     double y = 0.2;
-    double rotation = 0;
+    double systemInnerX = std::numeric_limits<double>::quiet_NaN();
+    double systemInnerY = std::numeric_limits<double>::quiet_NaN();
 
     // iterate on attributes
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_x:
@@ -1669,9 +1891,14 @@ int SSPResource::loadConnectorGeometry(xmlTextReaderPtr reader, model::BaseObjec
                 y = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
-            case e_rotation:
+            case e_systemInnerX:
             {
-                rotation = to_double(xmlTextReaderConstValue(reader));
+                systemInnerX = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_systemInnerY:
+            {
+                systemInnerY = to_double(xmlTextReaderConstValue(reader));
                 break;
             }
             default:
@@ -1710,22 +1937,25 @@ int SSPResource::loadConnectorGeometry(xmlTextReaderPtr reader, model::BaseObjec
     }
 
     // set the geometry on the ioBlock
-    auto ioBlock = references.rbegin();
+    auto ioBlock = references.back().rbegin();
     ioBlock->x = x;
     ioBlock->y = y;
+    ioBlock->systemInnerX = systemInnerX;
+    ioBlock->systemInnerY = systemInnerY;
 
     // set the geometry on the port
     if (references.size() > 1)
     {
-        auto outter = references.rbegin() + 1;
-        if (ioBlock->element == "" && ioBlock->connector == outter->connector)
+        auto& outter = (references.rbegin() + 1)->back();
+        if (ioBlock->element == "" && ioBlock->connector == outter.connector)
         {
-            outter->x = x;
-            outter->y = y;
+            outter.x = x;
+            outter.y = y;
+            outter.systemInnerX = systemInnerX;
+            outter.systemInnerY = systemInnerY;
         }
     }
 
-    
     return 1;
 }
 
@@ -1754,12 +1984,12 @@ int SSPResource::loadElementGeometry(xmlTextReaderPtr reader, model::BaseObject*
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_x1:
@@ -1852,9 +2082,6 @@ int SSPResource::loadElementGeometry(xmlTextReaderPtr reader, model::BaseObject*
         return -1;
     }
 
-    // reorder and assign port indexes
-    assignPortIndexes(o);
-
     return 1;
 }
 
@@ -1871,12 +2098,12 @@ int SSPResource::loadConnectionGeometry(xmlTextReaderPtr reader, model::BaseObje
         bool allocated = !points.empty();
 
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_pointsX:
@@ -1894,7 +2121,7 @@ int SSPResource::loadConnectionGeometry(xmlTextReaderPtr reader, model::BaseObje
                         points[2 * i] = ASPECT_RATIO * x;
                     }
                     else
-                        {
+                    {
                         points.push_back(ASPECT_RATIO * x);
                         points.push_back(y);
                     }
@@ -1947,6 +2174,85 @@ int SSPResource::loadConnectionGeometry(xmlTextReaderPtr reader, model::BaseObje
     return 1;
 }
 
+int SSPResource::loadGeometry(xmlTextReaderPtr reader, model::BaseObject* o)
+{
+    // load Xcos geometry and reconciliate with SSP geometry
+    std::vector<double> x_y_w_h;
+    x_y_w_h.resize(4);
+
+    // iterate on attributes
+    for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
+    {
+        const xmlChar* attribute = xmlTextReaderConstName(reader);
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
+        {
+            continue;
+        }
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
+        switch (current)
+        {
+            case e_x:
+            {
+                x_y_w_h[0] = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_y:
+            {
+                x_y_w_h[1] = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_width:
+            {
+                x_y_w_h[2] = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_height:
+            {
+                x_y_w_h[3] = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            default:
+                sciprint("unable to decode Geometry\n");
+                return -1;
+        }
+    }
+
+    // set the geometry on the block
+    model::BaseObject* geomObject = o;
+    if (o->kind() == PORT)
+    {
+        geomObject = references.back().back().block;
+    }
+
+    if (!controller.getObjectProperty(geomObject, GEOMETRY, _vecDblShared))
+    {
+        sciprint("unable to get Geometry\n");
+        return -1;
+    }
+
+    // TODO: reconcile the two geometries in objects has been moved on other tools
+    //
+    // Xcos geometry is in pixel (x,y,width,height):
+    //  - the origin is at the top-left corner
+    //  - increasing x-axis to the right, increasing y-axis is downward
+    //  - width and height are positive
+    //  - values are absolute in pixels * zoom factor
+    // SSP geometry is two points : (x1,y1) (x2,y2):
+    //  - the origin is at the center
+    //  - increasing x-axis to the right, increasing y-axis is *upward*
+    //  - x1 < x2 and y1 < y2 if no flipping
+    //  - values are relative ; maximum value is given by all object in the layer
+
+    if (controller.setObjectProperty(geomObject, GEOMETRY, x_y_w_h) == FAIL)
+    {
+        sciprint("unable to set Geometry\n");
+        return -1;
+    }
+
+    return 1;
+}
+
 int SSPResource::loadParameterSet(xmlTextReaderPtr reader, model::BaseObject* o)
 {
     assert(o->kind() == BLOCK || o->kind() == DIAGRAM);
@@ -1960,18 +2266,18 @@ int SSPResource::loadParameterSet(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_version:
                     {
                         const xmlChar* version = xmlTextReaderConstValue(reader);
-                        if (xmlStrcmp(version, (const xmlChar*)"1.0") != 0)
+                        if (!equals_to(version, "1.0") && !equals_to(version, "2.0"))
                         {
                             sciprint("unable to decode ParameterSet version\n");
                             return -1;
@@ -2009,14 +2315,14 @@ int SSPResource::loadParameter(xmlTextReaderPtr reader, model::BaseObject* o)
         case DIAGRAM:
         {
             // first allocate a new "undefined" parameter
-            std::vector<std::string> names;
-            if (!controller.getObjectProperty(o, PARAMETER_NAME, names))
+            std::vector<std::string> parameters;
+            if (!controller.getObjectProperty(o, PARAMETER_NAME, parameters))
             {
                 sciprint("unable to retrieve Parameter name\n");
                 return -1;
             }
-            names.push_back("");
-            if (controller.setObjectProperty(o, PARAMETER_NAME, names) == FAIL)
+            parameters.push_back("");
+            if (controller.setObjectProperty(o, PARAMETER_NAME, parameters) == FAIL)
             {
                 sciprint("unable to assign Parameter name\n");
                 return -1;
@@ -2033,18 +2339,18 @@ int SSPResource::loadParameter(xmlTextReaderPtr reader, model::BaseObject* o)
             for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
             {
                 const xmlChar* attribute = xmlTextReaderConstName(reader);
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (current)
                 {
                     case e_name:
                     {
-                        names.back() = to_string(xmlTextReaderConstValue(reader));
-                        if (controller.setObjectProperty(o, PARAMETER_NAME, names) == FAIL)
+                        parameters.back() = to_string(xmlTextReaderConstValue(reader));
+                        if (controller.setObjectProperty(o, PARAMETER_NAME, parameters) == FAIL)
                         {
                             sciprint("unable to assign Parameter name\n");
                             return -1;
@@ -2087,12 +2393,12 @@ int SSPResource::loadUnit(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_name:
@@ -2123,12 +2429,12 @@ int SSPResource::loadBaseUnit(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
             case e_kg:
@@ -2187,7 +2493,7 @@ int SSPResource::loadBaseUnit(xmlTextReaderPtr reader, model::BaseObject* o)
         }
     }
 
-    // assign the unit to tha default datatype on the correct layer
+    // assign the unit to the default datatype on the correct layer
     if (o->kind() == BLOCK)
     {
         model::Block* block = (model::Block*)o;
@@ -2202,7 +2508,7 @@ int SSPResource::loadBaseUnit(xmlTextReaderPtr reader, model::BaseObject* o)
         d.m_unit = unit;
 
         std::vector<model::Datatype*> datatypes = block->getDatatypes();
-        datatypes.push_back(controller.getInternalModel().flyweight(d));
+        datatypes.push_back(controller.getInternalModel().flyweight(std::move(d)));
         block->setDatatypes(datatypes);
     }
     else if (o->kind() == DIAGRAM)
@@ -2219,8 +2525,13 @@ int SSPResource::loadBaseUnit(xmlTextReaderPtr reader, model::BaseObject* o)
         d.m_unit = unit;
 
         std::vector<model::Datatype*> datatypes = diagram->getDatatypes();
-        datatypes.push_back(controller.getInternalModel().flyweight(d));
+        datatypes.push_back(controller.getInternalModel().flyweight(std::move(d)));
         diagram->setDatatypes(datatypes);
+    }
+    else
+    {
+        sciprint("unable to assign BaseUnit\n");
+        return -1;
     }
 
     return 1;
@@ -2232,26 +2543,73 @@ int SSPResource::loadAnnotation(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
 
             case e_type:
             {
-                // only xcos URI is managed here
+                // only xcos URI is managed here, store others as raw strings
                 const xmlChar* type = xmlTextReaderConstString(reader, xmlTextReaderConstValue(reader));
-                if (type == xcosNamespaceUri)
+                if (type == readerConstInterned[e_org_scilab_xcos_ssp])
                 {
-                    // TODO: decode data
+                    // xcos annotation will be converted to model values
                 }
                 else
                 {
+                    //
+                    // this is unknown annotation, store it as raw string
+                    //
+
+                    // read current node and its subtree
+                    xmlNodePtr node = xmlTextReaderExpand(reader);
+                    if (node == nullptr)
+                    {
+                        return -1;
+                    }
+                    // store into an output buffer
+                    xmlDocPtr doc = xmlTextReaderCurrentDoc(reader);
+                    xmlOutputBufferPtr output = xmlAllocOutputBuffer(nullptr);
+                    if (output == nullptr)
+                    {
+                        return -1;
+                    }
+                    xmlNodeDumpOutput(output, doc, node, 0, 1, nullptr);
+
+                    // store the annotation (within the current object or as global one)
+                    enum object_properties_t p = SSP_ANNOTATION;
+                    if (o->kind() == DIAGRAM && processed.size() <= 3)
+                    {
+                        // processed stack is: {SystemStructureDescription DIAGRAM, Annotations DIAGRAM, Annotation DIAGRAM}
+                        p = GLOBAL_SSP_ANNOTATION;
+                    }
+
+                    if (!controller.getObjectProperty(o, p, _vecStrShared))
+                    {
+                        return -1;
+                    }
+
+                    // append the annotation
+                    _vecStrShared.emplace_back((const char*)xmlOutputBufferGetContent(output), xmlOutputBufferGetSize(output));
+
+                    if (xmlOutputBufferClose(output) < 0)
+                    {
+                        return -1;
+                    }
+
+                    if (controller.setObjectProperty(o, p, _vecStrShared) == FAIL)
+                    {
+                        return -1;
+                    }
+
+                    // skip the following nodes
                     annotated = true;
+                    return 1;
                 }
             }
 
@@ -2270,24 +2628,24 @@ int SSPResource::loadComponent(xmlTextReaderPtr reader, model::BaseObject* o)
     for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
     {
         const xmlChar* attribute = xmlTextReaderConstName(reader);
-        auto found = std::find(constXcosNames.begin(), constXcosNames.end(), attribute);
-        if (found == constXcosNames.end())
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
         {
             continue;
         }
-        enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
         switch (current)
         {
 
             case e_type:
             {
                 const xmlChar* type = xmlTextReaderConstString(reader, xmlTextReaderConstName(reader));
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), type);
-                if (found == constXcosNames.end())
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), type);
+                if (found == readerConstInterned.end())
                 {
                     continue;
                 }
-                enum xcosNames t = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
+                enum xcosNames t = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
                 switch (t)
                 {
                     case e_application_x_fmu_sharedlibrary: // fallthrough
@@ -2317,7 +2675,7 @@ int SSPResource::loadComponent(xmlTextReaderPtr reader, model::BaseObject* o)
             case e_source:
             {
                 std::string source = to_string(xmlTextReaderConstValue(reader));
-                
+
                 const std::string fullPathname = std::string("TMPDIR/") + source;
                 const std::string resourcesPathname = source.substr(strlen("resources/"));
 
@@ -2331,41 +2689,59 @@ int SSPResource::loadComponent(xmlTextReaderPtr reader, model::BaseObject* o)
                 std::filesystem::create_directories(pPathWorkdir.parent_path());
                 std::filesystem::create_directories(pPathWorkdir);
 
-                std::vector<std::string> v = {resourcesPathname, workdir};
-                controller.setObjectProperty(o, EXPRS, v);
+                if (!controller.getObjectProperty(o, EXPRS, _vecStrShared))
+                {
+                    return -1;
+                }
+                if (_vecStrShared.size() < 2)
+                {
+                    _vecStrShared.resize(2);
+                }
+                _vecStrShared[0] = resourcesPathname;
+                _vecStrShared[1] = workdir;
+                if (controller.setObjectProperty(o, EXPRS, _vecStrShared) == FAIL)
+                {
+                    return -1;
+                }
                 break;
             }
 
             case e_implementation:
             {
-                // the implementation is mapped to a specific simulation function
-                const xmlChar* implementation = xmlTextReaderConstString(reader, xmlTextReaderConstValue(reader));
-                std::string functionName;
-                auto found = std::find(constXcosNames.begin(), constXcosNames.end(), implementation);
-                if (found == constXcosNames.end())
-                {
-                    continue;
-                }
-                enum xcosNames impl = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
-                switch (impl)
-                {
-                case e_ModelExchange:
-                    functionName = "fmu2_simulate_me";
-                    break;
-                case e_CoSimulation:
-                    functionName = "fmu2_simulate_cs";
-                    break;
-                case e_any:
-                    break;
-                default:
-                    sciprint("Component implementation \"%s\" is not supported\n", xmlTextReaderConstValue(reader));
-                    break;
-                }
-                if (controller.setObjectProperty(o, SIM_FUNCTION_NAME, functionName) == FAIL)
+                // the implementation is mapped to a selected fmuImpl
+                if (!controller.getObjectProperty(o, EXPRS, _vecStrShared))
                 {
                     return -1;
                 }
-                if (controller.setObjectProperty(o, SIM_FUNCTION_API, 4) == FAIL)
+                if (_vecStrShared.size() < 3)
+                {
+                    _vecStrShared.resize(3);
+                }
+
+                const xmlChar* implementation = xmlTextReaderConstString(reader, xmlTextReaderConstValue(reader));
+                auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), implementation);
+                if (found == readerConstInterned.end())
+                {
+                    continue;
+                }
+                enum xcosNames impl = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
+                switch (impl)
+                {
+                        // TODO: select the FMU v3 impl
+                    case e_ModelExchange:
+                        _vecStrShared[2] = "me 2.0";
+                        break;
+                    case e_CoSimulation:
+                        _vecStrShared[2] = "cs 2.0";
+                        break;
+                    case e_any:
+                        _vecStrShared[2] = "";
+                        break;
+                    default:
+                        sciprint("Component implementation \"%s\" is not supported\n", xmlTextReaderConstValue(reader));
+                        return -1;
+                }
+                if (controller.setObjectProperty(o, EXPRS, _vecStrShared) == FAIL)
                 {
                     return -1;
                 }
@@ -2374,10 +2750,15 @@ int SSPResource::loadComponent(xmlTextReaderPtr reader, model::BaseObject* o)
 
             case e_name:
             {
-                std::string name = to_string(xmlTextReaderConstValue(reader));
-                if (controller.setObjectProperty(o, NAME, name) == FAIL)
+                auto v = xmlTextReaderConstValue(reader);
+                temporaryComponentName = to_string(v);
+                if (starts_with(v, "#") == nullptr)
                 {
-                    return -1;
+                    // the name has been set by the user, preserve it
+                    if (controller.setObjectProperty(o, NAME, temporaryComponentName) == FAIL)
+                    {
+                        return -1;
+                    }
                 }
                 break;
             }
@@ -2401,11 +2782,120 @@ int SSPResource::loadComponent(xmlTextReaderPtr reader, model::BaseObject* o)
     return 1;
 }
 
+int SSPResource::loadNote(xmlTextReaderPtr reader, model::BaseObject* o)
+{
+    // in Xcos coordinates
+    std::vector<double> x_y_w_h;
+    x_y_w_h.resize(4);
+
+    // in SSP coordinates
+    double x1 = 0;
+    double y1 = 0;
+    double x2 = 0;
+    double y2 = 0;
+
+    // iterate on attributes
+    for (int rc = xmlTextReaderMoveToFirstAttribute(reader); rc > 0; rc = xmlTextReaderMoveToNextAttribute(reader))
+    {
+        const xmlChar* attribute = xmlTextReaderConstName(reader);
+        auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), attribute);
+        if (found == readerConstInterned.end())
+        {
+            continue;
+        }
+        enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
+        switch (current)
+        {
+            case e_x1:
+            {
+                x1 = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_y1:
+            {
+                y1 = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_x2:
+            {
+                x2 = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_y2:
+            {
+                y2 = to_double(xmlTextReaderConstValue(reader));
+                break;
+            }
+            case e_text:
+            {
+                std::string description = to_string(xmlTextReaderConstValue(reader));
+                if (controller.setObjectProperty(o, DESCRIPTION, description) == FAIL)
+                {
+                    return -1;
+                }
+                break;
+            }
+
+            default:
+                // ignore other parameters
+                break;
+        }
+    }
+
+    std::string style = "TEXT_f";
+    if (x1 < x2)
+    {
+        x_y_w_h[0] = x1;
+        x_y_w_h[2] = x2 - x1;
+    }
+    else
+    {
+        x_y_w_h[0] = x2;
+        x_y_w_h[2] = x1 - x2;
+
+        style += ";mirror=true";
+    }
+    // y-axis will be translated on SystemGeometry decoding
+    if (y1 < y2)
+    {
+        x_y_w_h[1] = -y2;
+        x_y_w_h[3] = y2 - y1;
+    }
+    else
+    {
+        x_y_w_h[1] = -y1;
+        x_y_w_h[3] = y2 - y1;
+
+        style += ";flip=true";
+    }
+
+    if (controller.setObjectProperty(o, GEOMETRY, x_y_w_h) == FAIL)
+    {
+        return -1;
+    }
+    if (controller.setObjectProperty(o, STYLE, style) == FAIL)
+    {
+        return -1;
+    }
+
+    return 1;
+}
+
 int SSPResource::processNode(xmlTextReaderPtr reader)
 {
+    auto logger = get_or_allocate_logger();
+    const xmlChar* name = xmlTextReaderConstLocalName(reader);
+
+    // verbose for debugging
+    if (logger->getLevel() <= LOG_DEBUG)
+    {
+        int line = xmlGetLineNo(xmlTextReaderCurrentNode(reader));
+        logger->log(LOG_DEBUG, "parsing line %d name %s\n", line, name);
+    }
+
     // manage only xcos related XML nodes
     const xmlChar* nsURI = xmlTextReaderConstNamespaceUri(reader);
-    if (nsURI == xmlnsSSC || nsURI == xmlnsSSB || nsURI == xmlnsSSD || nsURI == xmlnsSSV || nsURI == xmlnsSSM || nsURI == nullptr)
+    if (nsURI == xmlnsXCOS || nsURI == xmlnsSSC || nsURI == xmlnsSSB || nsURI == xmlnsSSD || nsURI == xmlnsSSV || nsURI == xmlnsSSM || nsURI == nullptr)
     {
         xmlReaderTypes nodeType = (xmlReaderTypes)xmlTextReaderNodeType(reader);
         switch (nodeType)
@@ -2413,7 +2903,7 @@ int SSPResource::processNode(xmlTextReaderPtr reader)
             case XML_READER_TYPE_NONE:
                 return 1;
             case XML_READER_TYPE_ELEMENT:
-                return processElement(reader);
+                return processElement(reader, nsURI);
             case XML_READER_TYPE_ATTRIBUTE:
                 sciprint("xmlReader attributes node not supported\n");
                 return -1;
@@ -2460,114 +2950,144 @@ int SSPResource::processNode(xmlTextReaderPtr reader)
     }
     else
     {
-        // TODO mixed model should be preserved in some way and restored back on SSPResource_save.cpp .
         if (annotated)
+        {
+            // within an ssc:Annotation
+            // the content has already been stored as a string
+            // skip up to its end
             return 1;
+        }
     }
-    sciprint("unable to process node\n");
+
+    int line = xmlGetLineNo(xmlTextReaderCurrentNode(reader));
+    logger->log(LOG_ERROR, "unable to process %s node at line %d\n", name, line);
     return -1;
 }
 
-static std::string interface_function(enum portKind kind, bool isImplicit, bool isMainDiagram)
+// assign IOBlock indexes if applicable
+void SSPResource::assignInnerPortIndexes(model::BaseObject* parent)
 {
-    std::string interfaceBlock[] = {"", "OUT_f", "IN_f", "CLKOUTV_f", "CLKINV_f"};
+    std::vector<Reference*> ioBlocks[] = {{}, {}, {}, {}, {}};
 
-    if (isImplicit)
+    auto& r_layer = references.back();
+
+    // add all System's connectors, ioBlocks are the first elements without named element,
+    for (std::vector<Reference>::iterator ioBlock = r_layer.begin(); ioBlock != r_layer.end() && ioBlock->element == ""; ++ioBlock)
     {
-        interfaceBlock[PORT_IN] = "INIMPL_f";
-        interfaceBlock[PORT_OUT] = "OUTIMPL_f";
-    }
-
-    if (isMainDiagram)
-    {
-        // corner case, this is implemented as fake subsystem
-        interfaceBlock[PORT_IN] = "SSPOutputConnector";
-        interfaceBlock[PORT_OUT] = "SSPInputConnector";
-    }
-
-    return interfaceBlock[kind];
-}
-
-static std::string simulation_function(enum portKind kind, bool isImplicit, bool isMainDiagram)
-{
-    std::string simulationFunction[] = {"", "output", "input", "output", "input"};
-
-    if (isImplicit)
-    {
-        simulationFunction[PORT_OUT] = "outimpl";
-        simulationFunction[PORT_IN] = "inimpl";
-    }
-
-    if (isMainDiagram)
-    {
-        // corner case, this is implemented as fake subsystem
-        simulationFunction[PORT_IN] = "csuper";
-        simulationFunction[PORT_OUT] = "csuper";
-    }
-
-    return simulationFunction[kind];
-}
-
-// assign port (if applicable) and compute its index
-void SSPResource::assignPortIndexes(model::BaseObject* parent)
-{
-    const enum portKind opposite[] = {PORT_UNDEF, PORT_OUT, PORT_IN, PORT_EOUT, PORT_EIN};
-
-    std::map<portKind, std::vector<Reference*>> ports;
-    for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
-        ports[kind] = std::vector<Reference*>();
-
-    std::map<portKind, std::vector<Reference*>> ioBlocks;
-    for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
-        ioBlocks[kind] = std::vector<Reference*>();
-
-    // look for all Component's connectors
-    std::vector<Reference>::reverse_iterator it = references.rbegin();
-    std::string element = it->element;
-    while (it != references.rend() && it->element != "" && it->element == element && it->block == parent)
-    {
-        int kind = PORT_UNDEF;
-        controller.getObjectProperty(it->port, PORT_KIND, kind);
-        ports[(portKind)kind].push_back(&*it);
-
-        it++;
-    }
-    // look for all System's connectors
-    std::vector<Reference>::reverse_iterator ioBlock = references.rbegin();
-    std::vector<Reference>::reverse_iterator outter = ioBlock + 1;
-    while (outter != references.rend() && outter->connector == ioBlock->connector)
-    {
-        int kind = PORT_UNDEF;
-        controller.getObjectProperty(outter->port, PORT_KIND, kind);
-
-        ioBlocks[(portKind)kind].push_back(&*ioBlock);
-        ports[(portKind)kind].push_back(&*outter);
-
-        outter += 2;
-        ioBlock += 2;
-    }
-    // add all main System's connectors
-    if (parent->kind() == DIAGRAM)
-    {
-        for (std::vector<Reference>::iterator ioBlock = references.begin(); ioBlock != references.end() && ioBlock->element == ""; ++ioBlock)
-        {
-            int kind = PORT_UNDEF;
-            controller.getObjectProperty(ioBlock->port, PORT_KIND, kind);
-            ioBlocks[opposite[kind]].push_back(&*ioBlock);
-        }
+        ioBlocks[opposite_port(ioBlock->kind)].push_back(&*ioBlock);
     }
 
     // sort per reference position
     for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
     {
-        auto cmp = [this](const Reference* a, const Reference* b)
-        {
+        std::stable_sort(ioBlocks[(portKind)kind].begin(), ioBlocks[(portKind)kind].end(), [](Reference* a, Reference* b){
             if (std::fabs(a->x - b->x) <= std::numeric_limits<double>::epsilon())
                 return a->y > b->y;
-            return a->x > b->x;
-        };
-        std::stable_sort(ports[(portKind)kind].begin(), ports[(portKind)kind].end(), cmp);
-        std::stable_sort(ioBlocks[(portKind)kind].begin(), ioBlocks[(portKind)kind].end(), cmp);
+            return a->x < b->x;
+        });
+    }
+
+    for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
+    {
+        object_properties_t p = property_from_port(kind);
+
+        // layer computes its port number from its already decoded children
+        for (int i = 0; i < ioBlocks[(portKind)kind].size(); ++i)
+        {
+            model::BaseObject* innerBlock = ioBlocks[(portKind)kind][i]->block;
+            int index = i + 1;
+
+            if (references.size() == 1)
+            {
+                // on an SSPInputConnector or SSPOutputConnector
+                std::vector<std::string> exprs;
+                if (kind == PORT_IN)
+                {
+                    exprs = {ioBlocks[(portKind)kind][i]->connector, "256"};
+                }
+                else
+                {
+                    exprs = {ioBlocks[(portKind)kind][i]->connector};
+                }
+
+                controller.setObjectProperty(innerBlock, EXPRS, exprs);
+                controller.setObjectProperty(innerBlock, IPAR, 1);
+            }
+            else
+            {
+                // on a subsystem input/output
+                controller.setObjectProperty(innerBlock, IPAR, index);
+                controller.setObjectProperty(innerBlock, EXPRS, std::to_string(index));
+            }
+        }
+    }
+}
+
+// remove unused IOBlocks for the Block implemented with native simulation functions
+int SSPResource::removeUnusedIOBlocks(model::BaseObject* parent)
+{
+    auto& r_layer = references.back();
+
+    size_t count = 0;
+    // count all System's connectors, ioBlocks are the first elements without named element,
+    for (std::vector<Reference>::iterator ioBlock = r_layer.begin(); ioBlock != r_layer.end() && ioBlock->element == ""; ++ioBlock)
+    {
+        count++;
+    }
+
+    if (!controller.getObjectProperty(parent, CHILDREN, _vecIDShared))
+    {
+        return -1;
+    }
+
+    // with only IOBlock children, remove them all
+    if (_vecIDShared.size() == count)
+    {
+        if (controller.setObjectProperty(parent, CHILDREN, std::vector<ScicosID>()) == FAIL)
+        {
+            return -1;
+        }
+        // delete
+        for (size_t i = 0; i < _vecIDShared.size(); ++i)
+        {
+            controller.deleteObject(_vecIDShared[i]);
+        }
+
+        return 2;
+    }
+
+    return 1;
+}
+
+// assign port indexes
+void SSPResource::assignOutterPortIndexes(model::BaseObject* parent)
+{
+    std::vector<Reference*> ports[] = {{}, {}, {}, {}, {}};
+
+    auto& r_layer = references.back();
+
+    // look for all Component's connectors (or System's outter ports)
+    for (auto it = std::find_if(r_layer.begin(), r_layer.end(), [parent](const Reference& r)
+                                { return r.block == parent; });
+         it != r_layer.end() && it->block == parent;
+         it++)
+    {
+        int kind = it->kind;
+        if (it->kind == PORT_UNDEF)
+        {
+            controller.getObjectProperty(it->port, PORT_KIND, kind);
+        }
+        ports[(portKind) kind].push_back(&*it);
+    }
+
+    // sort per reference position
+    for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
+    {
+        std::stable_sort(ports[(portKind)kind].begin(), ports[(portKind)kind].end(), [](Reference* a, Reference* b){
+            if (std::fabs(a->x - b->x) <= std::numeric_limits<double>::epsilon())
+                return a->y > b->y;
+            return a->x < b->x;
+        });
     }
 
     for (portKind kind : {PORT_IN, PORT_OUT, PORT_EIN, PORT_EOUT})
@@ -2577,344 +3097,407 @@ void SSPResource::assignPortIndexes(model::BaseObject* parent)
         // compute the port number
         if (!ports[(portKind)kind].empty()) // layer or Component have outter ports
         {
-            std::vector<ScicosID> portsID;
-            portsID.reserve(ports[(portKind)kind].size());
+            _vecIDShared.clear();
+            _vecIDShared.reserve(ports[(portKind)kind].size());
             for (const Reference* r : ports[(portKind)kind])
             {
-                portsID.push_back(r->port->id());
+                _vecIDShared.push_back(r->port->id());
             }
-            controller.setObjectProperty(parent, p, portsID);
-        }
-
-        // layer computes its port number from its already decoded children
-        for (int i = 0; i < ioBlocks[(portKind)kind].size(); ++i)
-        {
-            model::BaseObject* innerBlock = ioBlocks[(portKind)kind][i]->block;
-            int index = i + 1;
-
-            if (parent->kind() == DIAGRAM)
-            {
-                // on an SSPInputConnector or SSPOutputConnector
-                std::vector<std::string> exprs;
-                if (kind == PORT_IN)
-                {
-                    exprs = { ioBlocks[(portKind)kind][i]->connector, "256"};
-                }
-                else
-                {
-                    exprs = { ioBlocks[(portKind)kind][i]->connector};
-                }
-                
-                controller.setObjectProperty(innerBlock, EXPRS, exprs);
-                std::vector<int> ipar = { 1 };
-                controller.setObjectProperty(innerBlock, IPAR, ipar);
-            }
-            else
-            {
-                // on a subsystem input/output
-                std::vector<int> ipar = {(int)index};
-                controller.setObjectProperty(innerBlock, IPAR, index);
-                controller.setObjectProperty(innerBlock, EXPRS, std::to_string(index));
-            }
+            controller.setObjectProperty(parent, p, _vecIDShared);
         }
     }
 }
 
-int SSPResource::processElement(xmlTextReaderPtr reader)
+int SSPResource::processElement(xmlTextReaderPtr reader, const xmlChar* nsURI)
 {
     const xmlChar* name = xmlTextReaderConstLocalName(reader);
-    const char* kind_str[] = {
-        "BLOCK",
-        "DIAGRAM",
-        "LINK",
-        "ANNOTATION",
-        "PORT"};
 
-    // ignore elements within annotation
-    if (annotated)
-    {
-        return 1;
-    }
-
-    // verbose for debugging
-//#ifndef NDEBUG
-//    xmlNodePtr curNode = xmlTextReaderCurrentNode(reader);
-//    int line = xmlGetLineNo(curNode);
-//    sciprint("parsing line %d\n", line);
-//#endif
+    auto logger = get_or_allocate_logger();
+    logger->log(LOG_DEBUG, [&](std::stringstream &msg) {
+        msg << "processed depth is ";
+        if (processed.size() > 0)
+        {
+            msg << "( " << logger->id(processed[0]) << " , " << processed[0]->kind() << " )";
+        }
+        for (int i = 1; i < processed.size(); i++)
+        {
+            msg << ",  ";
+            msg << "( " << logger->id(processed[i]) << " , " << processed[i]->kind() << " )";
+        }
+        msg << "\n";
+    });
 
     // lookup for known node names
     // thanks to the string intern-ing, the pointer comparison could be used
-    auto found = std::find(constXcosNames.begin(), constXcosNames.end(), name);
-    if (found == constXcosNames.end())
+    auto found = std::find(readerConstInterned.begin(), readerConstInterned.end(), name);
+    if (found == readerConstInterned.end())
     {
         sciprint("Unknown \"%s\" element name\n", name);
         return -1;
     }
-    enum xcosNames current = static_cast<enum xcosNames>(std::distance(constXcosNames.begin(), found));
-    switch (current)
+    enum xcosNames current = static_cast<enum xcosNames>(std::distance(readerConstInterned.begin(), found));
+    if (nsURI == xmlnsXCOS)
     {
-        case e_SystemStructureDescription:
-        {
-            // the root diagram should be decoded
-            model::BaseObject* o = controller.getBaseObject(root);
-            processed = {o};
+        model::BaseObject* component = processed.back();
 
-            return loadSystemStructureDescription(reader, o);
-        }
-        case e_DefaultExperiment:
+        switch (current)
         {
-            return loadDefaultExperiment(reader, processed.back());
-        }
-        case e_System:
-        {
-            if (processed.size() == 1)
+            case e_color:
+                return loadComponentObjectProperty(reader, component, COLOR, e_color, _vecIntShared);
+            case e_context:
+                return loadComponentObjectProperty(reader, component, DIAGRAM_CONTEXT, e_context, _vecStrShared);
+            case e_control_points:
+                return loadComponentObjectProperty(reader, component, CONTROL_POINTS, e_control_points, _vecDblShared);
+            case e_datatype:
+                return loadComponentObjectProperty(reader, component, DATATYPE, e_datatype, _vecIntShared);
+            case e_debug_level:
+                _vecIntShared.resize(1);
+                return loadComponentObjectProperty(reader, component, DEBUG_LEVEL, e_debug_level, _vecIntShared[0]);
+            case e_description:
+                return loadComponentObjectProperty(reader, component, DESCRIPTION, e_description, _strShared);
+            case e_dstate:
+                return loadComponentObjectProperty(reader, component, DSTATE, e_dstate, _vecDblShared);
+            case e_equations:
+                return loadComponentObjectProperty(reader, component, EQUATIONS, e_equations, _vecDblShared);
+            case e_exprs:
+                return loadComponentObjectProperty(reader, component, EXPRS, e_exprs, _vecDblShared);
+            case e_firing:
+                _vecDblShared.resize(1);
+                return loadComponentObjectProperty(reader, component, FIRING, e_firing, _vecDblShared[0]);
+            case e_font:
+                return loadComponentObjectProperty(reader, component, FONT, e_font, _strShared);
+            case e_font_size:
+                return loadComponentObjectProperty(reader, component, FONT_SIZE, e_font_size, _strShared);
+            case e_geometry:
+                return loadGeometry(reader, processed.back());
+            case e_implicit:
             {
-                // this is the main diagram, resolve it
-                processed.push_back(processed.back());
+                bool implicit = false;
+                return loadComponentObjectProperty(reader, component, IMPLICIT, e_implicit, implicit);
             }
-            else
+            case e_interface_function:
+                return loadComponentObjectProperty(reader, component, INTERFACE_FUNCTION, e_interface_function, _strShared);
+            case e_ipar:
+                return loadComponentObjectProperty(reader, component, IPAR, e_ipar, _vecIntShared);
+            case e_kind:
+                _vecIntShared.resize(1);
+                switch (component->kind())
+                {
+                    case PORT:
+                        return loadComponentObjectProperty(reader, component, PORT_KIND, e_kind, _vecIntShared[0]);
+                    case LINK:
+                        return loadComponentObjectProperty(reader, component, KIND, e_kind, _vecIntShared[0]);
+                    default:
+                        return -1;
+                }
+                break;
+            case e_label:
             {
-                // this is a child of a diagram, create it
-                model::BaseObject* parent = processed.back();
-                model::BaseObject* o = controller.createBaseObject(BLOCK);
-                processed.push_back(o);
+                model::BaseObject* o = controller.createBaseObject(ANNOTATION);
+                if (controller.setObjectProperty(component, LABEL, o->id()) == FAIL)
+                {
+                    return -1;
+                }
+                // TODO store it for decoding its values later, maybe on processed.back()
+                processed_push(reader, o);
+                return 1;
+            }
+            case e_name:
+                return loadComponentObjectProperty(reader, component, NAME, e_name, _strShared);
+            case e_nmode:
+                return loadComponentObjectProperty(reader, component, NMODE, e_nmode, _vecIntShared);
+            case e_nzcross:
+                return loadComponentObjectProperty(reader, component, NZCROSS, e_nzcross, _vecIntShared);
+            case e_odstate:
+                return loadComponentObjectProperty(reader, component, ODSTATE, e_odstate, _vecDblShared);
+            case e_opar:
+                return loadComponentObjectProperty(reader, component, OPAR, e_opar, _vecDblShared);
+            case e_path:
+                return loadComponentObjectProperty(reader, component, PATH, e_path, _strShared);
+            case e_properties:
+                return loadComponentObjectProperty(reader, component, PROPERTIES, e_properties, _vecDblShared);
+            case e_rpar:
+                return loadComponentObjectProperty(reader, component, RPAR, e_rpar, _vecDblShared);
+            case e_sim_blocktype:
+                return loadComponentObjectProperty(reader, component, SIM_BLOCKTYPE, e_sim_blocktype, _strShared);
+            case e_sim_dep_ut:
+                return loadComponentObjectProperty(reader, component, SIM_DEP_UT, e_sim_dep_ut, _vecIntShared);
+            case e_sim_function_api:
+                _vecIntShared.resize(1);
+                return loadComponentObjectProperty(reader, component, SIM_FUNCTION_API, e_sim_function_api, _vecIntShared[0]);
+            case e_sim_function_name:
+                return loadComponentObjectProperty(reader, component, SIM_FUNCTION_NAME, e_sim_function_name, _strShared);
+            case e_state:
+                return loadComponentObjectProperty(reader, component, STATE, e_state, _vecDblShared);
+            case e_style:
+                return loadComponentObjectProperty(reader, component, STYLE, e_style, _strShared);
+            case e_thick:
+                return loadComponentObjectProperty(reader, component, THICK, e_thick, _vecDblShared);
+            case e_uid:
+                return loadComponentObjectProperty(reader, component, UID, e_uid, _strShared);
+            case e_version:
+                return loadComponentObjectProperty(reader, component, VERSION_NUMBER, e_version, _strShared);
 
-                // assign the child
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
+        }
+    }
+    else if (nsURI == xmlnsSSC)
+    {
+        switch (current)
+        {
+            case e_Real:
+                return loadReal(reader, processed.back(), current);
+            case e_Float64:
+                return loadReal(reader, processed.back(), current);
+            case e_Float32:
+                return loadReal(reader, processed.back(), current);
+            case e_Integer:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int8:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt8:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int16:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt16:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int32:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt32:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int64:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt64:
+                return loadInteger(reader, processed.back(), current);
+            case e_Boolean:
+                return loadBoolean(reader, processed.back());
+            case e_String:
+                return loadString(reader, processed.back());
+            case e_Enumeration:
+                return loadEnumeration(reader, processed.back());
+            case e_Binary:
+                return loadBinary(reader, processed.back());
+            case e_Dimension:
+                return loadDimension(reader, processed.back());
+            case e_Clock:
+                return loadClock(reader, processed.back());
+            case e_Unit:
+                processed_push(reader);
+                return loadUnit(reader, processed.back());
+            case e_BaseUnit:
+                return loadBaseUnit(reader, processed.back());
+            case e_Annotation:
+                processed_push(reader);
+                return loadAnnotation(reader, processed.back());
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
+        }
+    }
+    else if (nsURI == xmlnsSSB)
+    {
+        switch (current)
+        {
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
+        }
+    }
+    else if (nsURI == xmlnsSSD)
+    {
+        switch (current)
+        {
+            case e_SystemStructureDescription:
+            {
+                // the root diagram should be decoded
+                model::BaseObject* o = controller.getBaseObject(root);
+                processed = {o};
+
+                return loadSystemStructureDescription(reader, o);
+            }
+            case e_DefaultExperiment:
+            {
+                return loadDefaultExperiment(reader, processed.back());
+            }
+            case e_System:
+            {
+                if (processed.size() == 1)
+                {
+                    // this is the main diagram, resolve it
+                    processed_push(reader);
+                }
+                else
+                {
+                    // this is a child of a diagram, create it
+                    model::BaseObject* parent = processed.back();
+                    model::BaseObject* o = controller.createBaseObject(BLOCK);
+                    processed_push(reader, o);
+
+                    // assign the child
+                    controller.setObjectProperty(o, PARENT_DIAGRAM, root);
+                    if (parent->kind() == BLOCK)
+                    {
+                        controller.setObjectProperty(o, PARENT_BLOCK, parent->id());
+                    }
+                    controller.getObjectProperty(parent, CHILDREN, _vecIDShared);
+                    _vecIDShared.push_back(o->id());
+                    controller.setObjectProperty(parent, CHILDREN, _vecIDShared);
+
+                    controller.setObjectProperty(o, INTERFACE_FUNCTION, std::string("SUPER_f"));
+                }
+                references.emplace_back();
+                bounds.emplace_back();
+                return loadSystem(reader, processed.back());
+            }
+            case e_Connectors:
+                processed_push(reader);
+                break;
+            case e_Connector:
+                return loadConnector(reader, processed.back());
+            case e_SystemGeometry:
+                // SystemGeometry is used to relocate connectors with absolute coordinates
+                return loadSystemGeometry(reader, processed.back());
+            case e_ElementGeometry:
+                return loadElementGeometry(reader, processed.back());
+            case e_ConnectorGeometry:
+                return loadConnectorGeometry(reader, processed.back());
+            case e_ConnectionGeometry:
+                // geometry is used for rectangle coordinates of its parent
+                return loadConnectionGeometry(reader, processed.back());
+            case e_Connections:
+                processed_push(reader);
+                break;
+            case e_Connection:
+                return loadConnection(reader, processed.back());
+            case e_ParameterBindings:
+                processed_push(reader);
+                break;
+            case e_ParameterBinding:
+                processed_push(reader);
+                break;
+            case e_ParameterValues:
+                processed_push(reader);
+                break;
+            case e_Elements:
+                processed_push(reader);
+                break;
+            case e_Component:
+            {
+                model::BaseObject* o = controller.createBaseObject(BLOCK);
+                model::BaseObject* parent = processed.back();
+                processed_push(reader, o);
+
                 controller.setObjectProperty(o, PARENT_DIAGRAM, root);
                 if (parent->kind() == BLOCK)
                 {
                     controller.setObjectProperty(o, PARENT_BLOCK, parent->id());
                 }
-                std::vector<ScicosID> children;
-                controller.getObjectProperty(parent, CHILDREN, children);
-                children.push_back(o->id());
-                controller.setObjectProperty(parent, CHILDREN, children);
+                controller.getObjectProperty(parent, CHILDREN, _vecIDShared);
+                _vecIDShared.push_back(o->id());
+                controller.setObjectProperty(parent, CHILDREN, _vecIDShared);
 
-                controller.setObjectProperty(o, INTERFACE_FUNCTION, std::string("SUPER_f"));
+                references.emplace_back();
+                return loadComponent(reader, o);
             }
-            return loadSystem(reader, processed.back());
-        }
-        case e_Connectors:
-            processed.push_back(processed.back());
-            break;
-        case e_Connector:
-        {
-            int ret;
-            model::BaseObject* innerBlock = nullptr;
-            model::BaseObject* innerPort = nullptr;
-            model::BaseObject* outterPort = nullptr;
-            model::BaseObject* port = nullptr;
-            model::BaseObject* parent = processed.back();
-
-            bool isMainDiagram = parent->kind() == DIAGRAM;
-            bool isLayer;
+            case e_GraphicalElements:
+                processed_push(reader);
+                break;
+            case e_Note:
             {
-                std::string interfaceFunction;
-                controller.getObjectProperty(parent, INTERFACE_FUNCTION, interfaceFunction);
-                isLayer = interfaceFunction == "SUPER_f";
-            }
+                model::BaseObject* o = controller.createBaseObject(ANNOTATION);
+                model::BaseObject* parent = processed.back();
+                processed_push(reader, o);
 
-            if (isLayer)
-            {
-                innerBlock = controller.createBaseObject(BLOCK);
-                controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
-                controller.setObjectProperty(innerBlock, PARENT_BLOCK, parent->id());
-                innerPort = controller.createBaseObject(PORT);
-                controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
-
-                std::vector<ScicosID> children;
-                controller.getObjectProperty(parent, CHILDREN, children);
-                children.push_back(innerBlock->id());
-                controller.setObjectProperty(parent, CHILDREN, children);
-
-                outterPort = controller.createBaseObject(PORT);
-                controller.setObjectProperty(outterPort, SOURCE_BLOCK, parent);
-
-                references.emplace_back(Reference{"", "", 0, 0, parent, outterPort});
-                references.emplace_back(Reference{"", "", 0, 0, innerBlock, innerPort});
-
-                processed.push_back(outterPort);
-                port = outterPort;
-            }
-            else if (isMainDiagram)
-            {
-                innerBlock = controller.createBaseObject(BLOCK);
-                controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
-                innerPort = controller.createBaseObject(PORT);
-                controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
-
-                std::vector<ScicosID> children;
-                controller.getObjectProperty(parent, CHILDREN, children);
-                children.push_back(innerBlock->id());
-                controller.setObjectProperty(parent, CHILDREN, children);
-
-                references.emplace_back(Reference{"", "", 0, 0, innerBlock, innerPort});
-
-                processed.push_back(innerPort);
-                port = innerPort;
-            }
-            else // a regular FMU block
-            {
-                outterPort = controller.createBaseObject(PORT);
-                controller.setObjectProperty(outterPort, SOURCE_BLOCK, parent);
-
-                std::string parentName;
-                controller.getObjectProperty(parent, NAME, parentName);
-
-                references.emplace_back(Reference{parentName, "", 0, 0, parent, outterPort});
-
-                processed.push_back(outterPort);
-                port = outterPort;
-            }
-
-            ret = loadConnector(reader, port);
-            if (ret != 1)
-            {
-                sciprint("unable to set Connector\n");
-                return ret;
-            }
-
-            enum portKind kind;
-            controller.getObjectProperty(port, PORT_KIND, (int&)kind);
-            bool isImplicit;
-            controller.getObjectProperty(port, IMPLICIT, isImplicit);
-
-            const enum portKind opposite[] = {PORT_UNDEF, PORT_OUT, PORT_IN, PORT_EOUT, PORT_EIN};
-            if (innerPort != nullptr && innerPort != port)
-            {
-                // sync port information to the inner block
-                copy_property<bool>(port, innerPort, IMPLICIT);
-                if (controller.setObjectProperty(innerPort, PORT_KIND, opposite[kind]) == FAIL)
+                controller.setObjectProperty(o, PARENT_DIAGRAM, root);
+                if (parent->kind() == BLOCK)
                 {
-                    sciprint("unable to set Connector on innerPort\n");
-                    return -1;
+                    controller.setObjectProperty(o, PARENT_BLOCK, parent->id());
                 }
+                controller.getObjectProperty(parent, CHILDREN, _vecIDShared);
+                _vecIDShared.push_back(o->id());
+                controller.setObjectProperty(parent, CHILDREN, _vecIDShared);
+
+                return loadNote(reader, o);
             }
+            case e_Annotations:
+                processed_push(reader);
+                break;
+            case e_Units:
+                processed_push(reader);
+                break;
 
-            // set innerBlock data
-            if (innerBlock != nullptr)
-            {
-                portKind innerKind = opposite[kind];
-                std::vector<ScicosID> ports = {innerPort->id()};
-                controller.setObjectProperty(innerBlock, property_from_port(innerKind), ports);
-
-                // this is the connector block, loaded as I/O block inside the inner layer
-                copy_property<std::string>(port, innerBlock, NAME);
-                copy_property<std::string>(port, innerBlock, DESCRIPTION);
-
-                controller.setObjectProperty(innerBlock, INTERFACE_FUNCTION, interface_function(innerKind, isImplicit, isMainDiagram));
-                controller.setObjectProperty(innerBlock, SIM_FUNCTION_NAME, simulation_function(innerKind, isImplicit, isMainDiagram));
-                controller.setObjectProperty(innerBlock, STYLE, interface_function(innerKind, isImplicit, isMainDiagram));
-            }
-
-            // refresh the outter connector to connect it later
-            if (isLayer)
-            {
-                std::string portName;
-                controller.getObjectProperty(outterPort, NAME, portName);
-                std::string layerName;
-                controller.getObjectProperty(parent, NAME, layerName);
-                std::vector<Reference>::reverse_iterator outter = references.rbegin() + 1;
-                outter->element = layerName;
-                outter->connector = portName;
-            }
-
-            return ret;
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
         }
-        case e_Real:
-            return loadReal(reader, processed.back());
-        case e_Integer:
-            return loadInteger(reader, processed.back());
-        case e_Boolean:
-            return loadBoolean(reader, processed.back());
-        case e_String:
-            return loadString(reader, processed.back());
-        case e_Enumeration:
-            return loadEnumeration(reader, processed.back());
-        case e_Binary:
-            return loadBinary(reader, processed.back());
-        case e_SystemGeometry:
-            // SystemGeometry is used to relocate connectors with absolute coordinates
-            return loadSystemGeometry(reader, processed.back());
-        case e_ElementGeometry:
-            return loadElementGeometry(reader, processed.back());
-        case e_ConnectorGeometry:
-            return loadConnectorGeometry(reader, processed.back());
-        case e_ConnectionGeometry:
-            // geometry is used for rectangle coordinates of its parent
-            return loadConnectionGeometry(reader, processed.back());
-        case e_Connections:
-            processed.push_back(processed.back());
-            break;
-        case e_Connection:
-            return loadConnection(reader, processed.back());
-        case e_Units:
-            processed.push_back(processed.back());
-            break;
-        case e_Unit:
-            processed.push_back(processed.back());
-            return loadUnit(reader, processed.back());
-        case e_BaseUnit:
-            return loadBaseUnit(reader, processed.back());
-        case e_Annotations:
-            processed.push_back(processed.back());
-            break;
-        case e_ParameterBindings:
-            processed.push_back(processed.back());
-            break;
-        case e_ParameterBinding:
-            processed.push_back(processed.back());
-            break;
-        case e_ParameterValues:
-            processed.push_back(processed.back());
-            break;
-        case e_ParameterSet:
-            processed.push_back(processed.back());
-            return loadParameterSet(reader, processed.back());
-        case e_Parameters:
-            // store into processed if there is children
-            if (!xmlTextReaderIsEmptyElement(reader))
-            {
-                processed.push_back(processed.back());
-            }
-            break;
-        case e_Parameter:
-            processed.push_back(processed.back());
-            return loadParameter(reader, processed.back());
-        case e_Annotation:
-            return loadAnnotation(reader, processed.back());
-        case e_Elements:
-            processed.push_back(processed.back());
-            break;
-        case e_Component:
+    }
+    else if (nsURI == xmlnsSSV)
+    {
+        switch (current)
         {
-            model::BaseObject* o = controller.createBaseObject(BLOCK);
-            model::BaseObject* parent = processed.back();
-            processed.push_back(o);
-
-            controller.setObjectProperty(o, PARENT_DIAGRAM, root);
-            if (parent->kind() == BLOCK)
-            {
-                controller.setObjectProperty(o, PARENT_BLOCK, parent->id());
-            }
-            std::vector<ScicosID> children;
-            controller.getObjectProperty(parent, CHILDREN, children);
-            children.push_back(o->id());
-            controller.setObjectProperty(parent, CHILDREN, children);
-
-            return loadComponent(reader, o);
+            case e_ParameterSet:
+                processed_push(reader);
+                return loadParameterSet(reader, processed.back());
+            case e_Parameters:
+                // store into processed if there is children
+                if (!xmlTextReaderIsEmptyElement(reader))
+                {
+                    processed_push(reader);
+                }
+                break;
+            case e_Parameter:
+                processed_push(reader);
+                return loadParameter(reader, processed.back());
+            case e_Units: // ssv:Units is in the demo file, in the 2.0 spec should be ssc:Units
+                processed_push(reader);
+                break;
+            case e_Real:
+                return loadReal(reader, processed.back(), current);
+            case e_Float64:
+                return loadReal(reader, processed.back(), current);
+            case e_Float32:
+                return loadReal(reader, processed.back(), current);
+            case e_Integer:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int8:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt8:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int16:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt16:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int32:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt32:
+                return loadInteger(reader, processed.back(), current);
+            case e_Int64:
+                return loadInteger(reader, processed.back(), current);
+            case e_UInt64:
+                return loadInteger(reader, processed.back(), current);
+            case e_Boolean:
+                return loadBoolean(reader, processed.back());
+            case e_String:
+                return loadString(reader, processed.back());
+            case e_Enumeration:
+                return loadEnumeration(reader, processed.back());
+            case e_Binary:
+                return loadBinary(reader, processed.back());
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
         }
-
-        default:
-            // ignore annotations
-            if (annotated)
-            {
-                return 1;
-            }
-
-            sciprint("Unknown \"%s\" element name\n", name);
-            return -1;
+    }
+    else if (nsURI == xmlnsSSM)
+    {
+        switch (current)
+        {
+            default:
+                sciprint("Unknown \"%s\" element name on namespace %s\n", name, nsURI);
+                return -1;
+        }
     }
 
     return 1;
@@ -2923,8 +3506,10 @@ int SSPResource::processElement(xmlTextReaderPtr reader)
 int SSPResource::processText(xmlTextReaderPtr reader)
 {
     int ret;
+    const xmlChar* name = xmlTextReaderConstLocalName(reader);
+    const xmlChar* value = xmlTextReaderValue(reader);
 
-    sciprint("Unable to decode text value\n");
+    sciprint("Unable to decode text value %s at node %s.\n", value, name);
     ret = -1;
 
     return ret;
@@ -2932,43 +3517,75 @@ int SSPResource::processText(xmlTextReaderPtr reader)
 
 int SSPResource::processEndElement(xmlTextReaderPtr reader)
 {
+    const xmlChar* xmlns = xmlTextReaderConstNamespaceUri(reader);
     const xmlChar* name = xmlTextReaderConstLocalName(reader);
-    const char* kind_str[] = {
-        "BLOCK",
-        "DIAGRAM",
-        "LINK",
-        "ANNOTATION",
-        "PORT"};
     
-    // ignore annotations
-    if (annotated)
+    model::BaseObject* o = processed.back();
+
+    // verbose for debugging
+    auto logger = get_or_allocate_logger();
+    if (logger->getLevel() <= LOG_DEBUG)
     {
-        annotated = false;
-        return 1;
+        int line = xmlGetLineNo(xmlTextReaderCurrentNode(reader));
+        logger->log(LOG_DEBUG, "end element %s line %d\n", name, line);
     }
 
-    // on System (eg. layer) ending, clear all references
-    if (xmlStrEqual(name, (const xmlChar*)"System"))
+    if (annotated && xmlns == xmlnsSSC && name == readerConstInterned[e_Annotation])
     {
-        // drop the Component ports
-        while (!references.empty() && references.back().element != "")
+        annotated = false;
+    }
+    else if (xmlns == xmlnsSSD && name == readerConstInterned[e_System])
+    {
+        // on System (eg. layer) ending
+
+        // update geometries
+        updateSystem(o);
+
+        // reorder and assign I/O Blocks indexes
+        assignInnerPortIndexes(o);
+
+        // clear layer stored values
+        references.pop_back();
+        bounds.pop_back();
+
+        // assign outter port indexes
+        if (o->kind() == BLOCK)
         {
-            references.pop_back();
+            assignOutterPortIndexes(o);
         }
-        // drop the IOBlockss
+    }
+    else if (xmlns == xmlnsSSD && name == readerConstInterned[e_Component])
+    {
+        // on Component ending
+
+        // cleanup I/O blocks children if not implemented as a system
+        // DSUPER is a special case, it is a compiled superblock
+        if (!controller.getObjectProperty(o, INTERFACE_FUNCTION, _strShared))
         {
-            // look for the end of the layer
-            std::vector<Reference>::reverse_iterator ioBlock = references.rbegin();
-            std::vector<Reference>::reverse_iterator outter = ioBlock + 1;
-            while (outter != references.rend() && outter->connector == ioBlock->connector)
-            {
-                ioBlock += 2;
-                outter += 2;
-            }
-            // erase all IOBlocks
-            references.erase(std::remove_if(ioBlock.base(), references.end(), [](const Reference& r) { return r.element == ""; }), references.end());
+            return -1;
         }
 
+        int status = 1;
+        if (_strShared != "DSUPER")
+        {
+            status = removeUnusedIOBlocks(o);
+            if (status < 0)
+            {
+                return status;
+            }
+        }
+        // if the CHILDREN are used, setup I/O block
+        if (status != 2)
+        {    
+            // reorder and assign I/O Blocks indexes
+            assignInnerPortIndexes(o);
+        }
+
+        // remove temporaries
+        references.pop_back();
+
+        // assign port indexes
+        assignOutterPortIndexes(o);
     }
 
     processed.pop_back();

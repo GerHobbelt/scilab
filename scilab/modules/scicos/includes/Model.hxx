@@ -60,22 +60,27 @@ public:
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, bool& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::string& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, ScicosID& v) const;
+    bool getObjectProperty(model::BaseObject* object, object_properties_t p, model::BaseObject*& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<double>& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<int>& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<bool>& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector< std::string >& v) const;
     bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<ScicosID>& v) const;
+    bool getObjectProperty(model::BaseObject* object, object_properties_t p, std::vector<model::BaseObject*>& v) const;
 
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, double v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, int v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, bool v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, ScicosID v);
+    update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, model::BaseObject* v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, std::string v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<double>& v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<int>& v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<bool>& v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector< std::string >& v);
     update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<ScicosID>& v);
+    update_status_t setObjectProperty(model::BaseObject* object, object_properties_t p, const std::vector<model::BaseObject*>& v);
+    
     /*
      * Model custom methods
      */
@@ -97,7 +102,7 @@ public:
         allObjects.reserve(count);
     }
 
-    model::Datatype* flyweight(const model::Datatype& d);
+    model::Datatype* flyweight(model::Datatype&& d);
     void erase(model::Datatype* d);
 
 private:

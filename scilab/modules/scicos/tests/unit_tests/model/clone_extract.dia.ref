@@ -75,7 +75,7 @@ Xcos trace:   propertyUpdated( 6 , DIAGRAM , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PATH ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PROPERTIES ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , DIAGRAM , PROPERTIES ) : NO_CHANGES
-Xcos trace:   propertyUpdated( 6 , DIAGRAM , CONTEXT ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 6 , DIAGRAM , DIAGRAM_CONTEXT ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 6 , DIAGRAM ) : 0
 Xcos trace:   objectReferenced( 1 , BLOCK ) : 1
 Xcos debug:   propertyUpdated( 1 , BLOCK , PARENT_DIAGRAM ) : SUCCESS
@@ -102,10 +102,12 @@ Xcos info:    objectCloned( 5 , 7 , LINK )
 Xcos trace:   propertyUpdated( 7 , LINK , COLOR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , KIND ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , DESCRIPTION ) : NO_CHANGES
-Xcos trace:   propertyUpdated( 7 , LINK , UID ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , STYLE ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , LINK , UID ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , CONTROL_POINTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , THICK ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , LINK , COLOR ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 7 , LINK , SSP_ANNOTATION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , PARENT_DIAGRAM ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , PARENT_BLOCK ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , LINK , SOURCE_PORT ) : NO_CHANGES
@@ -128,26 +130,35 @@ Xcos trace:   objectUnreferenced( 5 , LINK ) : 0
 assert_checkequal(newLink.from, [3 1 0]);
 // Check that all the model items are freed
 clear
+Xcos trace:   propertyUpdated( 7 , LINK , LABEL ) : NO_CHANGES
 Xcos info:    objectDeleted( 7 , LINK )
 Xcos debug:   propertyUpdated( 1 , BLOCK , PARENT_DIAGRAM ) : SUCCESS
 Xcos debug:   propertyUpdated( 5 , LINK , PARENT_DIAGRAM ) : SUCCESS
+Xcos debug:   propertyUpdated( 6 , DIAGRAM , CHILDREN ) : SUCCESS
+Xcos trace:   propertyUpdated( 1 , BLOCK , LABEL ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 1 , BLOCK , INPUTS ) : SUCCESS
+Xcos trace:   propertyUpdated( 1 , BLOCK , INPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , OUTPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 5 , LINK , DESTINATION_PORT ) : SUCCESS
 Xcos info:    objectDeleted( 2 , PORT )
-Xcos debug:   propertyUpdated( 1 , BLOCK , INPUTS ) : SUCCESS
+Xcos trace:   propertyUpdated( 1 , BLOCK , INPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , OUTPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
 Xcos info:    objectDeleted( 3 , PORT )
-Xcos trace:   propertyUpdated( 1 , BLOCK , INPUTS ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 1 , BLOCK , OUTPUTS ) : SUCCESS
+Xcos trace:   propertyUpdated( 1 , BLOCK , INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 1 , BLOCK , OUTPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 5 , LINK , SOURCE_PORT ) : SUCCESS
 Xcos info:    objectDeleted( 4 , PORT )
+Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 1 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 1 , BLOCK , CHILDREN ) : NO_CHANGES
 Xcos info:    objectDeleted( 1 , BLOCK )
+Xcos trace:   propertyUpdated( 5 , LINK , LABEL ) : NO_CHANGES
 Xcos info:    objectDeleted( 5 , LINK )
 Xcos info:    objectDeleted( 6 , DIAGRAM )

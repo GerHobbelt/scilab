@@ -12,7 +12,7 @@
  */
 
 #include "XMIResource.hxx"
-#include "base64.hxx"
+#include "scicos_base64.hxx"
 
 #include <string>
 #include <sstream>

@@ -319,6 +319,7 @@ void Controller::deleteVector(model::BaseObject* initial, object_properties_t ui
 {
     std::vector<ScicosID> children;
     getObjectProperty(initial, uid_prop, children);
+    setObjectProperty(initial, uid_prop, std::vector<ScicosID>());
 
     for (ScicosID id : children)
     {
@@ -330,6 +331,7 @@ void Controller::deleteOwnedReference(model::BaseObject* o, object_properties_t 
 {
     ScicosID ref;
     getObjectProperty(o, uid_prop, ref);
+    setObjectProperty(o, uid_prop, ScicosID());
 
     deleteObject(ref);
 }
@@ -520,8 +522,7 @@ std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObje
             {
                 if (id != ScicosID())
                 {
-                    model::BaseObject *clone =
-                        cloneBaseObject(mapped, opposite, true, true);
+                    model::BaseObject *clone = cloneBaseObject(mapped, opposite, true, true);
                     cloned.push_back(clone->id());
                 }
                 else

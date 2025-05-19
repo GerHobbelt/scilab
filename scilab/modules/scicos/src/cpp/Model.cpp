@@ -221,12 +221,12 @@ model::BaseObject* Model::getObject(ScicosID uid) const
 }
 
 // datatypes being a vector of Datatype pointers, we need a dereferencing comparison operator to use std::lower_bound()
-static bool isInferior(const model::Datatype* d1, const model::Datatype* d2)
+static inline bool isInferior(const model::Datatype* d1, const model::Datatype* d2)
 {
     return *d1 < *d2;
 }
 
-model::Datatype* Model::flyweight(const model::Datatype& d)
+model::Datatype* Model::flyweight(model::Datatype&& d)
 {
     datatypes_set_t::iterator iter = std::lower_bound(datatypes.begin(), datatypes.end(), &d, isInferior);
     if (iter != datatypes.end() && !(d < **iter)) // if d is found
