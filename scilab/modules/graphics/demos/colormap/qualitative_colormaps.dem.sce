@@ -18,7 +18,9 @@ function demo_qualitative_colormaps()
     M(:) = 1:size(M, '*');
     M = M'
 
-    f=scf();
+    f=scf(100001);
+    clf(f, "reset");
+    demo_viewCode("qualitative_colormaps.dem.sce");
     f.figure_name = _("Qualitative colormaps");
     Matplot(M)
     f.color_map = cmap;

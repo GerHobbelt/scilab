@@ -21,7 +21,9 @@ function demo_new_colormaps()
     M(:) = 1:size(M, '*');
     M = M'
 
-    f=scf();
+    f=scf(100001);
+    clf(f, "reset");
+    demo_viewCode("additional_colormaps.dem.sce");
     f.figure_name = _("Additional colormaps");
     Matplot(M)
     f.color_map = cmap;

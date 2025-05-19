@@ -19,7 +19,9 @@ function demo_scilab_colormaps()
     M(:) = 1:size(M, '*');
     M = M'
 
-    f=scf();
+    f=scf(100001);
+    clf(f, "reset");
+    demo_viewCode("scilab_colormaps.dem.sce");
     f.figure_name = _("Scilab colormaps");
     Matplot(M)
     f.color_map = cmap;
