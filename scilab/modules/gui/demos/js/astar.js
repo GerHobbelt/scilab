@@ -169,6 +169,11 @@ function redraw() {
     let w = $(".center").width();
     let h = $(".center").height();
 
+    let startX = parseInt($("#startx").val());
+    let startY = parseInt($("#starty").val());
+    let finishX = parseInt($("#finishx").val());
+    let finishY = parseInt($("#finishy").val());
+
     // even value
     w += w % 2;
     h += h % 2;
@@ -185,16 +190,16 @@ function redraw() {
     cellSize -= cellSize % 2 == 0 ? 1 : 0; //always odd
     let totalW = cellSize * cols + cols - 1;
     let totalH = cellSize * rows + rows - 1;
-    let startX = (w - totalW) / 2;
-    let startY = (h - totalH) / 2;
-    startX = Math.floor(startX);
-    startY = Math.floor(startY);
+    let pointX = (w - totalW) / 2;
+    let pointY = (h - totalH) / 2;
+    pointX = Math.floor(pointX);
+    pointY = Math.floor(pointY);
 
     //border
     ctx.beginPath();
     ctx.lineWidth = 1;
-    ctx.strokeStyle = "black";
-    drawRect(ctx, startX, startY, totalW, totalH);
+    ctx.strokeStyle = "#000000";
+    drawRect(ctx, pointX, pointY, totalW, totalH);
     ctx.stroke();
 
     //grid
@@ -204,33 +209,35 @@ function redraw() {
             let y = i * cellSize + 1;
             ctx.beginPath();
             ctx.lineWidth = 1;
-            ctx.strokeStyle = "black";
-            drawRect(ctx, x + startX + j - 1, y + startY + i - 1, cellSize, cellSize);
+            ctx.strokeStyle = "#FFFFFF";
+            drawRect(ctx, x + pointX + j - 1, y + pointY + i - 1, cellSize, cellSize);
             ctx.stroke();
 
-            if (costs[i][j] != 0) {
-                let cost = costs[i][j];
-                ctx.fillStyle = data.colors[cost-1];
-            } else {
+            let cost = costs[i][j];
+            if ((i == startX - 1 && j == startY - 1) || (i == finishX - 1 && j == finishY - 1)) {
+                ctx.fillStyle = "#ffffff";
+            } else if (cost == 0) {
                 ctx.fillStyle = "#000000";
+            } else {
+                ctx.fillStyle = data.colors[cost-1];
             }
 
-            ctx.fillRect(x + startX + j - 1, y + startY + i - 1, cellSize, cellSize)
+            ctx.fillRect(x + pointX + j - 1, y + pointY + i - 1, cellSize, cellSize)
 
             if (i == start[0] - 1 && j == start[1] - 1) {
-                drawImage(startX + x + cellSize / 2 + j, startY + y + cellSize / 2 + i, "start");
+                drawImage(pointX + x + cellSize / 2 + j, pointY + y + cellSize / 2 + i, "start");
             }
 
             if (i == finish[0] - 1 && j == finish[1] - 1) {
-                drawImage(startX + x + cellSize / 2 + j, startY + y + cellSize / 2 + i, "finish");
+                drawImage(pointX + x + cellSize / 2 + j, pointY + y + cellSize / 2 + i, "finish");
             }
         }
     }
 
     //save computed values
     $("#main").data("cellSize", cellSize);
-    $("#main").data("startX", startX);
-    $("#main").data("startY", startY);
+    $("#main").data("startX", pointX);
+    $("#main").data("startY", pointY);
 }
 
 function createGrid() {
@@ -393,7 +400,7 @@ function getContext() {
 function createRandom2D(rows, cols) {
     return Array.from({ length: rows }, () =>
         Array.from({ length: cols }, () =>
-            Math.floor(Math.random() * 5)  // entier aléatoire entre 0 et 7
+            Math.floor(Math.random() * 8)  // entier aléatoire entre 0 et 7
         )
     );
 }

@@ -21,12 +21,10 @@ function uicontrol_plot3dHTML()
     demo_plot3d.figure_id       = 100002;
     demo_plot3d.background      = -2;
     demo_plot3d.color_map       = jet(128);
-    demo_plot3d.figure_position = [0 0];
     demo_plot3d.figure_name     = gettext("Control Plot3d (HTML)");
     demo_plot3d.axes_size       = [900 450];
 
     fakeframe_height = 10;
-
 
     // New menu
     h = uimenu(demo_plot3d, ...
