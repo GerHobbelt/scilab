@@ -26,6 +26,9 @@
 #include <string>
 #include <string_view>
 #include <vector>
+#ifdef __APPLE__
+#include "fast_float/fast_float.h"
+#endif
 #ifdef max
 #undef max
 #endif // max
@@ -202,7 +205,11 @@ std::errc from_string(const std::string_view& str, T& result)
         return {};
     }
     // default implementation is provided by std::from_chars
+#ifdef __APPLE__
+    auto [ptr, ec] = fast_float::from_chars(str.data(), str.data() + str.size(), result);
+#else
     auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), result);
+#endif
     return ec;
 }
 
