@@ -597,7 +597,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
 
                     index = max_indexes[PORT_IN]++;
                     all_known.push_back({port, _vecStrShared[0], index, false});
-                    all_ports.push_back({PORT_IN, index, nullptr, port, o});
+                    all_ports.push_back({PORT_IN, index, port, nullptr, o});
                 }
                 else if (interfaceFunction == "CLKINV_f" || interfaceFunction == "CLKIN_f")
                 {
@@ -679,7 +679,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                         return Result::Error(o, EXPRS);
                     }
                     model::BaseObject* port;
-                    status = get_port(controller, o, INPUTS, port, 0);
+                    status = get_port(controller, o, INPUTS, port, 1);
                     if (status.error())
                     {
                         return status;
@@ -687,7 +687,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
 
                     index = max_indexes[PORT_OUT]++;
                     all_known.push_back({port, _vecStrShared[0], index, false});
-                    all_ports.push_back({PORT_OUT, index, nullptr, port, o});
+                    all_ports.push_back({PORT_OUT, index, port, nullptr, o});
                 }
                 else if (interfaceFunction == "CLKOUTV_f" || interfaceFunction == "CLKOUT_f")
                 {
@@ -849,6 +849,17 @@ SSPResource::Result SSPResource::ChildrenCategories::load_ports(Controller& cont
     }
 
     return Result::Ok();
+}
+
+std::string SSPResource::ChildrenCategories::get_name(Controller& controller, model::BaseObject* o)
+{
+    // get a previously stored name
+    auto names_it = names.find(o);
+    if (names_it != names.end())
+    {
+        return names_it->second;
+    }
+    return "";
 }
 
 std::string SSPResource::ChildrenCategories::retrieve_name(Controller& controller, model::BaseObject* o)
@@ -1158,11 +1169,11 @@ SSPResource::Result SSPResource::writeSystem(xmlTextWriterPtr writer, model::Bas
     return Result::Ok();
 }
 
-SSPResource::Result SSPResource::writeConnectors(xmlTextWriterPtr writer, ChildrenCategories& inner)
+SSPResource::Result SSPResource::writeConnectors(xmlTextWriterPtr writer, ChildrenCategories& categories)
 {
     Result status = Result::Ok();
 
-    if (inner.all_ports.empty())
+    if (categories.all_ports.empty())
     {
         return status;
     }
@@ -1173,26 +1184,27 @@ SSPResource::Result SSPResource::writeConnectors(xmlTextWriterPtr writer, Childr
         return status;
     }
 
-    for (const ChildrenCategories::all_port_t& o : inner.all_ports)
+    for (const ChildrenCategories::all_port_t& o : categories.all_ports)
     {
         _strShared = "";
 
         // look for a generated one, on Component this is always the case, done by load_ports()
-        auto it = inner.names.find(o.outter_port);
-        if (it != inner.names.end())
+        auto it = categories.names.find(o.outter_port);
+        if (it != categories.names.end())
         {
             _strShared = it->second;
         }
         // if not present, retrieve it from the inner port
-        if (_strShared == "")
+        if (_strShared == "" && o.inner_port != nullptr)
         {
-            auto it = inner.names.find(o.inner_port);
-            if (it != inner.names.end())
+            auto it = categories.names.find(o.inner_port);
+            if (it != categories.names.end())
             {
                 _strShared = it->second;
             }
         }
 
+        bool modelName = false;
         // if not present, retrieve it from the port
         if (_strShared == "")
         {
@@ -1201,6 +1213,7 @@ SSPResource::Result SSPResource::writeConnectors(xmlTextWriterPtr writer, Childr
                 // this should probably be an assert
                 return Result::Error(o.outter_port, NAME);
             }
+            modelName = true;
         }
         // on I/O blocks, the name is set on the block
         if (_strShared == "")
@@ -1210,14 +1223,30 @@ SSPResource::Result SSPResource::writeConnectors(xmlTextWriterPtr writer, Childr
                 // this should probably be an assert
                 return Result::Error(o.block, NAME);
             }
+            modelName = true;
+        }
+        // for names on the model, ensure the name is unique and store it inside the known names
+        if (modelName && _strShared != "")
+        {
+            auto used_names_it = categories.used_names.find(_strShared);
+            if (used_names_it == categories.used_names.end())
+            {
+                categories.used_names.insert(used_names_it, _strShared);
+                categories.names.insert({o.outter_port, _strShared});
+            }
+            else
+            {
+                // already used, will be generated
+                _strShared = "";
+            }
         }
         // generate a name
         if (_strShared == "")
         {
-            _strShared = inner.retrieve_name(controller, o.outter_port);
+            _strShared = categories.retrieve_name(controller, o.outter_port);
         }
 
-        status = writeConnector(writer, o, _strShared, inner.max_indexes);
+        status = writeConnector(writer, o, _strShared, categories.max_indexes);
         if (status.error())
         {
             return status;
@@ -1824,19 +1853,16 @@ SSPResource::Result SSPResource::writeComponent(xmlTextWriterPtr writer, model::
     }
 
     ChildrenCategories c{_strShared, _vecDblShared, _vecIntShared, _vecStrShared, _vecIDShared};
-    if (component->kind() == BLOCK)
+    status = c.load_ports(controller, component);
+    if (status.error())
     {
-        status = c.load_ports(controller, component);
-        if (status.error())
-        {
-            return status;
-        }
+        return status;
+    }
 
-        status = writeConnectors(writer, c);
-        if (status.error())
-        {
-            return status;
-        }
+    status = writeConnectors(writer, c);
+    if (status.error())
+    {
+        return status;
     }
 
     status = writeAnnotations(writer, component);
@@ -2237,12 +2263,12 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
     if (it != categories.all_ports.end())
     {
         // local ioBlock is resolved, do not need to resolve startElement
-        _strShared = categories.retrieve_name(controller, sourcePort);
+        _strShared = categories.get_name(controller, sourcePort);
     }
     else
     {
         // resolve startElement
-        _strShared = categories.retrieve_name(controller, sourceBlock);
+        _strShared = categories.get_name(controller, sourceBlock);
         if (_strShared == "")
         {
             return Result::Error(sourceBlock, NAME);
@@ -2255,7 +2281,7 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
         }
 
         // resolve startConnector
-        _strShared = categories.retrieve_name(controller, sourcePort);
+        _strShared = categories.get_name(controller, sourcePort);
     }
 
     if (_strShared == "")
@@ -2274,12 +2300,12 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
     if (it != categories.all_ports.end())
     {
         // local ioBlock is resolved, do not need to resolve endElement
-        _strShared = categories.retrieve_name(controller, destinationPort);
+        _strShared = categories.get_name(controller, destinationPort);
     }
     else
     {
         // resolve endElement
-        _strShared = categories.retrieve_name(controller, destinationBlock);
+        _strShared = categories.get_name(controller, destinationBlock);
         if (_strShared == "")
         {
             return Result::Error(destinationBlock, NAME);
@@ -2292,7 +2318,7 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
         }
 
         // resolve endConnector
-        _strShared = categories.retrieve_name(controller, destinationPort);
+        _strShared = categories.get_name(controller, destinationPort);
     }
 
     if (_strShared == "")
@@ -2467,7 +2493,6 @@ SSPResource::Result SSPResource::writeSystemGeometry(xmlTextWriterPtr writer, mo
     }
     return Result::Ok();
 }
-
 
 SSPResource::Result SSPResource::writeGraphicalElements(xmlTextWriterPtr writer, ChildrenCategories& categories)
 {

@@ -252,6 +252,8 @@ public:
     Result load_ports(Controller& controller, model::BaseObject* block);
     // retrieve the name of a block or port (may be generated)
     std::string retrieve_name(Controller& controller, model::BaseObject* o);
+    // get the name of a block or port or ""
+    std::string get_name(Controller& controller, model::BaseObject* o);
     // retrieve the name of a block or port (set or generated)
     void insert_all_names(const ChildrenCategories& blockPorts);
 };
