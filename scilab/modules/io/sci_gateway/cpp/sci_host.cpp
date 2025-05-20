@@ -40,9 +40,9 @@ types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, typ
         return types::Function::Error;
     }
 
-    if (_iRetCount > 3)
+    if (_iRetCount == 2 || _iRetCount > 3)
     {
-        Scierror(78, _("%s: Wrong number of output argument(s): %d to %d expected.\n"), "host", 1, 3);
+        Scierror(78, _("%s: Wrong number of output argument(s): %d or %d expected.\n"), "host", 1, 3);
         return types::Function::Error;
     }
 
@@ -99,18 +99,15 @@ types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, typ
             out.push_back(new types::String(""));
         }
 
-        if (_iRetCount == 3)
+        if (errlines && error[0] != NULL)
         {
-            if (errlines && error[0] != NULL)
-            {
-                pStr = new types::String(errlines, 1);
-                pStr->set(error);
-                out.push_back(pStr);
-            }
-            else
-            {
-                out.push_back(new types::String(""));
-            }
+            pStr = new types::String(errlines, 1);
+            pStr->set(error);
+            out.push_back(pStr);
+        }
+        else
+        {
+            out.push_back(new types::String(""));
         }
     }
 

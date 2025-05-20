@@ -147,7 +147,6 @@ int spawncommand(wchar_t* _pstCommand, BOOL bOutput, char** stdoutstr, char** st
         close(stdout_pipe[1]);
         close(stderr_pipe[1]);
 
-        // if detach, do not get output ?
         // spawn threads for each output
         piOut.pipe = stdout_pipe[0];
         __threadId threadStdOut;
@@ -162,13 +161,10 @@ int spawncommand(wchar_t* _pstCommand, BOOL bOutput, char** stdoutstr, char** st
         waitpid(pid, &status, 0);
 
         // in case of detached command, do not wait for outputs
-        if(piOut.buffer || piErr.buffer)
-        {
-            __WaitThreadDie(threadStdOut);
-            __WaitThreadDie(threadStdErr);
-            *stdoutstr = piOut.buffer;
-            *stderrstr = piErr.buffer;
-        }
+        __WaitThreadDie(threadStdOut);
+        __WaitThreadDie(threadStdErr);
+        *stdoutstr = piOut.buffer;
+        *stderrstr = piErr.buffer;
     }
 
     waitpid(pid, &status, 0);

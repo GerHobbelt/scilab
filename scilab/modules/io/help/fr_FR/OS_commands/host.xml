@@ -127,6 +127,9 @@
                     session Scilab, ni sur les variables d'environnement du terminal OS dans
                     lequel la session Scilab fonctionne.
                 </listitem>
+                <listitem>
+                    Quand la fonction est appelée avec 3 sorties elle attend la fin de l'exécution de la commande.
+                </listitem>
             </itemizedlist>
         </important>
         <para>
@@ -136,9 +139,6 @@
         </para>
         <note>
             host() doit être préférée à son alias unix(), dont le nom prête à confusion.
-        </note>
-        <note>
-            <literal>host cls;</literal> efface le contenu de la consolebox (MS Windows).
         </note>
     </refsection>
     <refsection>

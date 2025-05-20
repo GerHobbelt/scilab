@@ -29,11 +29,9 @@
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>status = host(commands)</synopsis>
-        <synopsis>[status, stdout] = host(commands)</synopsis>
         <synopsis>[status, stdout, stderr] = host(commands)</synopsis>
         <para/>
         <synopsis>status = unix(commands)</synopsis>
-        <synopsis>[status, stdout] = unix(commands)</synopsis>
         <synopsis>[status, stdout, stderr] = unix(commands)</synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -88,24 +86,12 @@
         <title>Description</title>
         <para>
             <literal>host(…)</literal>
-            <itemizedlist>
-                <listitem>
-                    creates a session of the OS command interpreter (<emphasis>sh</emphasis>
-                    with Linux, or <emphasis>cmd.exe</emphasis> with Windows).
-                </listitem>
-                <listitem>
-                    sends the given <literal>commands</literal> to it,
-                </listitem>
-                <listitem>
-                    lets them be executed by the OS interpreter,
-                </listitem>
-                <listitem>
-                    receives all the messages normally displayed in the OS interpreter terminal,
-                </listitem>
-                <listitem>
-                    and closes the OS interpreter session.
-                </listitem>
-            </itemizedlist>
+            creates a session of the OS command interpreter (<emphasis>sh</emphasis>
+            with Linux, or <emphasis>cmd.exe</emphasis> with Windows),
+            sends the given <literal>commands</literal> to it,
+            lets them be executed by the OS interpreter,
+            receives all the messages normally displayed in the OS interpreter terminal,
+            and closes the OS interpreter session.
         </para>
         <important>
             The opened session of the OS interpreter is a fork of the session homing the current
@@ -125,6 +111,9 @@
                     <varname>commands</varname> does not change them in the Scilab session or/and
                     in the underlying OS interpreter session homing it.
                 </listitem>
+                <listitem>
+                    When called with 3 outputs the function will wait for the end of the command execution.
+                </listitem>
             </itemizedlist>
         </important>
         <para>
@@ -134,9 +123,6 @@
         </para>
         <note>
             host() shall be preferred to its unix() alias, whose name is misleading.
-        </note>
-        <note>
-            On MS Windows, <literal>host("cls")</literal> CLears the consolebox Screen.
         </note>
     </refsection>
     <refsection>

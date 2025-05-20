@@ -18,12 +18,13 @@ status = host("wrong_command");
 assert_checktrue(status <> 0);
 
 // check stdout
-[status, stdout] = host("echo OK");
+[status, stdout, stderr] = host("echo OK");
+assert_checktrue(stderr == "");
 assert_checktrue(status == 0);
 assert_checkequal(stripblanks(stdout), "OK");
 
 // check a command outputting to both stdout and stderr
 [status, stdout, stderr] = host("echo OK && wrong_command");
+assert_checktrue(stderr <> "");
+assert_checktrue(status <> 0);
 assert_checkequal(stripblanks(stdout), "OK");
-assert_checkfalse(status == 0);
-assert_checkfalse(stderr == "");
