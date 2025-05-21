@@ -20,6 +20,7 @@
 #include <algorithm>
 #include <array>
 #include <cmath>
+#include <functional>
 #include <limits>
 #include <map>
 #include <unordered_set>
@@ -216,6 +217,7 @@ public:
         model::BaseObject* outter_port;
         // inner I/O block or SSPInput, SSPOutput outter block
         model::BaseObject* block;
+        size_t block_index;
     };
 
     // All outter ports
@@ -538,6 +540,7 @@ private:
     Result writeBaseUnit(xmlTextWriterPtr writer, model::Datatype* d);
     Result writeAnnotations(xmlTextWriterPtr writer);
     Result writeAnnotations(xmlTextWriterPtr writer, model::BaseObject* o);
+    Result writeAnnotations(xmlTextWriterPtr writer, const ChildrenCategories::all_port_t &o);
 
     /*
      * Load helpers
@@ -549,7 +552,7 @@ private:
     int loadComponent(xmlTextReaderPtr reader, model::BaseObject* o);
     int loadNote(xmlTextReaderPtr reader, model::BaseObject* o);
     template<typename T>
-    int loadComponentObjectProperty(xmlTextReaderPtr reader, model::BaseObject* o, enum object_properties_t prop, enum xcosNames element, T& shared)
+    int loadValue(xmlTextReaderPtr reader, enum xcosNames element, T& shared, std::function<int()> func)
     {
         // defensive programming: ensure this is the expected attribute
         if (readerConstInterned[element] != xmlTextReaderConstLocalName(reader))
@@ -572,11 +575,7 @@ private:
                 case e_base64:
                 {
                     base64::decode((char*) xmlTextReaderConstValue(reader), shared);
-                    if (controller.setObjectProperty(o, prop, shared) == FAIL)
-                    {
-                        return -1;
-                    }
-                    break;
+                    return func();
                 }
 
                 case e_value:
@@ -586,11 +585,7 @@ private:
                     {
                         return -1;
                     }
-                    if (controller.setObjectProperty(o, prop, shared) == FAIL)
-                    {
-                        return -1;
-                    }
-                    break;
+                    return func();
                 }
     
                 default:
@@ -599,6 +594,17 @@ private:
         }
         
         return 1;
+    };
+    template<typename T>
+    int loadComponentObjectProperty(xmlTextReaderPtr reader, model::BaseObject* o, enum object_properties_t prop, enum xcosNames element, T& shared)
+    {
+        return loadValue(reader, element, shared, [&](){
+            if (controller.setObjectProperty(o, prop, shared) == FAIL)
+            {
+                return -1;
+            }
+            return 1;
+        });
     };
     int loadConnector(xmlTextReaderPtr reader, model::BaseObject* o);
     int loadConnectorContent(xmlTextReaderPtr reader, model::BaseObject* o);
@@ -649,7 +655,7 @@ private:
         return copy_property<T>(src, prop, dest, prop, shared);
     };
     void assignInnerPortIndexes(model::BaseObject* parent);
-    int removeUnusedIOBlocks(model::BaseObject* parent);
+    int assignIOBlockChildren(model::BaseObject* parent, bool alwaysAssign);
     void assignOutterPortIndexes(model::BaseObject* parent);
 
 private:
@@ -717,10 +723,11 @@ private:
 
         model::BaseObject* block;
         model::BaseObject* port;
-
+        
         enum portKind kind;
+        int index;
 
-        inline Reference(std::string e, std::string c, model::BaseObject* b, model::BaseObject* p) : element(e), connector(c), x(0), y(0), systemInnerX(std::numeric_limits<double>::quiet_NaN()), systemInnerY(std::numeric_limits<double>::quiet_NaN()), block(b), port(p), kind(PORT_UNDEF) {};
+        inline Reference(std::string e, std::string c, model::BaseObject* b, model::BaseObject* p) : element(e), connector(c), x(0), y(0), systemInnerX(std::numeric_limits<double>::quiet_NaN()), systemInnerY(std::numeric_limits<double>::quiet_NaN()), block(b), port(p), kind(PORT_UNDEF), index(0) {};
 
         inline
         bool operator==(const Reference& other) const {

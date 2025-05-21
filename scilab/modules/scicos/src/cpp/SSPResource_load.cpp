@@ -652,14 +652,24 @@ int SSPResource::updateSystem(model::BaseObject* o)
     // helper lambda function
     auto set_ioblock_geometry = [this, x1, y1, x2, y2](const Reference& ioBlock)
     {
-        std::vector<double> absoluteGeom = {0, 0, 40, 20};
+        controller.getObjectProperty(ioBlock.block, GEOMETRY, _vecDblShared);
+
+        // has been set by xcos:geometry
+        if (_vecDblShared[0] != 0. && _vecDblShared[1] != 0)
+        {
+            return 0;
+        }
 
         // x
-        absoluteGeom[0] = (x1 + ioBlock.x * (x2 - x1) + 10) * ASPECT_RATIO;
+        _vecDblShared[0] = (x1 + ioBlock.x * (x2 - x1) + 10) * ASPECT_RATIO;
         // y
-        absoluteGeom[1] = ((1.0 - ioBlock.y) * (y2 - y1) - 10 - y2) * ASPECT_RATIO;
+        _vecDblShared[1] = ((1.0 - ioBlock.y) * (y2 - y1) - 10 - y2) * ASPECT_RATIO;
+        // w
+        _vecDblShared[2] = 40;
+        // h
+        _vecDblShared[3] = 30;
 
-        if (controller.setObjectProperty(ioBlock.block, GEOMETRY, absoluteGeom) == FAIL)
+        if (controller.setObjectProperty(ioBlock.block, GEOMETRY, _vecDblShared) == FAIL)
         {
             sciprint("unable to set SystemGeometry\n");
             return -1;
@@ -693,10 +703,6 @@ int SSPResource::updateSystem(model::BaseObject* o)
             {
                 return ret;
             }
-            if (copy_property(parent_it->port, it->port, DATATYPE, _vecIntShared) == FAIL)
-            {
-                return FAIL;
-            }
         }
     }
 
@@ -707,36 +713,34 @@ int SSPResource::updateSystem(model::BaseObject* o)
     for (ScicosID id : children)
     {
         model::BaseObject* child = controller.getBaseObject(id);
+
         switch (child->kind())
         {
             case BLOCK:
             {
-                std::vector<double> geom;
-                controller.getObjectProperty(child, GEOMETRY, geom);
-                geom[0] = geom[0] - x1;
-                geom[1] = geom[1] + y2;
-                controller.setObjectProperty(child, GEOMETRY, geom);
+                controller.getObjectProperty(child, GEOMETRY, _vecDblShared);
+                _vecDblShared[0] = _vecDblShared[0] - x1;
+                _vecDblShared[1] = _vecDblShared[1] + y2;
+                controller.setObjectProperty(child, GEOMETRY, _vecDblShared);
                 break;
             }
             case LINK:
             {
-                std::vector<double> points;
-                controller.getObjectProperty(child, CONTROL_POINTS, points);
-                for (size_t i = 1; i < points.size(); i += 2)
+                controller.getObjectProperty(child, CONTROL_POINTS, _vecDblShared);
+                for (size_t i = 1; i < _vecDblShared.size(); i += 2)
                 {
-                    points[i - 1] = points[i - 1] - x1;
-                    points[i] = points[i] + y2;
+                    _vecDblShared[i - 1] = _vecDblShared[i - 1] - x1;
+                    _vecDblShared[i] = _vecDblShared[i] + y2;
                 }
-                controller.setObjectProperty(child, CONTROL_POINTS, points);
+                controller.setObjectProperty(child, CONTROL_POINTS, _vecDblShared);
                 break;
             }
             case ANNOTATION:
             {
-                std::vector<double> geom;
-                controller.getObjectProperty(child, GEOMETRY, geom);
-                geom[0] = geom[0] - x1;
-                geom[1] = geom[1] + y2;
-                controller.setObjectProperty(child, GEOMETRY, geom);
+                controller.getObjectProperty(child, GEOMETRY, _vecDblShared);
+                _vecDblShared[0] = _vecDblShared[0] - x1;
+                _vecDblShared[1] = _vecDblShared[1] + y2;
+                controller.setObjectProperty(child, GEOMETRY, _vecDblShared);
                 break;
             }
             default:
@@ -808,14 +812,8 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* paren
     if (isMainDiagram)
     {
         innerBlock = controller.createBaseObject(BLOCK);
-        controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
         innerPort = controller.createBaseObject(PORT);
         controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
-
-        std::vector<ScicosID> children;
-        controller.getObjectProperty(parent, CHILDREN, children);
-        children.push_back(innerBlock->id());
-        controller.setObjectProperty(parent, CHILDREN, children);
 
         r_layer.emplace_back(Reference("", "", innerBlock, innerPort));
 
@@ -830,15 +828,8 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* paren
         controller.setObjectProperty(outterPort, SOURCE_BLOCK, parent);
 
         innerBlock = controller.createBaseObject(BLOCK);
-        controller.setObjectProperty(innerBlock, PARENT_DIAGRAM, root);
-        controller.setObjectProperty(innerBlock, PARENT_BLOCK, parent->id());
         innerPort = controller.createBaseObject(PORT);
         controller.setObjectProperty(innerPort, SOURCE_BLOCK, innerBlock);
-
-        std::vector<ScicosID> children;
-        controller.getObjectProperty(parent, CHILDREN, children);
-        children.push_back(innerBlock->id());
-        controller.setObjectProperty(parent, CHILDREN, children);
 
         r_parent_layer.emplace_back(Reference(temporaryComponentName, "", parent, outterPort));
         r_layer.emplace_back(Reference("", "", innerBlock, innerPort));
@@ -1631,10 +1622,9 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
     {
         controller.setObjectProperty(link, PARENT_BLOCK, parent->id());
     }
-    std::vector<ScicosID> children;
-    controller.getObjectProperty(parent, CHILDREN, children);
-    children.push_back(link->id());
-    controller.setObjectProperty(parent, CHILDREN, children);
+    controller.getObjectProperty(parent, CHILDREN, _vecIDShared);
+    _vecIDShared.push_back(link->id());
+    controller.setObjectProperty(parent, CHILDREN, _vecIDShared);
 
     // store into processed if there is children
     processed_push(reader, link);
@@ -2970,39 +2960,63 @@ void SSPResource::assignInnerPortIndexes(model::BaseObject* parent)
     }
 }
 
-// remove unused IOBlocks for the Block implemented with native simulation functions
-int SSPResource::removeUnusedIOBlocks(model::BaseObject* parent)
+// assign IOBlocks for the Block implemented as sub-system
+int SSPResource::assignIOBlockChildren(model::BaseObject* parent, bool alwaysAssign)
 {
-    auto& r_layer = references.back();
-
-    size_t count = 0;
-    // count all System's connectors, ioBlocks are the first elements without named element,
-    for (std::vector<Reference>::iterator ioBlock = r_layer.begin(); ioBlock != r_layer.end() && ioBlock->element == ""; ++ioBlock)
-    {
-        count++;
-    }
-
     if (!controller.getObjectProperty(parent, CHILDREN, _vecIDShared))
     {
         return -1;
     }
+    size_t children_size = _vecIDShared.size();
+    auto& r_layer = references.back();
 
-    // with only IOBlock children, remove them all
-    if (_vecIDShared.size() == count)
+    if (!alwaysAssign && children_size == 0)
     {
-        if (controller.setObjectProperty(parent, CHILDREN, std::vector<ScicosID>()) == FAIL)
+        // delete the I/O object
+        for (const Reference& r : r_layer)
+        {
+            controller.deleteBaseObject(r.block);
+        }
+
+        return 0;
+    }
+
+    // assign the children and parent for I/O blocks
+    for (const Reference& r : r_layer)
+    {
+        // only if the block is unnamed
+        // (eg. not regular block outter port)
+        if (r.element != "")
+        {
+            continue;
+        }
+
+        if (0 < r.index && r.index <= _vecIDShared.size())
+        {
+            _vecIDShared.insert(_vecIDShared.begin() + r.index - 1, r.block->id());
+        }   
+        else
+        {
+            _vecIDShared.push_back(r.block->id());
+        }
+
+        if (parent->kind() == BLOCK)
+        {
+            if (controller.setObjectProperty(r.block, PARENT_BLOCK, parent->id()) == FAIL)
+            {
+                return -1;
+            }
+        }
+        if (controller.setObjectProperty(r.block, PARENT_DIAGRAM, root) == FAIL)
         {
             return -1;
         }
-        // delete
-        for (size_t i = 0; i < _vecIDShared.size(); ++i)
-        {
-            controller.deleteObject(_vecIDShared[i]);
-        }
-
-        return 2;
     }
 
+    if (controller.setObjectProperty(parent, CHILDREN, _vecIDShared) == FAIL)
+    {
+        return -1;
+    }
     return 1;
 }
 
@@ -3125,7 +3139,22 @@ int SSPResource::processElement(xmlTextReaderPtr reader, const xmlChar* nsURI)
             case e_interface_function:
                 return loadComponentObjectProperty(reader, component, INTERFACE_FUNCTION, e_interface_function, _strShared);
             case e_ipar:
-                return loadComponentObjectProperty(reader, component, IPAR, e_ipar, _vecIntShared);
+                // ipar can be used to set I/O block index ; store it and assign the I/O block with it
+                if (component->kind() == PORT)
+                {
+                    return loadValue(reader, e_ipar, _vecIntShared, [&]() {
+                        if (_vecIntShared.empty())
+                        {
+                            return -1;
+                        }
+                        references.back().back().index = _vecIntShared[0];
+                        return 1;
+                    });
+                }
+                else
+                {
+                    return loadComponentObjectProperty(reader, component, IPAR, e_ipar, _vecIntShared);
+                }
             case e_kind:
                 _vecIntShared.resize(1);
                 switch (component->kind())
@@ -3177,7 +3206,14 @@ int SSPResource::processElement(xmlTextReaderPtr reader, const xmlChar* nsURI)
             case e_state:
                 return loadComponentObjectProperty(reader, component, STATE, e_state, _vecDblShared);
             case e_style:
-                return loadComponentObjectProperty(reader, component, STYLE, e_style, _strShared);
+                if (component->kind() == PORT)
+                {
+                    return loadComponentObjectProperty(reader, references.back().back().block, STYLE, e_style, _strShared);
+                }
+                else
+                {
+                    return loadComponentObjectProperty(reader, component, STYLE, e_style, _strShared);
+                }
             case e_thick:
                 return loadComponentObjectProperty(reader, component, THICK, e_thick, _vecDblShared);
             case e_uid:
@@ -3480,6 +3516,7 @@ int SSPResource::processEndElement(xmlTextReaderPtr reader)
     else if (xmlns == xmlnsSSD && name == readerConstInterned[e_System])
     {
         // on System (eg. layer) ending
+        assignIOBlockChildren(o, true);
 
         // update geometries
         updateSystem(o);
@@ -3501,25 +3538,9 @@ int SSPResource::processEndElement(xmlTextReaderPtr reader)
     {
         // on Component ending
 
-        // cleanup I/O blocks children if not implemented as a system
-        // DSUPER is a special case, it is a compiled superblock
-        if (!controller.getObjectProperty(o, INTERFACE_FUNCTION, _strShared))
-        {
-            return -1;
-        }
-
-        int status = 1;
-        if (_strShared != "DSUPER")
-        {
-            status = removeUnusedIOBlocks(o);
-            if (status < 0)
-            {
-                return status;
-            }
-        }
         // if the CHILDREN are used, setup I/O block
-        if (status != 2)
-        {    
+        if(assignIOBlockChildren(o, false) > 0)
+        {
             // reorder and assign I/O Blocks indexes
             assignInnerPortIndexes(o);
         }

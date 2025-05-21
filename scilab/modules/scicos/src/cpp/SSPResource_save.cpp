@@ -561,8 +561,10 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     return Result::Error(o, INTERFACE_FUNCTION);
                 }
 
-                if (interfaceFunction == "IN_f" || interfaceFunction == "INIMPL_f")
+                else if ((parent->kind() == BLOCK) && (interfaceFunction == "IN_f" || interfaceFunction == "INIMPL_f"))
                 {
+                    // on Block containing an IN_f, it is treated as a Connector
+
                     int index;
                     status = decode_ipar_or_exprs(controller, o, index);
                     if (status.error())
@@ -592,7 +594,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     }
 
                     all_known.push_back({inner_port, name, index, generated});
-                    all_ports.push_back({PORT_IN, index, inner_port, outter_port, o});
+                    all_ports.push_back({PORT_IN, index, inner_port, outter_port, o, i+1});
                     max_indexes[PORT_IN]++;
                 }
                 else if (interfaceFunction == "SSPInputConnector")
@@ -615,9 +617,9 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
 
                     index = max_indexes[PORT_IN]++;
                     all_known.push_back({port, _vecStrShared[0], index, false});
-                    all_ports.push_back({PORT_IN, index, port, nullptr, o});
+                    all_ports.push_back({PORT_IN, index, port, nullptr, o, 0});
                 }
-                else if (interfaceFunction == "CLKINV_f" || interfaceFunction == "CLKIN_f")
+                else if ((parent->kind() == BLOCK) && (interfaceFunction == "CLKINV_f" || interfaceFunction == "CLKIN_f"))
                 {
                     int index;
                     status = decode_ipar_or_exprs(controller, o, index);
@@ -648,10 +650,10 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     }
 
                     all_known.push_back({inner_port, name, index, generated});
-                    all_ports.push_back({PORT_EIN, index, inner_port, outter_port, o});
+                    all_ports.push_back({PORT_EIN, index, inner_port, outter_port, o, i+1});
                     max_indexes[PORT_EIN]++;
                 }
-                else if (interfaceFunction == "OUT_f" || interfaceFunction == "OUTIMPL_f")
+                else if ((parent->kind() == BLOCK) && (interfaceFunction == "OUT_f" || interfaceFunction == "OUTIMPL_f"))
                 {
                     int index;
                     status = decode_ipar_or_exprs(controller, o, index);
@@ -682,7 +684,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     }
 
                     all_known.push_back({inner_port, name, index, generated});
-                    all_ports.push_back({PORT_OUT, index, inner_port, outter_port, o});
+                    all_ports.push_back({PORT_OUT, index, inner_port, outter_port, o, i+1});
                     max_indexes[PORT_OUT]++;
                 }
                 else if (interfaceFunction == "SSPOutputConnector")
@@ -705,9 +707,9 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
 
                     index = max_indexes[PORT_OUT]++;
                     all_known.push_back({port, _vecStrShared[0], index, false});
-                    all_ports.push_back({PORT_OUT, index, port, nullptr, o});
+                    all_ports.push_back({PORT_OUT, index, port, nullptr, o, 0});
                 }
-                else if (interfaceFunction == "CLKOUTV_f" || interfaceFunction == "CLKOUT_f")
+                else if ((parent->kind() == BLOCK) && (interfaceFunction == "CLKOUTV_f" || interfaceFunction == "CLKOUT_f"))
                 {
                     int index;
                     status = decode_ipar_or_exprs(controller, o, index);
@@ -738,7 +740,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     }
 
                     all_known.push_back({inner_port, name, index, generated});
-                    all_ports.push_back({PORT_EOUT, index, inner_port, outter_port, o});
+                    all_ports.push_back({PORT_EOUT, index, inner_port, outter_port, o, i+1});
                     max_indexes[PORT_EOUT]++;
                 }
                 else
@@ -844,7 +846,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_ports(Controller& cont
             }
 
             all_known.push_back({port, _strShared, index, generated});
-            all_ports.push_back({m.kind, index, nullptr, port, o});
+            all_ports.push_back({m.kind, index, nullptr, port, o, 0});
         }
 
         max_indexes[m.kind] = index + 1;
@@ -980,6 +982,8 @@ SSPResource::Result SSPResource::writeSystemStructureDescription(xmlTextWriterPt
         return status;
     }
 
+    // Do not save the optional generationDateAndTime on purpose, this will avoid some diff on committed file
+    /*
     {
         auto now = std::time(nullptr);
         auto tm = *std::gmtime(&now);
@@ -993,6 +997,7 @@ SSPResource::Result SSPResource::writeSystemStructureDescription(xmlTextWriterPt
             return status;
         }
     }
+    */
 
     //
     // write all the namespaces
@@ -1354,7 +1359,7 @@ SSPResource::Result SSPResource::writeConnector(xmlTextWriterPtr writer, const C
         return status;
     }
 
-    status = writeAnnotations(writer, port);
+    status = writeAnnotations(writer, o);
     if (status.error())
     {
         return status;
@@ -2532,42 +2537,41 @@ SSPResource::Result SSPResource::writeNote(xmlTextWriterPtr writer, model::BaseO
 {
     Result status = Result::Ok();
 
-    // SSP specifiction states: If undefined, the system canvas extent defaults to the bounding box of all ElementGeometry elements of the child elements of the system.
-    // however we need to compute the bounding box of all elements in the system, to be able to revert the Y-axis
-    const SystemCanvas& canvas = categories.canvas;
-
-    // ensure the canvas is valid
-    // from SSP specification: This element defines the extent of the system canvas. (x1,y1) and (x2,y2) define the lower-left and upper-right corner, respectively. Different from ElementGeometry, where x1 > x2 and y1 > y2 indicate flipping, x1 < x2 and y1 < y2 MUST hold here.
-    if (canvas.x1 >= canvas.x2 || canvas.y1 >= canvas.y2)
-    {
-        return Result::Error(o);
-    }
-
     status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_ssd], rawKnownStr[e_Note], nullptr));
     if (status.error())
     {
         return status;
     }
 
-    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_x1], BAD_CAST(to_string(canvas.x1).c_str())));
+    if (!controller.getObjectProperty(o, GEOMETRY, _vecDblShared))
+    {
+        return Result::Error(o, GEOMETRY);
+    }
+    if (_vecDblShared.size() != 4)
+    {
+        return Result::Error(o, GEOMETRY);
+    }
+    auto [x, y, w, h] = *(double (*)[4])_vecDblShared.data();
+
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_x1], BAD_CAST(to_string(x).c_str())));
     if (status.error())
     {
         return status;
     }
 
-    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_y1], BAD_CAST(to_string(canvas.y1).c_str())));
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_y1], BAD_CAST(to_string(y).c_str())));
     if (status.error())
     {
         return status;
     }
 
-    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_x2], BAD_CAST(to_string(canvas.x2).c_str())));
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_x2], BAD_CAST(to_string(x + w).c_str())));
     if (status.error())
     {
         return status;
     }
 
-    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_y2], BAD_CAST(to_string(canvas.y2).c_str())));
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_y2], BAD_CAST(to_string(y - h).c_str())));
     if (status.error())
     {
         return status;
@@ -2779,7 +2783,7 @@ SSPResource::Result SSPResource::writeAnnotations(xmlTextWriterPtr writer, model
     // write the full geometry as Xcos annotation, reconciliation might happen when loading the file back
     if (o->kind() == BLOCK || o->kind() == ANNOTATION)
     {
-        // xcos::Geometry
+        // xcos:geometry
         status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_xcos], rawKnownStr[e_geometry], nullptr));
         if (status.error())
         {
@@ -3064,6 +3068,159 @@ SSPResource::Result SSPResource::writeAnnotations(xmlTextWriterPtr writer, model
     if (!controller.getObjectProperty(o, SSP_ANNOTATION, _vecStrShared))
     {
         return Result::Error(o, SSP_ANNOTATION);
+    }
+    for (const std::string& s : _vecStrShared)
+    {
+        status = Result::FromXML(xmlTextWriterWriteFormatRaw(writer, "%s\n", s.c_str()));
+        if (status.error())
+        {
+            return status;
+        }
+    }
+
+    status = Result::FromXML(xmlTextWriterEndElement(writer));
+    if (status.error())
+    {
+        return status;
+    }
+    return Result::Ok();
+}
+
+SSPResource::Result SSPResource::writeAnnotations(xmlTextWriterPtr writer, const ChildrenCategories::all_port_t &all_port_info)
+{
+    Result status = Result::Ok();
+
+    status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_ssd], rawKnownStr[e_Annotations], nullptr));
+    if (status.error())
+    {
+        return status;
+    }
+
+    //
+    // write Xcos annotations
+    //
+
+    status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_ssc], rawKnownStr[e_Annotation], nullptr));
+    if (status.error())
+    {
+        return status;
+    }
+
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_type], rawKnownStr[e_org_scilab_xcos_ssp]));
+    if (status.error())
+    {
+        return status;
+    }
+
+    model::BaseObject* port = all_port_info.outter_port;
+    if (port == nullptr)
+    {
+        port = all_port_info.inner_port;
+    }
+    if (port != nullptr)
+    {
+        status = writeAnnotationObjectProperty(writer, port, UID, e_uid, _strShared);
+        if (status.error())
+        {
+            return status;
+        }
+        status = writeAnnotationObjectProperty(writer, port, DATATYPE, e_datatype, _vecIntShared);
+        if (status.error())
+        {
+            return status;
+        }
+        bool implicit = false;
+        status = writeAnnotationObjectProperty(writer, port, IMPLICIT, e_implicit, implicit);
+        if (status.error())
+        {
+            return status;
+        }
+        _vecDblShared.resize(1);
+        status = writeAnnotationObjectProperty(writer, port, FIRING, e_firing, _vecDblShared[0]);
+        if (status.error())
+        {
+            return status;
+        }
+    }
+
+    // write the Geometry from the inner block
+    status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_xcos], rawKnownStr[e_geometry], nullptr));
+    if (status.error())
+    {
+        return status;
+    }
+    if (!controller.getObjectProperty(all_port_info.block, GEOMETRY, _vecDblShared))
+    {
+        return Result::Error(all_port_info.block, GEOMETRY);
+    }
+    if (_vecDblShared.size() != 4)
+    {
+        return Result::Error(all_port_info.block, GEOMETRY);
+    }
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_x], BAD_CAST(to_string(_vecDblShared[0]).c_str())));
+    if (status.error())
+    {
+        return status;
+    }
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_y], BAD_CAST(to_string(_vecDblShared[1]).c_str())));
+    if (status.error())
+    {
+        return status;
+    }
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_width], BAD_CAST(to_string(_vecDblShared[2]).c_str())));
+    if (status.error())
+    {
+        return status;
+    }
+    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_height], BAD_CAST(to_string(_vecDblShared[3]).c_str())));
+    if (status.error())
+    {
+        return status;
+    }
+    status = Result::FromXML(xmlTextWriterEndElement(writer));
+    if (status.error())
+    {
+        return status;
+    }
+    status = writeAnnotationObjectProperty(writer, all_port_info.block, STYLE, e_style, _strShared);
+    if (status.error())
+    {
+        return status;
+    }
+
+    // write the block_index to load in order CHILDREN using the ipar attribute
+    status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_xcos], rawKnownStr[e_ipar], nullptr));
+    if (status.error())
+    {
+        return status;
+    }
+    if (all_port_info.block_index > 0)
+    {
+        status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_value], BAD_CAST(to_string(all_port_info.block_index).c_str())));
+        if (status.error())
+        {
+            return status;
+        }
+    }
+    status = Result::FromXML(xmlTextWriterEndElement(writer));
+    if (status.error())
+    {
+        return status;
+    }
+
+    status = Result::FromXML(xmlTextWriterEndElement(writer));
+    if (status.error())
+    {
+        return status;
+    }
+
+    //
+    // write other tools annotations
+    //
+
+    if (!controller.getObjectProperty(port, SSP_ANNOTATION, _vecStrShared))
+    {
+        return Result::Error(port, SSP_ANNOTATION);
     }
     for (const std::string& s : _vecStrShared)
     {

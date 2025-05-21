@@ -261,11 +261,16 @@ std::errc from_string(const std::string_view& str, std::vector<U>& result)
 {
     result.clear();
     size_t pos = 0;
+    
+    if (str.length() == 0)
+    {
+        return {};
+    }
 
-    while (pos < str.length())
+    while (pos <= str.length())
     {
         size_t next = str.find(separator<U>(), pos);
-        
+
         if (next == std::string::npos)
         {
             next = str.length();
