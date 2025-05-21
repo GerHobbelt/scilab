@@ -159,8 +159,8 @@ std::string interface_function(enum portKind kind, bool isImplicit, bool isMainD
 
     if (isImplicit)
     {
-        interfaceBlock[PORT_IN] = "INIMPL_f";
-        interfaceBlock[PORT_OUT] = "OUTIMPL_f";
+        interfaceBlock[PORT_IN] = "OUTIMPL_f";
+        interfaceBlock[PORT_OUT] = "INIMPL_f";
     }
 
     if (isMainDiagram)
@@ -693,7 +693,7 @@ int SSPResource::updateSystem(model::BaseObject* o)
             {
                 return ret;
             }
-            if (copy_property<std::vector<int>>(parent_it->port, it->port, DATATYPE) == FAIL)
+            if (copy_property(parent_it->port, it->port, DATATYPE, _vecIntShared) == FAIL)
             {
                 return FAIL;
             }
@@ -854,49 +854,6 @@ int SSPResource::loadConnector(xmlTextReaderPtr reader, model::BaseObject* paren
         return ret;
     }
 
-    enum portKind kind;
-    controller.getObjectProperty(port, PORT_KIND, (int&)kind);
-    bool isImplicit;
-    controller.getObjectProperty(port, IMPLICIT, isImplicit);
-
-    if (innerPort != nullptr && innerPort != port)
-    {
-        // sync port information to the inner block
-        copy_property<bool>(port, innerPort, IMPLICIT);
-        if (controller.setObjectProperty(innerPort, PORT_KIND, opposite_port(kind)) == FAIL)
-        {
-            sciprint("unable to set Connector on innerPort\n");
-            return -1;
-        }
-    }
-
-    // set innerBlock data
-    if (innerBlock != nullptr)
-    {
-        portKind innerKind = opposite_port(kind);
-        std::vector<ScicosID> ports = {innerPort->id()};
-        controller.setObjectProperty(innerBlock, property_from_port(innerKind), ports);
-
-        // this is the connector block, loaded as I/O block inside the inner layer
-        copy_property<std::string>(port, innerBlock, NAME);
-        copy_property<std::string>(port, innerBlock, DESCRIPTION);
-
-        controller.setObjectProperty(innerBlock, INTERFACE_FUNCTION, interface_function(innerKind, isImplicit, isMainDiagram));
-        controller.setObjectProperty(innerBlock, SIM_FUNCTION_NAME, simulation_function(innerKind, isImplicit, isMainDiagram));
-        controller.setObjectProperty(innerBlock, STYLE, interface_function(innerKind, isImplicit, isMainDiagram));
-    }
-
-    // refresh the outter connector to connect it later
-    if (!isMainDiagram)
-    {
-        std::string portName;
-        controller.getObjectProperty(outterPort, NAME, portName);
-
-        auto& r_parent_layer = *(references.rbegin() + 1);
-        r_parent_layer.back().connector = portName;
-        r_parent_layer.back().kind = kind;
-    }
-
     return ret;
 }
 
@@ -940,12 +897,15 @@ int SSPResource::loadConnectorContent(xmlTextReaderPtr reader, model::BaseObject
             }
             case e_name:
             {
-                std::string name = to_string(xmlTextReaderConstValue(reader));
-                if (controller.setObjectProperty(o, NAME, name) == FAIL)
+                const xmlChar* v = xmlTextReaderConstValue(reader);
+                if (starts_with(v, "#") == nullptr)
                 {
-                    return -1;
+                    if (controller.setObjectProperty(o, NAME, to_string(v)) == FAIL)
+                    {
+                        return -1;
+                    }
                 }
-                references.back().back().connector = name;
+                references.back().back().connector = to_string(v);
                 break;
             }
 
@@ -1048,14 +1008,6 @@ int SSPResource::loadReal(xmlTextReaderPtr reader, org_scilab_modules_scicos::mo
                         return -1;
                     }
                 }
-            }
-
-            // set the same on the innerPort
-            if (references.back().size() > 1 && references.back().back().port != o)
-            {
-                model::BaseObject* innerPort = references.back().back().port;
-                copy_property(o, innerPort, DATATYPE, _vecIntShared);
-                copy_property(o, innerPort, PARAMETER_UNIT, _strShared);
             }
             break;
         }
@@ -1643,15 +1595,13 @@ int SSPResource::loadClock(xmlTextReaderPtr reader, model::BaseObject* o)
 {
     assert(o->kind() == PORT);
 
-    // set the type as Clock
-    enum portKind kind;
-    if (!controller.getObjectProperty(o, PORT_KIND, (int&)kind))
-    {
-        return -1;
-    }
+    auto& r_layer = references.back();
+    enum portKind& kind = r_layer.back().kind;
 
+    // set the type as Clock
     if (kind == PORT_IN)
     {
+        kind = PORT_EIN;
         if (controller.setObjectProperty(o, PORT_KIND, PORT_EIN) == FAIL)
         {
             return -1;
@@ -1659,12 +1609,12 @@ int SSPResource::loadClock(xmlTextReaderPtr reader, model::BaseObject* o)
     }
     else if (kind == PORT_OUT)
     {
+        kind = PORT_EOUT;
         if (controller.setObjectProperty(o, PORT_KIND, PORT_EOUT) == FAIL)
         {
             return -1;
         }
     }
-
     return 1;
 }
 
@@ -1687,10 +1637,7 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
     controller.setObjectProperty(parent, CHILDREN, children);
 
     // store into processed if there is children
-    if (!xmlTextReaderIsEmptyElement(reader))
-    {
-        processed_push(reader, link);
-    }
+    processed_push(reader, link);
 
     std::string startElement;
     std::string startConnector;
@@ -3441,11 +3388,7 @@ int SSPResource::processElement(xmlTextReaderPtr reader, const xmlChar* nsURI)
                 processed_push(reader);
                 return loadParameterSet(reader, processed.back());
             case e_Parameters:
-                // store into processed if there is children
-                if (!xmlTextReaderIsEmptyElement(reader))
-                {
-                    processed_push(reader);
-                }
+                processed_push(reader);
                 break;
             case e_Parameter:
                 processed_push(reader);
@@ -3586,6 +3529,41 @@ int SSPResource::processEndElement(xmlTextReaderPtr reader)
 
         // assign port indexes
         assignOutterPortIndexes(o);
+    }
+    else if (xmlns == xmlnsSSD && name == readerConstInterned[e_Connector])
+    {
+        bool isMainDiagram = references.size() == 1;
+
+        auto& r_layer = references.back();
+        model::BaseObject* innerPort = r_layer.back().port;
+        model::BaseObject* innerBlock = r_layer.back().block;
+        model::BaseObject* outterPort = o;
+
+        // set inner block's port kind
+        portKind innerKind = opposite_port(r_layer.back().kind);
+        std::vector<ScicosID> ports = {innerPort->id()};
+        controller.setObjectProperty(innerBlock, property_from_port(innerKind), ports);
+        
+        copy_property(outterPort, innerBlock, NAME, _strShared);
+        copy_property(outterPort, innerBlock, DESCRIPTION, _strShared);
+
+        copy_property(outterPort, innerPort, DATATYPE, _vecIntShared);
+        bool isImplicit;
+        copy_property(outterPort, innerPort, IMPLICIT, isImplicit);
+
+        controller.setObjectProperty(innerBlock, INTERFACE_FUNCTION, interface_function(innerKind, isImplicit, isMainDiagram));
+        controller.setObjectProperty(innerBlock, SIM_FUNCTION_NAME, simulation_function(innerKind, isImplicit, isMainDiagram));
+        controller.setObjectProperty(innerBlock, STYLE, interface_function(innerKind, isImplicit, isMainDiagram));
+
+        // refresh the outter connector to connect it later
+        if (!isMainDiagram)
+        {
+            auto& r_parent_layer = *(references.rbegin() + 1);
+            r_parent_layer.back().connector = r_layer.back().connector;
+            r_parent_layer.back().kind = r_layer.back().kind;
+            r_parent_layer.back().x = r_layer.back().x;
+            r_parent_layer.back().y = r_layer.back().y;
+        }
     }
 
     processed.pop_back();

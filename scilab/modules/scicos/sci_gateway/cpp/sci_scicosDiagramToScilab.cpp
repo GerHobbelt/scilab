@@ -139,8 +139,9 @@ static types::InternalType* importFile(char const* file)
     
     auto logger = get_or_allocate_logger();
     logger->log(LOG_DEBUG, [&](std::stringstream& msg){
-        msg << "Importing file " << file << " and reset logger to " << uid << "\n";
-        logger->setLastObject(uid);
+        msg << "Importing file " << file << "\n";
+        // msg << "Reset logger to " << uid << "\n";
+        // logger->setLastObject(uid);
     });
 
     size_t fLen = strlen(file);

@@ -436,12 +436,30 @@ SSPResource::Result SSPResource::writeSystemStructureFile(void* context)
         return Result::Error();
     }
 
+    /* TODO: will reduce file size
+    // allocate default object values
+    defaultValues[BLOCK] = controller.createBaseObject(BLOCK);
+    defaultValues[DIAGRAM] = controller.createBaseObject(DIAGRAM);
+    defaultValues[LINK] = controller.createBaseObject(LINK);
+    defaultValues[ANNOTATION] = controller.createBaseObject(ANNOTATION);
+    defaultValues[PORT] = controller.createBaseObject(PORT);
+    */
+
     status = writeSystemStructureDescription(writer);
     if (status.error())
     {
         xmlFreeTextWriter(writer);
         return status;
     }
+
+    /* TODO: will reduce file size
+    controller.deleteBaseObject(defaultValues[BLOCK]);
+    controller.deleteBaseObject(defaultValues[DIAGRAM]);
+    controller.deleteBaseObject(defaultValues[LINK]);
+    controller.deleteBaseObject(defaultValues[ANNOTATION]);
+    controller.deleteBaseObject(defaultValues[PORT]);
+    defaultValues = {0};
+    */
 
     status = Result::FromXML(xmlTextWriterEndDocument(writer));
     if (status.error())
@@ -569,7 +587,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     bool generated = false;
                     if (name == "")
                     {
-                        name = "in";
+                        name = "#in";
                         generated = true;
                     }
 
@@ -625,7 +643,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     bool generated = false;
                     if (name == "")
                     {
-                        name = "clkin";
+                        name = "#clkin";
                         generated = true;
                     }
 
@@ -659,7 +677,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     bool generated = false;
                     if (name == "")
                     {
-                        name = "out";
+                        name = "#out";
                         generated = true;
                     }
 
@@ -715,7 +733,7 @@ SSPResource::Result SSPResource::ChildrenCategories::load_children(Controller& c
                     bool generated = false;
                     if (name == "")
                     {
-                        name = "clkout";
+                        name = "#clkout";
                         generated = true;
                     }
 
@@ -795,10 +813,10 @@ SSPResource::Result SSPResource::ChildrenCategories::load_ports(Controller& cont
         std::string prefix;
     };
     port_t map[] = {
-        {INPUTS, PORT_IN, "in"},
-        {OUTPUTS, PORT_OUT, "out"},
-        {EVENT_INPUTS, PORT_EIN, "clkin"},
-        {EVENT_OUTPUTS, PORT_EOUT, "clkout"},
+        {INPUTS, PORT_IN, "#in"},
+        {OUTPUTS, PORT_OUT, "#out"},
+        {EVENT_INPUTS, PORT_EIN, "#clkin"},
+        {EVENT_OUTPUTS, PORT_EOUT, "#clkout"},
     };
 
     for (auto m : map)
@@ -1937,13 +1955,6 @@ SSPResource::Result SSPResource::writeComponentObjectProperties(xmlTextWriterPtr
         return status;
     }
 
-    // write UID
-    status = writeAnnotationObjectProperty(writer, component, UID, e_uid, _strShared);
-    if (status.error())
-    {
-        return status;
-    }
-
     // write SIM_FUNCTION_NAME
     status = writeAnnotationObjectProperty(writer, component, SIM_FUNCTION_NAME, e_sim_function_name, _strShared);
     if (status.error())
@@ -2176,19 +2187,6 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
         return status;
     }
 
-    if (!controller.getObjectProperty(connection, DESCRIPTION, _strShared))
-    {
-        return Result::Error(connection, DESCRIPTION);
-    }
-    if (_strShared != "")
-    {
-        status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_description], BAD_CAST(_strShared.c_str())));
-        if (status.error())
-        {
-            return status;
-        }
-    }
-
     /*
      * Resolve all needed objects
      */
@@ -2336,10 +2334,13 @@ SSPResource::Result SSPResource::writeConnection(xmlTextWriterPtr writer, model:
     {
         return Result::Error(connection, DESCRIPTION);
     }
-    status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_description], BAD_CAST(_strShared.c_str())));
-    if (status.error())
+    if (_strShared != "")
     {
-        return status;
+        status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_description], BAD_CAST(_strShared.c_str())));
+        if (status.error())
+        {
+            return status;
+        }
     }
 
     // verbose for debugging
@@ -2979,12 +2980,6 @@ SSPResource::Result SSPResource::writeAnnotations(xmlTextWriterPtr writer, model
     if (o->kind() == PORT)
     {
         status = writeAnnotationObjectProperty(writer, o, DATATYPE, e_datatype, _vecIntShared);
-        if (status.error())
-        {
-            return status;
-        }
-        _vecIntShared.resize(1);
-        status = writeAnnotationObjectProperty(writer, o, PORT_KIND, e_kind, _vecIntShared[0]);
         if (status.error())
         {
             return status;

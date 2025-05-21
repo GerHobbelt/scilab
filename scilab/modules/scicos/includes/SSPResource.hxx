@@ -467,7 +467,20 @@ private:
         {
             return Result::Error(o, prop);
         }
-    
+        /* TODO: will reduce file size
+        T value = shared;
+
+        // compare against default value, skip serialization if this is the default
+        if (!controller.getObjectProperty(defaultValues[o->kind()], prop, shared))
+        {
+            return Result::Error(o, prop);
+        }
+        if (value == shared)
+        {
+            return Result::Ok();
+        }
+        */
+
         status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_xcos],  rawKnownStr[element], nullptr));
         if (status.error())
         {
@@ -631,20 +644,9 @@ private:
         return FAIL;
     };
     template<typename T> inline
-    update_status_t copy_property(model::BaseObject* src, object_properties_t src_prop, model::BaseObject* dest, object_properties_t dest_prop)
-    {
-        T v;
-        return copy_property<T>(src, src_prop, dest, dest_prop, v);
-    };
-    template<typename T> inline
     update_status_t copy_property(model::BaseObject* src, model::BaseObject* dest, object_properties_t prop, T& shared)
     {
         return copy_property<T>(src, prop, dest, prop, shared);
-    };
-    template<typename T> inline
-    update_status_t copy_property(model::BaseObject* src, model::BaseObject* dest, object_properties_t prop)
-    {
-        return copy_property<T>(src, prop, dest, prop);
     };
     void assignInnerPortIndexes(model::BaseObject* parent);
     int removeUnusedIOBlocks(model::BaseObject* parent);
@@ -752,6 +754,9 @@ private:
 
     // temporary storage for the current archive state
     void* context; 
+
+    // default object values per kind
+    std::array<model::BaseObject*, 5> defaultValues{nullptr};
 };
 
 }

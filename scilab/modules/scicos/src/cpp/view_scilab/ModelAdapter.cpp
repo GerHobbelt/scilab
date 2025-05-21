@@ -898,11 +898,11 @@ struct label
     {
         model::Block* adaptee = adaptor.getAdaptee();
 
-        std::string description;
-        controller.getObjectProperty(adaptee, DESCRIPTION, description);
+        std::string name;
+        controller.getObjectProperty(adaptee, NAME, name);
 
         types::String* o = new types::String(1, 1);
-        o->set(0, description.data());
+        o->set(0, name.data());
 
         return o;
     }
@@ -925,16 +925,16 @@ struct label
         model::Block* adaptee = adaptor.getAdaptee();
 
         char* c_str = wide_string_to_UTF8(current->get(0));
-        std::string description(c_str);
+        std::string name(c_str);
         FREE(c_str);
 
-        if (!isValidCIdentifier(description))
+        if (!isValidCIdentifier(name))
         {
             //FIXME: is this DESCRIPTION an identifier ?
         //    get_or_allocate_logger()->log(LOG_ERROR, _("Wrong value for field %s.%s : valid C identifier expected.\n"), "model", "label");
         //    return false;
         }
-        controller.setObjectProperty(adaptee, DESCRIPTION, description);
+        controller.setObjectProperty(adaptee, NAME, name);
         return true;
     }
 };
