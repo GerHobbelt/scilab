@@ -23,9 +23,9 @@
     <br/>
     <div class="refsection">
 <!-- Copy the html rendered CHANGES.md file below -->
-<h1>Welcome to Scilab 2025.0.0</h1>
-<p>This file details the changes between Scilab 2025.0.0 (this version), and the previous 2024.1.0 release.
-For changelogs of earlier releases, please see <a href="https://help.scilab.org/docs/2024.1.0/en_US/CHANGES.html">Scilab 2024.1.0</a>.</p>
+<h1>Welcome to Scilab 2025.1.0</h1>
+<p>This file details the changes between Scilab 2025.1.0 (this version), and the previous 2024.1.0 stable release (including information from 2025.0.0).
+For changelogs of earlier releases, please see <a href="https://help.scilab.org/docs/2025.0.0/en_US/CHANGES.html">Scilab 2025.0.0</a>.</p>
 <p>Summary:</p>
 <ul>
 <li>New features</li>
@@ -38,7 +38,56 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <p>Please report anything we could have missed, on <a href="https://scilab.discourse.group/">Discourse</a> or on <a href="https://gitlab.com/scilab/scilab/-/issues">GitLab</a>.</p>
 <h2>New features</h2>
 <p>For a high-level description of this release's main new features, please consult the &quot;What's new&quot; page of embedded documentation available by simply typing <code>doc</code> in the Scilab console.</p>
-<h3>New functions</h3>
+<h3>Scilab 2025.1.0</h3>
+<h4>New functions</h4>
+<ul>
+<li><code>addvars</code>: Add variables to table or timeseries.</li>
+<li><code>combinations</code>: Create a table containing all elements combinations.</li>
+<li><code>join</code>: Combine two tables or timeseries.</li>
+<li><code>removevars</code>: Remove variables from table or timeseries.</li>
+<li><code>diffxy</code>: Derivative of y with respect to x.</li>
+<li><code>hadamard</code>: Hadamard matrix.</li>
+<li><code>hankel</code>: Hankel matrix.</li>
+<li><code>pascal</code>: Pascal matrix.</li>
+<li><code>rosser</code>: Rosser matrix.</li>
+<li><code>wilkinson</code>: Wilkinson matrix.</li>
+<li><code>day</code>: Extract day from datetime.</li>
+<li><code>month</code>: Extract month from datetime.</li>
+<li><code>cart2pol</code>: Convert cartesian coordinates to polar/cylindrical.</li>
+<li><code>pol2cart</code>: Convert polar/cylindrical coordinates to cartesian.</li>
+<li><code>cylinder</code>: Compute cylinder coordinates.</li>
+<li><code>peaks</code>: Compute values of a function with lots of local maxima and minima.</li>
+<li><code>sphere</code>: Compute sphere coordinates.</li>
+<li><code>rmfield</code>: Remove fields from a struct.</li>
+<li><code>tbx_package</code>: Package a toolbox source tree with binaries into a single file.</li>
+</ul>
+<h4>Features improvements</h4>
+<ul>
+<li>New helpers for <code>arguments</code>: <code>mustBeScalar</code>, <code>mustBeScalarOrEmpty</code>, <code>mustBeEqualDimsOrEmpty</code>, <code>mustBeRow</code>, <code>mustBeColumn</code>.</li>
+<li><code>mustBeA</code> helper can now manage &quot;empty&quot; type (for empty matrix cases).</li>
+<li><code>toJSON()</code> and <code>fromJSON()</code> are now based on RapidJSON for efficiency and can manage <code>%Nan</code>, <code>-%Inf</code> and <code>%Inf</code> values.</li>
+<li>Option names are no more case-sensitive in <code>pca()</code>, <code>datetime()</code>, ...</li>
+<li><code>polyfit()</code> now manages weights for <code>y</code> data.</li>
+<li><code>host()</code> can now return both standard output and standard error.</li>
+</ul>
+<h4>Graphics &amp; GUI</h4>
+<ul>
+<li>New &quot;browser&quot; style <code>uicontrol</code> based on JCEF (See <a href="https://scilab.discourse.group/t/scilab-2025-1-0-preview-browser-uicontrol/">dedicated post on Discourse</a>).</li>
+<li>New discrete/qualitative colormaps: <code>flag</code>, <code>prism</code>, <code>Accent</code>, <code>Dark2</code>, <code>Paired</code>, <code>Pastel1</code>, <code>Pastel2</code>, <code>Set1</code>, <code>Set2</code> and <code>Set3</code>.</li>
+<li>New <code>turbo</code> colormap: varying from blue, lightblue, green, yellow, orange then red (quite similar to <code>jet</code> but perceptually uniform).</li>
+</ul>
+<h4>Performances</h4>
+<ul>
+<li><code>time</code> module have been updated to use the <code>arguments</code> block and enhance its performances.</li>
+<li><code>writetable</code> and <code>writetimeseries</code> have been optimized.</li>
+<li><code>addcolor</code> performances have been improved mainly for huge colormaps.</li>
+</ul>
+<h4>Xcos</h4>
+<ul>
+<li>Xcos diagrams can now be exported as SSP format for interoperability with other simulation tools.</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
+<h4>New functions</h4>
 <ul>
 <li><code>frank</code>: Computes Frank matrix.</li>
 <li><code>getdeprecated</code>: Gets names of deprecated functions and replacement function names.</li>
@@ -50,22 +99,22 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><code>polyval</code>: Evaluates a polynomial for some given values.</li>
 <li><code>vander</code>: Computes Vandermonde matrix.</li>
 </ul>
-<h3>Features improvements</h3>
+<h4>Features improvements</h4>
 <ul>
 <li><code>-e</code> and <code>-f</code> command-line options can now be used simultaneously  (and are run in the order they are given to Scilab).</li>
 <li><code>x_dialog</code> and <code>x_mdialog</code> can now be used to enter hidden entries such as passwords.</li>
 </ul>
-<h3>Language changes</h3>
+<h4>Language changes</h4>
 <ul>
 <li>Lambda functions are now available in Scilab using a dedicated syntax <code>#(x) -&gt; (x+1)</code></li>
 <li>New simplified syntax to declare complex numbers: <code>1i</code> and <code>1j</code> (equivalent to <code>1*%i</code>).</li>
 </ul>
-<h3>Web tools</h3>
+<h4>Web tools</h4>
 <ul>
 <li><code>timeout</code> optional parameter has been added to <code>http_*</code> functions.</li>
 <li><code>http_upload</code> can be used to upload a remote file with a different name as local one.</li>
 </ul>
-<h3>Graphics &amp; GUI</h3>
+<h4>Graphics &amp; GUI</h4>
 <ul>
 <li>New property <code>&quot;TooltipString&quot;</code> added for <code>uimenu</code> handles.</li>
 <li>New properties <code>&quot;cdata_bounds&quot;</code> &amp; <code>&quot;color_range&quot;</code> added for <code>Fac3d</code> handles.</li>
@@ -80,12 +129,19 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><code>&quot;interpreters&quot;</code> property added for <code>x_ticks</code>, <code>y_ticks</code> and <code>z_ticks</code> for <code>Axes</code> handles.</li>
 </ul>
 <p>Some GUI (File Browser, Help Browser, ...) have been improved.</p>
-<h3>Performances</h3>
+<h4>Performances</h4>
 <ul>
 <li>Some Scilab modules (<code>CACSD</code>, <code>Linear Algebra</code>, ...) have been updated to use the <code>arguments</code> block and enhance their performances.</li>
 <li>Threads management in Scilab kernel has been completely rewritten.</li>
 </ul>
 <h2>Obsolete functions or features</h2>
+<h3>Scilab 2025.1.0</h3>
+<p>All these functions and features will be removed in Scilab 2026.0.0 (October 2025):</p>
+<ul>
+<li><code>&quot;figure_style&quot;</code> property (useless since Scilab 5.0 when old graphics renderer was unplugged).</li>
+<li>Using a <code>&quot;Compound&quot;</code> or a <code>&quot;Compound&quot;</code> array as first argument in <code>legend</code> function (this feature was not documented and should not have been used).</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
 <p>All these functions and features will be removed in Scilab 2026.0.0 (October 2025):</p>
 <ul>
 <li><code>impl()</code>: Please use <code>dae()</code> instead.</li>
@@ -102,7 +158,16 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><code>splitURL</code>, obsolete since 2023.1.0, replaced by <code>url_split</code>.</li>
 </ul>
 <h2>Compilation</h2>
-<p>If you are familiar with building Scilab from sources, these dependencies have been updated:</p>
+<p>If you are familiar with building Scilab from sources, the following dependencies have been updated.</p>
+<h3>Scilab 2025.1.0</h3>
+<ul>
+<li>Required version of CURL updated to 8.10.1.</li>
+<li>Required version of MATIO updated to 1.5.28.</li>
+<li>RapidJSON 1.1.0 (or more recent) is now required.</li>
+<li>JCEF 127.3.1 (or more recent) is now required.</li>
+<li>GSON 2.10.1 (or more recent) is now required.</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
 <ul>
 <li>Build with HDF5 1.14.4 is now supported (with support for older versions).</li>
 <li>Build with libXML2 2.12.7 is now supported (with support for older versions).</li>
@@ -111,6 +176,11 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li>All Java dependencies of Scilab have been updated to the latest version (Java 17).</li>
 </ul>
 <h2>Known incompatibilities</h2>
+<h3>Scilab 2025.1.0</h3>
+<ul>
+<li>Inline help (used by Scilab extension for Visual Studio Code) build is now disabled for toolboxes as it can produce side effects on global extension behavior. If you want to re-enable it, call <code>xmltoinline</code> in the <code>builder.sce</code> file and call <code>loadToolboxInlineHelp</code> in your toolbox <code>.start</code> file. Use these undocumented functions at your own risk.</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
 <ul>
 <li><code>lyap</code> function no longer accepts non-square matrices as input.</li>
 <li><code>pca</code>: the order of the first three output arguments has been modified. The old <code>[lambda, comprinc, scores] = pca(x)</code> syntax has been replaced by <code>[comprinc, scores, lambda] = pca(x)</code>. See the history part of <a href="https://help.scilab.org/pca">pca documentation</a> for more information.</li>
@@ -123,6 +193,33 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 <li><code>h = plot(x1, y1, x2, y2)</code> now returns handles in <code>h</code> as in arguments i.e. <code>[h1, h2]</code>.</li>
 </ul>
 <h2>Packaging &amp; Supported Operating Systems</h2>
+<h3>Scilab 2025.1.0</h3>
+<ul>
+<li>To run or compile Scilab, you might need:
+<ul>
+<li>Windows (amd64):
+<ul>
+<li>Windows 11 (Desktop)</li>
+<li>Windows 10 (Desktop)</li>
+<li>Windows 8 (Desktop)</li>
+</ul>
+</li>
+<li>macOS:
+<ul>
+<li>Intel-based or M1-based Mac running macOS 11+ (compile and run)</li>
+</ul>
+</li>
+<li>Linux (amd64):
+<ul>
+<li>debian: 11, 12</li>
+<li>ubuntu: 20.04, 22.04, 24.04</li>
+<li>fedora: 40, 41</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
 <ul>
 <li>
 <p>32-bit platforms are not supported (no binary versions released).</p>
@@ -160,6 +257,66 @@ For changelogs of earlier releases, please see <a href="https://help.scilab.org/
 </li>
 </ul>
 <h2>Issue Fixes</h2>
+<h3>Scilab 2025.1.0</h3>
+<ul>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/6246">#6246</a>: <code>rmfield()</code> function was missing.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/9093">#9093</a>: <code>addcolor(colors)</code> was very slow when <code>length(colors)</code> was big.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/11983">#11983</a>: <code>getAllocatedSingleString()</code> produced wrong error messages.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/14340">#14340</a>: <code>tbx_package()</code> has been added to Scilab to make the creation on an ATOMS binary package easier.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/15252">#15252</a>: <code>getURL()</code> did not work with accentuated characters.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/15410">#15410</a>: Saving a graphic handle that was no longer valid crashed Scilab.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/15836">#15836</a>: The product <code>*</code> was not reliable for <code>int64</code> and <code>uint64</code> integers greater than <code>2^52</code>.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17250">#17250</a>: <code>uimport()</code> GUI had some glitches under macOS.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17261">#17261</a>: Some UIControls such as <code>&quot;text&quot;</code> and <code>&quot;editbox&quot;</code> did now support scroll by mouse wheel.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17271">#17271</a>: <code>modelicac.exe</code>, <code>modelicat.exe</code> and <code>XML2modelica.exe</code>were 32-bits binaries, hence producing issues when trying to run any Modelica exemple from a fresh Windows installation.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17318">#17318</a>: <code>atomsInstall</code> did not work with a URL as input argument.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17320">#17320</a>: <code>vander()</code> documentation contained wrong formulae.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17328">#17328</a>: <code>datetime(&quot;2024-10-29T07:45:59.898Z&quot;, &quot;InputFormat&quot;,&quot;yyyy-MM-ddTHH:mm:ss.SSSZ&quot;,&quot;OutputFormat&quot;,&quot;yyyy-MM-dd HH:mm:ss.SSS&quot;)</code> returned an error.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17329">#17329</a>: A space in path prevented navigation in Filebrowser.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17332">#17332</a>: Xcos failed to save a <code>*.zcos</code> or <code>*.xcos</code> file if the file name was not explicitly added to the desired filename.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17333">#17333</a>: Building a toolbox from Scilab startup script led to an infinite loop.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17335">#17335</a>: Examples in <code>profile()</code> documentation more worked.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17336">#17336</a>: None of the examples given in the ATOMS documentation worked.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17338">#17338</a>: <code>detectImportOptions()</code> sometimes detetced wrong types of data.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17339">#17339</a>: Insertion in a <code>table</code> could fail with an error.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17340">#17340</a>: Catenation of tables containing different types did not trigger an error.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17341">#17341</a>: Playing with profile could make Scilab crash.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17343">#17343</a>: Loading a toolbox twice produces a strange error on <code>loadToolboxInlineHelp()</code> (See <strong>Known incompatibilities</strong>).</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17344">#17344</a>: <code>x_mdialog()</code> no more worked with boolean matrices.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17345">#17345</a>: Modelica block in Xcos rotated after double click.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17346">#17346</a>: When an axes had a <code>frame</code> as parent, anti-aliasing was not activated as in parent figure.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17353">#17353</a>: Performance issue between version 2024.1.0 and version 2025.0.0 has been fixed.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17354">#17354</a>: <code>barh()</code> produced a wrong display.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17355">#17355</a>: <code>bar()</code> function wrongly returned a <code>&quot;Compound&quot;</code>(while <code>barh()</code> returned a vector of <code>&quot;Polylines&quot;</code>).</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17356">#17356</a>: <code>getfield()</code> crashed with a <code>struct</code> as input argument.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17358">#17358</a>: <code>table()</code> display failed with unlimited <code>0</code> horizontal paging control.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17360">#17360</a>: <code>CDATA</code> block in an XML <code>.content</code> field was escaped and not accessible in Scilab.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17362">#17362</a>: Labels defined in a SUPER_f block were badly saved/restored.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17364">#17364</a>: <code>[_, tz] = clock()</code> did not work on some GMT.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17366">#17366</a>: <code>fsolve()</code> and <code>optim()</code> documentation needed some improvements.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17368">#17368</a>: <code>bloc2ss()</code> failed to check input arguments type.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17380">#17380</a>: <code>fminsearch()</code> could not be called with an anonymous function as cost function.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17381">#17381</a>: <code>sci2exp()</code> made Scilab crash when called with an anonymous function as input.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17382">#17382</a>: <code>subplot()</code> did not return the created/selected axes.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17383">#17383</a>: <code>fromJSON(&quot;{inf:41}&quot;)</code> made Scilab crash.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17384">#17384</a>: <code>msscanf()</code> made Scilab crash in some particular cases.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17389">#17389</a>: <code>datetime()</code> failed when <code>&quot;InputFormat&quot;</code> specified milliseconds and when seconds value was <code>59</code>.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17398">#17398</a>: Displaying an uninitialized <code>tlist</code> produced an error.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17399">#17399</a>: Completion on handle properties or struct/tlist fieldnames wass case sensitive since Scilab 2025.0.0 (it was not the case before).</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17403">#17403</a>: Preferences no more loaded once a toolbox with preferences settings was uninstalled.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17404">#17404</a>: <code>uint64</code> multiplication gaves wrong results.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17406">#17406</a>: In Xcos, loading data in <code>&quot;LOOKUP_f&quot;</code> and <code>&quot;Curve_f&quot;</code> blocks no more worked.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17411">#17411</a>: <code>test_run()</code> no more worked for ATOMS modules.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17412">#17412</a>: <code>legend(axe_handle, ...)</code> no more worked if <code>axe_handle</code> was not current axes (<code>gca()</code>).</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17416">#17416</a>: Scilab 2025.0.0 did not start under macOS version 15.4.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17417">#17417</a>: <code>file_mask</code> did not work correctly <code>uigetfile()</code>.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17418">#17418</a>: There was a redundant extension in default Scinotes file name under macOS.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17419">#17419</a>: Information about ZIP files management under Windows in <code>uigetfile()</code> documentation was obsolete.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17425">#17425</a>: <code>Matplot1()</code> was broken for RGB images.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17429">#17429</a>: Colors of multiple graphics in <code>bode()</code> plots were reversed w.r.t. colors shown in the legend.</li>
+<li><a href="https://gitlab.com/scilab/scilab/-/issues/17431">#17431</a>: The last example on the <code>stackedplot()</code> documentation page was wrong.</li>
+</ul>
+<h3>Scilab 2025.0.0</h3>
 <ul>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/9630">#9630</a>: The toolbar of the documentation browser did not behave as other toolbars.</li>
 <li><a href="https://gitlab.com/scilab/scilab/-/issues/13121">#13121</a>: Solving ODEs could make Scilab crash under macOS.</li>

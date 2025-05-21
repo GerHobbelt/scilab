@@ -21,7 +21,6 @@
         <a href="https://gitlab.com/scilab/scilab/-/issues" class="ulink">Issues</a> |
         <a href="https://gitlab.com/scilab/forge/" class="ulink">Forge</a> |
         <a href="https://scilab.discourse.group/" class="ulink">Discourse</a> |
-        <a href="https://www.scilab.org/about/community/mailing-lists" class="ulink">Mailing Lists Archives</a> |
         <a href="https://atoms.scilab.org/" class="ulink">ATOMS</a> |
         <a href="https://fileexchange.scilab.org/" class="ulink">File Exchange</a>
         <hr/>
@@ -30,31 +29,64 @@
     <br/>
     <br/>
     <div class="refsection">
-        <h2 class="title">Welcome to Scilab 2025.0.0</h2>
+        <h2 class="title">Welcome to Scilab 2025.1.0</h2>
         <p class="para">
-            Scilab 2025.0.0 is a new stable release of Scilab, the open-source
+            Scilab 2025.1.0 is a new stable release of Scilab, the open-source
             platform for numerical computation.
         </p>
         <p class="para">
             Here is a tour of the changes since Scilab 2024.1.0.
         </p>
         <p class="para">
-            To view it in the help browser, enter <code>doc("2025.0.0")</code>
+            To view it in the documentation browser, enter <code>doc("2025.1.0")</code>
             in the console, and browse related pages.
         </p>
         <h3 class="title">Feature changes and additions</h3>
         <ul>
             <li>New functions:
                 <ul>
-                    <li><code>frank</code>: Computes Frank matrix.</li>
                     <li><code>getdeprecated</code>: Gets names of deprecated functions and replacement function names.</li>
-                    <li><code>hilbm</code>: Computes Hilbert matrix.</li>
-                    <li><code>invhilb</code>: Computes inverse of Hilbert matrix.</li>
                     <li><code>kmeans</code>: K-means clustering function.</li>
-                    <li><code>magic</code>: Computes magic square matrix.</li>
                     <li><code>polyfit</code>: Fits a curve with a polynomial.</li>
                     <li><code>polyval</code>: Evaluates a polynomial for some given values.</li>
+                    <li><code>addvars</code>: Add variables to table or timeseries.</li>
+                    <li><code>combinations</code>: Create a table containing all elements combinations.</li>
+                    <li><code>join</code>: Combine two tables or timeseries.</li>
+                    <li><code>removevars</code>: Remove variables from table or timeseries.</li>
+                    <li><code>diffxy</code>: Derivative of y with respect to x.</li>
+                    <li><code>frank</code>: Computes Frank matrix.</li>
+                    <li><code>hadamard</code>: Hadamard matrix.</li>
+                    <li><code>hankel</code>: Hankel matrix.</li>
+                    <li><code>hilbm</code>: Computes Hilbert matrix.</li>
+                    <li><code>invhilb</code>: Computes inverse of Hilbert matrix.</li>
+                    <li><code>magic</code>: Computes magic square matrix.</li>
+                    <li><code>pascal</code>: Pascal matrix.</li>
+                    <li><code>rosser</code>: Rosser matrix.</li>
                     <li><code>vander</code>: Computes Vandermonde matrix.</li>
+                    <li><code>wilkinson</code>: Wilkinson matrix.</li>
+                    <li><code>day</code>: Extract day from datetime.</li>
+                    <li><code>month</code>: Extract month from datetime.</li>
+                    <li><code>cart2pol</code>: Convert cartesian coordinates to polar/cylindrical.</li>
+                    <li><code>pol2cart</code>: Convert polar/cylindrical coordinates to cartesian.</li>
+                    <li><code>cylinder</code>: Compute cylinder coordinates.</li>
+                    <li><code>peaks</code>: Compute values of a function with lots of local maxima and minima.</li>
+                    <li><code>sphere</code>: Compute sphere coordinates.</li>
+                    <li><code>rmfield</code>: Remove fields from a struct.</li>
+                    <li><code>tbx_package</code>: Package a toolbox source tree with binaries into a single file.</li>
+                </ul>
+            </li>
+            <li>Features improvements:
+                <ul>
+                    <li>New helpers for <code>arguments</code> (<code>mustBeScalar</code>, <code>mustBeScalarOrEmpty</code>, <code>mustBeEqualDimsOrEmpty</code>, <code>mustBeRow</code>, <code>mustBeColumn</code>) are been added.</li>
+                    <li><code>mustBeA</code> helper can now manage "empty" type (for empty matrix cases).</li>
+                    <li>Some Scilab modules (<code>CACSD</code>, <code>Linear Algebra</code>, <code>Time</code> ...) have been updated to use the `arguments` block hence enhancing their performances.</li>
+                    <li><code>pca()</code> function now manages more input/output arguments.</li>
+                    <li><code>writetable()</code> and <code>writetimeseries()</code> have been optimized.</li>
+                    <li><code>addcolor()</code> performances have been improved mainly for huge colormaps.</li>
+                    <li><code>toJSON()</code> and <code>fromJSON()</code> are now based on RapidJSON for efficiency and can manage <code>%Nan</code>, <code>-%Inf</code> and <code>%Inf</code> values.</li>
+                    <li>Option names are no more case-sensitive in <code>pca()</code>, <code>datetime()</code>, ...</li>
+                    <li><code>polyfit()</code> now manages weights for <code>y</code> data.</li>
+                    <li><code>host()</code> can now return both standard output and standard error.</li>
                 </ul>
             </li>
             <li>Language changes:
@@ -69,7 +101,7 @@
                     <li><code>http_upload</code> can be used to upload a remote file with a different name as local one.</li>
                 </ul>
             </li>
-            <li>Graphics:
+            <li>Graphics &amp; GUI:
                 <ul>
                     <li>New property <code>"TooltipString"</code> added for <code>uimenu</code> handles.</li>
                     <li>New properties <code>"cdata_bounds"</code> &amp; <code>"color_range"</code> added for <code>Fac3d</code> handles.</li>
@@ -83,12 +115,14 @@
                             <li><code>"interpreters"</code> property added for <code>x_ticks</code>, <code>y_ticks</code> and <code>z_ticks</code> for <code>Axes</code> handles.</li>
                         </ul>
                     </li>
+                    <li>New <code>"browser"</code> style <code>uicontrol</code> based on JCEF (See <a href="https://scilab.discourse.group/t/scilab-2025-1-0-preview-browser-uicontrol/" class="ulink">dedicated post on Discourse</a>).</li>
+                    <li>New discrete/qualitative colormaps: <code>flag</code>, <code>prism</code>, <code>Accent</code>, <code>Dark2</code>, <code>Paired</code>, <code>Pastel1</code>, <code>Pastel2</code>, <code>Set1</code>, <code>Set2</code> and <code>Set3</code>.</li>
+                    <li>New <code>turbo</code> colormap: varying from blue, lightblue, green, yellow, orange then red (quite similar to <code>jet</code> but perceptually uniform).</li>
                 </ul>
             </li>
-            <li>Other Improvements:
+            <li>Xcos:
                 <ul>
-                    <li>Some Scilab modules (`CACSD`, `Linear Algebra`, ...) have been updated to use the `arguments` block hence enhancing their performances.</li>
-                    <li><code>pca()</code> function now manages more input/output arguments.</li>
+                    <li>Xcos diagrams can now be exported as SSP format for interoperability with other simulation tools.</li>
                 </ul>
             </li>
         </ul>
@@ -123,8 +157,6 @@
         </p>
         <p class="para"><a href="https://scilab.discourse.group/" class="ulink">Discourse</a> -
             Communicate and exchange with the community</p>
-        <p class="para"><a href="https://www.scilab.org/about/community/mailing-lists" class="ulink">Mailing Lists Archives</a> -
-            Consult mailing-lists archives</p>
         <p class="para"><a href="https://atoms.scilab.org/" class="ulink">ATOMS</a> - Browse Scilab packaged modules</p>
         <p class="para"><a href="https://fileexchange.scilab.org/" class="ulink">File Exchange</a> - Exchange your
             scripts, results and files.</p>
