@@ -77,7 +77,7 @@ Xcos debug:   propertyUpdated( 3 , BLOCK , IPAR ) : SUCCESS
 Xcos trace:   propertyUpdated( 3 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 3 , BLOCK , SIM_BLOCKTYPE ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 3 , BLOCK , SIM_DEP_UT ) : SUCCESS
-Xcos trace:   propertyUpdated( 3 , BLOCK , DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 3 , BLOCK , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 3 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 3 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 3 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -122,7 +122,7 @@ Xcos debug:   propertyUpdated( 6 , BLOCK , IPAR ) : SUCCESS
 Xcos trace:   propertyUpdated( 6 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , BLOCK , SIM_BLOCKTYPE ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 6 , BLOCK , SIM_DEP_UT ) : SUCCESS
-Xcos trace:   propertyUpdated( 6 , BLOCK , DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 6 , BLOCK , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 6 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -162,7 +162,7 @@ Xcos trace:   propertyUpdated( 10 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , SIM_BLOCKTYPE ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 10 , BLOCK , SIM_DEP_UT ) : SUCCESS
-Xcos trace:   propertyUpdated( 10 , BLOCK , DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 10 , BLOCK , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -207,7 +207,7 @@ Xcos debug:   propertyUpdated( 13 , BLOCK , IPAR ) : SUCCESS
 Xcos trace:   propertyUpdated( 13 , BLOCK , OPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 13 , BLOCK , SIM_BLOCKTYPE ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 13 , BLOCK , SIM_DEP_UT ) : SUCCESS
-Xcos trace:   propertyUpdated( 13 , BLOCK , DESCRIPTION ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 13 , BLOCK , NAME ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 13 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 13 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 13 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -235,7 +235,7 @@ Xcos trace:   propertyUpdated( 2 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , BLOCK , OPAR ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 2 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
 Xcos trace:   propertyUpdated( 2 , BLOCK , SIM_DEP_UT ) : NO_CHANGES
-Xcos debug:   propertyUpdated( 2 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos debug:   propertyUpdated( 2 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 2 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 2 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -246,9 +246,9 @@ Xcos info:    objectCreated( 17 , BLOCK )
 Xcos info:    objectCloned( 2 , 17 , BLOCK )
 Xcos trace:   propertyUpdated( 17 , BLOCK , DEBUG_LEVEL ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 17 , BLOCK , SIM_FUNCTION_API ) : NO_CHANGES
-Xcos trace:   propertyUpdated( 17 , BLOCK , DESCRIPTION ) : NO_CHANGES
+Xcos debug:   propertyUpdated( 17 , BLOCK , DESCRIPTION ) : SUCCESS
 Xcos debug:   propertyUpdated( 17 , BLOCK , INTERFACE_FUNCTION ) : SUCCESS
-Xcos debug:   propertyUpdated( 17 , BLOCK , NAME ) : SUCCESS
+Xcos trace:   propertyUpdated( 17 , BLOCK , NAME ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 17 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
 Xcos debug:   propertyUpdated( 17 , BLOCK , SIM_FUNCTION_NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 17 , BLOCK , STYLE ) : NO_CHANGES

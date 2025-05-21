@@ -102,7 +102,7 @@ Xcos trace:   propertyUpdated( 4 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , OPAR ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 4 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
 Xcos trace:   propertyUpdated( 4 , BLOCK , SIM_DEP_UT ) : NO_CHANGES
-Xcos debug:   propertyUpdated( 4 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos debug:   propertyUpdated( 4 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 4 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -125,7 +125,7 @@ Xcos info:    objectCreated( 7 , BLOCK )
 Xcos info:    objectCloned( 4 , 7 , BLOCK )
 Xcos trace:   propertyUpdated( 7 , BLOCK , DEBUG_LEVEL ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , SIM_FUNCTION_API ) : NO_CHANGES
-Xcos debug:   propertyUpdated( 7 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos trace:   propertyUpdated( 7 , BLOCK , DESCRIPTION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 7 , BLOCK , INTERFACE_FUNCTION ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 7 , BLOCK , NAME ) : SUCCESS
 Xcos debug:   propertyUpdated( 7 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
@@ -202,7 +202,7 @@ Xcos trace:   objectUnreferenced( 7 , BLOCK ) : 1
       pein = []
       peout = []
       gr_i = []
-      id = "Quat_Conj"
+      id = ""
       in_implicit = []
       out_implicit = []
       in_style = ""
@@ -309,7 +309,7 @@ Xcos info:    objectCreated( 10 , BLOCK )
 Xcos info:    objectCloned( 7 , 10 , BLOCK )
 Xcos trace:   propertyUpdated( 10 , BLOCK , DEBUG_LEVEL ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , SIM_FUNCTION_API ) : NO_CHANGES
-Xcos debug:   propertyUpdated( 10 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos trace:   propertyUpdated( 10 , BLOCK , DESCRIPTION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 10 , BLOCK , INTERFACE_FUNCTION ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 10 , BLOCK , NAME ) : SUCCESS
 Xcos debug:   propertyUpdated( 10 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
@@ -380,7 +380,7 @@ Xcos trace:   propertyUpdated( 9 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , OPAR ) : NO_CHANGES
 Xcos debug:   propertyUpdated( 9 , BLOCK , SIM_BLOCKTYPE ) : SUCCESS
 Xcos trace:   propertyUpdated( 9 , BLOCK , SIM_DEP_UT ) : NO_CHANGES
-Xcos debug:   propertyUpdated( 9 , BLOCK , DESCRIPTION ) : SUCCESS
+Xcos debug:   propertyUpdated( 9 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 9 , BLOCK , NZCROSS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , NMODE ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , EQUATIONS ) : NO_CHANGES
@@ -428,7 +428,7 @@ Xcos trace:   objectReferenced( 10 , BLOCK ) : 1
 Xcos trace:   objectUnreferenced( 10 , BLOCK ) : 0
   props: (params tlist) with fields:
       wpar = [600,450,0,0,600,450]
-      title = ["Untitled";""]
+      title = ["Quat_Conj";""]
       tol = []
       tf = []
       context = []
@@ -469,7 +469,7 @@ Xcos trace:   objectUnreferenced( 10 , BLOCK ) : 1
       pein = []
       peout = []
       gr_i = []
-      id = "Quat_Conj"
+      id = ""
       in_implicit = []
       out_implicit = []
       in_style = ""
@@ -556,7 +556,7 @@ Xcos trace:   objectReferenced( 11 , LINK ) : 1
 Xcos trace:   objectUnreferenced( 11 , LINK ) : 0
   props: (params tlist) with fields:
       wpar = [600,450,0,0,600,450]
-      title = ["Untitled";""]
+      title = ["Quat_Conj";""]
       tol = []
       tf = []
       context = []
