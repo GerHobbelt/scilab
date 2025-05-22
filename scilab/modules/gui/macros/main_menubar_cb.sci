@@ -19,6 +19,7 @@ function main_menubar_cb(key)
                 "*.xcos|*.zcos|*.xmi|*.ssp" _("Xcos diagrams")
                 "*.tst"                     _("Scilab Tests")
                 "*.sod"                     _("Scilab Data")
+                "*.sce|*.sci|*.xcos|*.zcos|*.xmi|*.ssp|*.tst|*.sod" _("All Scilab files")
                 ];
         %fileToOpen = uigetfile(ext, pwd(), msg);
         if %fileToOpen ~= "" then
