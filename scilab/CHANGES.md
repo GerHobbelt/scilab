@@ -71,7 +71,7 @@ For a high-level description of this release's main new features, please consult
 
 #### Xcos
 
-- Xcos diagrams can now be exported as SSP format for interoperability with other simulation tools.
+- [SSP](https://ssp-standard.org/) (System Structure and Parametrization) format support preview: Xcos can now load & save SSP files (hence providing better interoperability with other simulation tools).
 
 ### Scilab 2025.0.0
 
