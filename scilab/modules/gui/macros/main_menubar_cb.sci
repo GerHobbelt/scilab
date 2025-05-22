@@ -15,27 +15,20 @@ function main_menubar_cb(key)
 
     if key=="openFile"
         msg = gettext("Select a file to open");
-        ext = [ "*.sce|*.sci"       _("Scilab scripts")
-                "*.xcos|*.zcos|*.xmi" _("Xcos diagrams")
-                "*.tst|*.dia.ref"   _("Scilab Tests")
-                "*.scg"             _("Scilab Graphics")
-                "lib"               _("Scilab Library")
-                "*.sc*|*.*cos|*.tst|*.dia.ref|lib" _("All Scilab files")
+        ext = [ "*.sce|*.sci"               _("Scilab scripts")
+                "*.xcos|*.zcos|*.xmi|*.ssp" _("Xcos diagrams")
+                "*.tst"                     _("Scilab Tests")
+                "*.sod"                     _("Scilab Data")
                 ];
         %fileToOpen = uigetfile(ext, pwd(), msg);
         if %fileToOpen ~= "" then
             ext = convstr(fileparts(%fileToOpen, "extension"));
-            if or(ext==[".xcos" ".zcos" ".xmi"])
+            if or(ext==[".xcos" ".zcos" ".xmi" ".ssp"])
                 xcos(%fileToOpen);
-            elseif or(ext==[".sce" ".sci" ".tst" ".ref"])
+            elseif or(ext==[".sce" ".sci" ".tst"])
                 editor(%fileToOpen);
-            elseif ext==".scg"
+            elseif ext==".sod"
                 load(%fileToOpen);
-            elseif basename(%fileToOpen)=="lib"
-                libname = xmlGetValues("/scilablib","name",%fileToOpen);
-                load(%fileToOpen);
-                mprintf(libname+" loaded.\n");
-                execstr(libname+"=return("+libname+")");
             else
                 if getos()=="Windows"
                     winopen(%fileToOpen)
