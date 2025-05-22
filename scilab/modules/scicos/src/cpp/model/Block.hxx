@@ -761,7 +761,7 @@ class Block : public BaseObject
 
     void getSimDepUT(std::vector<int>& data) const
     {
-        data.resize(2, 0);
+        data.assign({0, 0});
         switch (m_sim.dep_ut)
         {
             case DEP_U& DEP_T:

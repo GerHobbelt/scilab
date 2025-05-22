@@ -83,7 +83,7 @@ private:
         if (m_dataType == nullptr)
         {
             // By default, size is set to [-1,1] and type to real (1)
-            v.resize(3, 1);
+            v.assign(3, 1);
             v[0] = -1;
         }
         else

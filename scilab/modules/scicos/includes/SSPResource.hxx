@@ -501,15 +501,15 @@ private:
         {
             std::string str = base64::encode(shared);
 
-            // FIXME: remove this check when the base64 encoding is bullet-proof
+            // Uncomment to check the base64 encoding
             // this is a conservative approach to ensure the saved file will be readable later
-            T decoded;
-            base64::decode(str, decoded);
-            if (decoded != shared)
-            {
-                // error in base64 encoding
-                return Result::Error(o, prop);
-            }
+            // T decoded;
+            // base64::decode(str, decoded);
+            // if (decoded != shared)
+            // {
+            //     // error in base64 encoding
+            //     return Result::Error(o, prop);
+            // }
 
             status = Result::FromXML(xmlTextWriterWriteAttribute(writer, rawKnownStr[e_base64], BAD_CAST(str.c_str())));
             if (status.error())

@@ -249,26 +249,29 @@ SSPResource::Result SSPResource::save(const char* uri)
     archive_entry_set_filetype(st.entry(), AE_IFREG);
     archive_entry_set_perm(st.entry(), 0644);
 
-    status = Result::FromArchive(archive_write_header(st.output(), st.entry()));
-    if (status.error())
+    if (status.ok())
     {
-        return status;
+        status = Result::FromArchive(archive_write_header(st.output(), st.entry()));
     }
-    status = writeSystemStructureFile(&st);
-    if (status.error())
+    if (status.ok())
     {
-        return status;
+        status = writeSystemStructureFile(&st);
     }
 
     // write the resources/ subdirectory entries
-    status = Result::FromArchive(archive_write_zip_set_compression_store(st.output()));
-    if (status.error())
+    if (status.ok())
     {
-        return status;
+        status = Result::FromArchive(archive_write_zip_set_compression_store(st.output()));
     }
+
     std::vector<char> buff(8192);
     for (std::string f : st._fmupath)
     {
+        if (status.error())
+        {
+            break;
+        }
+
         // copy FMU entry
         archive_entry_set_pathname(st.entry(), ("resources/" + f).c_str());
         archive_entry_unset_size(st.entry());
@@ -278,7 +281,7 @@ SSPResource::Result SSPResource::save(const char* uri)
         status = Result::FromArchive(archive_write_header(st.output(), st.entry()));
         if (status.error())
         {
-            return status;
+            break;
         }
 
         // resolve FMU fullpath, use SimpleFMU.sci from fmu-wrapper toolbox as reference
@@ -304,7 +307,7 @@ SSPResource::Result SSPResource::save(const char* uri)
         if (!FileExist(filepath.c_str()))
         {
             Sciwarning("FMU file %s not found", f.c_str());
-            return Result::Error();
+            status = Result::Error();
         }
 
         // copy FMU data
@@ -319,12 +322,14 @@ SSPResource::Result SSPResource::save(const char* uri)
                 if (archive_error_code < 0)
                 {
                     Sciwarning("libarchive reported errno #%d: %s", archive_errno(st.output()), archive_error_string(st.output()));
-                    return Result::Error();
+                    status = Result::Error();
+                    break;
                 }
                 if (archive_error_code != bytesRead)
                 {
                     Sciwarning("libarchive reported partial write, expected %d, got %d", bytesRead, archive_error_code);
-                    return Result::Error();
+                    status = Result::Error();
+                    break;
                 }
             }
         }
@@ -2459,7 +2464,8 @@ SSPResource::Result SSPResource::writeSystemGeometry(xmlTextWriterPtr writer, mo
     // from SSP specification: This element defines the extent of the system canvas. (x1,y1) and (x2,y2) define the lower-left and upper-right corner, respectively. Different from ElementGeometry, where x1 > x2 and y1 > y2 indicate flipping, x1 < x2 and y1 < y2 MUST hold here.
     if (canvas.x1 >= canvas.x2 || canvas.y1 >= canvas.y2)
     {
-        return Result::Error(o);
+        // do not write SystemGeometry on empty canvas
+        return Result::Ok();
     }
 
     status = Result::FromXML(xmlTextWriterStartElementNS(writer, rawKnownStr[e_ssd], rawKnownStr[e_SystemGeometry], nullptr));
