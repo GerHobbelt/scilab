@@ -10,7 +10,7 @@ function demo_qualitative_colormaps()
     //Compute gigantic colormap
     cmap=[];
     for i=colormapList
-        cmap = [cmap ; colormap(evstr(i + "(12)"))]; // 12 is the size of the base pattern for biggest discrete colormaps currently available in Scilab
+        cmap = [cmap ; evstr(i + "(12)")]; // 12 is the size of the base pattern for biggest discrete colormaps currently available in Scilab
     end
 
     n = size(colormapList, '*');

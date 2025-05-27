@@ -11,7 +11,7 @@ function demo_scilab_colormaps()
     //Compute gigantic colormap
     cmap=[];
     for i=colormapList
-        cmap = [cmap ; colormap(evstr(i + "(128)"))]
+        cmap = [cmap ; evstr(i + "(128)")]
     end
 
     n = size(colormapList, '*');
