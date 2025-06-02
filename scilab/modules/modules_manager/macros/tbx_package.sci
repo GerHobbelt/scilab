@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2024 - Dassaut Systèmes S.E. - Clément DAVID
+// Copyright (C) 2024 - Dassault Systèmes S.E. - Clément DAVID
 //
 // This file is distributed under the same license as the Scilab package.
 // For more information, see the COPYING file which you should have received
