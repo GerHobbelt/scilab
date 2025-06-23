@@ -38,7 +38,7 @@ static char *CommandWords[] =
     "exit", "arguments"
 };
 
-static const int nbrMustBe = 33;
+static const int nbrMustBe = 35;
 static char* MustBe[] = {
     "mustBePositive", "mustBeNonpositive", "mustBeNonnegative",
     "mustBeNegative", "mustBeFinite", "mustBeNonNan",
@@ -50,7 +50,8 @@ static char* MustBe[] = {
     "mustBeMember", "mustBeInRange", "mustBeFile",
     "mustBeFolder", "mustBeNonzeroLengthText", "mustBeValidVariableName",
     "mustBeEqualDims", "mustBeSameType", "mustBeSquare", 
-    "mustBeScalar", "mustBeEqualDimsOrEmpty", "mustBeEqualDimsOrScalar"
+    "mustBeScalar", "mustBeEqualDimsOrEmpty", "mustBeEqualDimsOrScalar", 
+    "mustBeRow", "mustBeColumn"
 };
 
 
