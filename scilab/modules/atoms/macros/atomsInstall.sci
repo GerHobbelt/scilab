@@ -164,7 +164,7 @@ function result = atomsInstall(packages,section)
     for i=1:size(packages(:,1),"*")
         this_package = packages(i,1);
 
-        if ~ isempty(regexp(this_package,"/(\.tar\.gz|\.tgz|\.zip)$/","o")) then
+        if ~ isempty(regexp(this_package,"/(\.tar\.xz|\.tar\.gz|\.tgz|\.zip)$/","o")) then
 
             // try to download file only when a protocol is given
             try
