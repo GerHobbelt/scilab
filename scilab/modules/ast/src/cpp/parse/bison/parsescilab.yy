@@ -1820,6 +1820,7 @@ expressions         {
 /* Make a break in a function or make the variable getting one scope up. */
 returnControl :
 RETURN                  { $$ = new ast::ReturnExp(@$); print_rules("returnControl", "RETURN");}
+| RETURN LPAREN RPAREN  { $$ = new ast::ReturnExp(@$); print_rules("returnControl", "RETURN");}
 | RETURN variable       { $$ = new ast::ReturnExp(@$, $2); print_rules("returnControl", "RETURN variable");}
 | RETURN functionCall   { $$ = new ast::ReturnExp(@$, $2); print_rules("returnControl", "RETURN functionCall");}
 ;
