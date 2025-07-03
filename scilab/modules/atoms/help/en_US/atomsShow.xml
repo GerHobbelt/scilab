@@ -40,38 +40,17 @@
                 <term>module</term>
                 <listitem>
                     <para>
-                        1x1 or 1x2 Matrix of strings:
+                        1 x 1 or 1 x 2 matrix of strings
                     </para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                the most recent version is used
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: if this field is empty or is not present,
+                                the most recent version is used</td>
                         </tr>
                     </informaltable>
                 </listitem>

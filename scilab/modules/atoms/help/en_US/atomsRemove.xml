@@ -42,38 +42,17 @@
                 <term>modules</term>
                 <listitem>
                     <para>
-                        mx1 or mx2 character string matrix:
+                        m x 1 or m x 2 matrix of strings
                     </para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present, all versions
-                                of the module are removed.
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: if this field is empty or is not present, all versions
+                                of the module are removed.</td>
                         </tr>
                     </informaltable>
                 </listitem>
@@ -126,61 +105,32 @@
             <varlistentry>
                 <term>result</term>
                 <listitem>
-                    <para>5xn character string matrix:</para>
+                    <para>m x 5 matrix of strings</para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                            <th>3rd Col.</th>
+                            <th>4th Col.</th>
+                            <th>5th Col.</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version</td>
+                            <td>Installation section</td>
+                            <td>Installation path</td>
+                            <td>Status</td>
                         </tr>
-                        <!-- Section -->
                         <tr>
                             <td>
-                                <emphasis>3rd Col.</emphasis>
                             </td>
                             <td>
-                                <emphasis role="strong">Installation section</emphasis>
                             </td>
                             <td>
                                 this parameter determines whether the module has been installed
                                 for all users or only for the   current user.
                             </td>
-                        </tr>
-                        <!-- Installation path -->
-                        <tr>
                             <td>
-                                <emphasis>4th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Installation path</emphasis>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <!-- Status -->
-                        <tr>
-                            <td>
-                                <emphasis>5th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Status</emphasis>
                             </td>
                             <td>
                                 "I" stands for "Intentionally", "A" stands for "Automatically"

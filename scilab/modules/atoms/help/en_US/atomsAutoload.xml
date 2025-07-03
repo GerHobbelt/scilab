@@ -5,10 +5,6 @@
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -40,44 +36,20 @@
                 <term>modules</term>
                 <listitem>
                     <para>
-                        4xn character string matrix:
+                        m x 4 matrix of strings
                     </para>
                     <informaltable border="1">
-                        <!-- Module's technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Module's technical name</emphasis>
-                            </td>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                            <th>3rd Col.</th>
+                            <th>4th Col.</th>
                         </tr>
-                        <!-- Module's version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Module's version</emphasis>
-                            </td>
-                        </tr>
-                        <!-- Module's Installed Section -->
-                        <tr>
-                            <td>
-                                <emphasis>3rd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Module's installed section</emphasis>
-                            </td>
-                        </tr>
-                        <!-- Autoload Installation Path -->
-                        <tr>
-                            <td>
-                                <emphasis>4th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Module's installation path</emphasis>
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version</td>
+                            <td>Installed section</td>
+                            <td>Installation path</td>
                         </tr>
                     </informaltable>
                 </listitem>

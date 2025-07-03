@@ -81,8 +81,8 @@
                 <term>repositories</term>
                 <listitem>
                     <para>
-                        Matrix of strings : the first column give the list of repositories
-                        managed by ATOMS and the second column indicate if the repository is
+                        Matrix of strings : the first column gives the list of repositories
+                        managed by ATOMS and the second column indicates if the repository is
                         an official repository, if the repository has been added for all users
                         or only for the current user.
                     </para>
@@ -96,7 +96,7 @@
     <refsection>
         <title>Description</title>
         <para>
-            <literal>atomsRepositoryList</literal> return a matrix that give the list of
+            <literal>atomsRepositoryList</literal> returns a matrix that gives the list of
             available repositories.
         </para>
     </refsection>

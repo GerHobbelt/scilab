@@ -5,10 +5,6 @@
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -42,38 +38,17 @@
                 <term>modules</term>
                 <listitem>
                     <para>
-                        mx1, mx2 Matrix of strings:
+                        m x 1, m x 2 matrix of strings
                     </para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                the most recent version is used
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: if this field is empty or is not present,
+                                the most recent version is used</td>
                         </tr>
                     </informaltable>
                 </listitem>
@@ -82,24 +57,8 @@
                 <term>file</term>
                 <listitem>
                     <para>
-                        mx1 Matrix of strings:
+                        m x 1 matrix of strings containing the file-system path.
                     </para>
-                    <informaltable border="1">
-                        <!-- File-system path -->
-                        <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">File-system path</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                    </informaltable>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -136,61 +95,32 @@
             <varlistentry>
                 <term>result</term>
                 <listitem>
-                    <para>5xn character string matrix:</para>
+                    <para>m x 5 matrix of strings</para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                            <th>3rd Col.</th>
+                            <th>4th Col.</th>
+                            <th>5th Col.</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version</td>
+                            <td>Installation section</td>
+                            <td>Installation path</td>
+                            <td>Status</td>
                         </tr>
-                        <!-- Section -->
                         <tr>
                             <td>
-                                <emphasis>3rd Col.</emphasis>
                             </td>
                             <td>
-                                <emphasis role="strong">Installation section</emphasis>
-                            </td>
+                            </td>                          
                             <td>
                                 this parameter determines whether the module has been installed
                                 for all users or only for the   current user.
                             </td>
-                        </tr>
-                        <!-- Installation path -->
-                        <tr>
                             <td>
-                                <emphasis>4th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Installation path</emphasis>
-                            </td>
-                            <td>
-                            </td>
-                        </tr>
-                        <!-- Status -->
-                        <tr>
-                            <td>
-                                <emphasis>5th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Status</emphasis>
                             </td>
                             <td>
                                 "I" stands for "Intentionally", "A" stands for "Automatically"

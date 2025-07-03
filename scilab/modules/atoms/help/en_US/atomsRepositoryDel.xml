@@ -97,7 +97,8 @@
     <refsection>
         <title>Description</title>
         <para>
-
+            <literal>atomsRepositoryDel</literal> removes one or multiple URLs from the list of repositories and returns 
+            the number of repositories successfully removed.
         </para>
     </refsection>
     <!-- ===================================================================== -->

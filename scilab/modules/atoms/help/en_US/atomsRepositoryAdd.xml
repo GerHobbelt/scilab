@@ -90,7 +90,8 @@
     <refsection>
         <title>Description</title>
         <para>
-
+            <literal>atomsRepositoryAdd</literal> adds one or multiple URLs to the list of repositories and returns 
+            the number of repositories successfully added.
         </para>
     </refsection>
     <!-- ===================================================================== -->

@@ -42,54 +42,20 @@
                 <term>modules</term>
                 <listitem>
                     <para>
-                        mx1, mx2 Matrix of strings:
+                        m x 1, m x 2 matrix of strings
                     </para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
+                            <th>3rd Col. (Optional)</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                module's version is ignored.
-                            </td>
-                        </tr>
-                        <!-- Section -->
-                        <tr>
-                            <td>
-                                <emphasis>3rd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Section</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                module's section is ignored.
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: if this field is empty or is not present,
+                                module's version is ignored.</td>
+                            <td>Section: if this field is empty or is not present,
+                                module's section is ignored.</td>
                         </tr>
                     </informaltable>
                 </listitem>
@@ -133,6 +99,7 @@
                 <term>res</term>
                 <listitem>
                     <para>
+                        a boolean: %T if the modules are installed, %f otherwise.
                     </para>
                 </listitem>
             </varlistentry>
@@ -144,7 +111,8 @@
     <refsection>
         <title>Description</title>
         <para>
-
+            <literal>atomsIsInstalled</literal> returns %t if <literal>module</literal> 
+            is installed, %f otherwise.
         </para>
     </refsection>
     <!-- ===================================================================== -->

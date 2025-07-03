@@ -5,10 +5,6 @@
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -39,58 +35,26 @@
             <varlistentry>
                 <term>module</term>
                 <listitem>
-                    <para>mx1, mx2, mx3 Matrix of strings :</para>
+                    <para>m x 1, m x 2, m x 3 matrix of strings</para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td>
-                            </td>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
+                            <th>3rd Col. (Optional)</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                the most recent version is used
-                            </td>
-                        </tr>
-                        <!-- Section -->
-                        <tr>
-                            <td>
-                                <emphasis>3nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Section</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this field is empty or is not present,
-                                "allusers" is used
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: if this field is empty or is not present,
+                                the most recent version is used</td>
+                            <td>Section: if this field is empty or is not present,
+                                "allusers" is used</td>
                         </tr>
                     </informaltable>
                 </listitem>
                 <term>path</term>
-                <para>The path of the given module</para>
+                <listitem>
+                    <para>The path of the given module</para>
+                </listitem>
             </varlistentry>
         </variablelist>
     </refsection>

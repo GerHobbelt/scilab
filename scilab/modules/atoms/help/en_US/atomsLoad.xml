@@ -48,49 +48,21 @@
             <varlistentry>
                 <term>result</term>
                 <listitem>
-                    <para>4xn character string matrix:</para>
+                    <para>m x 4 matrix of strings</para>
                     <informaltable border="1">
-                        <!-- Technical name -->
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td/>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                            <th>3rd Col.</th>
+                            <th>4th Col.</th>
                         </tr>
-                        <!-- Version -->
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td/>
-                        </tr>
-                        <!-- Section -->
-                        <tr>
-                            <td>
-                                <emphasis>3rd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Installation section</emphasis>
-                            </td>
-                            <td>this parameter determines whether the module has been
-                                installed for all users or only for the current user.
-                            </td>
-                        </tr>
-                        <!-- Installation path -->
-                        <tr>
-                            <td>
-                                <emphasis>4th Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Installation path</emphasis>
-                            </td>
-                            <td/>
+                            <td>Technical name</td>
+                            <td>Version</td>
+                            <td>Installation section: this parameter determines 
+                                whether the module has been
+                                installed for all users or only for the current user.</td>
+                            <td>Installation path</td>
                         </tr>
                     </informaltable>
                 </listitem>

@@ -48,7 +48,18 @@
                 <term>result</term>
                 <listitem>
                     <para>
+                        m x 2 matrix of strings
                     </para>
+                    <informaltable border="1">
+                        <tr>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                        </tr>
+                        <tr>
+                            <td>Technical name</td>
+                            <td>Summary</td>
+                        </tr>
+                    </informaltable>
                 </listitem>
             </varlistentry>
         </variablelist>

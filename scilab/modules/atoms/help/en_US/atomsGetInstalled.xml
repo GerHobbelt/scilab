@@ -5,10 +5,6 @@
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -36,42 +32,6 @@
     <refsection>
         <title>Arguments</title>
         <variablelist>
-            <varlistentry>
-                <term>installed</term>
-                <listitem>
-                    <para>5xn String matrix :</para>
-                    <itemizedlist>
-                        <listitem>
-                            <para>
-                                <literal>1st column</literal> : External module's technical name
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                <literal>2nd column</literal> : External module's version
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                <literal>3rd column</literal> : allusers/user, this parameter tell if
-                                the external module has been installed for all users or only for the
-                                current user.
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                <literal>4th column</literal> : External module's installation path
-                            </para>
-                        </listitem>
-                        <listitem>
-                            <para>
-                                <literal>5th column</literal> : I/A, this parameter tell if
-                                the external module has been automatically or intentionally installed.
-                            </para>
-                        </listitem>
-                    </itemizedlist>
-                </listitem>
-            </varlistentry>
             <varlistentry>
                 <term>section</term>
                 <listitem>
@@ -104,6 +64,29 @@
                     <para>
                         The default value is "all".
                     </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>installed</term>
+                <listitem>
+                    <para>m x 5 matrix of strings</para>
+                    <informaltable border="1">
+                        <tr>
+                            <th>1st Col.</th>
+                            <th>2nd Col.</th>
+                            <th>3rd Col.</th>
+                            <th>4th Col.</th>
+                            <th>5th Col.</th>
+                        </tr>
+                        <tr>
+                            <td>Module's name</td>
+                            <td>Version</td>
+                            <td>Installation section (allusers/user): this parameter determines whether the module has been installed
+                                for all users or only for the current user.</td>
+                            <td>Installation path</td>
+                            <td>Status: "I" stands for "Intentionally", "A" stands for "Automatically"</td>
+                        </tr>
+                    </informaltable>
                 </listitem>
             </varlistentry>
         </variablelist>

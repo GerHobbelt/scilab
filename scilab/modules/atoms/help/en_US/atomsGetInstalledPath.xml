@@ -5,10 +5,6 @@
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  * Copyright (C) 2019 - Samuel GOUGEON
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -34,66 +30,40 @@
             <varlistentry>
                 <term>modules</term>
                 <listitem>
-                    <para>m x 1, m x 2, or m x 3 Matrix of strings:</para>
+                    <para>m x 1, m x 2, or m x 3 matrix of strings</para>
                     <informaltable border="1">
                         <tr>
-                            <td>
-                                <emphasis>1st Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Technical name</emphasis>
-                            </td>
-                            <td>
-                                Mandatory
-                            </td>
-                            <td/>
+                            <th>1st Col. (Mandatory)</th>
+                            <th>2nd Col. (Optional)</th>
+                            <th>3rd Col. (Optional)</th>
                         </tr>
                         <tr>
-                            <td>
-                                <emphasis>2nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Version</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this column is missing or this value is "", the first
-                                (and possibly only installed) version found is considered.
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <emphasis>3nd Col.</emphasis>
-                            </td>
-                            <td>
-                                <emphasis role="strong">Section</emphasis>
-                            </td>
-                            <td>
-                                Optional
-                            </td>
-                            <td>
-                                If this column is missing or this value is "", the "all" section is
-                                used. Possible values are "user", "allusers", and "all".
-                            </td>
+                            <td>Technical name</td>
+                            <td>Version: If this value is missing or "", the first
+                                (and possibly only installed) version found is considered.</td>
+                            <td>Section: If this value is missing or "", the "all" section is
+                                used. Possible values are "user", "allusers", and "all".</td>
                         </tr>
                     </informaltable>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>section</term>
-                <para>single string among "user", "allusers", "all". It is used ony if
+                <listitem>
+                    <para>single string among "user", "allusers", "all". It is used ony if
                     <varname>modules</varname> has less than 3 columns. It is equivalent to
                     <literal>modules(:,3)=section</literal>.
-                </para>
+                    </para>
+                </listitem>
             </varlistentry>
             <varlistentry>
                 <term>paths</term>
-                <para>
-                    the paths of the given modules (starting with SCI or SCIHOME),
-                    or "" for any unfound module, such that always size(paths,1)==size(modules,1).
-                </para>
+                <listitem>
+                    <para>
+                        the paths of the given modules (starting with SCI or SCIHOME),
+                        or "" for any unfound module, such that always size(paths,1)==size(modules,1).
+                    </para>
+                </listitem>
             </varlistentry>
         </variablelist>
     </refsection>
