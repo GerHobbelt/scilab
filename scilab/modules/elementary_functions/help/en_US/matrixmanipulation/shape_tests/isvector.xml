@@ -43,7 +43,8 @@
         <title>Description</title>
         <para>
             <literal>isvector(x)</literal> returns true if <literal>x</literal>
-            is a vector (only one of its dimension is different from 1).
+            is a scalar (all dimensions equal to 1) or 
+            is a vector (only one dimension not equal to 1).
         </para>
     </refsection>
     <refsection>
@@ -52,5 +53,14 @@
 isvector(ones(10,1))
 isvector(1)
  ]]></programlisting>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2025.0.0</revnumber>
+                <revremark><literal>isvector(x)</literal> now returns true if <literal>x</literal> is a scalar.</revremark>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>
