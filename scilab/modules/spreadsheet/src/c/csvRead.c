@@ -47,7 +47,7 @@ static char* getNumbersOfColumnsInLines(wchar_t** lines, int sizelines,
 static int getNumbersOfColumnsInLine(wchar_t* line, const wchar_t* separator);
 static void removeEmptyLinesAtEnd(wchar_t** lines, int* nonEmptyLines);
 static void moveEmptyLinesToEnd(wchar_t** lines, int* nonEmptyLines);
-static void replaceDoubleQuotes(wchar_t** lines, int* nbLines);
+static int replaceDoubleQuotes(wchar_t** lines, int* nbLines);
 static int hasOnlyBlankCharacters(wchar_t** line);
 static void replaceStrings(wchar_t** lines, int* nbLines, wchar_t** toreplace, int sizetoreplace);
 static wchar_t** extractComments(wchar_t** lines, int* nbLines, const wchar_t* regexpcomments, int* nbcomments, int* iErr);
@@ -58,11 +58,9 @@ csvResult* csvRead(const wchar_t* filename, const wchar_t* separator, const wcha
     csvResult* result = NULL;
     int fd = 0;
     int f_swap = 0;
-    double res = 0.0;
     int errMOPEN = MOPEN_INVALID_STATUS;
     wchar_t** pwstLines = NULL;
     int nbLines = 0;
-    wchar_t** replacedInLines = NULL;
     wchar_t** pComments = NULL;
     int nbComments = 0;
     wchar_t** pHeader = NULL;
@@ -281,56 +279,126 @@ int csvTextScanInPlace(wchar_t** text, int nbLines, const wchar_t* separator,
     return 0;
 }
 // =============================================================================
-static void replaceDoubleQuotes(wchar_t** lines, int* nbLines)
+static int replaceDoubleQuotes(wchar_t** lines, int* nbLines)
 {
-    int dest = 0;
-    wchar_t* it = NULL;
-    for (int next = dest; next < *nbLines; dest++, next++)
+    int nbQuote = 0;
+    int realLines = 0;
+    size_t data_size = 3*2048;
+    // data[0]: start quote line
+    // data[2]: end quote line
+    // data[3]: total line string size
+    size_t* data = (size_t*)MALLOC(data_size * sizeof(size_t));
+    memset(data, 0, data_size * sizeof(size_t));
+    int dataPos = 0;
+    for (int l = 0; l < *nbLines; l++)
     {
-        int quoteCount = 0;
-        lines[dest] = lines[next];
-
-        it = lines[dest];
-        for (; *it != L'\0'; it++)
+        wchar_t* wline = lines[l];
+        size_t sline = wcslen(wline);
+        for (int c = 0; c < sline; c++)
         {
-            if (*it == L'"')
+            if(wline[c] == L'"')
             {
-                quoteCount++;
+                nbQuote++;
+                if(nbQuote % 2)
+                {
+                    // start quote
+                    if(dataPos - 3 >= 0 && data[dataPos-2] == l)
+                    {
+                        // start new column string, stay in the same csv line
+                        dataPos -= 3;
+                        nbQuote -= 2;
+                        data[dataPos+2] -= sline;
+                    }
+                    else
+                    {
+                        data[dataPos] = l;
+                    }
+                }
+                else
+                {
+                    // end quote
+                    if(data[dataPos] == l)
+                    {
+                        // same line, nothing to store
+                        data[dataPos] = 0;
+                        nbQuote -= 2;
+                    }
+                    else
+                    {
+                        // store data for futur concatenation
+                        data[dataPos+2] += sline;
+                        data[dataPos+1] = l;
+                        dataPos += 3;
+
+                        if(dataPos >= data_size)
+                        {
+                            size_t* tmp = (size_t*)MALLOC(2 * data_size * sizeof(size_t));
+                            memset(tmp, 0, 2 * data_size * sizeof(size_t));
+                            memcpy(tmp, data, data_size);
+                            FREE(data);
+                            data = tmp;
+                            data_size = 2* data_size;
+                        }
+                    }
+                }
             }
         }
 
-        // if at the end of this line, we still have an open double quote.
-        // merge this line and the followings.
-        for (; quoteCount % 2 == 1 && next + 1 < *nbLines; next++)
+        if(nbQuote % 2)
         {
-            wchar_t* currentLine = lines[dest];
-            wchar_t* nextLine = lines[next + 1];
+            // inside quote
+            data[dataPos+2] += sline;
+        }
+        else
+        {
+            // outside quote
+            realLines++;
+        }
+    }
 
-            size_t currentLen = it - lines[dest];
-            size_t nextLen = wcslen(nextLine);
-            size_t newLen = currentLen + nextLen + 2; // includes 'LF' and '\0'
+    if(nbQuote > 0)
+    {
+        if(nbQuote % 2)
+        {
+            // missing closing quote
+            int iLine = data[dataPos]+1;
+            FREE(data);
+            return iLine;
+        }
 
-            lines[dest] = MALLOC(newLen * sizeof(wchar_t));
-            memcpy(lines[dest], currentLine, currentLen * sizeof(wchar_t));
-            *(lines[dest] + currentLen) = 0x0A; // LF
-            memcpy(lines[dest] + currentLen + 1, nextLine, nextLen * sizeof(wchar_t));
-            *(lines[dest] + currentLen + 1 + nextLen) = L'\0';
-
-            FREE(currentLine);
-            FREE(nextLine);
-
-            it = lines[dest] + currentLen;
-            for (; *it != L'\0'; it++)
+        // string concatenation
+        int i = 0;
+        int iLines = data[0];
+        for(int iNewLines = iLines; iNewLines < realLines; iNewLines++)
+        {
+            if(iLines == data[i])
             {
-                if (*it == L'"')
+                int nbLF = data[i+1] - data[i] + 1; // one LF by line + \0 at the end
+                wchar_t* newLine = (wchar_t*)MALLOC((nbLF + data[i+2])*sizeof(wchar_t));
+                wchar_t* tmp = newLine;
+                for(int i = 0; i < nbLF; i++)
                 {
-                    quoteCount++;
+                    size_t iLen = wcslen(lines[iLines]);
+                    wcsncpy(tmp, lines[iLines], iLen);
+                    tmp[iLen] = 0x0A; // LF
+                    tmp += (iLen + 1);
+                    FREE(lines[iLines]);
+                    lines[iLines++] = NULL;
                 }
+                *(tmp-1) = L'\0'; // replace last LF by \0
+                lines[iNewLines] = newLine;
+                i+=3;
+            }
+            else
+            {
+                lines[iNewLines] = lines[iLines];
+                lines[iLines++] = NULL;
             }
         }
     }
 
-    *nbLines = dest;
+   *nbLines = realLines;
+    return 0;
 }
 // =============================================================================
 char* csvTextScanSize(wchar_t** lines, int* nbLines, const wchar_t* separator, int* rows, int* cols, int haveRange, int* iRange)
@@ -354,7 +422,12 @@ char* csvTextScanSize(wchar_t** lines, int* nbLines, const wchar_t* separator, i
     // escape line breaks (CRLF) inside double quotes
     // Note: this reallocate and change the number of lines to restore valid
     //       lines and number of lines.
-    replaceDoubleQuotes(lines, nbLines);
+    int lastQuoteLine = replaceDoubleQuotes(lines, nbLines);
+    if(lastQuoteLine != 0)
+    {
+        Sciwarning(_("%s: Missing closing '\"' opened at line %d.\n"), _("Warning"), lastQuoteLine);
+        return "%s: can not read file, error in the column structure.\n";
+    }
 
     errorMsg = getNumbersOfColumnsInLines(lines, *nbLines, separator, cols);
     *rows = *nbLines;
@@ -369,11 +442,11 @@ char* csvTextScanSize(wchar_t** lines, int* nbLines, const wchar_t* separator, i
         // error
         if (iRange[0] > *rows)
         {
-            return gettext("%s: Range row or/and column left indice(s) out of bounds.\n");
+            return "%s: Range row or/and column left indice(s) out of bounds.\n";
         }
         if (iRange[1] > *cols)
         {
-            return gettext("%s: Range row or/and column left indice(s) out of bounds.\n");
+            return "%s: Range row or/and column left indice(s) out of bounds.\n";
         }
 
         // truncate
@@ -439,7 +512,7 @@ static char* getNumbersOfColumnsInLines(wchar_t** lines, int sizelines,
                 if (previousNbColumns != NbColumns)
                 {
                     Sciwarning(_("%s: Inconsistency found in the columns. At line %d, found %d columns while the previous had %d.\n"), _("Warning"), i + 1, NbColumns, previousNbColumns);
-                    return gettext("%s: can not read file, error in the column structure\n");
+                    return "%s: can not read file, error in the column structure\n";
                 }
             }
         }

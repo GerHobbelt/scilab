@@ -45,7 +45,6 @@ int sci_csvRead(char *fname, void* pvApiCtx)
 {
     SciErr sciErr;
     int iErr = 0;
-    int iErrEmpty = 0;
 
     wchar_t *filename = NULL;
     wchar_t *separator = NULL;
@@ -59,7 +58,6 @@ int sci_csvRead(char *fname, void* pvApiCtx)
     int nbElementsToReplace = 0;
 
     wchar_t *regexp = NULL;
-    int haveRegexp = 0;
 
     csvResult *result = NULL;
     sciErr.iErr = 0;
@@ -126,10 +124,6 @@ int sci_csvRead(char *fname, void* pvApiCtx)
             {
                 FREE(regexp);
                 regexp = NULL;
-            }
-            else
-            {
-                haveRegexp = 1;
             }
         }
 
@@ -290,18 +284,14 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                 double* pDblImgValues = NULL;
 
                 char* errorMsg = NULL;
-
                 errorMsg = csvTextScanSize(result->pwstrValues, &result->nbLines, separator, &m1, &n1, haveRange, iRange);
                 if (errorMsg != NULL)
                 {
-                    Scierror(999, errorMsg, fname);
+                    Scierror(999, _(errorMsg), fname);
                     break;
                 }
 
-                /*
-                 * Allocate some memory to store the decoded content
-                 */
-
+                // Allocate some memory to store the decoded content
                 if (wcscmp(conversion, CONVTOSTR) == 0)
                 {
                     // allocMatrixOfWideString (non existing yet) here will avoid an extra copy
@@ -328,9 +318,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                        return 0;
+                        break;
                     }
                 }
 
@@ -338,9 +326,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                 if (csvTextScanInPlace(result->pwstrValues, result->nbLines, separator, decimal, haveRange, iRange, m1, n1, pstrValues, pDblRealValues, &pDblImgValues))
                 {
                     Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                    freeCsvResult(result);
-                    freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                    return 0;
+                    break;
                 }
 
                 // push or recreate Scilab variables
@@ -359,9 +345,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                        return 0;
+                        break;
                     }
                     LhsVar(1) = Rhs + 2;
                     // release the allocated on-demand array
@@ -387,10 +371,8 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
                         FREE(pstrValues);
-                        return 0;
+                        break;
                     }
                     LhsVar(1) = Rhs + 1;
 
@@ -404,9 +386,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                        return 0;
+                        break;
                     }
 
                     LhsVar(2) = Rhs + 3;
@@ -420,9 +400,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                        return 0;
+                        break;
                     }
 
                     if (result->nbComments > 0)
@@ -443,9 +421,7 @@ int sci_csvRead(char *fname, void* pvApiCtx)
                     {
                         printError(&sciErr, 0);
                         Scierror(17, _("%s: Memory allocation error.\n"), fname);
-                        freeCsvResult(result);
-                        freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
-                        return 0;
+                        break;
                     }
                     LhsVar(2) = Rhs + 3;
                 }
@@ -493,7 +469,6 @@ int sci_csvRead(char *fname, void* pvApiCtx)
     }
 
     freeCsvResult(result);
-
     freeVar(&filename, &separator, &decimal, &conversion, &iRange, &toreplace, nbElementsToReplace * 2, &regexp);
 
     return 0;
