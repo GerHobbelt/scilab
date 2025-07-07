@@ -117,24 +117,10 @@
                         <tr>
                             <td>Technical name</td>
                             <td>Version</td>
-                            <td>Installation section</td>
+                            <td>Installation section: this parameter determines whether the module has been installed
+                                for all users or only for the current user.</td>
                             <td>Installation path</td>
-                            <td>Status</td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                this parameter determines whether the module has been installed
-                                for all users or only for the   current user.
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                "I" stands for "Intentionally", "A" stands for "Automatically"
-                            </td>
+                            <td>Status: "I" stands for "Intentionally", "A" stands for "Automatically"</td>
                         </tr>
                     </informaltable>
                 </listitem>

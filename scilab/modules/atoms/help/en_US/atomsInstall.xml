@@ -107,24 +107,10 @@
                         <tr>
                             <td>Technical name</td>
                             <td>Version</td>
-                            <td>Installation section</td>
+                            <td>Installation section: this parameter determines whether the module has been installed
+                                for all users or only for the current user.</td>
                             <td>Installation path</td>
-                            <td>Status</td>
-                        </tr>
-                        <tr>
-                            <td>
-                            </td>
-                            <td>
-                            </td>                          
-                            <td>
-                                this parameter determines whether the module has been installed
-                                for all users or only for the   current user.
-                            </td>
-                            <td>
-                            </td>
-                            <td>
-                                "I" stands for "Intentionally", "A" stands for "Automatically"
-                            </td>
+                            <td>Status: "I" stands for "Intentionally", "A" stands for "Automatically"</td>
                         </tr>
                     </informaltable>
                 </listitem>
@@ -139,6 +125,9 @@
         <para>
             <literal>atomsInstall</literal> installs one or several external modules.
         </para>
+        <note>
+            <para>By default, <literal>atomsInstall</literal> tries to install modules from ATOMS remote repositories. To install a module from a local file, you have to switch ATOMS to offline mode by using <literal>atomsSetConfig("offline","True")"</literal> command.</para>
+        </note>
     </refsection>
     <!-- ===================================================================== -->
     <!-- Examples -->
@@ -146,7 +135,7 @@
     <refsection>
         <title>Examples</title>
         <para>
-            <emphasis role="strong">Example 1</emphasis>: Installing a module from a repository
+            <emphasis role="strong">Example 1:</emphasis> Installing a module from a repository
         </para>
         <programlisting role="example"><![CDATA[
 // Display some additional information
@@ -186,7 +175,7 @@ atomsRepositoryDel(repository);
 atomsSystemUpdate();
         ]]></programlisting>
         <para>
-            <emphasis role="strong">Example 2</emphasis>: Installing a local module.  As well as
+            <emphasis role="strong">Example 2:</emphasis> Installing a module from a local archive. As well as
             installing modules from the central repository, you can also install
             modules directly from your own machine.
         </para>
@@ -194,9 +183,8 @@ atomsSystemUpdate();
 // Display some additional information
 atomsSetConfig("Verbose","True");
 
-// Load the test repository
-exec("SCI/modules/atoms/tests/unit_tests/atomsTestUtils.sce", -1);
-repository = atomsCreateTestRepository("scene10");
+// Switch to offline mode
+atomsSetConfig("offLine","True");
 
 // Install a module
 atomsInstall(SCI+"/modules/atoms/tests/unit_tests/toolbox_7V6_1.0-1.bin.zip");
@@ -206,8 +194,9 @@ disp( atomsGetInstalled() );
 
 // Cleaning
 atomsRemove("toolbox_7V6");
-atomsRepositoryDel(repository);
-atomsSystemUpdate();
+
+// Back to default mode
+atomsSetConfig("offLine","False");
 ]]></programlisting>
     </refsection>
     <!-- ===================================================================== -->
