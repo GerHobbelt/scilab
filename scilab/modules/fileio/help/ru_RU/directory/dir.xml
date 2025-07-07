@@ -86,10 +86,6 @@
             форматированного в виде столбца. Это можно изменить,
             переопределив функцию <function>%dir_p</function>.
         </para>
-        <para>
-            Начиная с Scilab 5.3.1, завершение "/" или "\" (см. <link
-      linkend="filesep">filesep</link>) отображается для каждой директории.
-        </para>
     </refsection>
     <refsection>
         <title>Примеры</title>
@@ -121,5 +117,17 @@ mprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\n",x.name,dt(:,[1 2 6 7:9]))
             </member>
         </simplelist>
     </refsection>
+    <refsection role="history">
+        <title>История</title>
+        <revhistory>
+            <revision>
+                <revnumber>5.3.1</revnumber>
+                <revdescription>
+                    <para>
+                        завершение "/" или "\" (см. <link linkend="filesep">filesep</link>) отображается для каждой директории.
+                    </para>
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>
-

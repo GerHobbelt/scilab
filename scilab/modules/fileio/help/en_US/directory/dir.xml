@@ -80,9 +80,6 @@
             The default display of the returned structure is a column formatted list
             of files. It can be changed redefining the function <function>%dir_p</function>.
         </para>
-        <para>
-            Since Scilab 5.3.1, a trailing "/" or "\" (see <link linkend="filesep">filesep</link>) is displayed for each directory.
-        </para>
     </refsection>
     <refsection>
         <title>Examples</title>
@@ -113,5 +110,18 @@ mprintf("%s: %04d-%02d-%02d %02d:%02d:%02d\n",x.name,dt(:,[1 2 6 7:9]))
                 <link linkend="date">date</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>5.3.1</revnumber>
+                <revdescription>
+                    <para>
+                        A trailing "/" or "\" (see <link linkend="filesep">filesep</link>) is displayed for each directory.
+                    </para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

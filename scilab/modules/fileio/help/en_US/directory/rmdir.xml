@@ -48,7 +48,7 @@
             <varlistentry>
                 <term>status</term>
                 <listitem>
-                    <para>a boolean.</para>
+                    <para>an integer value: <constant>1</constant> for success and <constant>0</constant> for error.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
