@@ -35,7 +35,7 @@ create_linux_runner:
   needs: []
   variables:
     GIT_CLEAN_FLAGS: "none"
-    DISTRO: "ubuntu-20.04"
+    DISTRO: "ubuntu-22.04"
   script:
     - |
       if echo "$DOCKER_TAG" | grep -vqEo '[0-9]{1,}.[0-9]{1,}.[0-9]{1,}'; then

@@ -10,17 +10,17 @@
 #
 # Build compilers used to build Scilab
 #
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL description="Build needed compilers"
 
 # Install needed packages
 ARG DEBIAN_FRONTEND=noninteractive
-RUN apt-get update && apt-get install -y curl autoconf make gcc g++
+RUN apt-get update && apt-get install -y curl autoconf make gcc g++ bzip2
 
 # Set environment variables
 ENV GCC_VERSION 11.4.0
 ENV PATCHELF_VERSION 0.17.2
-ENV OCAML_VERSION 4.12.0
+ENV OCAML_VERSION 4.13.1
 ENV OCAML_FINDLIB_VERSION 1.9.1
 ENV OCAML_NUM_VERSION 1.4
 
@@ -57,7 +57,6 @@ RUN curl -L https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequiremen
     && ln -s mpc-$MPC_VERSION mpc
 RUN curl -L https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/isl-$ISL_VERSION.tar.bz2 | tar -xjf - \
     && ln -s isl-$ISL_VERSION isl
-
 
 # Build and install GCC
 WORKDIR /work/gcc-$GCC_VERSION/gcc-build
@@ -123,7 +122,7 @@ RUN rm -fr *
 #
 # Build the Scilab builder image with minimal dependencies
 #
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 LABEL description="Scilab builder image used by CI/CD runners"
 
 # Install system dependencies without asking anything
