@@ -12,8 +12,14 @@
 function writetimeseries(ts, filename, varargin)
     rhs = nargin;
     delim = ",";
+    fname = "writetimeseries";
+
     if rhs > 2 then
-        for i = nargin-1:-2:3
+        nboptvars = rhs - 2;
+        if modulo(nboptvars, 2) == 1 then
+            error(msprintf(_("%s: Wrong number of input arguments: %d expected.\n"), fname, nboptvars + 1));
+        end
+        for i = 1:2:nboptvars
             if type(varargin(i)) <> 10 then
                 break;
             end
@@ -22,13 +28,13 @@ function writetimeseries(ts, filename, varargin)
             case "Delimiter"
                 delim = varargin(i + 1);
                 if type(delim) <> 10 then
-                    error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), "writetimeseries", varargin(i)));
+                    error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), fname, varargin(i)));
                 end
                 if ~isscalar(delim) then
-                    error(msprintf(_("%s: Wrong size for %s argument: scalar expected.\n"), "writetimeseries", varargin(i)));
+                    error(msprintf(_("%s: Wrong size for %s argument: scalar expected.\n"), fname, varargin(i)));
                 end
             else
-                error(msprintf(_("%s: Wrong value for input argument #%d: ''%s'' not allowed.\n"), "writetimeseries", i, varargin(i)));
+                error(msprintf(_("%s: Wrong value for input argument #%d: ''%s'' not allowed.\n"), fname, i, varargin(i)));
             end
 
             rhs = rhs - 2;
@@ -37,12 +43,12 @@ function writetimeseries(ts, filename, varargin)
 
     // arg #1
     if ~istimeseries(ts) then
-        error(msprintf(_("%s: Wrong type for input argument #%d: timeseries expected.\n"), "writetimeseries", 1));
+        error(msprintf(_("%s: Wrong type for input argument #%d: timeseries expected.\n"), fname, 1));
     end
 
     // arg #2
     if type(filename) <> 10 then
-        error(msprintf(_("%s: Wrong type for input argument #%d: file name expected.\n"), "writetimeseries", 1));
+        error(msprintf(_("%s: Wrong type for input argument #%d: file name expected.\n"), fname, 1));
     end
 
     tss = string(ts);

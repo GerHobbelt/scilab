@@ -178,3 +178,8 @@ assert_checkequal(tt.c, "version" + emptystr(3, 1));
 writetimeseries(tt, fullfile(TMPDIR, "test.csv"));
 tt1 = readtimeseries(fullfile(TMPDIR, "test.csv"));
 assert_checktrue(tt1.vars == tt.vars);
+
+ts = timeseries(hours(1:3)', [1;2;3], ["a"; "b"; "c"]);
+writetimeseries(ts, fullfile(TMPDIR, "ts.csv"), "Delimiter", ascii(9));
+ts1 = readtimeseries(fullfile(TMPDIR, "ts.csv"));
+assert_checktrue(ts.vars == ts1.vars);
