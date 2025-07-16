@@ -297,3 +297,7 @@ t("", :) = [3, 4];
 assert_checkequal(t, table([0 1; 1 2; 2 3; 3 4], "VariableNames", ["A", "B"], "RowNames", ["a"; "b"; "c"; ""]));
 t.Row($) = "d";
 assert_checkequal(t.Row, ["a"; "b"; "c"; "d"]);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("table([1;2;3], [4;5;6], [7;8;9], ""rowNames"", [""R1"";""R2"";""R3""], ""variableNames"", [""a"", ""b"", ""c""])", "errcatch") == 0);
+assert_checktrue(execstr("table([1;2], [4;5], ""variablenames"", [""a1"", ""a2""], ""roWnameS"", [""b1"";""b2""])", "errcatch") == 0);

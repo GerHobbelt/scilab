@@ -134,3 +134,8 @@ assert_checkequal(r, expected);
 r = rowfun(mean, t, "InputVariables", "execTimeDuration", "GroupingVariables", "id")
 expected = table([0;1;2], [2;2;2], [mean(d(1:2)); mean(d(3:4)); mean(d(5:6))], "VariableNames", ["id", "GroupCount", "Var1"]);
 assert_checkequal(r, expected);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("rowfun(mean, t, ""inPUtvariABles"", ""execTimeDuration"", ""grouPINGvarIAbles"", ""id"")", "errcatch") == 0);
+assert_checktrue(execstr("rowfun(f, A, ""gROUpINGvariableS"", ""x4"", ""inputvariables"", [""x1"", ""x3""], ""OUTputVARiablenames"", ""z"")", "errcatch") == 0);
+assert_checktrue(execstr("rowfun(f3, A, ""InputVariables"", [""x1"", ""x3""], ""numOUTputs"", 3)", "errcatch") == 0);

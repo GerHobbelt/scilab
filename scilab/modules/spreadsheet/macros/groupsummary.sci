@@ -25,13 +25,13 @@ function out = groupsummary(varargin)
                 break;
             end
 
-            select varargin(i)
-            case "IncludeEmptyGroups"
+            select convstr(varargin(i), "l")
+            case "includeemptygroups"
                 includeEmptyGroups = varargin(i + 1);
                 if type(includeEmptyGroups) <> 4 then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A boolean expected.\n"), fname, i));
                 end
-            case "IncludedEdge"
+            case "includededge"
                 includedEdge = varargin(i+1);
                 if type(includedEdge) <> 10 then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), fname, i+1));

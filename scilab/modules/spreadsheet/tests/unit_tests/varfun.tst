@@ -71,6 +71,10 @@ ts = timeseries(timestamp, x1, x2, msg, "VariableNames", ["timestamp", "x1", "x2
 f = #(x) -> (strsubst(x, " ", ""));
 v = varfun(f, ts, "InputVariables", "message");
 
+// Test case-sensitivity on options
+assert_checktrue(execstr("varfun(sum, A, ""GRoupingvaRiabLES"", ""hours"")", "errcatch") == 0);
+assert_checktrue(execstr("varfun(f, ts, ""inputvariables"", ""message"")", "errcatch") == 0);
+
 
 // -----------------------------------------------------------------------------
 // Data from www.historique-meteo.net

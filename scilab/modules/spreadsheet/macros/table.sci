@@ -37,8 +37,8 @@ function t = table(varargin)
                 break;
             end
 
-            select varargin(i)
-            case "VariableNames"
+            select convstr(varargin(i), "l")
+            case "variablenames"
                 variableNames = varargin(i + 1);
                 if type(variableNames) <> 10 then
                     error(msprintf(_("%s: Wrong type for ""%s"" argument: string vector expected.\n"), fname, "VariableNames"));
@@ -58,7 +58,7 @@ function t = table(varargin)
                     error(msprintf(_("%s: Wrong value for ""%s"" argument: unique variable names expected.\n"), fname, "VariableNames"));
                 end
 
-            case "RowNames"
+            case "rownames"
                 rowNames = varargin(i + 1);
 
                 if type(rowNames) <> 10 then
@@ -70,8 +70,7 @@ function t = table(varargin)
                 end
 
             else
-                break; 
-                //error(msprintf(_("%s: Wrong value for input argument #%d: ''%s'' not allowed.\n"), fname, i, varargin(i)));
+                break;
             end
             
             rhs = rhs - 2;

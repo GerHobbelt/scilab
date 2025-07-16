@@ -21,16 +21,19 @@ function out = addvars(varargin)
 
     if nargin > 3 then
         for i = nargin-1:-2:3
-            select varargin(i)
-            case "After"
+            if (typeof(varargin(i)) <> "string")
+                break;
+            end
+            select convstr(varargin(i), "l")
+            case "after"
                 after = %t;
                 location = varargin(i+1);
                 numloc = i;
-            case "Before"
+            case "before"
                 before = %t;
                 location = varargin(i+1);
                 numloc = i;
-            case "NewVariableNames"
+            case "newvariablenames"
                 newvarnames = varargin(i+1);
                 numvar = i;
             else

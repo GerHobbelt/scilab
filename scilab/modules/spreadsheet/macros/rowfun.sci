@@ -22,23 +22,23 @@ function out = rowfun(varargin)
             if type(varargin(i)) <> 10 || (type(varargin(i)) == 10 && ~isscalar(varargin(i))) then
                 break;
             end
-            select varargin(i)
-            case "GroupingVariables" 
+            select convstr(varargin(i), "l")
+            case "groupingvariables" 
                 groupingVariables = varargin(i + 1);
                 if and(type(groupingVariables) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: string or double vector expected.\n"), fname, i));
                 end
-            case "InputVariables"
+            case "inputvariables"
                 inputVariables = varargin(i + 1);
                 if and(type(inputVariables) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: string or double vector expected.\n"), fname, i));
                 end
-            case "OutputVariableNames"
+            case "outputvariablenames"
                 outputVariable = varargin(i + 1);
                 if type(outputVariable) <> 10 then
                     error(msprintf(_("%s: Wrong type for input argument #%d: string vector expected.\n"), fname, i));
                 end
-            case "NumOutputs"
+            case "numoutputs"
                 numOutputs = varargin(i + 1);
                 if and(type(numOutputs) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: double expected.\n"), fname, i));

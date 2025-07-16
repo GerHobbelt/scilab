@@ -21,13 +21,13 @@ function tt = readtable(varargin)
             if type(varargin(i)) <> 10 then
                 break;
             end
-            select varargin(i)
-            case "VariableNames"
+            select convstr(varargin(i), "l")
+            case "variablenames"
                 names = varargin(i + 1);
                 if type(names) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), fname, varargin(i)));
                 end
-            case "ReadRowNames"
+            case "readrownames"
                 readrownames = varargin(i + 1);
                 if type(readrownames) <> 4 then
                     error(msprintf(_("%s: Wrong type for %s argument: boolean expected.\n"), fname, varargin(i)));

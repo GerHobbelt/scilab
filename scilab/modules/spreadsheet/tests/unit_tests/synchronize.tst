@@ -426,6 +426,11 @@ assert_checktrue(tscomputed.Time == newtime1);
 assert_checkequal(tscomputed.Var1_ts1, c11);
 assert_checkequal(tscomputed.Var1_ts2, c22);
 
+// Test case-sensitivity on options
+assert_checktrue(execstr("synchronize(ts1, ts2, ""regular"", ""tiMEstEP"", hours(1))", "errcatch") == 0);
+assert_checktrue(execstr("synchronize(ts1, ts2, ""regular"", ""SaMPLeRaTe"", 1/3600)", "errcatch") == 0);
+assert_checktrue(execstr("synchronize(ts1, ts2, ""hourly"", sum, ""InclUDEdEdGE"", ""right"")", "errcatch") == 0);
+
 // -----------------------------------------------------------------------
 // ERRORS
 // -----------------------------------------------------------------------

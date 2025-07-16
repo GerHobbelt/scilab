@@ -45,29 +45,34 @@ function out = duration(varargin)
 
     if rhs > 2 then
         while rhs > 2
-            select varargin(rhs - 1)
-            case "InputFormat"
-                inputFormat = varargin(rhs);
-                if type(inputFormat) <> 10 then
-                    error(msprintf(gettext("%s: Wrong type for input argument #%d: string expected.\n"), fname, rhs));
-                end
-                infmt = strsubst(inputFormat, "/\.S+$/", "", "r")
-                if find(infmt == authorizedFormat) == [] then
-                    error(msprintf(gettext("%s: Wrong value for ""%s"" argument: {%s, %s, %s, %s} expected.\n"), fname, varargin(rhs-1), "dd:hh:mm:ss", "hh:mm:ss", "hh:mm", "mm:ss"));
-                end
-            case "OutputFormat"
-                outputFormat = varargin(rhs);
-                if ~isempty(outputFormat) then
-                    if type(outputFormat) <> 10 then
+            v = varargin(rhs - 1);
+            if typeof(v) == "string" then
+                select convstr(v, "l")
+                case "inputformat"
+                    inputFormat = varargin(rhs);
+                    if type(inputFormat) <> 10 then
                         error(msprintf(gettext("%s: Wrong type for input argument #%d: string expected.\n"), fname, rhs));
                     end
-                    outfmt = strsubst(outputFormat, "/\.S+$/", "", "r")
-                    if find(outfmt == authorizedFormat) == [] then
+                    infmt = strsubst(inputFormat, "/\.S+$/", "", "r")
+                    if find(infmt == authorizedFormat) == [] then
                         error(msprintf(gettext("%s: Wrong value for ""%s"" argument: {%s, %s, %s, %s} expected.\n"), fname, varargin(rhs-1), "dd:hh:mm:ss", "hh:mm:ss", "hh:mm", "mm:ss"));
                     end
+                case "outputformat"
+                    outputFormat = varargin(rhs);
+                    if ~isempty(outputFormat) then
+                        if type(outputFormat) <> 10 then
+                            error(msprintf(gettext("%s: Wrong type for input argument #%d: string expected.\n"), fname, rhs));
+                        end
+                        outfmt = strsubst(outputFormat, "/\.S+$/", "", "r")
+                        if find(outfmt == authorizedFormat) == [] then
+                            error(msprintf(gettext("%s: Wrong value for ""%s"" argument: {%s, %s, %s, %s} expected.\n"), fname, varargin(rhs-1), "dd:hh:mm:ss", "hh:mm:ss", "hh:mm", "mm:ss"));
+                        end
+                    end
+                else
+                    error(msprintf(_("%s: Unknown option ""%s"".\n"), fname, v));
                 end
             else
-                if type(varargin(rhs - 1)) <> 1 then
+                if type(v) <> 1 then
                     error(msprintf(gettext("%s: Wrong value for input argument #%d: ""%s"" or ""%s"" expected.\n"), fname, rhs-1, "InputFormat", "OutputFormat"));
                 end
                 if rhs > 4 then
@@ -130,6 +135,8 @@ function out = duration(varargin)
         else
             error(msprintf(gettext("%s: Wrong type for input arguments #%d, #%d, #%d and #%d: reals expected.\n"), fname, 1, 2, 3, 4));
         end
+    else
+        error(msprintf(gettext("%s: Wrong number of input arguments.\n"), fname));
     end
 
     if type(input1) == 1 then

@@ -34,3 +34,7 @@ writetable(t, fullfile(TMPDIR, "test.csv"), "WriteRowNames", %t);
 t1 = readtable(fullfile(TMPDIR, "test.csv"), "ReadRowNames", %t);
 assert_checktrue(t1.vars == t.vars);
 assert_checktrue(t1.Row == t.Row);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("writetable(t, fullfile(TMPDIR, ""test.csv""), ""deLImitER"", "";"", ""wRiTerOWnaMES"", %t)", "errcatch") == 0);
+assert_checktrue(execstr("readtable(fullfile(TMPDIR, ""test.csv""), ""rEAdrOwnAmEs"", %t)", "errcatch") == 0);

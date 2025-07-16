@@ -24,8 +24,8 @@ function writetimeseries(ts, filename, varargin)
                 break;
             end
 
-            select varargin(i)
-            case "Delimiter"
+            select convstr(varargin(i), "l")
+            case "delimiter"
                 delim = varargin(i + 1);
                 if type(delim) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), fname, varargin(i)));

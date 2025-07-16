@@ -183,3 +183,6 @@ ts = timeseries(hours(1:3)', [1;2;3], ["a"; "b"; "c"]);
 writetimeseries(ts, fullfile(TMPDIR, "ts.csv"), "Delimiter", ascii(9));
 ts1 = readtimeseries(fullfile(TMPDIR, "ts.csv"));
 assert_checktrue(ts.vars == ts1.vars);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("readtimeseries(filename, ""rowtImES"", d)", "errcatch") == 0);

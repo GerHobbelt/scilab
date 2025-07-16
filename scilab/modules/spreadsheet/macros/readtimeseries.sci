@@ -28,8 +28,8 @@ function tt = readtimeseries(varargin)
                 break;
             end
 
-            select varargin(i)
-            case "SampleRate"
+            select convstr(varargin(i), "l")
+            case "samplerate"
                 sampleRate = varargin(i + 1);
                 if type(sampleRate) <> 1 then
                     error(msprintf(_("%s: Wrong type for %s argument: double expected.\n"), "readtimeseries", varargin(i)));
@@ -41,7 +41,7 @@ function tt = readtimeseries(varargin)
                 listArgs($+1) = varargin(i);
                 listArgs($+1) = sampleRate;
 
-            case "TimeStep"
+            case "timestep"
                 timeStep = varargin(i + 1);
                 if and(typeof(timeStep) <> ["duration", "calendarDuration"]) then
                     error(msprintf(_("%s: Wrong type for %s argument: duration or calendarDuration expected.\n"), "readtimeseries", varargin(i)));
@@ -53,7 +53,7 @@ function tt = readtimeseries(varargin)
                 listArgs($+1) = varargin(i);
                 listArgs($+1) = timeStep;
 
-            case "StartTime"
+            case "starttime"
                 startTime = varargin(i + 1);
                 if and(typeof(startTime) <> ["duration", "datetime"]) then
                     error(msprintf(_("%s: Wrong type for %s argument: duration or datetime expected.\n"), "readtimeseries", varargin(i)));
@@ -65,7 +65,7 @@ function tt = readtimeseries(varargin)
                 listArgs($+1) = varargin(i);
                 listArgs($+1) = startTime;
 
-            case "RowTimes"
+            case "rowtimes"
                 rowTimes = varargin(i + 1);
                 if and(typeof(rowTimes) <> ["string", "duration", "datetime"]) then
                     error(msprintf(_("%s: Wrong type for %s argument: string or duration or datetime expected.\n"), "readtimeseries", varargin(i)));
@@ -79,13 +79,13 @@ function tt = readtimeseries(varargin)
                     listArgs($+1) = rowTimes;
                 end
 
-            case "ConvertTime"
+            case "converttime"
                 method = varargin(i + 1);
                 if type(method) <> 13 then
                     error(msprintf(_("%s: Wrong type for %s argument: function expected.\n"), "readtimeseries", varargin(i)));
                 end
 
-            case "VariableNames"
+            case "variablenames"
                 names = varargin(i + 1);
                 if type(names) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), "readtimeseries", varargin(i)));

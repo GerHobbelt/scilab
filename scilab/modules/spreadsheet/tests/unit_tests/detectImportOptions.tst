@@ -44,3 +44,6 @@ ts = readtimeseries(fullfile(path, "t1.csv"), opts);
 assert_checkequal(ts.Properties.VariableNames, ["time", "val", "a", "b"]);
 expected = [string(datetime(2021, 11, 12, 1:4, 0, 0)'), string([zeros(4,1), [20; 24; 21; 24]]), ["on"; "on"; "off"; "on"]];
 assert_checkequal(string(ts), expected);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("detectImportOptions(fullfile(path, ""K_3.csv""), ""deLiMiTeR"", "" "")", "errcatch") == 0);

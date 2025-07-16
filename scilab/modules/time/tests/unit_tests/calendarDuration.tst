@@ -242,6 +242,12 @@ clear e;
 e = []; e($+1) = caldays(1);
 checkcalendar(e, 0, 0, 1, 0);
 
+// case-insensitive
+d = calendarDuration(1,2,3,"outputformat", "ymdt");
+checkstring(d, " 1y 2m 3d");
+d = calendarDuration(1,2,3,"outputformat", "mdt");
+checkstring(d, " 14m 3d");
+
 // checkerror
 msg = msprintf(_("%s: Wrong number of input argument: %d to %d expected, except to %d and %d.\n"), "calendarDuration", 1, 8, 2, 7);
 assert_checkerror("calendarDuration(1, 2, 3, 4, 5)", msg);

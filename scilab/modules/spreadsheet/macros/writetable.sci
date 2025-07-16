@@ -33,8 +33,8 @@ function writetable(t, varargin)
                 break;
             end
 
-            select varargin(i)
-            case "Delimiter"
+            select convstr(varargin(i), "l")
+            case "delimiter"
                 delim = varargin(i + 1);
                 if type(delim) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument: string expected.\n"), fname, varargin(i)));
@@ -42,7 +42,7 @@ function writetable(t, varargin)
                 if ~isscalar(delim) then
                     error(msprintf(_("%s: Wrong size for %s argument: scalar expected.\n"), fname, varargin(i)));
                 end
-            case "WriteRowNames"
+            case "writerownames"
                 writerownames = varargin(i + 1);
                 if type(writerownames) <> 4 then
                     error(msprintf(_("%s: Wrong type for %s argument: boolean expected.\n"), fname, varargin(i)));
@@ -50,7 +50,7 @@ function writetable(t, varargin)
                 if or(size(writerownames) <> [1 1]) then
                     error(msprintf(_("%s: Wrong size for %s argument: scalar expected.\n"), fname, varargin(i)));
                 end
-            case "WriteVariableNames"
+            case "writevariablenames"
                 writevarnames = varargin(i + 1);
                 if type(writevarnames) <> 4 then
                     error(msprintf(_("%s: Wrong type for %s argument: boolean expected.\n"), fname, varargin(i)));

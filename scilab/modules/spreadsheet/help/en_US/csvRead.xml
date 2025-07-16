@@ -353,7 +353,7 @@ while %t
         mprintf("  T=%.3f (s)\n",t);
         mprintf("  T=%.1f (ms/cell)\n",p);
     end
-    if ( nrows &lt; blocksize ) then
+    if ( nrows < blocksize ) then
         mprintf("... End of the file.\n");
         break
     end

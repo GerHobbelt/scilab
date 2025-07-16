@@ -339,16 +339,24 @@ assert_checkequal(l, expected);
 l = linspace(hours(1), minutes(10), 5);
 assert_checkequal(l, expected($:-1:1));
 
+// case-insensitive
+d = duration("01:54","inputformat", "hh:mm", "outputformat", "mm:ss");
+checkstring(d, "114:00");
+d = duration("01:54","inputformat", "hh:mm");
+checkstring(d, "01:54:00");
+d = duration(2, 30, 45, "outputformat", "hh:mm:ss");
+checkstring(d, "02:30:45");
+
 // checkerror
 msg = msprintf(_("%s: Wrong number of input argument: %d to %d expected, except to %d.\n"), "duration", 1, 8, 2);
 assert_checkerror("duration()", msg);
 assert_checkerror("duration(1, 1)", msg);
 assert_checkerror("duration(1, 1, 1, 1, 1, 1, 1, 1, 1)", msg);
 
-msg = msprintf(_("%s: Wrong value for input argument #%d: ""%s"" or ""%s"" expected.\n"), "duration", 2, "InputFormat", "OutputFormat");
+msg = msprintf(_("%s: Unknown option ""%s"".\n"), "duration", "toto");
 assert_checkerror("duration(""12:12:30"", ""toto"", ""hh:mm:ss"")", msg);
-msg = msprintf(_("%s: Wrong value for input argument #%d: ""%s"" or ""%s"" expected.\n"), "duration", 4, "InputFormat", "OutputFormat");
 assert_checkerror("duration(""12:12:30"", ""InputFormat"", ""hh:mm:ss"", ""toto"", ""hh:mm"")", msg);
+assert_checkerror("duration(1, ""toto"", 2)", msg);
 
 msg = msprintf(_("%s: Wrong type for input argument #%d: real, string or duration expected.\n"), "duration", 1);
 assert_checkerror("duration(%t)", msg);
@@ -360,9 +368,6 @@ assert_checkerror("duration("""")", msg);
 msg = msprintf(_("%s: Wrong type for input arguments #%d, #%d and #%d: reals expected.\n"), "duration", 1, 2, 3);
 assert_checkerror("duration(""toto"", 1, 2)", msg);
 assert_checkerror("duration(1, 2, ""toto"")", msg);
-
-msg = msprintf(_("%s: Wrong value for input argument #%d: ""%s"" or ""%s"" expected.\n"), "duration", 2, "InputFormat", "OutputFormat");
-assert_checkerror("duration(1, ""toto"", 2)", msg);
 
 msg = msprintf(_("%s: Wrong type for input argument #%d: string expected.\n"), "duration", 3);
 assert_checkerror("duration(1, ""InputFormat"", 2)", msg);

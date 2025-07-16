@@ -41,17 +41,39 @@ function out = calendarDuration(varargin)
         error(msprintf(_("%s: Wrong number of input argument: %d to %d expected, except to %d and %d.\n"), fname, 1, 8, 2, 7));
     end
 
-    if nargin > 2 && varargin($-1) == "OutputFormat" then
-        outputFormat = varargin($);
-        if ~isempty(outputFormat) then
-            if type(outputFormat) <> 10 then
-                error(msprintf(_("%s: Wrong type for input argument #%d: string expected.\n"), fname, rhs));
-            end
-            if find(outputFormat == ["ymdt", "mdt"]) == [] then
-                error(msprintf(_("%s: Wrong value for ""%s"" argument: {%s, %s} expected.\n"), fname, varargin($), "ymdt", "mdt"));
+    if rhs > 2 then
+        if typeof(varargin($-1)) == "string" then
+            if convstr(varargin($-1), "l") == "outputformat" then
+                outputFormat = varargin($);
+                if ~isempty(outputFormat) then
+                    if type(outputFormat) <> 10 then
+                        error(msprintf(_("%s: Wrong type for input argument #%d: string expected.\n"), fname, rhs));
+                    end
+                    if find(outputFormat == ["ymdt", "mdt"]) == [] then
+                        error(msprintf(_("%s: Wrong value for ""%s"" argument: {%s, %s} expected.\n"), fname, varargin($), "ymdt", "mdt"));
+                    end
+                end
+                rhs = rhs - 2;
+            else
+                select rhs
+                case 3
+                    if type(varargin(1)) <> 1 && type(varargin(3)) <> 1 then
+                        error(msprintf(_("%s: Wrong type for input arguments #%d, #%d and #%d: reals expected.\n"), fname, 1, 2, 3));
+                    end
+                case 4
+                    if type(varargin(1)) <> 1 && type(varargin(2)) <> 1 && typeof(varargin(4)) <> "duration" then
+                        error(msprintf(_("%s: Wrong type for input arguments #%d, #%d and #%d: reals and duration expected.\n"), fname, 1, 2, 4));
+                    end
+                case 6
+                    if type(varargin(1)) <> 1 && type(varargin(2)) <> 1 && type(varargin(3)) <> 1 && ...
+                    type(varargin(4)) <> 1 && type(varargin(6)) <> 1 then
+                        error(msprintf(_("%s: Wrong type for input arguments #%d, #%d, #%d, #%d, #%d and #%d: reals expected.\n"), fname, 1, 2, 3, 4, 5, 6));
+                    end
+                else
+                    error(msprintf(_("%s: Unknown option ""%s"".\n"), fname, varargin($-1)));
+                end
             end
         end
-        rhs = nargin - 2;
     end
 
     select rhs

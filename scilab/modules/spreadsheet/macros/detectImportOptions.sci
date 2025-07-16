@@ -44,8 +44,8 @@ function opts = detectImportOptions(filename, varargin)
                 error(msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), fname, i));
             end
 
-            select varargin(i)
-            case "Delimiter"
+            select convstr(varargin(i), "l")
+            case "delimiter"
                 delim = varargin(i+1);
                 if type(delim) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument #%d: A string expected.\n"), fname, "Delimiter", i+1));
@@ -54,7 +54,7 @@ function opts = detectImportOptions(filename, varargin)
                     error(msprintf(_("%s: Wrong value for %s argument #%d: A non-empty string expected.\n"), fname, "Delimiter", i+1));
                 end
 
-            case "Decimal"
+            case "decimal"
                 decimal = varargin(i+1);
                 if type(decimal) <> 10 then
                     error(msprintf(_("%s: Wrong type for %s argument #%d: A string expected.\n"), fname, "Decimal", i+1));
@@ -63,7 +63,7 @@ function opts = detectImportOptions(filename, varargin)
                     error(msprintf(_("%s: Wrong value for %s argument #%d: A non-empty string expected.\n"), fname, "Decimal", i+1));
                 end
 
-            case "NumHeaderLines"
+            case "numheaderlines"
                 numHeaderLines = varargin(i+1);
                 if type(numHeaderLines) <> 1 then
                     error(msprintf(_("%s: Wrong type for %s argument #%d: A double expected.\n"), fname, "NumHeaderLines", i+1));

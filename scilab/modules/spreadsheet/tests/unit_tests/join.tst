@@ -66,6 +66,11 @@ assert_checkequal(t, expected);
 t = join(a, b, "LeftKeys", 2, "RightKeys", 2, "KeepOneCopy", "a");
 assert_checkequal(t, expected);
 
+// Test case-sensitivity on options
+assert_checktrue(execstr("join(a, c, ""keys"", ""b"", ""keeponecopy"", ""a"")", "errcatch") == 0);
+assert_checktrue(execstr("join(a, c, ""KeYs"", ""b"", ""KeepoNEcopy"", ""a"")", "errcatch") == 0);
+assert_checktrue(execstr("join(a, b, ""leFTkeyS"", ""b"", ""rIghtkEYs"", ""d"")", "errcatch") == 0);
+
 
 a = timeseries(hours(1:3)', ["a", "b", "c"]', "VariableNames", ["hours", "b"]);
 c = timeseries(hours([3;1;2;3]), ["c"; "a"; "b";"d"], [10; 12; 14; 0], "VariableNames", ["hours", "b", "c"]);

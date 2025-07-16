@@ -135,6 +135,10 @@ expected = ["[-1.5, -0.5]" "[-4, -1.5]" "3"; "(0.5, 1.5]" "[-4, -1.5]" "1"; "(0.
 assert_checkequal(G.Properties.VariableNames, varnames);
 assert_checkequal(string(G), expected);
 
+// Test case-sensitivity on options
+assert_checktrue(execstr("groupsummary(A, ""x1"", [-1.5 -0.5 0.5 1.5], ""includededge"", ""right"")", "errcatch") == 0);
+assert_checktrue(execstr("groupsummary(A, ""x1"", [-1.5 -0.5 0.5 1.5], ""InClUdededGe"", ""right"")", "errcatch") == 0);
+
 
 timestamp = hours([1 3 2 2 3])';
 A = timeseries(timestamp, x1, x2, "VariableNames", ["hours", "x1", "x2"]);

@@ -31,29 +31,29 @@ function out = retime(varargin)
                 break;
             end
 
-            select varargin(i)
-            case "SampleRate"
+            select convstr(varargin(i), "l")
+            case "samplerate"
                 sampleRate = varargin(i + 1);
                 if type(sampleRate) <> 1 || ~isscalar(sampleRate) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A real scalar expected.\n"), fname, i + 1));
                 end
                 step = duration(0, 0, 1 / sampleRate);
                 //timeStep = step;
-            case "TimeStep"
+            case "timestep"
                 timeStep = varargin(i + 1);
                 if (~isduration(timeStep) && ~iscalendarDuration(timeStep)) || or(size(timeStep) <> [1 1]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A duration or calendarDuration expected.\n"), fname, i + 1));
                 end
                 step = timeStep;
                 sampleRate = %nan;//seconds(1) / timeStep;
-            case "Constant"
+            case "constant"
                 constant = varargin(i + 1);
                 if type(constant) <> 1 || ~isscalar(constant) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A real scalar expected.\n"), fname, i + 1));
                 end
             // case "EndValues"
             //     endValues = varargin(i + 1);
-            case "IncludedEdge"
+            case "includededge"
                 includedEdge = varargin(i + 1);
                 if type(includedEdge) <> 10 || and(includedEdge <> ["left", "right"]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: %s or %s expected.\n"), fname, i + 1, """left""", """right"""));

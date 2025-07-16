@@ -102,6 +102,15 @@ assert_checkequal(tscomputed.Properties.StartTime, minutes(0));
 assert_checkequal(tscomputed.Properties.SampleRate, Fs);
 assert_checkequal(tscomputed.Properties.TimeStep, minutes(15));
 
+
+// -----------------------------------------------------------------------
+// Test case-sensitivity on options
+// -----------------------------------------------------------------------
+assert_checktrue(execstr("timeseries(v1, v2, v3, ""roWtiMeS"", time)", "errcatch") == 0);
+assert_checktrue(execstr("timeseries(v1, v2, v3, ""TiMeSTeP"", step)", "errcatch") == 0);
+assert_checktrue(execstr("timeseries(v1, v2, v3, ""sAmplErAtE"", Fs)", "errcatch") == 0);
+assert_checktrue(execstr("timeseries(v1, v2, v3, ""timestep"", minutes(15), ""StaRTTime"", minutes(0), ""variableNAMES"", [""Time"", ""a"", ""b"", ""c""])", "errcatch") == 0);
+
 // -----------------------------------------------------------------------
 // Extraction - Insertion
 // -----------------------------------------------------------------------

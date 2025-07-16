@@ -533,6 +533,12 @@ assert_checktrue(tscomputed.Time == tsTimeExpected(1:2));
 tscomputed = retime(ts, "monthly", "count", "IncludedEdge", "right");
 assert_checktrue(tscomputed.Time == tsTimeExpected(2:3));
 
+// Test case-sensitivity on options
+assert_checktrue(execstr("retime(ts, ""regular"", ""tIMEstep"", hours(1))", "errcatch") == 0);
+assert_checktrue(execstr("retime(ts, ""regular"", ""sAmplErAtE"", 1/3600)", "errcatch") == 0);
+assert_checktrue(execstr("retime(ts, ""hourly"", ""fillwithconstant"", ""COnSTanT"", 1)", "errcatch") == 0);
+assert_checktrue(execstr("retime(ts, ""hourly"", sum, ""InCLudedeDGe"", ""right"")", "errcatch") == 0);
+
 
 // -----------------------------------------------------------------------
 // ERRORS

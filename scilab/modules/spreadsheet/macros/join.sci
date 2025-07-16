@@ -31,28 +31,28 @@ function [out, loc] = join(tleft, tright, varargin)
                 break;
             end
 
-            select varargin(i)
-            case "Keys"
+            select convstr(varargin(i), "l")
+            case "keys"
                 keys = varargin(i+1);
                 if and(type(keys) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A double or string expected.\n"), "join", i+1));
                 end
-            case "KeepOneCopy"
+            case "keeponecopy"
                 keeponecopy = varargin(i+1);
                 if type(keeponecopy) <> 10 then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A string expected.\n"), "join", i+1));
                 end
-            case "LeftKeys"
+            case "leftkeys"
                 leftkeys = varargin(i+1);
                 if and(type(leftkeys) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A double or string expected.\n"), "join", i+1));
                 end
-            case "RightKeys"
+            case "rightkeys"
                 rightkeys = varargin(i+1);
                 if and(type(rightkeys) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A double or string expected.\n"), "join", i+1));
                 end
-            case "LeftVariables"
+            case "leftvariables"
                 leftvariables = varargin(i+1);
                 if and(type(leftkeys) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A double or string expected.\n"), "join", i+1));
@@ -60,7 +60,7 @@ function [out, loc] = join(tleft, tright, varargin)
                 if istimeseries(tleft) & or(leftvariables == varnames_tleft(1)) then
                     error(msprintf(_("%s: ""%s"", row Times of timeseries, is not supported in ""%s"".\n"), "join", varnames_tleft(1), varargin(i)));
                 end
-            case "RightVariables"
+            case "rightvariables"
                 rightvariables = varargin(i+1);
                 if and(type(rightkeys) <> [1 10]) then
                     error(msprintf(_("%s: Wrong type for input argument #%d: A double or string expected.\n"), "join", i+1));

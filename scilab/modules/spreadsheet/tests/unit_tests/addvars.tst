@@ -231,3 +231,11 @@ for i = 1:5
     ts = addvars(ts, l(i), "After", "x1", "NewVariableNames", str(i));
     assert_checkequal(ts, timeseries(dt, [1;3;5], l(i:-1:1), [2;4;6], "VariableNames", ["Time", "x1", str(i:-1:1) "x2"]));
 end
+
+t = table([1;2;3], ["A";"B";"C"]);
+
+// Test case-sensitivity on options
+assert_checktrue(execstr("addvars(t, var_double, ""newvariableNames"", ""Double"", ""aFTeR"", ""Var1"")", "errcatch") == 0); 
+assert_checktrue(execstr("addvars(t, var_double, ""after"", ""Var1"", ""neWvariablenames"", ""Double"")", "errcatch") == 0); 
+assert_checktrue(execstr("addvars(t, var_double, ""newvariableNames"", ""Double"", ""befoRE"", ""Var2"")", "errcatch") == 0); 
+assert_checktrue(execstr("addvars(t, var_double, ""BeFoRe"", ""Var2"", ""neWvarIabLenames"", ""Double"")", "errcatch") == 0);
