@@ -154,8 +154,8 @@ void addIntValue(std::wostringstream *_postr, T _TVal, int _iWidth, bool bPrintP
                  >::type* = 0)
 {
     const wchar_t* pwstSign = NULL;
-    wchar_t pwstFormat[32];
-    wchar_t pwstOutput[32];
+    wchar_t pwstFormat[32] = {0};
+    wchar_t pwstOutput[32] = {0};
     if (bPrintPlusSign == true)
     {
         pwstSign = (_TVal < 0 ? L"-" : L"+");
