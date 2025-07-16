@@ -5,8 +5,10 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- NO CHECK REF -->
+
 a = jarray("java.lang.String", 2, 2, 3);
-str = "Hi Jims again !!"
+str = "Hi Jims again !!";
 // array insertion
 a(1, 1, 3) = "Hi Jims !";
 a(2, 1, 3) = str;

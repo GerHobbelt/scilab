@@ -36,8 +36,6 @@ int ScilabGateway::wrap(char * fname, const int envId, void * pvApiCtx)
     ScilabObjects::initialization(env, pvApiCtx);
     options.setIsNew(false);
 
-    CheckOutputArgument(pvApiCtx, Rhs, Rhs);
-
     tmpvar = new int[Rhs + 1];
     *tmpvar = 0;
 

@@ -102,9 +102,7 @@ int ScilabGateway::objectInsert(char * fname, const int envId, void * pvApiCtx)
             delete[] tab;
             ScilabObjects::removeTemporaryVars(envIdA, tmpvarB);
 
-            ScilabObjects::createEnvironmentObjectAtPos(EXTERNAL_OBJECT, Rhs + 1, idObjA, envIdA, pvApiCtx);
-
-            LhsVar(1) = Rhs + 1;
+            LhsVar(1) = Rhs;
             PutLhsVar();
 
             return 0;
@@ -213,9 +211,7 @@ int ScilabGateway::objectInsert(char * fname, const int envId, void * pvApiCtx)
 
     ScilabObjects::removeTemporaryVars(envIdA, tmpvarB);
 
-    ScilabObjects::createEnvironmentObjectAtPos(EXTERNAL_OBJECT, Rhs + 1, idObjA, envIdA, pvApiCtx);
-
-    LhsVar(1) = Rhs + 1;
+    LhsVar(1) = Rhs;
     PutLhsVar();
 
     return 0;
