@@ -225,8 +225,20 @@ bool sax_json_scilab::end_array()
     StepAny* current = m_steps.top();
     if(current->type == ScilabType::ScilabNull)
     {
-        // ending an empty array: []
-        current->container = types::Double::Empty();
+        if(current->dim > 0)
+        {
+            // [[]... : create a list that start with an empty matrix
+            m_steps.pop();
+            delete current;
+            m_steps.push(new StepAny(new types::List()));
+            m_steps.push(new StepAny(types::Double::Empty()));
+            current = m_steps.top();
+        }
+        else
+        {
+            // ending an empty array: []
+            current->container = types::Double::Empty();
+        }
     }
     else if(current->type != ScilabType::ScilabList)
     {
