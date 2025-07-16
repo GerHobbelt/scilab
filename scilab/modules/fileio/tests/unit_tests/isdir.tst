@@ -24,3 +24,5 @@ if mkdir(DIR_NAME_TST) <> 1 then pause,end
 if isdir(DIR_NAME_TST) <> %t then pause,end
 if isdir(DIR_NAME_TST+filesep()) <> %t then pause,end
 if removedir(DIR_NAME_TST) <> %t then pause,end
+
+if isdir("") <> %f then pause,end

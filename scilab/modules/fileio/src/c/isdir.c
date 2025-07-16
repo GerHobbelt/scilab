@@ -58,6 +58,16 @@ BOOL isdir(const char * path)
 BOOL isdirW(const wchar_t * wcpath)
 {
     BOOL bOK = FALSE;
+    size_t len;
+    if (wcpath == NULL)
+    {
+        return FALSE;
+    }
+    len = wcslen(wcpath);
+    if (len == 0)
+    {
+        return FALSE;
+    }
 #ifndef _MSC_VER
     struct stat buf;
     char *path = wide_string_to_UTF8(wcpath);
@@ -72,9 +82,9 @@ BOOL isdirW(const wchar_t * wcpath)
     DWORD attr = 0;
     wchar_t *tmpPath = os_wcsdup(wcpath);
 
-    if ((tmpPath[wcslen(tmpPath) - 1] == L'\\') || (tmpPath[wcslen(tmpPath) - 1] == L'/'))
+    if ((tmpPath[len - 1] == L'\\') || (tmpPath[len - 1] == L'/'))
     {
-        tmpPath[wcslen(tmpPath) - 1] = L'\0';
+        tmpPath[len - 1] = L'\0';
     }
     attr = GetFileAttributesW(tmpPath);
     FREE(tmpPath);

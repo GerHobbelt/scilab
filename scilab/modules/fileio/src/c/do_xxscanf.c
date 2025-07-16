@@ -398,7 +398,7 @@ int do_xxscanf (const wchar_t *fname, FILE *fp, wchar_t *format, int *nargs, wch
                )
             {
                 f2--;
-                n = os_swprintf(f2, MAX_STR - 1, L"%d%c", MAX_STR - 1, L'l');
+                n = os_swprintf(f2, MAX_STR - (f2 - sformat), L"%d%c", MAX_STR - 1, L'l');
                 f2 += n;
                 *f2++ = *f1++;
             }

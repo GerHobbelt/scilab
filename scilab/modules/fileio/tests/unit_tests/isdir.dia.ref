@@ -18,3 +18,4 @@ if mkdir(DIR_NAME_TST) <> 1 then bugmes();quit;end
 if isdir(DIR_NAME_TST) <> %t then bugmes();quit;end
 if isdir(DIR_NAME_TST+filesep()) <> %t then bugmes();quit;end
 if removedir(DIR_NAME_TST) <> %t then bugmes();quit;end
+if isdir("") <> %f then bugmes();quit;end

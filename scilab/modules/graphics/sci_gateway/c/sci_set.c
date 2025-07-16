@@ -58,7 +58,7 @@ int sci_set(char *fname, void *pvApiCtx)
 
     char* pstNewProperty = NULL;
 
-    unsigned long hdl;
+    long long hdl;
     int iObjUID = 0;
     int iType = 0;
     int* piType = &iType;
@@ -294,13 +294,13 @@ int sci_set(char *fname, void *pvApiCtx)
             return 0;
         }
 
-        if (getScalarHandle(pvApiCtx, piAddr1, (long long*)&hdl))
+        if (getScalarHandle(pvApiCtx, piAddr1, &hdl))
         {
             Scierror(999, _("%s: Wrong size for input argument #%d: A single handle expected.\n"), fname, 1);
             return 1;
         }
 
-        iObjUID = getObjectFromHandle(hdl);
+        iObjUID = getObjectFromHandle((long) hdl);
     }
 
     if (iObjUID == 0)
