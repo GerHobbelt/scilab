@@ -3,6 +3,7 @@
  *  Copyright (C) 2013 - Scilab Enterprises - Calixte DENIZET
  *  Copyright (C) 2013 - Scilab Enterprises - Cedric Delamarre
  *  Copyright (C) 2015 - Scilab Enterprises - Antoine ELIAS
+ *  Copyright (C) 2025 - Dassault Systèmes S.E. - Vincent COUVERT
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -37,9 +38,11 @@ extern "C"
 
 static wchar_t* replaceAndCountLines(const wchar_t* _pwstInput, int* _piLines, int* _piNewLine);
 static wchar_t* replace_with_ls(TokenDef* token);
+static wchar_t* replace_with_lld(TokenDef* token);
+static wchar_t* replace_with_llu(TokenDef* token);
 static void updatel(TokenDef* token);
-static void replace_lu_llu(TokenDef* token);
-static void replace_ld_lld(TokenDef* token);
+static void updateld(TokenDef* token);
+static void updatelu(TokenDef* token);
 static void print_nan_or_inf(wchar_t* pwstTemp, double dblVal, const wchar_t* token, int pos, int width);
 
 #define NanString L"Nan"
@@ -250,7 +253,7 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
             wchar_t wcType = *(pwstPercent + 1);
             tok->typePos = static_cast<int>((pwstPercent + 1) - tok->pwstToken);
 
-            //check numer of input
+            //check number of input
             //printf("%f") or printf("%$2", 1) for example
             if (itPos == inPos.end() || (positioned ? argumentPos.back() + 1 : (*itPos).first) >= in.size())
             {
@@ -284,6 +287,11 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
                         return nullptr;
                     }
 
+                    if (tok->length == true)
+                    {
+                        updateld(tok);
+                    }
+
                     tok->outputType = types::InternalType::ScilabInt64;
                     tok->pos = p;
                     tok->col = c;
@@ -311,6 +319,11 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
                         Scierror(999, _("%s: Wrong number of input arguments: data doesn't fit with format.\n"), funcname.data());
                         *_piOutputRows = 0;
                         return nullptr;
+                    }
+
+                    if (tok->length == true)
+                    {
+                        updatelu(tok);
                     }
 
                     tok->outputType = types::InternalType::ScilabUInt64;
@@ -464,7 +477,7 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
             wchar_t* lf = wcsstr(token, L"\n");
             if (lf)
             {
-                // create tkoen as part of current token
+                // create token as part of current token
                 size_t sToken = lf - token;
                 token = (wchar_t*)MALLOC((sToken + 1) * sizeof(wchar_t));
                 wcsncpy(token, tmpToken ? tmpToken : tok->pwstToken, sToken);
@@ -520,7 +533,6 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
 
                     if (std::isfinite(dblVal))
                     {
-                        replace_ld_lld(tok);
                         if (tok->widthStar)
                         {
                             if (tok->precStar)
@@ -560,7 +572,6 @@ wchar_t** scilab_sprintf(const std::string& funcname, const wchar_t* _pwstInput,
 
                     if (std::isfinite(dblVal))
                     {
-                        replace_lu_llu(tok);
                         if (tok->widthStar)
                         {
                             if (tok->precStar)
@@ -820,9 +831,55 @@ static wchar_t* replace_with_ls(TokenDef* token)
     return pwstToken;
 }
 /*--------------------------------------------------------------------------*/
+static wchar_t* replace_with_lld(TokenDef* token)
+{
+    //replace %ld by %lld for int64 display
+    int iPos = token->typePos;
+    int sizeTotal = (int)wcslen(token->pwstToken);
+    wchar_t* pwstToken = new wchar_t[sizeTotal + 2];
+
+    wcsncpy(pwstToken, token->pwstToken, iPos);
+    pwstToken[iPos] = L'l';
+    pwstToken[iPos + 1] = L'd';
+    wcsncpy(&pwstToken[iPos + 2], token->pwstToken + iPos + 1, sizeTotal - (iPos + 1));
+    pwstToken[sizeTotal + 1] = L'\0';
+
+    return pwstToken;
+}
+/*--------------------------------------------------------------------------*/
+static wchar_t* replace_with_llu(TokenDef* token)
+{
+    //replace %lu by %llu for uint64 display
+    int iPos = token->typePos;
+    int sizeTotal = (int)wcslen(token->pwstToken);
+    wchar_t* pwstToken = new wchar_t[sizeTotal + 2];
+
+    wcsncpy(pwstToken, token->pwstToken, iPos);
+    pwstToken[iPos] = L'l';
+    pwstToken[iPos + 1] = L'u';
+    wcsncpy(&pwstToken[iPos + 2], token->pwstToken + iPos + 1, sizeTotal - (iPos + 1));
+    pwstToken[sizeTotal + 1] = L'\0';
+
+    return pwstToken;
+}
+/*--------------------------------------------------------------------------*/
 static void updatel(TokenDef* token)
 {
     wchar_t* newToken = replace_with_ls(token);
+    delete[] token->pwstToken;
+    token->pwstToken = newToken;
+}
+/*--------------------------------------------------------------------------*/
+static void updateld(TokenDef* token)
+{
+    wchar_t* newToken = replace_with_lld(token);
+    delete[] token->pwstToken;
+    token->pwstToken = newToken;
+}
+/*--------------------------------------------------------------------------*/
+static void updatelu(TokenDef* token)
+{
+    wchar_t* newToken = replace_with_llu(token);
     delete[] token->pwstToken;
     token->pwstToken = newToken;
 }
@@ -836,32 +893,6 @@ static wchar_t* replace(const wchar_t* s, const wchar_t* r, int pos, const wchar
     wchar_t* res = new wchar_t[h.size() + 1];
     wcscpy(res, h.data());
     return res;
-}
-/*--------------------------------------------------------------------------*/
-static void replace_lu_llu(TokenDef* token)
-{
-    if (token->length)
-    {
-        wchar_t* newToken = replace(L"lu", L"llu", token->typePos, token->pwstToken);
-        if (newToken)
-        {
-            delete[] token->pwstToken;
-            token->pwstToken = newToken;
-        }
-    }
-}
-/*--------------------------------------------------------------------------*/
-static void replace_ld_lld(TokenDef* token)
-{
-    if (token->length)
-    {
-        wchar_t* newToken = replace(L"ld", L"lld", token->typePos, token->pwstToken);
-        if (newToken)
-        {
-            delete[] token->pwstToken;
-            token->pwstToken = newToken;
-        }
-    }
 }
 /*--------------------------------------------------------------------------*/
 static void print_nan_or_inf(wchar_t* pwstTemp, double dblVal, const wchar_t* token, int pos, int width)
