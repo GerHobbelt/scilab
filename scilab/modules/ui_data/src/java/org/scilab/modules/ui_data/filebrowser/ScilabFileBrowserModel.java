@@ -18,6 +18,7 @@ package org.scilab.modules.ui_data.filebrowser;
 import java.io.File;
 import java.io.IOException;
 import java.nio.file.FileSystems;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardWatchEventKinds;
 import java.nio.file.WatchEvent;
@@ -147,6 +148,10 @@ public class ScilabFileBrowserModel extends AbstractScilabTreeTableModel
                     continue;
                 }
                 Path p = fn.file.toPath();
+                if(Files.isReadable(p) == false) {
+                    // See #17447: java.nio.file.AccessDeniedException issued when trying to watch C:\Users\<USER>\Documents\My Music and similar directories
+                    continue;
+                }
                 try {
                     p.register(
                         watcher, StandardWatchEventKinds.ENTRY_CREATE, StandardWatchEventKinds.ENTRY_DELETE);

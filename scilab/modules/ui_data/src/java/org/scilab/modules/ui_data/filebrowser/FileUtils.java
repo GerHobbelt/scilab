@@ -120,7 +120,9 @@ public final class FileUtils {
 
                 return len != -1 && i != len;
             } catch (IOException e) {
-                e.printStackTrace();
+                // Do not print exception
+                // See https://gitlab.com/scilab/scilab/-/merge_requests/1393#note_2568501274
+                //e.printStackTrace();
             }
         }
         return false;
