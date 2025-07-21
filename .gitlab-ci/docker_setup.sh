@@ -15,7 +15,8 @@ where:
     -b, --builder DOCKER_LINUX_BUILDER    build the DOCKER_LINUX_BUILDER image, like CI_REGISTRY_IMAGE/linux-builder
     -p, --prebuild DOCKER_LINUX_PREBUILD  build the DOCKER_LINUX_PREBUILD image, like CI_REGISTRY_IMAGE/linux-prebuild
     -t, --testers                         build the CI_REGISTRY_IMAGE/{fedora, ubuntu, debian} images
-    -r, --retag                           create a new tag with existing images
+        --retag CI_COMMIT_TAG             create a new tag with existing images
+        --skip-push                       skip the push of the images, useful for local testing
 
 Example to push images for mr325:
  docker login registry.gitlab.com/scilab/scilab
@@ -30,6 +31,7 @@ DOCKER_LINUX_PREBUILD=""
 DOCKER_TAG=""
 TESTERS=""
 CI_COMMIT_TAG=""
+SKIP_PUSH=false
 while :
 do
   case "$1" in
@@ -68,7 +70,7 @@ do
       TESTERS=testers
       shift 1
       ;;
-    -r | --retag)
+    --retag)
       if [ $# -ne 0 ]; then
         if test "$2" = -*; then
           >&2 echo "Error: $1 expect a value"
@@ -76,6 +78,10 @@ do
         CI_COMMIT_TAG="$2"
       fi
       shift 2
+      ;;
+    --skip-push)
+      SKIP_PUSH=true
+      shift 1
       ;;
     --) # End of all options
       shift
@@ -101,13 +107,13 @@ fi
 # build the linux builder image
 if test -n "${DOCKER_LINUX_BUILDER}"; then
   docker build -t "${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}" - <.gitlab-ci/Dockerfile.linux
-  docker push "${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}"
+  "${SKIP_PUSH}" || docker push "${DOCKER_LINUX_BUILDER}:${DOCKER_TAG}"
 fi
 
 # build the linux dependencies image
 if test -n "${DOCKER_LINUX_PREBUILD}"; then
   docker build -t "${DOCKER_LINUX_PREBUILD}:${DOCKER_TAG}" --build-arg DOCKER_LINUX_BUILDER="$(echo "$DOCKER_LINUX_PREBUILD" | sed s/prebuild/builder/)" --build-arg DOCKER_TAG="${DOCKER_TAG}" - <.gitlab-ci/Dockerfile.linux.prebuild
-  docker push "${DOCKER_LINUX_PREBUILD}:${DOCKER_TAG}"
+  "${SKIP_PUSH}" || docker push "${DOCKER_LINUX_PREBUILD}:${DOCKER_TAG}"
 fi
 
 # build linux distribution
@@ -125,12 +131,16 @@ if test -n "${TESTERS}"; then
   docker build -t "${CI_REGISTRY_IMAGE}/fedora-41:${DOCKER_TAG}" --build-arg DISTRO=fedora:41 - <.gitlab-ci/linux-images/Dockerfile.fedora
   docker build -t "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}" --build-arg DISTRO=debian:12 - <.gitlab-ci/linux-images/Dockerfile.ubuntu
   
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${DOCKER_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${DOCKER_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-25.04:${DOCKER_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/fedora-40:${DOCKER_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/fedora-41:${DOCKER_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}"
+  if test "${SKIP_PUSH}" = true; then
+    echo "Skipping push of images"
+  else
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${DOCKER_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${DOCKER_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-25.04:${DOCKER_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/fedora-40:${DOCKER_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/fedora-41:${DOCKER_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}"
+  fi
 fi
 
 if test -n "${CI_COMMIT_TAG}"; then
@@ -159,15 +169,19 @@ if test -n "${CI_COMMIT_TAG}"; then
   docker image tag "${CI_REGISTRY_IMAGE}/fedora-41:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/fedora-41:${CI_COMMIT_TAG}"
   docker image tag "${CI_REGISTRY_IMAGE}/debian-12:${DOCKER_TAG}" "${CI_REGISTRY_IMAGE}/debian-12:${CI_COMMIT_TAG}"
 
-  echo "Pusing images"
-  docker push "${CI_REGISTRY_IMAGE}/linux-builder:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/linux-prebuild:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/ubuntu-25.04:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/fedora-40:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/fedora-41:${CI_COMMIT_TAG}"
-  docker push "${CI_REGISTRY_IMAGE}/debian-12:${CI_COMMIT_TAG}"
+  if test "${SKIP_PUSH}" = true; then
+    echo "Skipping push of images"
+  else
+    echo "Pushing images"
+    docker push "${CI_REGISTRY_IMAGE}/linux-builder:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/linux-prebuild:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-22.04:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-24.04:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/ubuntu-25.04:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/fedora-40:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/fedora-41:${CI_COMMIT_TAG}"
+    docker push "${CI_REGISTRY_IMAGE}/debian-12:${CI_COMMIT_TAG}"
+  fi
 fi
 
 exit 0
