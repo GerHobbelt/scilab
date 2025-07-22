@@ -2,6 +2,7 @@
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2006 - INRIA - Allan CORNET
  * Copyright (C) 2010 - DIGITEO - Bruno JOFRET
+ * Copyright (C) 2025 - Dassault Systèmes S.E. - Vincent COUVERT
  *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -20,6 +21,9 @@
 #include "Scierror.h"
 #include "localization.h"
 #include "api_scilab.h"
+#include "configvariable_interface.h"
+#include "sciprint.h"
+#include "home.h"
 
 /*--------------------------------------------------------------------------*/
 int sci_pwd(char *fname, void* pvApiCtx)
@@ -40,29 +44,27 @@ int sci_pwd(char *fname, void* pvApiCtx)
             FREE(path);
             path = NULL;
         }
-        Scierror(998, _("%s: An error occurred.\n"), fname);
-        return 0;
-    }
-    else
-    {
-        int n1 = 1;
-        int m1 = (int)strlen(path);
-
-        n1 = 1;
-        sciErr = createMatrixOfString(pvApiCtx, Rhs + 1, 1, 1, &path);
-        if (sciErr.iErr)
+        if (getWarningMode())
         {
-            printError(&sciErr, 0);
-            FREE(path);
-            path = NULL;
-            return 0;
+            sciprint(_("Current directory reset to user home.\n"));
         }
+        path = getHOME(); // If working directory no more exists then go back to user home.
+        scichdir(path);
+    }
 
-        LhsVar(1) = Rhs + 1;
+    sciErr = createMatrixOfString(pvApiCtx, Rhs + 1, 1, 1, &path);
+    if (sciErr.iErr)
+    {
+        printError(&sciErr, 0);
         FREE(path);
         path = NULL;
-        PutLhsVar();
+        return 0;
     }
+
+    LhsVar(1) = Rhs + 1;
+    FREE(path);
+    path = NULL;
+    PutLhsVar();
 
     return 0;
 }
