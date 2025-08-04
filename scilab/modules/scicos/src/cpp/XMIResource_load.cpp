@@ -57,11 +57,11 @@ struct LibXML2State
     LibXML2State()
     {
         xmlGenericErrorFunc f = &console_print;
-        initGenericErrorDefaultFunc(&f);
+        xmlSetGenericErrorFunc(nullptr, f);
     }
     ~LibXML2State()
     {
-        initGenericErrorDefaultFunc(nullptr);
+        xmlSetGenericErrorFunc(nullptr, nullptr);
     }
 };
 
