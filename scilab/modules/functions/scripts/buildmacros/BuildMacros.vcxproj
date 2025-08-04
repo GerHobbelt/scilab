@@ -120,7 +120,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <None Include="buildmacros.sce" />
-    <None Include="cleanmacros.sce" />
+    <None Include="cleanmacros.bat" />
     <None Include="loadgenlib.sce" />
   </ItemGroup>
   <ItemGroup>

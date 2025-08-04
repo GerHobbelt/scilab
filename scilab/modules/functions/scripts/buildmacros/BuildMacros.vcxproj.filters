@@ -18,10 +18,10 @@
     <None Include="buildmacros.sce">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="cleanmacros.sce">
+    <None Include="loadgenlib.sce">
       <Filter>Source Files</Filter>
     </None>
-    <None Include="loadgenlib.sce">
+    <None Include="cleanmacros.bat">
       <Filter>Source Files</Filter>
     </None>
   </ItemGroup>

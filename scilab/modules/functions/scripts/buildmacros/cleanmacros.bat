@@ -1,6 +1,6 @@
 
 rem Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-rem Copyright (C) 2008 - INRIA
+rem Copyright (C) 2006-2008 - INRIA - Allan CORNET
 rem
 rem Copyright (C) 2012 - 2016 - Scilab Enterprises
 rem
@@ -11,7 +11,10 @@ rem and continues to be available under such terms.
 rem For more information, see the COPYING file which you should have received
 rem along with this program.
 
-  @rem Allan CORNET INRIA 2006
-  @cd ..\..\..\
-  @del lib /s 2>NUL
-  @del *.bin /s 2>NUL
+@cd ..\..\..\
+@rem Backup file that is not generated
+@rename io\tests\nonreg_tests\lib lib.bak
+@del lib /s 2>NUL
+@rem Restore backup
+@rename io\tests\nonreg_tests\lib.bak lib
+@del *.bin /s 2>NUL
