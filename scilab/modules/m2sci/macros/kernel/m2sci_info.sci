@@ -37,7 +37,9 @@ function m2sci_info(txt,verb_mode)
     end
 
     if verb_mode>1 | verb_mode==-1 then
-        write(logfile,margin+txt); // margin is defined in mfile2sci()
+        fd = mopen(logfile, "a"); // logfile is defined in mfile2sci()
+        mfprintf(fd, "%s\n",margin+txt); // margin is defined in mfile2sci()
+        mclose(fd);
     end
 
     if verb_mode>2 | verb_mode==-1 then

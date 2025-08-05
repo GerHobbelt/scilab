@@ -54,7 +54,7 @@ function r=mtlb_eval(%s1,%s2)
 
     margin="  "
     verbose_mode = 0;
-    logfile=file("open",res_path+"m2sci_fun.log","unknown")
+    logfile=res_path+"m2sci_fun.log";
     global("varslist")
     varslist=m2sci_init()
 
@@ -86,8 +86,6 @@ function r=mtlb_eval(%s1,%s2)
     else
         %nold=%nold+1
     end
-
-    file("close", logfile);
 
     nams=who("get");
     if size(nams,"*")<=%nold then

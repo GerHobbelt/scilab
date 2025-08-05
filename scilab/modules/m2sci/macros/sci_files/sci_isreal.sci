@@ -21,7 +21,7 @@ function tree = sci_isreal(tree)
         tree = Cste(%f)    // isreal({1}) : Octave answers false
 
     else
-        if or(A.vtype==[String Boolean])
+        if or(A.vtype==[String Boolean Unknown])
             // %c_isreal and %b_isreal are not defined in Scilab
             A = convert2double(A)
         end
@@ -29,6 +29,7 @@ function tree = sci_isreal(tree)
         // eps set to 0
         // tree.rhs = Rhs_tlist(A,Cste(0)) // isreal(complex(1,0)) => false (Octave)
 
-        tree.lhs = list(Variable("ans", Infer(list(1,1),Type(Boolean,Boolean))))
+        tree.lhs(1).dims=list(1, 1)
+        tree.lhs(1).type=Type(Boolean,Boolean)
     end
 endfunction

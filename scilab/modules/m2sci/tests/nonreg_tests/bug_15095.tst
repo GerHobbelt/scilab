@@ -7,8 +7,7 @@
 //
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
-// <-- WINDOWS ONLY -->
-//    Extension to Linux and MacOS to come later
+//
 // <-- Non-regression test for bug 15095 -->
 //
 // <-- GitLab URL -->

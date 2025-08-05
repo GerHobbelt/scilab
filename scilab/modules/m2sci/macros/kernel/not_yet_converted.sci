@@ -184,7 +184,6 @@ function allnames=not_yet_converted()
     "commandwindow";
     "compan";
     "compass";
-    "complex";
     "computer";
     "cond";
     "condeig";
@@ -958,6 +957,7 @@ function allnames=not_yet_converted()
     "regexpi";
     "regexprep";
     "rehash";
+
     "reloadsys";
     "relop";
     "remapfig";

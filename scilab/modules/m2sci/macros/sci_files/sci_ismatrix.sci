@@ -25,8 +25,9 @@ function tree = sci_ismatrix(tree)
     else
         tmp = Funcall("ndims", 1, Rhs_tlist(tree.rhs(1)), list())
         tree = Operation("<", list(tmp, Cste(3)), tree.lhs)
+
+        tree.out(1).dims = list(1,1)
+        tree.out(1).type = Type(Boolean,Boolean)
     end
 
-    tree.out(1).dims = list(1,1)
-    tree.out(1).type = Type(Boolean,Boolean)
 endfunction

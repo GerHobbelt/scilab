@@ -36,8 +36,13 @@ function sameInfos = m2sciCompareInfos(varName, m2sciInfos, matInfos)
 
     // Property comparison
     if m2sciPropInfo<>matPropInfo & m2sciPropInfo<>"Unknown" then
-        disp(varName + ": " + string(m2sciPropInfo) + " <> " + string(matPropInfo))
-        sameInfos = %F;
+        if m2sciTypeInfo == "String" & m2sciPropInfo == "Char" & matPropInfo == "Real" then // Compatibility with Matlab tests written before String/Char different handling
+            warning(varName + ": " + string(m2sciPropInfo) + " <> " + string(matPropInfo))
+            sameInfos = %T;
+        else
+            disp(varName + ": " + string(m2sciPropInfo) + " <> " + string(matPropInfo))
+            sameInfos = %F;
+        end
         return
     end
 

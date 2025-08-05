@@ -32,7 +32,7 @@ Syntaxes = [
     "isreal(b)"                      "%f"
     "isreal(@sin)"                   "%f"
     "%m2scideclare d|1 2|?|?"        ""
-    "isreal(d)"                      "isreal(d)"
+    "isreal(d)"                      "isreal(mtlb_double(d))"
     ];
 
 mfile = TMPDIR + "/_isreal";

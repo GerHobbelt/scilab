@@ -16,7 +16,7 @@
 //    mtlb_max and mtlb_min cannot handle %i*0
 
 r = mtlb_max(1 + %i * 0, 0);
-assert_checkequal(r, complex(1));
+assert_checkequal(r, 1);
 
 r = mtlb_min(1 + %i * 0, 0);
 assert_checkequal(r, 0);

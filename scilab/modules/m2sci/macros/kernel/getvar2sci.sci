@@ -20,6 +20,11 @@ function sci_equiv = getvar2sci(var,lhslist)
         error(gettext("Wrong number of inputs."))
     end
 
+    if typeof(var) == "operation" then // Happens in case of recursive extraction
+        sci_equiv = var;
+        return
+    end
+
     isFunctionHandle = part(var.name,1)=="£" // set by m2sci_syntax() for @entries
     if isFunctionHandle then
         var.name = part(var.name, 2:$)

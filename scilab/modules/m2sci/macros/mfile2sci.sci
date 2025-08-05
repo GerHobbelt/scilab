@@ -122,10 +122,10 @@ function res = mfile2sci(fil, results_path, Recmode, only_double, verbose_mode, 
         if ierr1==0 then
             load(File)
             file("close",tempfd1)
-            file("close",logfile)
+            mclose(logfile)
             mdelete(File)
         end
-        logfile = file("open",results_path+"m2sci_"+fnam+".log","unknown")
+        logfile = results_path+"m2sci_"+fnam+".log"
         save(File, "logfile")
     end
 
@@ -288,11 +288,10 @@ function res = mfile2sci(fil, results_path, Recmode, only_double, verbose_mode, 
             if ierr2==0 then
                 load(pathconvert(TMPDIR)+gettext("resumelogfile.dat"))
                 file("close", tempfd2)
-                file("close", resume_logfile)
+                mclose(resume_logfile)
                 mdelete(pathconvert(TMPDIR)+gettext("resumelogfile.dat"))
             end
             resume_logfile = results_path+gettext("resume")+"_m2sci_"+fnam+".log"
-            resume_logfile = file("open", resume_logfile, "unknown")
             save(pathconvert(TMPDIR)+gettext("resumelogfile.dat"), "resume_logfile")
         end
 
@@ -332,8 +331,9 @@ function res = mfile2sci(fil, results_path, Recmode, only_double, verbose_mode, 
         not_mtlb_fun12;
         "*"]
 
-        write(resume_logfile,margin+info_resume)
-        file("close",resume_logfile)
+        fd = mopen(resume_logfile, "a");
+        mfprintf(fd, "%s\n", margin+info_resume);
+        mclose(fd);
         mdelete(pathconvert(TMPDIR)+gettext("resumelogfile.dat"))
         //end
 
@@ -393,7 +393,6 @@ function res = mfile2sci(fil, results_path, Recmode, only_double, verbose_mode, 
         m2sci_infos = m2sci_infos_save
     end
 
-    file("close", logfile)
     clearglobal m2sci_infos  mtlbref_fun  mtlbtool_fun  not_mtlb_fun
     clearglobal m2sci_Mtoolboxes_funs_db
     
