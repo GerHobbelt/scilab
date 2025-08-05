@@ -538,6 +538,12 @@
                             <listitem>
                                 <literal>err=10</literal>: End of optimization (linear search fails).
                             </listitem>
+                            <listitem>
+                                <literal>err=12</literal>: End of optimization: Linear search failed because of a too small step increment (equivalent to <literal>err=10</literal>).
+                            </listitem>
+                            <listitem>
+                                <literal>err=13</literal>: Optim stops: Maximum number of calls to the user function (cost+gradient) has been exceeded (equivalent to <literal>err=4</literal>).
+                            </listitem>
                         </itemizedlist>
                     </para>
                 </listitem>
