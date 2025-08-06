@@ -1247,15 +1247,17 @@ public final class FindAction extends DefaultAction implements WindowFocusListen
      */
     public void closeFindReplaceWindow() {
         if (windowAlreadyExist) {
-            JEditorPane scinotesTextPane = getEditor().getTextPane();
+            JEditorPane scinotesTextPane = current.getEditor().getTextPane();
             if (scinotesTextPane != null) {
                 scinotesTextPane.getHighlighter().removeAllHighlights();
-                int start = scinotesTextPane.getSelectionStart();
-                int end = scinotesTextPane.getSelectionEnd();
-                scinotesTextPane.select(start, end);
+                if (scinotesTextPane.getCaret() != null) {
+                    int start = scinotesTextPane.getSelectionStart();
+                    int end = scinotesTextPane.getSelectionEnd();
+                    scinotesTextPane.select(start, end);
+                }
             }
-            getEditor().getSwingParentWindow().removeWindowFocusListener(this);
-            frame.removeWindowFocusListener(this);
+            current.getEditor().getSwingParentWindow().removeWindowFocusListener(current);
+            frame.removeWindowFocusListener(current);
             frame.dispose();
             windowAlreadyExist = false;
         }
