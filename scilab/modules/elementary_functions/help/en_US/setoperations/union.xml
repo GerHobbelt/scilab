@@ -4,11 +4,8 @@
  * Copyright (C) 2008 - INRIA
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  * Copyright (C) 2020 - Samuel GOUGEON
+ * Copyright (C) 2025 - Dassault Systèmes S.E. - Adeline CARNIS
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -36,9 +33,19 @@
             <varlistentry>
                 <term>a, b</term>
                 <listitem>
-                    arrays of booleans, numbers, or text. Sparse boolean or numerical matrices
-                    are accepted. The types of <varname>a</varname>
-                    and of <varname>b</varname> can be distinct but compatible for concatenation.
+                    can be:
+                    <itemizedlist>
+                        <listitem>
+                            vectors or matrices of booleans, doubles, strings, <link linkend="duration">duration</link> or 
+                            <link linkend="datetime">datetime</link>. Sparse boolean or numerical matrices
+                            are accepted. The types of <varname>a</varname>
+                            and of <varname>b</varname> can be distinct but compatible for concatenation.
+                        </listitem>
+                        <listitem>
+                            <link linkend="table">table</link> and <link linkend="timeseries">timeseries</link> are also accepted:  
+                            <varname>a</varname> and <varname>b</varname> must have the same variable names. 
+                        </listitem>
+                    </itemizedlist>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -54,14 +61,23 @@
                             2 or "c": the union is performed over the columns.
                         </listitem>
                     </itemizedlist>
+                    This option is not supported for table and timeseries.
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>v</term>
                 <listitem>
-                    row vector, or matrix. <varname>v</varname>'s data type
-                    is the type of <literal>[a(:) ; b(:)]</literal>'s result.
+                    depending on type of <varname>a</varname> and <varname>b</varname>:
+                    <itemizedlist>
+                        <listitem>
+                            row vector, or matrix. <varname>v</varname>'s data type
+                            is the type of <literal>[a(:) ; b(:)]</literal>'s result.
+                        </listitem>
+                        <listitem>
+                            table or timeseries
+                        </listitem>
+                    </itemizedlist>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -86,8 +102,12 @@
     <refsection>
         <title>Description</title>
         <para>
-            <literal>union(a,b)</literal> returns a sorted row vector which
-            retains the unique entries of <literal>[a(:) ; b(:)]</literal>.
+            <literal>union(a,b)</literal>, with <literal>a</literal> and <literal>b</literal> vectors or matrices, 
+            returns a sorted row vector or matrix which
+            retains the unique entries of <literal>[a(:) ; b(:)]</literal>. 
+            If <literal>a</literal> and <literal>b</literal> 
+            are table or timeseries, <literal>union(a, b)</literal> returns the sorted unique rows contained 
+            in <literal>a</literal> and <literal>b</literal>.
         </para>
         <para>
             <literal>union(a,b,"r")</literal> or
@@ -103,6 +123,9 @@
             in lexicographic ascending order. In this case matrices
             <literal>a</literal> and <literal>b</literal> must have the same number of
             rows.
+        </para>
+        <para>
+            The <literal>orient</literal> option is not managed for table and timeseries.
         </para>
         <para>
             <literal>[v,ka,kb]=union(a,b)</literal> also returns index vectors
@@ -193,6 +216,43 @@ full(U), ka, kb
  kb  =
    1.
 ]]></screen>
+        <para/>
+        <para>
+            <literal>union()</literal> for duration and datetime:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = hours([1 7 7 4 3 6 6]);
+            B = hours([7 5 3 0]);
+            [u, ka, kb] = union(A, B)
+
+            A = datetime("today") + A;
+            B = datetime("today") + B;
+            [u, ka, kb] = union(A, B)
+        ]]></programlisting>
+        <para/>
+        <para>
+        <literal>union()</literal> for table:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = table([1 7 7 4 3 6 6]', [1:7]');
+            B = table([7 5 3 0]', [2;2;5;5]);
+            [u, ka, kb] = union(A, B)
+
+            A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+            B = table([2;3;4;1], [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+            [u, ka, kb] = union(A, B)
+            ]]>
+        </programlisting>
+        <para/>
+        <para>
+        <literal>union()</literal> for timeseries:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = timeseries(hours([1:10])', floor(rand(10,1)*10));
+            B = timeseries(hours(1:2:15)', floor(rand(8,1)*15));
+            [u, ka, kb] = union(A, B)
+            ]]>
+        </programlisting>
     </refsection>
     <refsection role="see also">
         <title>See also</title>
@@ -218,6 +278,12 @@ full(U), ka, kb
                 <revnumber>6.1.1</revnumber>
                 <revdescription>
                     Extension to sparse boolean, sparse real, and sparse complex matrices.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Support for duration, datetime, table and timeseries types added.
                 </revdescription>
             </revision>
         </revhistory>

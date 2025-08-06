@@ -1,6 +1,7 @@
 // =============================================================================
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2020 - Samuel Gougeon
+// Copyright (C) 2025 - Dassault Systèmes S.E. - Adeline CARNIS
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
@@ -134,3 +135,147 @@ for p = add
     [v,ka,kb] = union(a',b',"r");
     assert_checkequal(list(v,ka,kb), list(Ref',[5 3 1 2],[2 1]));
 end
+
+// duration
+A = hours([ 1 8 4 5 2 1]);
+B = hours([ 9 7 4 2 1 4]);
+u = union(A, B);
+assert_checkequal(u, hours([1 2 4 5 7 8 9]));
+
+[u, ka, kb] = union(A, B);
+assert_checkequal(ka, [1 5 3 4 2]);
+assert_checkequal(kb, [2 1]);
+
+a  = hours([2.   2.   1.   2.   0.
+      0.   2.   1.   2.   1. ]);
+b  = hours([1.   0.   2.   0.   1.
+      2.   0.   0.   1.   1. ]);
+Ref= hours([0.   0.   1.   1.   2.   2.
+      0.   1.   1.   2.   0.   2. ]);
+assert_checkequal(union(a,b,"c"), Ref);
+assert_checkequal(union(a',b',"r"), Ref');
+[v,ka,kb] = union(a,b,"c");
+assert_checkequal(list(v,ka,kb), list(Ref,[5 3 1 2],[2 1]));
+[v,ka,kb] = union(a',b',"r");
+assert_checkequal(list(v,ka,kb), list(Ref',[5 3 1 2],[2 1]));
+
+// datetime
+A = datetime(2025, 7, [1 8 4 5 2 1]);
+B = datetime(2025, 7, [9 7 4 2 1 4]);
+u = union(A, B);
+assert_checkequal(u, datetime(2025, 7, [1 2 4 5 7 8 9]));
+
+[u, ka, kb] = union(A, B);
+assert_checkequal(ka, [1 5 3 4 2]);
+assert_checkequal(kb, [2 1]);
+
+A = A';
+B = B';
+u = union(A, B);
+assert_checkequal(u, datetime(2025, 7, [1 2 4 5 7 8 9]));
+
+[u, ka, kb] = union(A, B);
+assert_checkequal(ka, [1 5 3 4 2]);
+assert_checkequal(kb, [2 1]);
+
+a  = datetime(2025, 7, 1) + hours([2.   2.   1.   2.   0.
+      0.   2.   1.   2.   1. ]);
+b  = datetime(2025, 7, 1) + hours([1.   0.   2.   0.   1.
+      2.   0.   0.   1.   1. ]);
+Ref= datetime(2025, 7, 1) + hours([0.   0.   1.   1.   2.   2.
+      0.   1.   1.   2.   0.   2. ]);
+assert_checkequal(union(a,b,"c"), Ref);
+assert_checkequal(union(a',b',"r"), Ref');
+[v,ka,kb] = union(a,b,"c");
+assert_checkequal(list(v,ka,kb), list(Ref,[5 3 1 2],[2 1]));
+[v,ka,kb] = union(a',b',"r");
+assert_checkequal(list(v,ka,kb), list(Ref',[5 3 1 2],[2 1]));
+
+// table
+A = table([1; 8; 4; 5; 2; 1]);
+B = table([9; 7; 4; 2; 1; 4]);
+u = union(A, B);
+assert_checkequal(u, table([1; 2; 4; 5; 7; 8; 9]));
+
+[u, ka, kb] = union(A, B);
+assert_checkequal(ka, [1 5 3 4 2]);
+assert_checkequal(kb, [2 1]);
+
+A = table([0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = table([1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+[v, ka, kb] = union(A,B);
+assert_checkequal(v, [A(ka, :); B(kb, :)]);
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = table([2;3;4;1], ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[v, ka, kb] = union(A,B);
+assert_checkequal(v, table([1;1;2;2;3;4], ["d";"h";"d";"h";"c";"f"], [%f;%t;%t;%f; %t;%t]));
+assert_checkequal(ka, [1 4 2 3]);
+assert_checkequal(kb, [4 1]);
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+B = table([2;3;4;1], [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+[M, ka, kb] = union(A, B);
+assert_checkequal(M, table([1;1;2;2;3;4], ["d";"h";"d";"h";"c";"f"], [%f;%t;%t;%f; %t;%t], "VariableNames", ["double", "string", "boolean"]));
+assert_checkequal(ka, [1 4 2 3]);
+assert_checkequal(kb, [4 1]);
+
+A = table([1;0;1],"RowNames", ["a";"b";"c"]);
+B = table([0 1 0]', "RowNames", ["a";"b";"c"]);
+[u, ka, kb] = union(A, B);
+assert_checkequal(u, table([0;1], "RowNames", ["b";"a"]));
+assert_checkequal(ka, [2 1]);
+assert_checkequal(kb, []);
+
+// timeseries
+A = timeseries(hours(1:6)', [1; 8; 4; 5; 2; 1]);
+B = timeseries(hours([1; 2; 3; 5; 1; 7]),[9; 7; 4; 2; 1; 4]);
+u = union(A, B);
+assert_checkequal(string(u), string(timeseries(hours([1;1;2;2;3;4;5;6;7]), [1;9;7;8;4;5;2;1;4])));
+
+[u, ka, kb] = union(A, B);
+assert_checkequal(ka, [1 2 3 4 5 6]);
+assert_checkequal(kb, [1 2 6]);
+
+A = timeseries(hours(1:5)',[0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = timeseries(hours([5; 1; 10]),[1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+
+[v, ka, kb] = union(A,B);
+expected = [A(ka, :); B(kb, :)];
+assert_checkequal(string(v), string(expected));
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = timeseries(hours([2;3;4;1]), ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[v, ka, kb] = union(A,B);
+assert_checkequal(string(v), string(timeseries(hours([1;1;2;2;3;4]), ["d";"h";"d";"h";"c";"f"], [%f;%t;%t;%f; %t;%t])));
+assert_checkequal(ka, [1 4 2 3]);
+assert_checkequal(kb, [4 1]);
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+B = timeseries(hours([2;3;4;1]), [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+[M, ka, kb] = union(A, B);
+assert_checkequal(string(M), string(timeseries(hours([1;1;2;2;3;4]), ["d";"h";"d";"h";"c";"f"], [%f;%t;%t;%f; %t;%t], "VariableNames", ["double", "string", "boolean"])));
+assert_checkequal(ka, [1 4 2 3]);
+assert_checkequal(kb, [4 1]);
