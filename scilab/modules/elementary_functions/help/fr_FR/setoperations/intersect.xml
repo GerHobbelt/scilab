@@ -4,11 +4,8 @@
  * Copyright (C) 2008 - INRIA
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  * Copyright (C) 2018 - 2020 - Samuel GOUGEON
+  * Copyright (C) 2025 - Dassault Systèmes S.E. - Adeline CARNIS
  *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
  *
@@ -38,12 +35,15 @@
             <varlistentry>
                 <term>a, b</term>
                 <listitem>
-                    vecteurs, matrices ou hypermatrices de booléens, d'entiers encodés, de nombres
-                    réels ou complexes, ou de texte. <varname>a</varname> et <varname>b</varname>
+                    vecteurs ou matrices de booléens, d'entiers encodés, de nombres
+                    réels ou complexes, de texte, de <link linkend="duration">duration</link> ou de 
+                    <link linkend="datetime">datetime</link> et aussi <link linkend="table">table</link> et <link linkend="timeseries">timeseries</link>. 
+                    <varname>a</varname> et <varname>b</varname>
                     doivent être du même type de données, mais ont des tailles indépendantes.
                     Pour les données texte, les caractères UTF sont admis.
                     Les matrices creuses booléennes ou numériques sont acceptées :
                     <varname>a</varname> ou <varname>b</varname> ou les deux peuvent être creuses.
+                    Si <varname>a</varname> et <varname>b</varname> sont des tables ou timeseries, ils doivent avoir les mêmes noms de variables.
                     <para/>
                 </listitem>
             </varlistentry>
@@ -52,7 +52,7 @@
                 <listitem>
                     indicateur de traitement par colonnes ou lignes. Valeurs possibles :
                     1 ou "r", 2 ou "c". Ne peut pas être utilisé lorsque <varname>a</varname>
-                    ou/et <varname>b</varname> est une hypermatrice.
+                    ou/et <varname>b</varname> est une hypermatrice, table ou timeseries.
                     <para/>
                 </listitem>
             </varlistentry>
@@ -81,6 +81,9 @@
                     <para>
                         <varname>M</varname> est creuse dés que <varname>a</varname> ou
                         <varname>b</varname> est creuse et aucune n'est vide.
+                    </para>
+                    <para>
+                        <varname>M</varname> est table ou timeseries si <varname>a</varname> et <varname>b</varname> sont des tables ou timeseries.
                     </para>
                 </listitem>
             </varlistentry>
@@ -115,6 +118,11 @@
                 </listitem>
             </itemizedlist>
         </para>
+        <para>
+            Si <literal>a</literal> et <literal>b</literal> sont des tables ou timeseries, alors <literal>intersect</literal> retourne 
+            les lignes présentes dans a et b. Dans le cas des timeseries, 
+            les "rowTimes" sont prises en compte contrairement aux "rowNames" pour les tables.
+        </para>
         <warning>
             Deux éléments NaN étant toujours considérés comme différents, NaN ou les lignes ou
             colonnes en contenant ne seront jamais présents dans le résultat <literal>M</literal>.
@@ -124,6 +132,9 @@
             <literal>ka</literal> et <literal>kb</literal> des indices dans <literal>a</literal>
             et <literal>b</literal> des éléments communs rencontrés à leur première position,
             tels que <literal>M=a(ka)</literal> and <literal>M=b(kb)</literal>.
+        </para>
+        <para>
+            Dans le cas des tables ou timeseries, <literal>M = a(ka,:)</literal> et <literal>M = b(kb, :)</literal>.
         </para>
         <refsect3>
             <title>Lignes ou colonnes en commun</title>
@@ -149,6 +160,9 @@
             <literal>intersect(a,b,"c")</literal> ou <literal>intersect(a,b,2)</literal> réalise
             la même chose sur les colonnes.
         </para>
+        <warning>
+            L'option <literal>orient</literal> n'est pas supportée pour les tables et timeseries.
+        </warning>
         </refsect3>
     </refsection>
     <refsection>
@@ -306,6 +320,44 @@ issparse(M), full(M), ka, kb
  kb  =
    1.   5.   4.
 ]]></screen>
+<para/>
+        <para>
+        <literal>intersect()</literal> pour les durations et datetimes:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = hours([1 7 7 4 3 6 6]);
+            B = hours([7 5 3 0]);
+            [M, ka, kb] = intersect(A, B)
+
+            A = datetime("today") + A;
+            B = datetime("today") + B;
+            [M, ka, kb] = intersect(A, B)
+            ]]>
+        </programlisting>
+        <para/>
+        <para>
+        <literal>intersect()</literal> pour les tables:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = table([1 7 7 4 3 6 6]', [1:7]');
+            B = table([7 5 3 0]', [2;2;5;5]);
+            [M, ka, kb] = intersect(A, B)
+
+            A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+            B = table([2;3;4;1], [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+            [M, ka, kb] = intersect(A, B)
+            ]]>
+        </programlisting>
+        <para/>
+        <para>
+        <literal>intersect()</literal> pour les timeseries:
+        </para>
+        <programlisting role="example"><![CDATA[
+            A = timeseries(hours([1:10])', floor(rand(10,1)*10));
+            B = timeseries(hours(1:2:15)', floor(rand(8,1)*15));
+            [M, ka, kb] = intersect(A, B)
+            ]]>
+        </programlisting>
     </refsection>
     <refsection role="see also">
         <title>Voir aussi</title>
@@ -337,6 +389,12 @@ issparse(M), full(M), ka, kb
                 <revnumber>6.1.1</revnumber>
                 <revdescription>
                     Matrices creuses numériques ou booléennes désormais acceptées.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Gestion des types duration, datetime, table et timeseries ajoutée
                 </revdescription>
             </revision>
         </revhistory>

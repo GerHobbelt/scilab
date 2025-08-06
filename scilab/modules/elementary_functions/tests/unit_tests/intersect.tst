@@ -227,3 +227,159 @@ assert_checkequal(i, m1(:,k1));
 assert_checkequal(i, m2(:,k2));
 assert_checkequal(k1, [4  5  7  3  6  1]);
 assert_checkequal(k2, [10 6  9  8  1  4]);
+
+// duration
+A = hours([ 1 8 4 5 2 1]);
+B = hours([ 9 7 4 2 1 4]);
+i = intersect(A, B);
+assert_checkequal(i, hours([1 2 4]));
+
+[i, k1, k2] = intersect(A, B);
+assert_checkequal(k1, [1 5 3]);
+assert_checkequal(k2, [5 4 3]);
+
+A = hours([0,0,1,1 1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]);
+B = hours([1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]);
+[v, ka, kb] = intersect(A,B,'c');
+assert_checkequal(v, A(:,ka));
+assert_checkequal(A(:,ka), B(:,kb));
+assert_checkequal(intersect(A,B,'c'), v);
+assert_checkequal(v, hours([0,1;0,1;2,1;0,2;2,1;0,3]));
+
+A = A'; B = B';
+[v, ka, kb] = intersect(A, B, 'r');
+assert_checkequal(v, A(ka,:));
+assert_checkequal(A(ka,:), B(kb,:));
+assert_checkequal(intersect(A,B,'r'), v);
+assert_checkequal(v, hours([0,1;0,1;2,1;0,2;2,1;0,3]'));
+
+// datetime
+A = datetime(2025, 7, [1 8 4 5 2 1]);
+B = datetime(2025, 7, [9 7 4 2 1 4]);
+i = intersect(A, B);
+assert_checkequal(i, datetime(2025, 7, [1 2 4]));
+
+[i, k1, k2] = intersect(A, B);
+assert_checkequal(k1, [1 5 3]);
+assert_checkequal(k2, [5 4 3]);
+
+A = A';
+B = B';
+i = intersect(A, B);
+assert_checkequal(i, datetime(2025, 7, [1 2 4]));
+
+[i, k1, k2] = intersect(A, B);
+assert_checkequal(k1, [1 5 3]);
+assert_checkequal(k2, [5 4 3]);
+
+A = datetime(2025, 7, 18) + hours([0,0,1,1 1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]);
+B = datetime(2025, 7, 18) + hours([1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]);
+
+[v, ka, kb] = intersect(A,B,'c');
+assert_checkequal(v, A(:,ka));
+assert_checkequal(A(:,ka), B(:,kb));
+assert_checkequal(intersect(A,B,'c'), v);
+assert_checkequal(v, datetime(2025, 7, 18) + hours([0,1;0,1;2,1;0,2;2,1;0,3]));
+
+A = A'; B = B';
+[v, ka, kb] = intersect(A, B, 'r');
+assert_checkequal(v, A(ka,:));
+assert_checkequal(A(ka,:), B(kb,:));
+assert_checkequal(intersect(A,B,'r'), v);
+assert_checkequal(v, datetime(2025, 7, 18) + hours([0,1;0,1;2,1;0,2;2,1;0,3]'));
+
+// table
+A = table([1; 8; 4; 5; 2; 1]);
+B = table([9; 7; 4; 2; 1; 4]);
+i = intersect(A, B);
+assert_checkequal(i, table([1; 2; 4]));
+
+[i, k1, k2] = intersect(A, B);
+assert_checkequal(k1, [1 5 3]);
+assert_checkequal(k2, [5 4 3]);
+
+A = table([0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = table([1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+[v, ka, kb] = intersect(A,B);
+assert_checkequal(v, A(ka, :));
+assert_checkequal(A(ka, :), B(kb, :));
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = table([2;3;4;1], ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[v, ka, kb] = intersect(A,B);
+assert_checkequal(v, A(ka, :));
+assert_checkequal(A(ka, :), B(kb, :));
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+B = table([2;3;4;1], [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+[M, ka, kb] = intersect(A, B);
+assert_checkequal(M, A(ka, :));
+
+// timeseries
+A = timeseries(hours(1:6)', [1; 8; 4; 5; 2; 1]);
+B = timeseries(hours([1; 2; 3; 5; 1; 7]), [9; 7; 4; 2; 1; 4]);
+i = intersect(A, B);
+assert_checkequal(i, timeseries(hours([1;3;5]), [1; 4; 2]));
+
+[i, k1, k2] = intersect(A, B);
+assert_checkequal(k1, [1 3 5]);
+assert_checkequal(k2, [5 3 4]);
+
+A = timeseries(hours(1:5)',[0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = timeseries(hours([5; 1; 10]),[1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+[v, ka, kb] = intersect(A,B);
+assert_checkequal(v, A(ka, :));
+assert_checkequal(A(ka, :), B(kb, :));
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = timeseries(hours([2;3;4;1]), ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[v, ka, kb] = intersect(A,B);
+assert_checkequal(v, A(ka, :));
+assert_checkequal(A(ka, :), B(kb, :));
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t;%f], 'VariableNames', ["Time", "string", "boolean"]);
+B = timeseries(hours([2;3;4;1]), [%t;%t;%t;%t], ["d";"c";"f";"h"], 'VariableNames', ["Time", "boolean", "string"])
+[M, ka, kb] = intersect(A, B);
+assert_checkequal(M, A(ka, :));
