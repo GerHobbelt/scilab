@@ -12,6 +12,9 @@
 // along with this program.
 
 function []=demo_function_choice()
+    warnobsolete("x_choose", "2026.1.0")
+
+    oldln=lines();
     while %t then
         num=x_choose(demolist(:,1),"Choose a demo");
         if num==0 then

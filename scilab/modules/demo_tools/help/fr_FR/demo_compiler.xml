@@ -16,7 +16,9 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="fr" xml:id="demo_compiler">
     <refnamediv>
         <refname>demo_compiler</refname>
-        <refpurpose>teste la présence d'un compilateur </refpurpose>
+        <refpurpose>
+            teste la présence d'un compilateur.<emphasis role="bold">Cette fonction est obsolète. Merci d'utiliser <literal>haveacompiler</literal> à la place.</emphasis>
+        </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Séquence d'appel</title>
@@ -33,28 +35,26 @@
     <refsection>
         <title>Exemples</title>
         <programlisting role="example"><![CDATA[
-select num,
- case 0
-  return;
- case 2 then
-  st = demo_compiler(); //The compiler will be used
-  if (st==%t) then
-    mode(0);
-    wheel_build_and_load()
-  end
- case 1 then // A precomputed value
-    x=read(path+'/x.wrt',8,301);
-    wheelg=wheelgs;
-    show(x);
-end
+st = demo_compiler(); //The compiler will be used
  ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>Voir aussi</title>
         <simplelist type="inline">
             <member>
-                <link linkend="findmsvccompiler">findmsvccompiler</link>
+                <link linkend="haveacompiler">haveacompiler</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Historique</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Déclarée obsolète et sera supprimée de Scilab 2026.1.0.
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

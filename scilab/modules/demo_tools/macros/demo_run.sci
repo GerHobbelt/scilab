@@ -12,5 +12,8 @@
 // along with this program.
 
 function demo_run(fil)
+
+    warnobsolete("exec", "2026.1.0")
+
     exec(fil);
 endfunction

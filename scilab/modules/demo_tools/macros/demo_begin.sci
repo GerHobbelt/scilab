@@ -1,4 +1,3 @@
-
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 // Copyright (C) 2007-2008 - INRIA - Pierre MARECHAL <pierre.marechal@inria.fr>
 //
@@ -13,6 +12,8 @@
 
 function demo_begin()
 
+    warnobsolete("exec", "2026.1.0")
+
     // Sauvegarde du mode
     demo_save_mode  = mode();
 
@@ -23,20 +24,11 @@ function demo_begin()
     local_variables  = who("local");
 
     // Construction de la commande pour sauvegarder les variables locales
-    local_cmd_str = "save(TMPDIR+''/who_local.dat''";
-    for i=1:size(local_variables,"r")
-        local_cmd_str = local_cmd_str + "," + local_variables(i);
-    end
-    local_cmd_str = local_cmd_str + ");";
+    local_cmd_str = "save(TMPDIR + ''/who_local.dat'', local_variables)";
 
     // Sauvegarde des variables locales dans le fichier TMPDIR/who_local.dat
     execstr(local_cmd_str);
 
-    // Suppression des variables afin d'avoir un environnement propre pour les
-    // Démos
-    clear
-
     // Suppression de la pagination
     lines(0);
-
 endfunction

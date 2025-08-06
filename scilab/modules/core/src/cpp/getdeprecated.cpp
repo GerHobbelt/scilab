@@ -19,6 +19,15 @@ extern "C" {
 std::unordered_map<std::wstring, std::wstring> getDeprecated()
 {
     return {
+        // Scilab 2026.0.0 => 2026.1.0
+        {L"demo_begin", L"exec"},
+        {L"demo_run", L"exec"},
+        {L"demo_end", L"exec"},
+        {L"demo_compiler", L"haveacompiler"},
+        {L"demo_file_choice", L"x_choose"},
+        {L"demo_function_choice", L"x_choose"},
+        {L"demo_choose", L"x_choose"},
+
         // Scilab 2025.0.0 => 2026.0.0
         {L"captions", L"legend"},
         {L"impl", L"dae"},

@@ -16,7 +16,9 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="demo_run">
     <refnamediv>
         <refname>demo_run</refname>
-        <refpurpose>script file execution </refpurpose>
+        <refpurpose>
+            script file execution. <emphasis role="bold">This function is obsolete. Please use <literal>exec</literal> instead.</emphasis>
+        </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -25,7 +27,7 @@
     <refsection>
         <title>Description</title>
         <para>
-            The  function demo_run executes a script in the file 'fil' given in argument.
+            The function demo_run executes a script in the file 'fil' given in argument.
         </para>
     </refsection>
     <refsection role="see also">

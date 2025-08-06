@@ -5,5 +5,5 @@
 // This file is distributed under the same license as the Scilab package.
 //
 
-demo_run("SCI/modules/graphics/demos/anim/anim1/anim1.sce");
+exec("SCI/modules/graphics/demos/anim/anim1/anim1.sce");
 

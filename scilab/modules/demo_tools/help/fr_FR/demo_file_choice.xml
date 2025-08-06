@@ -16,7 +16,9 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="fr" xml:id="demo_file_choice">
     <refnamediv>
         <refname>demo_file_choice</refname>
-        <refpurpose>choisit et exécute un item au sein d'une liste </refpurpose>
+        <refpurpose>
+            choisit et exécute un item au sein d'une liste. <emphasis role="bold">Cette fonction est obsolète. Merci d'utiliser <literal>x_choose</literal> à la place.</emphasis>
+        </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Séquence d'appel</title>
@@ -41,21 +43,31 @@
     <refsection>
         <title>Exemples</title>
         <programlisting role="example"><![CDATA[
-demolist=['n-pendulum','npend/npend_gateway.sce';
-	  'Wheel simulation','wheel2/wheel_gateway.sce';
-	  'Bike Simulation','bike/bike_gateway.sce';
-	  'ODE''S','ode/ode.dem';
-	  'DAE''S','dae/dae.dem']
+demopath = fullfile(SCI, "modules");
 
-demo_file_choice('SCI/demos/simulation/','no');
+demolist=[_("N-pendulum")      ,"differential_equations/demos/n_pendulum/n_pendulum.dem.sce" ;
+          _("Champ")           ,"graphics/demos/2d_3d_plots/champ.dem.sce"];
+
+demo_file_choice();
  ]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>Voir aussi</title>
         <simplelist type="inline">
             <member>
-                <link linkend="demo_function_choice">demo_function_choice</link>
+                <link linkend="x_choose">x_choose</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>Historique</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Déclarée obsolète et sera supprimée de Scilab 2026.1.0.
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

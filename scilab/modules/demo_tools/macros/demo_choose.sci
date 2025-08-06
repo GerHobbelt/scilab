@@ -12,6 +12,8 @@
 // along with this program.
 
 function [num]=demo_choose(fil)
+    warnobsolete("x_choose", "2026.1.0")
+
     load(fil,"choice","titl");
     num=x_choose(choice,titl);
 endfunction

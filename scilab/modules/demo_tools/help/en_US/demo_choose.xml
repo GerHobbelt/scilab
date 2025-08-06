@@ -16,7 +16,9 @@
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:db="http://docbook.org/ns/docbook" xmlns:scilab="http://www.scilab.org" xml:lang="en" xml:id="demo_choose">
     <refnamediv>
         <refname>demo_choose</refname>
-        <refpurpose>create a dialog box for the choice of options </refpurpose>
+        <refpurpose>
+            create a dialog box for the choice of options. <emphasis role="bold">This function is obsolete. Please use <literal>x_choose</literal> instead.</emphasis>
+        </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -74,5 +76,16 @@ end
                 <link linkend="x_choose">x_choose</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Tagged obsolete and will be removed in Scilab 2026.1.0.
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

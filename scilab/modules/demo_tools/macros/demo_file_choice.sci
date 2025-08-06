@@ -17,6 +17,8 @@
 
 function [] = demo_file_choice()
 
+    warnobsolete("x_choose", "2026.1.0")
+
     while %t then
 
         if ~exists("demolistlabel") then
@@ -56,7 +58,7 @@ function [] = demo_file_choice()
             elseif grep(script_path,"dem.sce") == 1 then
                 // Demonstration
                 demo_clean();
-                demo_run(script_path);
+                exec(script_path);
             else
                 // Old system
                 exec(script_path,-1);
@@ -68,17 +70,11 @@ function [] = demo_file_choice()
 endfunction
 
 
-function [] = demo_clean()
+function demo_clean()
 
-    // Suppression de toutes les fenêtres graphiques créé
-    // par les précédentes démos
-
-    opened_windows = winsid();
-
-    for i=1:size(opened_windows,"c")
-        if (opened_windows(i)>=100000) & (opened_windows(i)<=100100) then
-            close(opened_windows(i));
-        end
-    end
+	// Windows to close, opened by demos
+    tmp = winsid();
+	tmp = tmp(tmp >=100000 & tmp <= 100100)
+    close(tmp)
 
 endfunction

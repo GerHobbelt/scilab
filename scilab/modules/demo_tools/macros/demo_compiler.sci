@@ -12,6 +12,8 @@
 // along with this program.
 
 function [ans]=demo_compiler()
+    warnobsolete("haveacompiler", "2026.1.0")
+
     if (~haveacompiler()) then
         messagebox(["Scilab doesn''t find a C compiler","This demo is disabled"],"modal");
         ans=%f;

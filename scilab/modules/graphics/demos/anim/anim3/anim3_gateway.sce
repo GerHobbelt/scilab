@@ -9,4 +9,4 @@
 // Demonstrate animation based on the rotation of Lorenz curve
 // =============================================================================
 
-demo_run("SCI/modules/graphics/demos/anim/anim3/anim3.sce");
+exec("SCI/modules/graphics/demos/anim/anim3/anim3.sce");

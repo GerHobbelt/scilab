@@ -9,4 +9,4 @@
 // Demonstrate animation based on the rotation of a 3D contour plot
 // =============================================================================
 
-demo_run("SCI/modules/graphics/demos/anim/anim4/anim4.sce");
+exec("SCI/modules/graphics/demos/anim/anim4/anim4.sce");
