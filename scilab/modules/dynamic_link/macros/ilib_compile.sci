@@ -156,7 +156,7 @@ function libn = ilib_compile(lib_name, ..
         // CF bug #7887 for more information.
         // Note that, for the configure, the setup is done by compilerDetection.sh
         cmdGCC="if test -x ""$(which gcc 2>/dev/null)""; then echo $(LC_ALL=C gcc -print-search-dirs|awk -F= ''$1==""libraries: ""{print $2}''); fi";
-        [GCClibpath, ierr, stderr] = unix_g(cmdGCC);
+        [ierr, GCClibpath, stderr] = host(cmdGCC);
 
         if (GCClibpath <> "" & GCClibpath <> [] & ierr == 0 & grep(getenv("LD_LIBRARY_PATH"),GCClibpath) == []) then
             setenv("LD_LIBRARY_PATH",GCClibpath+":"+getenv("LD_LIBRARY_PATH"));
@@ -168,7 +168,7 @@ function libn = ilib_compile(lib_name, ..
 
         //** BEWARE : this function can cause errors if used with "old style" Makefile inside a Scilab 5
         //**          environment where the Makefile are created from a "./configure"
-        [msg, ierr, stderr] = unix_g(cmd) ;
+        [ierr, msg, stderr] = host(cmd) ;
 
         if ( ilib_verbose() == 2 ) then
             mprintf(gettext("%s: Build command: %s\n"),"ilib_compile",cmd);
@@ -184,14 +184,14 @@ function libn = ilib_compile(lib_name, ..
             chdir(oldPath); // Go back to the working dir
             error(errMsg);
             return ;
-        end
-
-        if stderr <> "" then
-            if ( ilib_verbose() <> 0 ) then
-                mprintf(gettext("%s: Warning: No error code returned by the compilation but the error output is not empty:\n"),"ilib_compile");
-                mprintf(stderr);
+        else
+            // stderr can be not empty, it can contain compilation warnings
+            if stderr <> "" then
+                if ( ilib_verbose() <> 0 ) then
+                    mprintf(gettext("%s: Warning: No error code returned by the compilation but the error output is not empty:\n"),"ilib_compile");
+                    mprintf("%s\n", stderr);
+                end
             end
-            return ;
         end
 
         generatedLibrary=".libs/" + lib_name;

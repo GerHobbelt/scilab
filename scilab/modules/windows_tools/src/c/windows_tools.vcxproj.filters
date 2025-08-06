@@ -59,9 +59,6 @@
     <ClCompile Include="..\..\sci_gateway\cpp\sci_createGUID.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\sci_gateway\cpp\sci_dos.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\sci_gateway\cpp\sci_findfileassociation.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

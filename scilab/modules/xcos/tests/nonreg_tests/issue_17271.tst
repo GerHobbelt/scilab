@@ -25,7 +25,7 @@ end
 
 exe = ["modelicac.exe";"modelicat.exe";"XML2modelica.exe"]
 cmd = "dumpbin /HEADERS " + fullfile(SCI, "bin", exe);
-txt = unix_g(dlwWriteBatchFile(cmd));
+[_, txt] = host(dlwWriteBatchFile(cmd));
 
 fileheader = grep(txt, "FILE HEADER VALUES");
 for h = fileheader

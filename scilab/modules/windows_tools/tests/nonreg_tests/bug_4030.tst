@@ -14,6 +14,6 @@
 // <-- Short Description -->
 // unix_w('dir /s') displays strange matrix 
 
-unix_w('dir /s')
+host('dir /s', echo=%t)
 
 // see output 

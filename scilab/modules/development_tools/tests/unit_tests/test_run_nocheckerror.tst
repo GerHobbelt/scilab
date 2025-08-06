@@ -5,7 +5,8 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- NO CHECK REF -->
 // <-- NO CHECK ERROR OUTPUT -->
 
 // Checks that the error output is not checked.
-unix("Foo!");
+host("Foo!");

@@ -1,18 +1,12 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
- * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) XXXX-2008 - INRIA
- * Copyright (C) 2018 - Samuel GOUGEON
- *
- * Copyright (C) 2012 - 2016 - Scilab Enterprises
- *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
- * For more information, see the COPYING file which you should have received
- * along with this program.
- *
+* Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+*
+* Copyright (C) XXXX-2008 - INRIA
+* Copyright (C) 2018 - Samuel GOUGEON
+* Copyright (C) 2012 - 2016 - Scilab Enterprises
+* Copyright (C) 2025 - Dassault Systèmes S.E. - Cédric DELAMARRE
+*
  -->
 <refentry xmlns="http://docbook.org/ns/docbook" xmlns:xlink="http://www.w3.org/1999/xlink"
           xmlns:svg="http://www.w3.org/2000/svg" xmlns:mml="http://www.w3.org/1998/Math/MathML"
@@ -27,13 +21,8 @@
         <refpurpose>alias de host()</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
-        <synopsis>status = host(commands)</synopsis>
-        <synopsis>[status, stdout] = host(commands)</synopsis>
-        <synopsis>[status, stdout, stderr] = host(commands)</synopsis>
-        <para/>
-        <synopsis>status = unix(commands)</synopsis>
-        <synopsis>[status, stdout] = unix(commands)</synopsis>
-        <synopsis>[status, stdout, stderr] = unix(commands)</synopsis>
+        <title>Syntax</title>
+        <synopsis>[status, stdout, stderr] = host(commands, echo=%f)</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -43,12 +32,15 @@
                 <listitem>
                     <para>
                         texte unique constitué d'instructions à soumettre à l'interpréteur de
-                        commandes du système d'exploitation (Windows, Linux, ou MacOS) pour exécution.
+                        commandes du système d'exploitation pour exécution.
                     </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>echo</term>
+                <listitem>
                     <para>
-                        Sous Windows, <varname>commands</varname> doit avoir au maximum 8191
-                        caractères (après expansion des éventuelles variables d'environnement
-                        incluses).
+                        Un booléen: Argument nommé optionnel utilisé pour afficher les sorties standards dans la console Scilab.
                     </para>
                 </listitem>
             </varlistentry>
@@ -56,13 +48,8 @@
                 <term>status</term>
                 <listitem>
                     <para>
-                      un entier: -1 si la commande ne peut pas être exécutée (par exemple pour
-                      mémoire insuffisante). Si la commande est exécutée (avec succès ou non) :
-                      code entier de sortie retourné par l'interpréteur de commande.
+                      Un entier: code de sortie retourné par l'interpréteur de commande.
                     </para>
-                    <note>
-                       Sous Windows, 0 est le plus souvent retourné en cas d'exécution sans erreur.
-                    </note>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -70,6 +57,7 @@
                 <listitem>
                     <para>
                         Chaîne de caractère qui contient la sortie standard de la commande exécutée.
+                        Lorsque la fonction est appelée avec deux arguments de sortie, stdout contient les deux sorties standards stdout et stderr.
                     </para>
                 </listitem>
             </varlistentry>
@@ -87,25 +75,16 @@
         <title>Description</title>
         <para>
             <literal>host(…)</literal>
-            <itemizedlist>
-                <listitem>
-                    créée une session de l'interpréteur de commande du système d'exploitation (OS)
-                    (<emphasis>sh</emphasis> avec Linux, <emphasis>cmd.exe</emphasis> avec Windows,
-                    etc..).
-                </listitem>
-                <listitem>
-                    envoie la <literal>commands</literal> à l'interpréteur,
-                </listitem>
-                <listitem>
-                    attend que l'interpréteur de l'OS l'exécute,
-                </listitem>
-                <listitem>
-                    reçoit tous les messages normalement affichés dans le terminal de l'interpréteur,
-                </listitem>
-                <listitem>
-                    et ferme la session de l'interpréteur.
-                </listitem>
-            </itemizedlist>
+            créée une session de l'interpréteur de commande du système d'exploitation (OS)
+            (<emphasis>sh</emphasis> avec Linux et macOS, <emphasis>cmd.exe</emphasis> avec Windows,
+            etc..) pour exécuter la commande.
+        </para>
+        <para>
+            <literal>host(…)</literal> retourne les deux sorties standards dans la même sortie lorsque la fonction a été appelée avec deux arguments de sortie.
+            Ceci permet de garder l'ordre chronologique des logs entre stdout et stderr.
+        </para>
+        <para>
+            En utilisant l'argument nommé optionnel echo=%t, les deux sortie standards seront afficher dans la console Scilab pendant l'exécution de la commande.
         </para>
         <important>
             La session de l'interpréteur de commandes créée est un clône de la session OS depuis
@@ -130,111 +109,48 @@
                 <listitem>
                     Quand la fonction est appelée avec 3 sorties elle attend la fin de l'exécution de la commande.
                 </listitem>
+                <listitem>
+                    Lorsque la fonction est appelée avec deux ou trois arguments de sortie, elle attendra la fin de l'execution de la commande pour retourner les sorties.
+                </listitem>
             </itemizedlist>
         </important>
-        <para>
-            Les messages de résultat et/ou d'erreur issus de l'interpréteur et normalement affichés
-            dans son propre terminal sont détournés et affichés dans le terminal de lancement de
-            Scilab (pour MS Windows, dans la <link linkend="consolebox">consolebox</link>).
-        </para>
-        <note>
-            host() doit être préférée à son alias unix(), dont le nom prête à confusion.
-        </note>
     </refsection>
     <refsection>
-        <title>Exemples</title>
+        <title>Examples</title>
         <refsect3>
-            <title>Pour les utilisateurs de Windows :</title>
-            <para>
-                Dossier de travail dans les sessions respectives de Scilab / de l'interpréteur DOS :
-            </para>
+            <title>Utilisation des variables d'environnements définies par Scilab</title>
             <programlisting role="example"><![CDATA[
-pwd                 // Dossier de travail courant dans la session Scilab
-if getos()=="Windows"
-    host cls;
-    consolebox on;
-    host cd;        // Dossier de travail initial dans la session de l'interpréteur de l'OS
+disp(SCI)
+if getos() == "windows" then
+    [stat, stdout] = host("echo %SCI%")
 else
-    host pwd;
+    [stat, stdout] = host("echo $SCI")
 end
-// Les chemins affichés dans le terminal DOS/consolebox et dans la console Scilab sont les mêmes.
      ]]></programlisting>
-        <para>
-            Affichage dans le terminal DOS de Scilab (consolebox) :
-        </para>
-        <programlisting role="example"><![CDATA[
-host cls;
-host "echo Scilab host() function";
-host "echo A & echo BC";
-host("echo DEF"+ascii(10)+"echo G");
-host("echo Dossier de travail: & cd");
-host dira;   // => erreur : commande inconnue
-     ]]></programlisting>
-        <screen><![CDATA[
-Scilab host() function
-A
-BC
-DEF
-Dossier de travail:
-C:\Scilab\tests
-'dira' n'est pas reconnu en tant que commande interne
-ou externe, un programme exécutable ou un fichier de commandes.
-]]></screen>
-        <para>
-            Variables d'environnement du DOS, respectivement dans les sessions Scilab et host() :
-        </para>
-            <programlisting role="example"><![CDATA[
-setenv TEST AAAA;
-getenv NUMBER_OF_PROCESSORS
-host cls;
-host "echo %TEST%";
-host "echo %USERNAME% %NUMBER_OF_PROCESSORS%";
-host "set TEST=BBBB";
-getenv TEST
-     ]]></programlisting>
-        Affichage : les lignes ci-dessous préfixées avec ":" sont affichées dans la consolebox (DOS).
-        Les autres sont affichées dans la console Scilab :
-        <screen><![CDATA[
---> setenv TEST AAAA;
---> getenv NUMBER_OF_PROCESSORS
- ans  =
- 2
-
---> host cls;
---> host "echo %TEST%";
-: AAAA
-
---> host "echo %USERNAME% %NUMBER_OF_PROCESSORS%";
-: Samuel 2
-
---> host "set TEST=BBBB"  // correctement exécuté :
- ans  =
-   0.
-
---> getenv TEST
- ans  =
- AAAA
-]]></screen>
         </refsect3>
         <refsect3>
-            <title>Exemples d'application :</title>
-            <para>Fonction openURL() portable basée sur host():</para>
+            <title>Jouer avec les sorties</title>
             <programlisting role="example"><![CDATA[
-    function openURL(url)
-        if getos()=="Windows"
-            winopen(url)
-        elseif getos()=="Linux"
-            host("xdg-open """+url+"""")
-        elseif getos()=="Darwin"         // Mac OS
-            host("open """+url+"""")
-        else
-            warning("openURL: OS inconnu")
-        end
-    endfunction
-
-    // Utilisation :
-    openURL("https://help.scilab.org/docs/current/en_US/host.html")
-        ]]></programlisting>
+// get separated stdout and stderr
+[stat, stdout, stderr] = host("echo OK && echo KO 1>&2 && echo END")
+// get both outputs keeping chronological order
+[stat, stdout] = host("echo OK && echo KO 1>&2 && echo END")
+     ]]></programlisting>
+        </refsect3>
+        <refsect3>
+            <title>Commande détachée</title>
+            <programlisting role="example"><![CDATA[
+// Detach a command to avoid waiting for its end
+host("ping -c 3 localhost &")
+// But, this command will wait for outputs
+[stat, stdout] = host("ping -c 3 localhost &")
+     ]]></programlisting>
+        </refsect3>
+        <refsect3>
+            <title>Forcer les sorties de commande dans la console Scilab</title>
+            <programlisting role="example"><![CDATA[
+host("ping -c 3 localhost", echo=%t)
+     ]]></programlisting>
         </refsect3>
     </refsection>
     <refsection role="see also">
@@ -248,21 +164,6 @@ getenv TEST
             </member>
             <member>
                 <link linkend="setenv">setenv</link>
-            </member>
-            <member>
-                <link linkend="unix_g">unix_g</link>
-            </member>
-            <member>
-                <link linkend="unix_s">unix_s</link>
-            </member>
-            <member>
-                <link linkend="unix_w">unix_w</link>
-            </member>
-            <member>
-                <link linkend="unix_x">unix_x</link>
-            </member>
-            <member>
-                <link linkend="dos">dos</link>
             </member>
             <member>
                 <link linkend="powershell">powershell</link>
@@ -279,6 +180,12 @@ getenv TEST
                 <revnumber>2025.1.0</revnumber>
                 <revdescription>
                     Retourne la sortie standard et la sortie d'erreur.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Un argument nommé facultatif 'echo' a été ajouté.
                 </revdescription>
             </revision>
         </revhistory>

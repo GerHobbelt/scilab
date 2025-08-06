@@ -31,11 +31,6 @@ public:
     LOCALIZATION_IMPEXP static std::string toUTF8(const std::wstring & wstr);
     LOCALIZATION_IMPEXP static std::wstring toWide(const std::string & str);
 
-private:
-
-    static int ReadUTF8Character(const char * str, int * nBytes);
-    static bool IsValidUTF8(const char*  pStText);
-
 };
 
 }

@@ -25,11 +25,11 @@ xmlWrite(doc);
 
 // check no freeze
 scilabBin = """" + WSCI + "\bin\WScilex""";
-err = unix(scilabBin + " -e ""plot2d();exit()"" --timeout 2m");
+[s,o,e] = host(scilabBin + " -scihome "+SCIHOME+" -e ""disp(SCIHOME);plot2d();exit()"" --timeout 2m", echo=%t);
 xmlSetAttributes(pref(1).attributes, ["state", savedState]);
 xmlWrite(doc);
-assert_checktrue(err == 0);
+assert_checkequal(s, 0);
 
 // check that -nogui return an error with WScilex
-err = unix(scilabBin + "-cli -nogui ");
+err = host(scilabBin + "-cli -nogui ");
 assert_checktrue(err <> 0);

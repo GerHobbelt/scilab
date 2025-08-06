@@ -77,7 +77,7 @@ function   [ok]=compile_init_modelica(xmlmodel,paremb,jaco)
         instr = tmpdir + "igenm.bat";
     end
 
-    [rep,stat,err]=unix_g(instr);
+    [stat, _, err] = host(instr);
     if stat == 0 then
         mprintf("%s"," Init C code   : "+FlatCi);
         mprintf("\n\r");

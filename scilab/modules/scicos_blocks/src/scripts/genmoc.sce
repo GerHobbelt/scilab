@@ -38,15 +38,15 @@ for k=1:size(models,1)
     if n<>2 then
         write(%io(2),"Processing file "+M)
         if genmoc_verbose then
-            ierr=unix(compilername+" -c "+M+" -o "+M+"c")
+            ierr=host(compilername+" -c "+M+" -o "+M+"c")
             if ierr<>0 then
                 mprintf("------------------------- "+M+..
                 " Compilation error detected")
                 break,
             end
         else
-            // error will stop unix_s in case of error
-            unix_s(compilername+" -c "+M+" -o "+M+"c")
+            // error will stop host() in case of error
+            [_,_]=host(compilername+" -c "+M+" -o "+M+"c")
         end
     end
 end

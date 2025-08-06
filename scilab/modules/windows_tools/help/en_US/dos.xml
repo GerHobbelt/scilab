@@ -20,7 +20,9 @@
           xml:lang="en" xml:id="dos">
     <refnamediv>
         <refname>dos</refname>
-        <refpurpose>executes some DOS instructions (Windows only)
+        <refpurpose>
+        executes some DOS instructions (Windows only)
+        <emphasis role="bold">This function is obsolete. Please use <link linkend="system">system</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -190,5 +192,16 @@ getenv TEST
                 <link xlink:href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">List of MS Windows exit codes</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>dos is obsolete, use system instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

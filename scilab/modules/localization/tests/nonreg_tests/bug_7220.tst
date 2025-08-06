@@ -16,6 +16,6 @@
 //  On Windows, when you start Scilab with "WScilex -l ru_RU", some menus were disabled.
 
 // launch scilab by this line:
-unix(SCI+"/bin/Wscilex -l ru_RU")
+host(SCI+"/bin/Wscilex -l ru_RU")
 
 // check that menus are not grayed

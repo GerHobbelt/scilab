@@ -23,6 +23,7 @@
         <refpurpose>
            executar algumas instruções do Windows, Linux ou MacOS, resulta em uma janela
            de mensagem pop-up
+           <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -115,5 +116,16 @@ end
                 <link linkend="messagebox">messagebox</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host plus messagebox instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

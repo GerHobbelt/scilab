@@ -16,25 +16,24 @@
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
 
-// checks that we don't have a dependency on libmmd.dll
-
-allDLLs = ls("SCI/bin/*.dll");
-fortran = grep(allDLLs, ["libmmd", "libifcore", "lapack", "arpack"]);
-nonFortran = setdiff(1:size(allDLLs, 1), fortran);
-
-for dll = allDLLs(nonFortran)'
-    stdout = unix_g("dumpbin /IMPORTS "+dll);
-    found = grep(stdout, "libmmd.dll");
-    if found then pause, end
+if ~exists("dynamic_linkwindowslib") then
+    load("SCI/modules/dynamic_link/macros/windows/lib");
 end
+
+// checks that we don't have a dependency on libmmd.dll
+// on other than fortran libs
+allDLLs = ls("SCI/bin/*.dll");
+fortran = grep(allDLLs, ["libmmd", "libifcore", "lapack", "Arpack", "arpack", "_f."]);
+allDLLs(fortran) = [];
+
+[_, output] = host(dlwWriteBatchFile("dumpbin /IMPORTS " + strcat(allDLLs, " ")));
+found = grep(output, "libmmd.dll");
+assert_checkequal(found, []);
 
 // checks that we don't have a dependency on user32.dll
-
-windowsOnly = grep(allDLLs, ["tk85", "tcl85", "sound", "scilocalization", "sciconsole", "noconsole", "newt", "nativewindow", "libjvm", "Windows", "windows", "core", "ast"]);
-genericCode = setdiff(1:size(allDLLs, 1), windowsOnly);
-
-for dll = allDLLs(genericCode)'
-    stdout = unix_g("dumpbin /IMPORTS "+dll);
-    found = grep(stdout, "USER32.dll");
-    if found then pause, end
-end
+allDLLs = ls("SCI/bin/*.dll");
+haveDeps = grep(allDLLs, ["io", "libcrypto", "tk85", "tcl85", "sound", "scilocalization", "sciconsole", "noconsole", "newt", "nativewindow", "libjvm", "Windows", "windows", "core", "ast"]);
+allDLLs(haveDeps) = [];
+[_, output] = host(dlwWriteBatchFile("dumpbin /IMPORTS " + strcat(allDLLs, " ")));
+found = grep(output, "USER32.dll");
+assert_checkequal(found, []);

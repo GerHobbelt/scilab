@@ -19,8 +19,8 @@ function dllinfolist = dlwDllInfo(dllname, options)
 
         cmd = dlwGetEnvCmd() + " && dumpbin /IMPORTS """ + dllname +""""
 
-        [result,bOK] = dos(cmd);
-        if bOK == %T then
+        [stat, result] = host(cmd);
+        if stat == 0 then
             // cleaning output
             result = stripblanks(result);
             result(5) = "";
@@ -59,8 +59,8 @@ function dllinfolist = dlwDllInfo(dllname, options)
         symbolslist = list();
         symbolsdll = [];
         cmd = dlwGetEnvCmd() + " && dumpbin /EXPORTS """ + dllname +"""";
-        [result, bOK] = dos(cmd);
-        if bOK == %T then
+        [stat, result] = host(cmd);
+        if stat == 0 then
             result(result == "") = [];
             ilastcomment = grep(result, "ordinal hint RVA");
             if ilastcomment <> [] then
@@ -83,8 +83,8 @@ function dllinfolist = dlwDllInfo(dllname, options)
         dllinfolist = list();
         machine = "";
         cmd = dlwGetEnvCmd() + " && dumpbin /HEADERS """ + dllname +"""";
-        [result, bOK] = dos(cmd);
-        if bOK == %T then
+        [stat, result] = host(cmd);
+        if stat == 0 then
             iMachine = grep(result, "machine (");
             if iMachine <> [] then
                 infomachinestr = result(iMachine(1));

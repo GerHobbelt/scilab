@@ -206,7 +206,6 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <ClCompile Include="..\..\sci_gateway\cpp\sci_genlib.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_getpid.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_host.cpp" />
-    <ClCompile Include="..\..\sci_gateway\cpp\sci_unix.cpp" />
     <ClCompile Include="readwrite.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -253,7 +252,6 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <None Include="..\c\Scilab_Windows_Import.def" />
     <None Include="core_f_Import.def" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

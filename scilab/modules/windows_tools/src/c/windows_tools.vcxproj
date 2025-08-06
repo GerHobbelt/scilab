@@ -247,7 +247,6 @@ lib /DEF:"$(ProjectDir)Call_scilab_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Pla
   <ItemGroup>
     <ClCompile Include="..\..\sci_gateway\cpp\sci_consolebox.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_createGUID.cpp" />
-    <ClCompile Include="..\..\sci_gateway\cpp\sci_dos.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_findfileassociation.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_getsystemmetrics.cpp" />
     <ClCompile Include="..\..\sci_gateway\cpp\sci_istssession.cpp" />

@@ -6,8 +6,7 @@
 // =============================================================================
 //
 // <-- JVM MANDATORY -->
-//
-// <-- INTERACTIVE TEST -->
+// <-- NO CHECK REF -->
 //
 // <-- Non-regression test for bug 8424 -->
 //
@@ -17,15 +16,14 @@
 // <-- Short Description -->
 // [a, b] = dos("git 1>&2") returned a wrong error.
 //
-// git without  parameter returns same thing git --help.
+// git without parameter returns same thing git --help.
 // except that it is in stderr and not in stdout
 // Here dos failed and returned [] and a error in api_scilab.
-// This test is interactive because it is require git.
 
-[a1, b1] = dos("git 1>&2");
-if b1 <> %f then pause, end
+[stat, _, stderr] = host("git 1>&2");
+assert_checkequal(stat, 1);
 
-[a2, b2] = dos("git --help");
-if b2 <> %t then pause, end
+[stat, stdout, _] = host("git --help");
+assert_checkequal(stat, 0);
 
-if ~or(a1 == a2) then pause, end
+assert_checkequal(stderr, stdout);

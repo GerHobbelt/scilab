@@ -19,7 +19,6 @@ convertlanguagealias
 LanguageIsOK
 needtochangelanguage
 exportLocaleToSystem
-IsValidUTF8
 getLcidString
 setLanguagePreferences
 getLanguagePreferences

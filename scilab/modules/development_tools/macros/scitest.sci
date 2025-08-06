@@ -162,15 +162,13 @@ function mydisp(str)
 endfunction
 
 function myexec()
+    if fileinfo(tmpfiles+"dia")<>[] then
+        deletefile(tmpfiles+"dia")
+    end
+
     if getos() == "Windows" then
-        if fileinfo(tmpfiles+"dia")<>[] then
-            deletefile(tmpfiles+"dia")
-        end
-        dos(""""+SCI+"\bin\scilab"+""""+" -nwni -args -nouserstartup -f "+tmpfiles+"tst 1>NUL");
+        host(""""+SCI+"\bin\scilab"+""""+" -nwni -args -nouserstartup -f "+tmpfiles+"tst 1>NUL");
     else
-        if fileinfo(tmpfiles+"dia")<>[] then
-            deletefile(tmpfiles+"dia")
-        end
-        unix_s("( "+SCI+"/bin/scilab -nw -args -nouserstartup -f "+tmpfiles+"tst > "+tmpfiles+"res ) 2> "+tmpfiles+"err")
+        host("( "+SCI+"/bin/scilab -nw -args -nouserstartup -f "+tmpfiles+"tst > "+tmpfiles+"res ) 2> "+tmpfiles+"err")
     end
 endfunction

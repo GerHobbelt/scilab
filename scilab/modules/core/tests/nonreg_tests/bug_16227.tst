@@ -18,4 +18,4 @@
 // WSCI was not available among environment variables
 
 assert_checkequal(getenv("WSCI"), WSCI)
-assert_checktrue(dos("dir %WSCI%"))
+assert_checkequal(host("dir %WSCI%"), 0)

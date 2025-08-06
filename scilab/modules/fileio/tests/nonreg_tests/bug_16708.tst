@@ -23,5 +23,5 @@ if getos() <> "Windows" && ~isfile(SCI_BIN) then
 end
 
 cmd = msprintf("echo success| %s -ns -nwni -nb -e %s", SCI_BIN, """str=mgetl(%io(1));mprintf(str)""");
-result = unix_g(cmd);
+[_, result] = host(cmd);
 assert_checkequal(result,"success");

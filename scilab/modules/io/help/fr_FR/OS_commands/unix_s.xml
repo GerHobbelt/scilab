@@ -20,7 +20,10 @@
         xml:lang="fr" xml:id="unix_s">
     <refnamediv>
         <refname>unix_s</refname>
-        <refpurpose>exécute des instructions Windows, Linux ou MacOS : résultats masqués (mode Silencieux)</refpurpose>
+        <refpurpose>
+        exécute des instructions Windows, Linux ou MacOS : résultats masqués (mode Silencieux)
+        <emphasis role="bold">Cette fonction est obsolète. Utilisez <link linkend="host">host</link> à la place.</emphasis>
+        </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Séquence d'appel</title>
@@ -112,5 +115,16 @@ end
                 <link linkend="getos">getos</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Obsolète, utilisez [stat, _, stderr] = host(cmd) à la place.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

@@ -22,6 +22,7 @@
         <refname>unix_w</refname>
         <refpurpose>
            executa algumas instruções do Windows, Linux ou MacOS, resulta no console do Scilab
+           <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -115,5 +116,16 @@ end
                 <link linkend="getos">getos</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host(cmd, echo=%t) instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

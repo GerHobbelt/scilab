@@ -69,14 +69,6 @@ char *wide_string_to_UTF8(const wchar_t *_wide);
 int wcstat(char* filename, struct _stat *st);
 #endif
 
-/**
-* checks input text is a valid UTF-8 format
-* @param[in] string to check
-* @return TRUE or FALSE
-*/
-BOOL IsValidUTF8(const char* pStText);
-
-
 #ifdef __cplusplus
 }
 #endif

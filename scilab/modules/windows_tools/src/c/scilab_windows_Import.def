@@ -10,11 +10,4 @@ RestoreConsoleColors
 RestoreConsoleFont
 closeInnosetupMutex
 RestoreExitButton
-ClosePipeInfo
-pipeSpawnOut
-pipeSpawnErr
-CreateOutput
-spawncommand
-DetectDetachProcessInCommandLine
-DetectStartInCommandLine
 timeout_process_after

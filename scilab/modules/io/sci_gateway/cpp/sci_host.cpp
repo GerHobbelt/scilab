@@ -19,122 +19,75 @@
 #include "string.hxx"
 #include "function.hxx"
 #include "double.hxx"
+#include "spawncommand.hxx"
 
 extern "C"
 {
-#ifdef _MSC_VER
-#include "spawncommand.h"
-#else
-#include "systemc.h"
-#endif
-
 #include "localization.h"
 #include "Scierror.h"
 }
 
-types::Function::ReturnValue sci_host(types::typed_list &in, int _iRetCount, types::typed_list &out)
+static const char fname[] = "host";
+types::Function::ReturnValue sci_host(types::typed_list& in, types::optional_list& opt, int _iRetCount, types::typed_list& out)
 {
     if (in.size() < 1 || in.size() > 2)
     {
-        Scierror(77, _("%s: Wrong number of input argument(s): %d to %d expected.\n"), "host", 1, 2);
+        Scierror(77, _("%s: Wrong number of input argument(s): %d to %d expected.\n"), fname, 1, 2);
         return types::Function::Error;
     }
 
-    if (_iRetCount == 2 || _iRetCount > 3)
+    if (_iRetCount > 3)
     {
-        Scierror(78, _("%s: Wrong number of output argument(s): %d or %d expected.\n"), "host", 1, 3);
+        Scierror(78, _("%s: Wrong number of output argument(s): %d to %d expected.\n"), fname, 1, 3);
         return types::Function::Error;
     }
 
+    // Get command
     types::InternalType* pIT = in[0];
-
     if (pIT->isString() == false || pIT->getAs<types::String>()->getSize() != 1)
     {
-        Scierror(89, _("%s: Wrong size for input argument #%d: string expected.\n"), "host", 1);
+        Scierror(89, _("%s: Wrong size for input argument #%d: string expected.\n"), fname, 1);
         return types::Function::Error;
     }
 
     wchar_t* pstCommand = pIT->getAs<types::String>()->get(0);
 
-    char** output = NULL;
-    char** error = NULL;
-    int outlines = 0;
-    int errlines = 0;
-#ifdef _MSC_VER
-    double stat = (double)spawncommand(pstCommand, FALSE);
-    if(_iRetCount > 1)
+    // Get optional
+    int iEcho = 0;
+    for (const auto& o : opt)
     {
-        output = CreateOutput(&pipeSpawnOut, FALSE);
-        outlines = pipeSpawnOut.NumberOfLines;
-        if(_iRetCount == 3)
+        if (o.first == L"echo")
         {
-            error = CreateOutput(&pipeSpawnErr, FALSE);
-            errlines = pipeSpawnErr.NumberOfLines;
+            if (o.second->isBool() == false || o.second->getAs<types::Bool>()->isScalar() == false)
+            {
+                Scierror(999, _("%s: Wrong type for input argument #%s: A scalar boolean expected.\n"), fname, "echo");
+                return types::Function::Error;
+            }
+
+            iEcho = o.second->getAs<types::Bool>()->get(0);
+        }
+        else
+        {
+            Scierror(999, _("%s: Wrong named argument %s: expected name is '%s'.\n"), fname, "echo");
+            return types::Function::Error;
         }
     }
-#else
-    char* stdoutstr = nullptr;
-    char* stderrstr = nullptr;
-    BOOL bOutput = _iRetCount > 1 ? TRUE : FALSE;
-    int stat = spawncommand(pstCommand, bOutput, &stdoutstr, &stderrstr);
-    if(bOutput && stdoutstr && stderrstr)
-    {
-        outlines = splitstring(stdoutstr, &output);
-        errlines = splitstring(stderrstr, &error);
-    }
-#endif
+
+    // Call command
+    types::String* pStrOut = nullptr;
+    types::String* pStrErr = nullptr;
+    int stat = spawncommand(pstCommand, _iRetCount - 1, &pStrOut, &pStrErr, iEcho);
 
     out.push_back(new types::Double(stat));
-    if (_iRetCount > 1)
+    if (pStrOut)
     {
-        types::String* pStr = nullptr;
-        if (outlines && output[0] != NULL)
-        {
-            pStr = new types::String(outlines, 1);
-            pStr->set(output);
-            out.push_back(pStr);
-        }
-        else
-        {
-            out.push_back(new types::String(""));
-        }
-
-        if (errlines && error[0] != NULL)
-        {
-            pStr = new types::String(errlines, 1);
-            pStr->set(error);
-            out.push_back(pStr);
-        }
-        else
-        {
-            out.push_back(new types::String(""));
-        }
+        out.push_back(pStrOut);
     }
 
-#ifdef _MSC_VER
-    ClosePipeInfo(pipeSpawnOut);
-    ClosePipeInfo(pipeSpawnErr);
-
-    for(int i = 0; i < outlines; i++)
+    if (pStrErr)
     {
-        if (output[i])
-        {
-            FREE(output[i]);
-        }
+        out.push_back(pStrErr);
     }
 
-    for(int i = 0; i < errlines; i++)
-    {
-        if (error[i])
-        {
-            FREE(error[i]);
-        }
-    }
-#else
-    FREE(stdoutstr);
-    FREE(stderrstr);
-    FREE(output);
-    FREE(error);
-#endif
     return types::Function::OK;
 }

@@ -53,9 +53,6 @@
     <ClCompile Include="MutexClosingScilab.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="spawncommand.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="splashScreen.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

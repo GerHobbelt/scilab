@@ -7,7 +7,7 @@
 // =============================================================================
 //
 // <-- NO CHECK ERROR OUTPUT -->
-//
+// <-- NO CHECK REF -->
 // <-- CLI SHELL MODE -->
 //
 // <-- UNIX ONLY -->
@@ -45,6 +45,6 @@ txt = [
 mputl(txt, fd);
 mclose(fd);
 
-err = unix(SCI+"/bin/scilab-cli -f ""test_script3.sce""");
-if err == 0 then pause, end
+stat = host(SCI+"/bin/scilab-cli -f ""test_script3.sce""");
+assert_checkfalse(stat == 0);
 

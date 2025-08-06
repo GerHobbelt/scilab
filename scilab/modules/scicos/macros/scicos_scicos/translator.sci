@@ -101,7 +101,8 @@ function [ok]=translator(filemo,Mblocks,_Modelica_libs,Flat)
         instr = outpath + "/gent.bat";
     end
 
-    if execstr("unix_s(instr)","errcatch") <> 0 then
+    stat = host(instr);
+    if stat <> 0 then
         messagebox([_("-------Modelica translator error message:-----");
         mgetl(outpath + "S_translator.err")], "error", "modal");
         ok = %f,

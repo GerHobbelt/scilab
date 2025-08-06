@@ -20,18 +20,20 @@
           xml:lang="en" xml:id="unix_w">
     <refnamediv>
         <refname>unix_w</refname>
-        <refpurpose>executes some Windows, Linux or MacOS instructions: output in Scilab's console
+        <refpurpose>
+        executes some Windows, Linux or MacOS instructions: output in Scilab's console
+        <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>unix_w(commands)</synopsis>
+        <synopsis>unix_w(command)</synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
         <variablelist>
             <varlistentry>
-                <term>commands</term>
+                <term>command</term>
                 <listitem>
                     <para>A single text: instruction(s) Windows, Linux or MacOS to be executed.</para>
                 </listitem>
@@ -41,42 +43,14 @@
     <refsection>
         <title>Description</title>
         <para>
-            <literal>unix_w(…)</literal> opens a new session of the Operating System (OS) command
-            interpreter (<emphasis>sh</emphasis> with Linux, <emphasis>cmd.exe</emphasis> with
-            Windows, etc..), sends <varname>commands</varname> to it,
-            lets it processing <varname>commands</varname> instructions, receives the standard
-            output and possible error message yielded by the processing, and closes the interpreter
-            session.
+            <literal>unix_w(…)</literal> executes a command on the Operating system using CMD on Windows or sh on Linux and macOS and force the output to display in Scilab's console.
         </para>
         <para>
             The starting working directory and environment variables of the opened interpreter
             are set <link linkend="host_description">as described for host()</link>.
         </para>
         <para>
-          The standard output returned by the OS is displayed in Scilab's console ("_w" stands
-          for the main Scilab's "Window").
-        </para>
-        <para>
-            If an instruction in <varname>commands</varname> generates an error,
-            <itemizedlist>
-                <listitem>
-                    the error message from the OS is displayed in the Scilab console
-                </listitem>
-                <listitem>
-                    <literal>unix_w</literal> stops and displays its own error message in the
-                    Scilab console.
-                </listitem>
-                <listitem>
-                    In <varname>commands</varname>, the remaining unprocessed instructions are ignored.
-                </listitem>
-            </itemizedlist>
-            <warning>
-                The effects of valid instructions processed before the erroneous one remain actual
-                (for instance, deleted files). However, their standard output is lost: It is not
-                displayed in the Scilab console.
-            </warning>
-            <varname>commands</varname> with multiple instructions are not recommended.
-            They are more difficult to debug.
+            If an instruction in <varname>commands</varname> generates an error, this function throw a Scilab error.
         </para>
     </refsection>
     <refsection>
@@ -114,5 +88,16 @@ end
                 <link linkend="getos">getos</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host(cmd, echo=%t) instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

@@ -22,12 +22,15 @@ assert_checkerror("[a, b, c] = scilab(code=""1+1"", background=%T)", sprintf(_("
 assert_checkequal(status, 0);
 stdout(find(stdout == "")) = [];
 assert_checkequal(stdout, [" ans = ";"   2."]);
-assert_checkequal(stderr, "");
+stderr(find(stderr == "")) = [];
+assert_checkequal(stderr, []);
 
 // Test file execution
 tmp = tempname();
 mputl("1+1", tmp);
 [status, stdout, stderr] = scilab(file=tmp);
 assert_checkequal(status, 0);
+stdout(find(stdout == "")) = [];
 assert_checkequal(stdout, []);
-assert_checkequal(stderr, "");
+stderr(find(stderr == "")) = [];
+assert_checkequal(stderr, []);

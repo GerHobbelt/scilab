@@ -31,26 +31,26 @@ disp(isatty());
 // -quit is only discarded when standart input is redirected (piped mode)
 if isatty() == %f then
     //With -quit argument
-    err = unix(scilabBin + " -e ""exit()"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""exit()"" -quit --timeout 2m");
     assert_checkequal(err, 0);
-    err = unix(scilabBin + " -e ""1+1;"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""1+1;"" -quit --timeout 2m");
     assert_checkequal(err, 0);
-    err = unix(scilabBin + " -e ""1+1; exit(12)"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""1+1; exit(12)"" -quit --timeout 2m");
     assert_checkequal(err, 12);
-    err = unix(scilabBin + " -e ""error(\""error_test\"");"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""error(\""error_test\"");"" -quit --timeout 2m");
     assert_checktrue(err <> 0 && err <> 22 && err <> 258);
-    err = unix(scilabBin + " -e ""error(\""error_test\"");exit(12)"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""error(\""error_test\"");exit(12)"" -quit --timeout 2m");
     assert_checktrue(err <> 12 && err <> 0 && err <> 22 && err <> 258);
-    err = unix(scilabBin + " -e ""try, error(\""error_test\""); catch, disp(lasterror()),end"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""try, error(\""error_test\""); catch, disp(lasterror()),end"" -quit --timeout 2m");
     assert_checkequal(err, 0);
-    err = unix(scilabBin + " -e ""try, error(\""error_test\""); catch,disp(lasterror());exit(12), end"" -quit --timeout 2m");
+    err = host(scilabBin + " -e ""try, error(\""error_test\""); catch,disp(lasterror());exit(12), end"" -quit --timeout 2m");
     assert_checkequal(err, 12);
 end
 
 //Without -quit argument
-err = unix(scilabBin + " -e ""exit()"" --timeout 2m");
+err = host(scilabBin + " -e ""exit()"" --timeout 2m");
 assert_checkequal(err, 0);
-err = unix(scilabBin + " -e ""1+1; exit(12)"" --timeout 2m");
+err = host(scilabBin + " -e ""1+1; exit(12)"" --timeout 2m");
 assert_checkequal(err, 12);
-err = unix(scilabBin + " -e ""try, error(\""error_test\""); catch,disp(lasterror());exit(12), end"" --timeout 2m");
+err = host(scilabBin + " -e ""try, error(\""error_test\""); catch,disp(lasterror());exit(12), end"" --timeout 2m");
 assert_checkequal(err, 12);

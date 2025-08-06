@@ -22,7 +22,7 @@ else
     cmd = "echo ""(1 + 1)"" | " + strsplit(SCI, "share/scilab")(1) + "/bin/scilab-cli -ns ";
 end
 
-[resp, ierr, msgerr] = unix_g(cmd)
+[ierr, resp] = host(cmd)
 assert_checkequal(ierr, 0);
 
 expected = [

@@ -246,7 +246,6 @@ lib /DEF:"$(ProjectDir)Gui_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Platform) /
     <ClCompile Include="killScilabProcess.c" />
     <ClCompile Include="mmapWindows.c" />
     <ClCompile Include="MutexClosingScilab.c" />
-    <ClCompile Include="spawncommand.c" />
     <ClCompile Include="splashScreen.cpp" />
     <ClCompile Include="TextToPrint.c" />
     <ClCompile Include="WindowShow.c" />

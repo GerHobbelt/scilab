@@ -68,7 +68,7 @@ function  ok = modelicac(Flat, Flat_functions, xmlfileTMP, Jacobian, Cfile, with
         end
     end
 
-    [rep,stat,err]=unix_g(instr);
+    [stat, _, err] = host(instr);
     if stat <> 0 then
         messagebox(err, _("Modelica compiler"), "error", "modal");
         ok=%f;

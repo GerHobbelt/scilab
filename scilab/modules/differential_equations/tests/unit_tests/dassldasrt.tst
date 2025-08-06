@@ -209,11 +209,13 @@ gr22=[...
 
 //Uncomment lines below: link may be machine dependent if some f77 libs are 
 //needed for linking
-//unix_g('cd /tmp;rm -f /tmp/res22.f');unix_g('cd /tmp;rm -f /tmp/gr22.f');
-//unix_g('cd /tmp;rm -f /tmp/jac22.f');
+//host('cd /tmp;rm -f /tmp/res22.f');
+//host('cd /tmp;rm -f /tmp/gr22.f');
+//host('cd /tmp;rm -f /tmp/jac22.f');
 //write('/tmp/res22.f',res22);write('/tmp/gr22.f',gr22);write('/tmp/jac22.f',jac22)
-//unix_g("cd /tmp;make /tmp/res22.o");unix_g('cd /tmp;make /tmp/gr22.o');
-//unix_g('cd /tmp;make /tmp/jac22.o');
+//host("cd /tmp;make /tmp/res22.o");
+//host('cd /tmp;make /tmp/gr22.o');
+//host('cd /tmp;make /tmp/jac22.o');
 //          2  Linking the routines
 //link('/tmp/res22.o','res22');link('/tmp/jac22.o','jac22');link('/tmp/gr22.o','gr22')
 //rtol=[1.d-6;1.d-6];atol=[1.d-6;1.d-4];

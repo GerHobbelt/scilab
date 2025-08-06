@@ -200,7 +200,7 @@ function [packages,categories_flat,categories] = atomsDESCRIPTIONget(update)
                     extract_cmd = """" + gzip_path + """" + " -f -d """ + file_out + """";
                 end
 
-                [rep, stat ,err] = unix_g(extract_cmd);
+                [stat, rep ,err] = host(extract_cmd);
 
                 if stat ~= 0 then
                     disp(err);

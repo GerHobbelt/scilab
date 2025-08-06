@@ -18,7 +18,7 @@ function [OSNAME,ARCH,LINUX,MACOSX,SOLARIS,BSD] = atomsGetPlatform()
     // Operating system detection
 
     if getos() <> "Windows" then
-        OSNAME   = unix_g("uname");
+        [_, OSNAME] = host("uname");
         MACOSX   = (strcmp(OSNAME,"darwin", "i") == 0);
         LINUX    = (strcmp(OSNAME,"linux", "i")  == 0);
         SOLARIS  = (strcmp(OSNAME,"sunos", "i")  == 0);

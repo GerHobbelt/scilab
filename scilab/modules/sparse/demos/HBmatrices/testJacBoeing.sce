@@ -24,7 +24,7 @@ function testJacBoeing(filename)
         end
         extract_cmd = """" + gzip_path + """" + " -f -d """ + localfile + """";
     end
-    [rep, stat ,err] = unix_g(extract_cmd);
+    [stat, _ ,err] = host(extract_cmd);
     if stat ~= 0 then
         disp(err);
         error(msprintf(gettext("%s: Extraction of (''%s'') has failed.\n"),"testJacBoeing",localfile));

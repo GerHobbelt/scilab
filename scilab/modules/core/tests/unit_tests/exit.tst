@@ -20,6 +20,6 @@ else
 end
 
 for i = 1:10
-	exitcode = unix(SCIPATH + "/bin/scilab -nwni -e ""exit(" + string(i) + ")""");
-    assert_checkequal(exitcode, i);
+	exitcode = host(SCIPATH + "/bin/scilab -nwni -e ""exit(" + string(i) + ")""");
+  assert_checkequal(exitcode, i);
 end

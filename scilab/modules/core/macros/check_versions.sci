@@ -22,9 +22,9 @@ function ret=check_versions(varargin)
         if isfile(file_to_check) then
             try
                 if getos() == "Windows" then
-                    stat = unix_w(SCI+"\modules\helptools\bin\xmllint\xmllint --noout --valid "+file_to_check);
+                    stat = host(SCI+"\modules\helptools\bin\xmllint\xmllint --noout --valid "+file_to_check, echo=%t);
                 else
-                    stat = unix_w("xmllint --noout --valid "+file_to_check);
+                    stat = host("xmllint --noout --valid "+file_to_check, echo=%t);
                 end
             catch
                 ret=%F;

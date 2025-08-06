@@ -28,3 +28,9 @@ assert_checkequal(stripblanks(stdout), "OK");
 assert_checktrue(stderr <> "");
 assert_checktrue(status <> 0);
 assert_checkequal(stripblanks(stdout), "OK");
+
+// check a command outputting both stdout and stderr in output
+[status, output] = host("echo OK && echo KO 1>&2");
+assert_checktrue(output <> "");
+assert_checktrue(status == 0);
+assert_checkequal(stripblanks(output), ["OK"; "KO"]);

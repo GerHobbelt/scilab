@@ -21,18 +21,10 @@
 #include "c_gateway_prototype.h"
 
 /*--------------------------------------------------------------------------*/
-IO_IMPEXP int gw_io(void);
-/*--------------------------------------------------------------------------*/
-
 //Scilab 6
 int sci_getenv(char *fname, void* pvApiCtx);
 int sci_setenv(char *fname, void* pvApiCtx);
 
-//int sci_read(char *fname, unsigned long fname_len);
-int sci_oldsave(char *fname, unsigned long fname_len);
-//int sci_write(char *fname, unsigned long fname_len);
-int sci_save(char *fname, void *pvApiCtx);
-int sci_percent_load(char *fname, unsigned long fname_len);
 C_GATEWAY_PROTOTYPE(sci_getio);
 /*--------------------------------------------------------------------------*/
 #endif /* __GW_IO_H__ */

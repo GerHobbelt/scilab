@@ -34,14 +34,14 @@ function dlwCompile(files, make_command, makename)
 
     cmd = make_command + makename + " " + target_build + " 2>&0"
     scibuildfile = dlwWriteBatchFile(cmd);
-    [msg, stat] = unix_g(scibuildfile);
+    [stat, msg] = host(scibuildfile);
     deletefile(scibuildfile);
 
     if stat <> 0 then
         // more feedback when compilation fails
         cmd = make_command + makename + " " + target_build + " 1>&2"
         scibuildfile = dlwWriteBatchFile(cmd);
-        [msg, stat, stderr] = unix_g(scibuildfile);
+        [stat, msg, stderr] = host(scibuildfile);
         deletefile(scibuildfile);
         disp(stderr);
         error(msprintf(gettext("%s: Error while executing %s.\n"), "ilib_compile", makename));

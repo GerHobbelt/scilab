@@ -14,7 +14,7 @@
 function reset_test_module(source, destDir)
     if isdir(destDir)
         if getos()=="Windows"
-            dos("rmdir /Q /S """+destDir+"""")
+            host("rmdir /Q /S """+destDir+"""")
         else
             removedir(destDir);
         end

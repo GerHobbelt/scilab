@@ -185,15 +185,15 @@ function atomsDownload(url_in,file_out,md5sum)
                 end
             elseif getos() == "Windows" & CURL then
                 download_cmd = """" + pathconvert(SCI+"/tools/curl/curl.exe",%F) + """" + proxy_host_arg + proxy_user_arg + timeout_arg + " -s """ + url_in + """ -o """ + file_out + """";
-                [rep,stat,err] = unix_g(download_cmd);
+                [stat,rep,err] = host(download_cmd);
             elseif CURL then
                 // curl
                 download_cmd = "curl "+proxy_host_arg+proxy_user_arg+timeout_arg+" -s "+url_in + " -o " + file_out;
-                [rep,stat,err] = unix_g(download_cmd);
+                [stat,rep,err] = host(download_cmd);
             elseif WGET then
                 // wget
                 download_cmd = proxy_host_arg+"wget"+proxy_user_arg+timeout_arg+" "+url_in + " -O " + file_out;
-                [rep,stat,err] = unix_g(download_cmd);
+                [stat,rep,err] = host(download_cmd);
             elseif getos() == "Windows" & HTTPDOWNLOAD then
                 imode = ilib_verbose();
                 ilib_verbose(0) ;

@@ -36,10 +36,10 @@ function cleantests(myTests)
     if getos() == "Windows" then
         path=SCI+"\tests\basic_tests"
         file_to_clean=path+strsubst(myTests,".tst",".dia")
-        unix_s("del "+""""+strcat(file_to_clean,""" """)+"""")
+        [_,_] = host("del "+""""+strcat(file_to_clean,""" """)+"""")
     else
         path="./"
         file_to_clean=path+strsubst(myTests,".tst",".dia")
-        unix_s("rm -f "+strcat(file_to_clean," "))
+        [_,_] = host("rm -f "+strcat(file_to_clean," "))
     end
 endfunction

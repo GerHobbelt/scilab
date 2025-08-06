@@ -34,11 +34,9 @@ function res = dlwMake(files, objects_or_dll)
     //create a scibuild.bat file in TMPDIR directory
     cmd = "nmake /Y /nologo /f Makefile.mak " + OBJ;
     scibuildfile = dlwWriteBatchFile(cmd);
+    [_, msg] = host(scibuildfile);
     if ilib_verbose() > 1 then
-        msg = unix_g(scibuildfile);
         disp(msg);
-    else
-        host(scibuildfile);
     end
 
     deletefile(scibuildfile);

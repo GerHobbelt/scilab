@@ -76,7 +76,8 @@ function [model, ok] = build_block(o)
 
             //       // build compilation command line, execute it and test for result
             //       strCmd = compilerpath + ' -c ' + funam + ' -o ' + fullfile(tarpath, nameF + '.moc')
-            //       if execstr('unix_s(''' + strCmd + ''')', 'errcatch') <> 0 then
+            //       [stat, _, stderr] = host(strCmd);
+            //       if stat <> 0 then
             //         error(sprintf(gettext("%s: Error : the following command line failed to execute: %s.\n"), "build_block", strCmd))
             //         ok = %f
             //       end

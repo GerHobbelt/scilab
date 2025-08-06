@@ -970,7 +970,7 @@ function status = test_single(_module, _testPath, _testName)
         mode_arg = "-nwni";
     elseif _module.wanted_mode == ["NWNI" "PROFILING"] && getos() == "Linux" then
         mode_arg = "-nwni -profiling";
-        valgrind_opt = "SCILAB_VALGRIND_OPT=""--log-file=" + tmp_prof + " """;
+        valgrind_opt = "SCILAB_VALGRIND_OPT=""--log-file=" + tmp_prof + """";
     else
         if execMode == "NWNI" then
             mode_arg = "-nwni";
@@ -982,11 +982,10 @@ function status = test_single(_module, _testPath, _testName)
     end
 
     if mpi == %t then
-        prefix_bin="mpirun -c " + string(mpi_node) + "  -bynode"
+        prefix_bin="mpirun -c " + string(mpi_node) + " -bynode"
     else
         prefix_bin=""
     end
-
 
     //language
     if language == "any" then
@@ -997,22 +996,16 @@ function status = test_single(_module, _testPath, _testName)
 
     loader_path = pathconvert(fullfile(_module.moduleName, "loader.sce"), %f);
 
-    SCI_ARGS = msprintf(" -nb -quit -scihome ""%s"" --timeout %s ", scihome, timeout);
+    SCI_ARGS = msprintf("-nb -quit -scihome ""%s"" --timeout %s", scihome, timeout);
 
     // Build final command
-    if getos() == "Windows" then
-        if (isdir(_module.moduleName) & isfile(loader_path)) // external module not in Scilab
-            test_cmd = "( """ + SCI_BIN + "\bin\scilab"" " + mode_arg + " " + language_arg + SCI_ARGS + "-e ""exec(""""" + loader_path + """"");exec(""""" + tmp_tst + """"", -1);"" > """ + tmp_res + """ ) 2> """ + tmp_err + """";
-        else // standard module
-            test_cmd = "( """ + SCI_BIN + "\bin\scilab"" " + mode_arg + " " + language_arg + SCI_ARGS + "-e ""exec(""""" + tmp_tst + """"", -1);"" > """ + tmp_res + """ ) 2> """ + tmp_err + """";
-        end
-    else
-        if (isdir(_module.moduleName) & isfile(loader_path))
-            test_cmd = "( " + valgrind_opt + " " + SCI_BIN + "/bin/scilab " + mode_arg + " " + language_arg + SCI_ARGS + "-e ""exec(''" + loader_path + "'');exec(''" + tmp_tst +"'');""" + " > " + tmp_res + " ) 2> " + tmp_err;
-        else
-            test_cmd = "( " + valgrind_opt + " " + prefix_bin + " " + SCI_BIN + "/bin/scilab " + mode_arg + " " + language_arg + SCI_ARGS + " -f " + tmp_tst + " > " + tmp_res + " ) 2> " + tmp_err;
-        end
+    SCI_BIN_STR = """" + fullfile(SCI_BIN, "bin", "scilab")+ """";
+    EXEC_CMD = "exec(''" + tmp_tst + "'', -1);";
+    if (isdir(_module.moduleName) & isfile(loader_path)) // external module not in Scilab
+        EXEC_CMD = "exec(''" + loader_path + "'', -1);" + EXEC_CMD;
     end
+    EXEC_CMD = """" + EXEC_CMD +""""
+    CMD_ARRAY = [valgrind_opt, prefix_bin, SCI_BIN_STR, mode_arg, language_arg, SCI_ARGS, "-e", EXEC_CMD];
 
     // cleanup previously generated files
     deletetmpfiles(tmp_tst, tmp_dia, tmp_res, tmp_err, path_dia);
@@ -1021,16 +1014,20 @@ function status = test_single(_module, _testPath, _testName)
     mputl(sciFile, tmp_tst);
 
     //execute test
-    returnStatus = host(test_cmd);
+    [returnStatus, res, err] = host(strcat(CMD_ARRAY, " "));
+
     //Check return status
     if (returnStatus <> 0)
+        // In case of failure, save res & err to file
+        mputl(res, tmp_res);
+        mputl(err, tmp_err);
+
         details = [ launchthecommand(testFile); ..
         checkthefile(tmp_dia)];
         status.id = 5;
         status.message = "failed: tested Scilab exited with error code " + string(returnStatus);
         status.details = details;
         if params.show_error == %T then
-            res = mgetl(tmp_res)
             res(res=="") = []
             res = strsubst(res, "/[^[:print:]]/", "", "regexp");
             if res <> [] then
@@ -1040,7 +1037,6 @@ function status = test_single(_module, _testPath, _testName)
             else
                 res = ""
             end
-            err = mgetl(tmp_err)
             err(err=="") = []
             err = strsubst(err, "/[^[:print:]]/", "", "regexp");
             if err <> [] then
@@ -1507,10 +1503,8 @@ function msg = comparethefiles ( filename1 , filename2 )
             diffTool = "diff";
         end
         targetFile=TMPDIR + filesep() + "tempdiff.diff";
-        unix(diffTool + " -u " + filename1 + " " + filename2 + " > " + targetFile);
-        // unix_g is failing to return the output into a variable
-        msg=[msg; mgetl(targetFile)]
-        deletefile(targetFile);
+        [_,out]=host(diffTool + " -u " + filename1 + " " + filename2);
+        msg=[msg; out]
     end
 endfunction
 

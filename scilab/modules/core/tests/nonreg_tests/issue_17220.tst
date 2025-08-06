@@ -23,7 +23,7 @@ else
 end
 
 // Run another Scilab with Java to be sure there is no Java process/thread which locks TMPDIR
-rep = unix_g(scilabBin + " -nw -e ""disp(TMPDIR)"" -quit");
+[_, rep] = host(scilabBin + " -nw -e ""disp(TMPDIR)"" -quit");
 rep(rep=="") = []; // Remove empty lines to be sure TMPDIR value is on last line
 
 // Extract root of TMPDIR of Scilab launched using unix_g()

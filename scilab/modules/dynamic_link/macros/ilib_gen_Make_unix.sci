@@ -185,7 +185,7 @@ function ilib_gen_Make_unix(names,   ..
         // timestamp to one second later.
         // (just try "touch configure Makefile; make" on any autoconf project)
         sleep(1000);
-        unix_g("touch Makefile");
+        host("touch Makefile");
     else
         // Makefile.orig doesn't exists or may be invalid regarding the flags
         // run the ./configure with the flags
@@ -207,7 +207,7 @@ function ilib_gen_Make_unix(names,   ..
 
     cmd=commandpath + "/scicompile.sh " + libname + " " + filelist
 
-    [msg,ierr, stderr] = unix_g(cmd);
+    [ierr, msg, stderr] = host(cmd);
 
     if ( ilib_verbose() == 2 ) then
         mprintf(gettext("   %s: Substitute the reference by the actual file.\n"),"ilib_gen_Make");
@@ -221,7 +221,8 @@ function ilib_gen_Make_unix(names,   ..
     if ierr <> 0 then
         if ( ilib_verbose() <> 0 ) then
             mprintf(gettext("%s: Error while modifying the reference Makefile:\n"),"ilib_gen_Make")
-            mprintf(msg + " " + stderr);
+            mprintf(gettext("Output: %s\n"),msg);
+            mprintf(gettext("stderr: %s\n"),stderr);
         end
         return;
     end
@@ -246,7 +247,7 @@ function generateConfigure(workingPath, ..
     cmd = gencompilationflags_unix(ldflags, cflags, fflags, cc, "configure")
     cmd = workingPath+"/compilerDetection.sh "+cmd
 
-    [msg,ierr,stderr] = unix_g(cmd);
+    [ierr, msg, stderr] = host(cmd);
 
     if ( ilib_verbose() == 2 ) then
         mprintf(gettext("   %s: Command: %s\n"),"ilib_gen_Make",cmd);
@@ -256,7 +257,8 @@ function generateConfigure(workingPath, ..
 
     if ierr <> 0 then
         if ( ilib_verbose() <> 0 ) then
-            mprintf("%s\n", msg + " " + stderr);
+            mprintf(gettext("Output: %s\n"),msg);
+            mprintf(gettext("stderr: %s\n"),stderr);
         end
         error(msprintf(gettext("%s: An error occurred during the detection of the compiler(s). Set ilib_verbose(2) for more information.\n"), "ilib_gen_Make"));
         return;

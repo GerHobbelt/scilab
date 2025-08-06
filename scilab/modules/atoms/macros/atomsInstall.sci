@@ -374,7 +374,7 @@ function result = atomsInstall(packages,section)
             rename_cmd = "mv """+this_package_details("extractedDirectory")+""" """+this_package_directory+this_package_version+"""";
         end
 
-        [rep,stat,err]=unix_g(rename_cmd);
+        [stat,rep,err]=host(rename_cmd);
 
         if stat <> 0 then
             // Second try after a sleep
@@ -382,7 +382,7 @@ function result = atomsInstall(packages,section)
 
             if getos() == "Windows" then
                 sleep(2000);
-                [rep,stat,err]=unix_g(rename_cmd);
+                [stat,rep,err]=host(rename_cmd);
             end
 
             if stat <> 0 then
@@ -404,7 +404,7 @@ function result = atomsInstall(packages,section)
 
             move_cmd = "move """+atoms_tmp_directory+this_package_version+""" """+pathconvert(this_package_directory,%F)+"""";
 
-            [rep,stat,err]=unix_g(move_cmd);
+            [stat,rep,err]=host(move_cmd);
 
             if stat <> 0 then
 
@@ -413,7 +413,7 @@ function result = atomsInstall(packages,section)
 
                 if getos() == "Windows" then
                     sleep(2000);
-                    [rep,stat,err]=unix_g(move_cmd);
+                    [stat,rep,err]=host(move_cmd);
                 end
 
                 atomsError("error", ..

@@ -47,7 +47,7 @@ function  ok=xml2modelica(xmlfile,Flati)
         instr = tmpdir + "igenx.bat";
     end
 
-    [rep,stat,err]=unix_g(instr);
+    [stat, _, err] = host(instr);
     if stat == 0 then
         mprintf("%s\n", " xml->Modelica : " + Flati);
         ok = %t;

@@ -109,7 +109,7 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     </Midl>
     <ClCompile>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>.;../../includes;../../../../libs/intl;../../../../libs/libxml2;../../../localization/includes;../../../api_scilab/includes;../../../core/includes;../../../output_stream/includes;../../../fileio/includes;../../../windows_tools/includes;../../../windows_tools/src/c/scilab_windows;../../../dynamic_link/includes;../../../ast/includes/operations;../../../string/includes;../../../ast/includes/types;../../../ast/includes/ast;../../../ast/includes/exps;../../../ast/includes/symbol;../../../ast/includes/system_env;../../../ast/includes/parse;../../../threads/includes;../../../tclsci/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../../includes;../../../../libs/intl;../../../../libs/libxml2;../../../localization/includes;../../../api_scilab/includes;../../../core/includes;../../../output_stream/includes;../../../fileio/includes;../../../windows_tools/includes;../../../windows_tools/src/c/scilab_windows;../../../dynamic_link/includes;../../../ast/includes/operations;../../../string/includes;../../../ast/includes/types;../../../ast/includes/ast;../../../ast/includes/exps;../../../ast/includes/symbol;../../../ast/includes/system_env;../../../ast/includes/parse;../../../threads/includes;../../../tclsci/includes;../../../jvm/includes;$(SCILAB_JDK64)/include;$(SCILAB_JDK64)/include/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;FORDLL;_DEBUG;_WINDOWS;_USRDLL;IO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <WarningLevel>Level3</WarningLevel>
@@ -117,10 +117,11 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <PreLinkEvent>
       <Message>Make dependencies</Message>
       <Command>lib /DEF:"$(ProjectDir)core_import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Platform) /OUT:"$(ProjectDir)core.lib" 1&gt;NUL 2&gt;NUL
+lib /DEF:"$(ProjectDir)libjvm_import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Platform) /OUT:"$(ProjectDir)libjvm.lib" 1&gt;NUL 2&gt;NUL
 </Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>core.lib;libjvm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)bin\$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -167,7 +168,7 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <ClCompile>
       <FavorSizeOrSpeed>Speed</FavorSizeOrSpeed>
       <WholeProgramOptimization>false</WholeProgramOptimization>
-      <AdditionalIncludeDirectories>.;../../includes;../../../../libs/intl;../../../../libs/libxml2;../../../localization/includes;../../../api_scilab/includes;../../../core/includes;../../../output_stream/includes;../../../fileio/includes;../../../windows_tools/includes;../../../windows_tools/src/c/scilab_windows;../../../dynamic_link/includes;../../../ast/includes/operations;../../../string/includes;../../../ast/includes/types;../../../ast/includes/ast;../../../ast/includes/exps;../../../ast/includes/symbol;../../../ast/includes/system_env;../../../ast/includes/parse;../../../threads/includes;../../../tclsci/includes;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.;../../includes;../../../../libs/intl;../../../../libs/libxml2;../../../localization/includes;../../../api_scilab/includes;../../../core/includes;../../../output_stream/includes;../../../fileio/includes;../../../windows_tools/includes;../../../windows_tools/src/c/scilab_windows;../../../dynamic_link/includes;../../../ast/includes/operations;../../../string/includes;../../../ast/includes/types;../../../ast/includes/ast;../../../ast/includes/exps;../../../ast/includes/symbol;../../../ast/includes/system_env;../../../ast/includes/parse;../../../threads/includes;../../../tclsci/includes;../../../jvm/includes;$(SCILAB_JDK64)/include;$(SCILAB_JDK64)/include/win32;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_DEPRECATE;FORDLL;NDEBUG;_WINDOWS;_USRDLL;IO_EXPORTS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <StringPooling>true</StringPooling>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
@@ -177,10 +178,11 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <PreLinkEvent>
       <Message>Make dependencies</Message>
       <Command>lib /DEF:"$(ProjectDir)core_import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Platform) /OUT:"$(ProjectDir)core.lib" 1&gt;NUL 2&gt;NUL
+lib /DEF:"$(ProjectDir)libjvm_import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(Platform) /OUT:"$(ProjectDir)libjvm.lib" 1&gt;NUL 2&gt;NUL
 </Command>
     </PreLinkEvent>
     <Link>
-      <AdditionalDependencies>core.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>core.lib;libjvm.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(SolutionDir)bin\$(ProjectName).dll</OutputFile>
       <GenerateDebugInformation>false</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
@@ -194,6 +196,8 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="..\cpp\loadlib.cpp" />
+    <ClCompile Include="..\cpp\spawncommand.cpp" />
+    <ClCompile Include="..\cpp\spawncommand_tools.cpp" />
     <ClCompile Include="DllmainIo.c" />
     <ClCompile Include="getenvc.c" />
     <ClCompile Include="getpidc.c" />
@@ -204,6 +208,8 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <ClInclude Include="..\..\includes\dynlib_io.h" />
     <ClInclude Include="..\..\includes\getenvc.h" />
     <ClInclude Include="..\..\includes\loadlib.hxx" />
+    <ClInclude Include="..\..\includes\spawncommand.hxx" />
+    <ClInclude Include="..\cpp\spawncommand_tools.hxx" />
     <ClInclude Include="getpidc.h" />
     <ClInclude Include="..\..\includes\gw_io.h" />
     <ClInclude Include="..\..\includes\setenvc.h" />
@@ -214,6 +220,7 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     <None Include="core_import.def" />
     <None Include="..\..\io.iss" />
     <None Include="..\..\Makefile.am" />
+    <None Include="libjvm_import.def" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="io.rc" />
@@ -244,6 +251,9 @@ lib /DEF:"$(ProjectDir)scilab_windows_Import.def" /SUBSYSTEM:WINDOWS /MACHINE:$(
     </ProjectReference>
     <ProjectReference Include="..\..\..\tclsci\tclsci.vcxproj">
       <Project>{c456d5b8-8a32-496a-a2ee-164b0d734126}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\..\..\threads\threads.vcxproj">
+      <Project>{50a1ffc8-adc2-4d9e-a2d0-5dcd63188ae9}</Project>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>

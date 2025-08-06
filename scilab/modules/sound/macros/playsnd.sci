@@ -150,19 +150,19 @@ function playsnd(y, rate, nbiter, playerCmd)
         if playerCmd <> "/dev/audio" then
             player = strtok(playerCmd, " ")
             options = strchr(playerCmd," ")
-            unix("killall -9 " + player + " 2> /dev/null")
+            host("killall -9 " + player + " 2> /dev/null")
             //cmd = "%s --disable-resample -r %d %s ''%s'' > /dev/null 2>&1 &"
             cmd = "%s %s ''%s'' > /dev/null 2>&1 &"
             cmd = msprintf(cmd, player, options, File);
             if y <> []
                 msg = msprintf(_("%s: Failed to play the sound with command: %s.\n"), fname,  cmd)
                 if nbiter==-1
-                    unix_g(cmd);
+                    host(cmd);
                 else
                     realtimeinit(1)
                     realtime(0)
                     for i = 1:nbiter
-                        unix_g(cmd);
+                        host(cmd);
                         realtime(i*duration)
                     end
                 end

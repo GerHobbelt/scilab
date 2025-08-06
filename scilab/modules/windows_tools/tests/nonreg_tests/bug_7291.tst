@@ -6,6 +6,7 @@
 // =============================================================================
 //
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 //
 // <-- Non-regression test for bug 7291 -->
 //
@@ -15,13 +16,15 @@
 // <-- Short Description -->
 // unix('') and dos('') returned a wrong messsage in console
 
-r = unix('');
-if r <> 1 then pause,end
+r = host('');
+assert_checkequal(r, 1);
 
-[a,b] = dos('');
-if b <> %f then pause,end
-if a <> [] then pause,end
+[r, o, e] = host('');
+assert_checkequal(r, 1);
+assert_checkequal(o, "");
+assert_checkequal(e, "");
 
-[a,b] = dos('', '-echo');
-if b <> %f then pause,end
-if a <> [] then pause,end
+r = host('', echo=%t);
+assert_checkequal(r, 1);
+assert_checkequal(o, "");
+assert_checkequal(e, "");

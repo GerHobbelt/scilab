@@ -20,7 +20,7 @@ function vs = getVsWhereInformation()
     //-requires     MSBuild, version be able to build C++
 
     cmd = sprintf("""%s"" -products * -requires Microsoft.Component.MSBuild -prerelease -format json -utf8", fullfile(SCI, "tools", "vswhere", "vswhere"));
-    x = unix_g(cmd);
+    [_, x] = host(cmd);
     vs = [];
     vers = [];
     if isempty(x) == %f then

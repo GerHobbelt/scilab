@@ -112,9 +112,9 @@ function varargout = scilab(code, file, mode, quit, args, background)
     end
 
     if background then
-        unix_g(cmd);
+        host(cmd);
         varargout = list();
     else
-        [varargout(2), varargout(1), varargout(3)] = unix_g(cmd);
+        [varargout(1), varargout(2), varargout(3)] = host(cmd);
     end
 endfunction

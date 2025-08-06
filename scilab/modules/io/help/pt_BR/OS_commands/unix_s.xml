@@ -22,6 +22,7 @@
         <refname>unix_s</refname>
         <refpurpose>
            executa silenciosamente algumas instruções do Windows, Linux ou MacOS
+           <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -119,5 +120,16 @@ end
                 <link linkend="getos">getos</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use [stat, _, stderr] = host(cmd) instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

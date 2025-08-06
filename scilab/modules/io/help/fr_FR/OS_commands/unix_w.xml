@@ -20,7 +20,9 @@
           xml:lang="fr" xml:id="unix_w">
     <refnamediv>
         <refname>unix_w</refname>
-        <refpurpose>exécute des instructions Windows, Linux ou MacOS : résultats dans la console Scilab
+        <refpurpose>
+        exécute des instructions Windows, Linux ou MacOS : résultats dans la console Scilab
+        <emphasis role="bold">Cette fonction est obsolète. Utilisez <link linkend="host">host</link> à la place.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -116,5 +118,16 @@ end
                 <link linkend="getos">getos</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Obsolète, utilisez host(cmd, echo=%t) à la place.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

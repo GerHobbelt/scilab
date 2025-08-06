@@ -76,8 +76,8 @@ void RestoreConsoleColors(void)
 /*--------------------------------------------------------------------------*/
 void UpdateConsoleFont(void)
 {
-    //change codepage to cp65001
-    SetConsoleOutputCP(65001);
+    //change codepage to cp 65001
+    SetConsoleOutputCP(CP_UTF8);
 }
 /*--------------------------------------------------------------------------*/
 void SaveConsoleFont(void)
@@ -136,8 +136,9 @@ void CreateScilabConsole(int ShowBanner)
     HWND hScilex = NULL;
     char *scilabVersionString = getScilabVersionAsString();
 
-    SetConsoleState(0);  /* Console DOS Cachée par défaut */
+    SetConsoleState(0);  /* Console DOS CachÃ©e par dÃ©faut */
     AllocConsole();
+    UpdateConsoleFont();
 
     wsprintf(ScilexConsoleName, "%s %s (%d)", NameConsole, scilabVersionString, getCurrentScilabId());
     SetConsoleTitle(ScilexConsoleName);

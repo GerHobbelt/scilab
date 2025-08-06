@@ -17,6 +17,7 @@ RUN apt-get update && apt-get install -y \
   curl \
   unzip \
   libxi6 \
+  libgtk-3-0 \
   locales gcc g++ gfortran make gettext \
   && rm -rf /var/lib/apt/lists/*
 

@@ -24,18 +24,18 @@ else
     sciAdvCli = strsplit(SCI, "share/scilab")(1) + "/bin/scilab-adv-cli";
 end
 
-[resp, ierr, msgerr] = unix_g("echo %pi | "+sciCli+" -nb");
+[ierr, resp] = host("echo %pi | "+sciCli+" -nb");
 assert_checkequal(ierr, 0);
 resp(find(resp=="")) = [];
-[expected, ierr, msgerr] = unix_g(sciCli+" -nb -quit -e %pi");
+[ierr, expected] = host(sciCli+" -nb -quit -e %pi");
 assert_checkequal(ierr, 0);
 expected(find(expected=="")) = [];
 assert_checkequal(resp, expected);
 
-[resp, ierr, msgerr] = unix_g("echo %pi | "+sciAdvCli+" -nb");
+[ierr, resp] = host("echo %pi | "+sciAdvCli+" -nb");
 assert_checkequal(ierr, 0);
 resp(find(resp=="")) = [];
-[expected, ierr, msgerr] = unix_g(sciAdvCli+" -nb -quit -e %pi");
+[ierr, expected] = host(sciAdvCli+" -nb -quit -e %pi");
 assert_checkequal(ierr, 0);
 expected(find(expected=="")) = [];
 assert_checkequal(resp, expected);

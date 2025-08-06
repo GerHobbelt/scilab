@@ -20,7 +20,9 @@
           xml:lang="fr" xml:id="unix_x">
     <refnamediv>
         <refname>unix_x</refname>
-        <refpurpose>exécute des instructions Windows, Linux ou MacOS : résultats dans une fenêtre d'information
+        <refpurpose>
+        exécute des instructions Windows, Linux ou MacOS : résultats dans une fenêtre d'information
+        <emphasis role="bold">Cette fonction est obsolète. Utilisez <link linkend="host">host</link> à la place.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -115,4 +117,12 @@ end
             </member>
         </simplelist>
     </refsection>
+        <revhistory>
+        <revision>
+            <revnumber>2026.0.0</revnumber>
+            <revdescription>
+                <para>Obsolète, utilisez host et messagebox à la place.</para>
+            </revdescription>
+        </revision>
+    </revhistory>
 </refentry>

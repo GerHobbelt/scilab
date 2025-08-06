@@ -21,5 +21,5 @@ else
     scilabBin = strsplit(SCI, "share/scilab")(1) + "/bin/scilab-cli";
 end
 
-err = unix(scilabBin + " -e ""1+"" -quit --timeout 2m");
+err = host(scilabBin + " -e ""1+"" -quit --timeout 2m");
 assert_checktrue(err <> 0);

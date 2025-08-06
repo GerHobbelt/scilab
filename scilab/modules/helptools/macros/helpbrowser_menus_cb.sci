@@ -91,15 +91,15 @@ function openURL(url)
         if default
             winopen(url)
         else
-            unix(msprintf("start """" %s ""%s""", v(2), url))
+            host(msprintf("start """" %s ""%s""", v(2), url))
         end
 
     case "Linux"
-        if default, cmd = "xdg-open ", end
-        unix(cmd + """" + url + """")
+        if default then cmd = "xdg-open "; end
+        host(cmd + """" + url + """")
 
     case "Darwin"
-        if default, cmd = "open ", end
-        unix(cmd + """" + url + """")
+        if default then cmd = "open "; end
+        host(cmd + """" + url + """")
     end
 endfunction

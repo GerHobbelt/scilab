@@ -20,9 +20,9 @@ tmpfile = TMPDIR + "/testwrite.sce";
 mputl("disp(""hello"");", tmpfile);
 
 if getos() <> 'Windows' then
-  unix("chmod u-w " + tmpfile);
+  host("chmod u-w " + tmpfile);
 else
-  dos("attrib +R " + tmpfile);  
+  host("attrib +R " + tmpfile);  
 end
 scinotes(tmpfile);
 
@@ -32,7 +32,7 @@ tmpfile = TMPDIR + "/testread.sce";
 mputl("disp(""hello"");", tmpfile);
 
 if getos() <> 'Windows' then
-  unix("chmod u-r " + tmpfile);
+  host("chmod u-r " + tmpfile);
   scinotes(tmpfile);
 end
 

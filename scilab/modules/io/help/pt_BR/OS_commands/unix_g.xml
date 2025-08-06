@@ -22,6 +22,7 @@
         <refname>unix_g</refname>
         <refpurpose>
             executa algumas instruções do Windows, Linux ou MacOS, saída em variáveis
+            <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -146,5 +147,16 @@ DIR('SCI/etc')
                 <ulink url="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">List of MS Windows exit codes</ulink>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

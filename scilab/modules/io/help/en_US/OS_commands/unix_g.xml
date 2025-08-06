@@ -22,21 +22,20 @@
         <refname>unix_g</refname>
         <refpurpose>
           executes some Windows, Linux or MacOS instructions: output in variables
+          <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>
-            rep = unix_g(commands)
-            [rep, status] = unix_g(commands)
-            [rep, status, msgerr] = unix_g(commands)
+            [rep, status, msgerr] = unix_g(command)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
         <variablelist>
             <varlistentry>
-                <term>commands</term>
+                <term>command</term>
                 <listitem>
                     <para>A single text: instruction(s) to be executed</para>
                 </listitem>
@@ -44,19 +43,19 @@
             <varlistentry>
                 <term>rep</term>
                 <listitem>
-                    <para>column of text: standard output.</para>
+                    <para>String: standard output.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>status</term>
                 <listitem>
-                    <para>an integer, the error status. status=0 if no error occurred</para>
+                    <para>Integer, the OS command error status.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>msgerr</term>
                 <listitem>
-                    <para>column of text: error message.</para>
+                    <para>String: error message.</para>
                 </listitem>
             </varlistentry>
         </variablelist>
@@ -64,12 +63,11 @@
     <refsection>
         <title>Description</title>
         <para>
-            <literal>unix_g(…)</literal> opens a new session of the Operating System (OS) command
-            interpreter (<emphasis>sh</emphasis> with Linux, <emphasis>cmd.exe</emphasis> with
-            Windows, etc..), sends <varname>commands</varname> to it,
-            lets it processing <varname>commands</varname> instructions, receives the standard
-            output and possible error message yielded by the processing, and closes the interpreter
-            session.
+            <literal>unix_g(…)</literal> executes a command on the Operating system using CMD on Windows or sh on Linux and macOS.
+            Scilab receives the standard output and possible error message yielded by the command execution.
+        </para>
+        <para>
+            It uses CMD on Windows and sh on Linux and MacOS
         </para>
         <para>
             The starting working directory and environment variables of the opened interpreter
@@ -79,25 +77,8 @@
             The standard output is recorded in the variable <varname>rep</varname>.
         </para>
         <para>
-            If <varname>commands</varname> includes an erroneous instruction,
-            <itemizedlist>
-              <listitem>
-                <varname>rep</varname> is set to "".
-              </listitem>
-              <listitem>
-                If the output variable <varname>msgerr</varname> is used, the error message normally
-                displayed in the OS terminal is caught and stored in it. Otherwise, the OS error
-                is displayed in the Scilab console.
-              </listitem>
-              <listitem>
-                The remaining instructions after the erroneous one are ignored.
-              </listitem>
-            </itemizedlist>
-            <warning>
-              The effects of valid instructions processed before the erroneous one remain actual
-              (for instance, deleted files). However, their standard output is lost.
-              This is why multiple instructions in <varname>commands</varname> are not recommended.
-            </warning>
+            The standard error is recorded in the variable <varname>msgerr</varname>.
+            When the <literal>unix_g</literal> is called without <varname>msgerr</varname>, the error is printed in the Scilab console.
         </para>
     </refsection>
     <refsection>
@@ -139,9 +120,17 @@ DIR('SCI/etc')
             <member>
                 <link linkend="powershell">powershell</link>
             </member>
-            <member>
-                <link xlink:href="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">List of MS Windows exit codes</link>
-            </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

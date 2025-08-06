@@ -37,12 +37,7 @@ function res = G_make(files, objects_or_dll)
         mk = [];
         for x = files(:)', if strindex(x,"-l")==[], mk=mk+" "+x ; end ;end
 
-        if ilib_verbose() > 1 then
-            msg = unix_g("make "+ mk);
-        else
-            host("make "+ mk);
-        end
-
+        [_, msg] = host("make "+ mk);
         res = files ;
 
     end

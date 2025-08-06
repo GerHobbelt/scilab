@@ -3,6 +3,7 @@
 // Copyright (C) 2010 - DIGITEO - Allan CORNET
 //
 // Copyright (C) 2012 - 2016 - Scilab Enterprises
+// Copyright (C) 2025 - Dassault Systèmes S.E. - Cédric DELAMARRE
 //
 // This file is hereby licensed under the terms of the GNU GPL v2.0,
 // pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -12,18 +13,15 @@
 // along with this program.
 
 // start a command PowerShell
-function [resultat, status] = powershell(varargin)
+function [resultat, status] = powershell(command)
+    arguments
+        command { mustBeA(command, "string"), mustBeScalar }
+    end
+
     Chainecmd = "";
     Chainecmdbegin = "powershell.exe -nologo -inputformat text -outputformat text -Noninteractive ";
     resultat = [gettext("Error(s) : see help powershell");gettext("Please verify your powershell command without Scilab.")];
     status = %f;
-
-    [lhs, rhs] = argn(0);
-
-    if (getos() <> "Windows") then
-        resultat = [gettext("Only for Microsoft Windows.")];
-        return;
-    end
 
     try
         winqueryreg("HKEY_LOCAL_MACHINE", "SOFTWARE\Microsoft\PowerShell\1", "Install");
@@ -32,14 +30,6 @@ function [resultat, status] = powershell(varargin)
         return;
     end
 
-    if (rhs == 1) then
-        if ( (type(varargin(1)) == 10) & and(size(varargin(1)) == [1 1]) ) then
-            Chainecmd = Chainecmdbegin + "-command """ + varargin(1) + """";
-            [resultat, status] = dos(Chainecmd);
-        else
-            error(msprintf(gettext("%s: Wrong type for input argument #%d: String expected.\n"), "powershell", 1));
-        end
-    else
-        error(msprintf(gettext("%s: Wrong number of input argument(s): %d expected.\n"), "powershell", 1));
-    end
+    Chainecmd = Chainecmdbegin + "-command """ + command + """";
+    [status, resultat] = host(Chainecmd);
 endfunction

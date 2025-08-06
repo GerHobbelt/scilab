@@ -4,7 +4,10 @@
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
-
+//
+// <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
+//
 // <-- Non-regression test for bug 4702 -->
 //
 // <-- GitLab URL -->
@@ -13,8 +16,6 @@
 // <-- Short Description -->
 // on some case, dos(cmd) does not return results
 
-[output, bStat] = dos('ipconfig');
-if bStat == %f then pause,end
-if output == [] then pause,end
-
-
+[stat, output] = host('ipconfig');
+assert_checkequal(stat, 0);
+assert_checkfalse(output == []);

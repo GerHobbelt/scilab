@@ -140,4 +140,15 @@ DIR('SCI/etc')
             </member>
         </simplelist>
     </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Tagged obsolete, use host instead.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
+    </refsection>
 </refentry>

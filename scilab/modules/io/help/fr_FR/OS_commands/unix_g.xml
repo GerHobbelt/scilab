@@ -22,6 +22,7 @@
         <refname>unix_g</refname>
         <refpurpose>
           exécute des instructions Windows, Linux ou MacOS : résultats dans des variables
+          <emphasis role="bold">Cette fonction est obsolète. Utilisez <link linkend="host">host</link> à la place.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -152,5 +153,16 @@ DIR('SCI/etc')
                 <ulink url="https://msdn.microsoft.com/en-us/library/windows/desktop/ms681382.aspx">Liste de codes de sortie MS Windows</ulink>
             </member>
         </simplelist>
+    </refsection>
+    <refsection>
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Obsolète, utilisez host à la place.</para>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

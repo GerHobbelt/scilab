@@ -25,7 +25,7 @@ if getos() == 'Windows' then
   // set APPDATA to find another SCIHOME
   setenv('APPDATA', path_directory);
   
-  res = unix('scilab -e quit');
+  res = host('scilab -e quit');
   assert_checkequal(res, 0);
   
   // restore previous env. variables

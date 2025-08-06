@@ -6,6 +6,9 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 //
+// <-- NO CHECK REF -->
+// <-- CLI SHELL MODE -->
+//
 // <-- Non-regression test for bug 10606 -->
 //
 // <-- GitLab URL -->
@@ -13,7 +16,6 @@
 //
 // <-- Short Description -->
 //[rep,stat,stderr]=unix_g("diff /etc/passwd /etc/group")
-
 //Shows only
 // stderr  =
 //     []
@@ -21,13 +23,5 @@
 //    1.
 // rep  =
 
-if getos()=="Windows"
-    [rep,stat,stderr]=unix_g("fc "+SCI+"/CHANGES.md "+SCI+"/COPYING");
-
-else
-
-    [rep,stat,stderr]=unix_g("diff "+SCI+"/CHANGES.md "+SCI+"/COPYING");
-
-end
-
-assert_checkfalse(rep == []);
+[stat,rep,stderr]=host("diff "+SCI+"/CHANGES.md "+SCI+"/COPYING");
+assert_checkfalse(rep == "");

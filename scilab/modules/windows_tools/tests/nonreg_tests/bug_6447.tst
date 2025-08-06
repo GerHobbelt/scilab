@@ -4,10 +4,11 @@
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
-
+//
 // <-- Non-regression test for bug 6447 -->
 //
 // <-- CLI SHELL MODE --> 
+// <-- NO CHECK REF --> 
 //
 // <-- GitLab URL -->
 // https://gitlab.com/scilab/scilab/-/issues/6447
@@ -17,15 +18,13 @@
 // unix_g uses dos on Windows.
 
 cd("SCI\modules\windows_tools\tests\nonreg_tests");
-ref1 = "Les caractères accentués ne sont supportés pas par unix_g() lorsqu''ils sont encodés en UTF8 comme ici";
 
-[a, b] = dos("type text_UTF8.txt");
-if b <> %t then pause,end
-if a <> ref1 then pause,end
+[stat, out] = host("type text_UTF8.txt");
+ref = mgetl("text_UTF8.txt");
+assert_checkequal(stat, 0);
+assert_checkequal(out, ref);
 
-[c, d] = unix_g("type text_UTF8.txt");
-if d <> 0 then pause,end
-if c <> ref1 then pause,end
-
-[e, f] = dos("type text_ANSI.txt");
-if f <> %t then pause,end
+[stat, out] = host("type text_ANSI.txt");
+ref = mgetl("text_ANSI.txt");
+assert_checkequal(stat, 0);
+assert_checkequal(out, ref);

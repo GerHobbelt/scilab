@@ -14,6 +14,6 @@
 // <-- Short Description -->
 // It is no more possible in Scilab 5.x to select the content of messageboxes (available in Scilab 4.x)
 
-unix_x("set")
+messagebox("Is the text selectable?")
 
 // Try to select, copy and paste the contents of the message box, the lines must be kept.

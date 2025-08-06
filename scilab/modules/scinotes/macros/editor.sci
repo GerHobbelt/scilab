@@ -38,7 +38,7 @@ function editor(varargin)
         else
             cmd = cmd + " &"
         end
-        unix_w(cmd);
+        host(cmd, echo=%t);
     else
         cmd = makeCommand(prefsNode.attributes.macro, varargin);
         xmlDelete(doc);
