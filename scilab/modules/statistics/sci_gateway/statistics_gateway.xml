@@ -33,6 +33,7 @@
     <gateway name="sci_cdfnor"      function="cdfnor"   type="0" />
     <gateway name="sci_cdfpoi"      function="cdfpoi"   type="0" />
     <gateway name="sci_cdft"        function="cdft"     type="0" />
+    <gateway name="sci_cdftnc"      function="cdftnc"   type="0" />
     <gateway name="sci_percent_cov" function="%_cov"    type="1" />
     <gateway name="sci_nansum"      function="nansum"   type="1" />
     <gateway name="sci_mean"        function="mean"     type="1" />

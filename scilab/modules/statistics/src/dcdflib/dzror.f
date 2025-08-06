@@ -184,12 +184,6 @@ C
       b = b + w
       xlo = b
       x = xlo
-      if (x.lt.eps) then
-        x=0
-        status = 0
-        return
-      endif
-C     GET-FUNCTION-VALUE
 c      ASSIGN 200 TO i99999
       i99999=3
       GO TO 270

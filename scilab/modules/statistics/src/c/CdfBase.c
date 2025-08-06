@@ -295,31 +295,50 @@ int CdfBase(char const * const fname, void* pvApiCtx, int inarg, int oarg, int s
             {
 
             }
-            //cdffnc
             else if (fname[4] == 'n')
             {
-                if (strcmp(option, "PQ") == 0)
+                // cdftnc
+                if (fname[3] == 't')
                 {
-                    pos = 3;
-                    pos1 = 4;
+                    if (strcmp(option, "PQ") == 0)
+                    {
+                        pos = 3;
+                    }
+                    else if (strcmp(option, "T") == 0)
+                    {
+                        pos = 2;
+                    }
+                    else if (strcmp(option, "Pnonc") == 0)
+                    {
+                        pos = 5;
+                    }
                 }
-                else if (strcmp(option, "F") == 0)
+                else
                 {
-                    pos = 2;
-                    pos1 = 3;
-                }
-                else if (strcmp(option, "Dfn") == 0)
-                {
-                    pos = 2;
-                }
-                else if (strcmp(option, "Dfd") == 0)
-                {
-                    pos = 6;
-                }
-                else if (strcmp(option, "Pnonc") == 0)
-                {
-                    pos = 5;
-                    pos1 = 6;
+                    // cdffnc
+                    if (strcmp(option, "PQ") == 0)
+                    {
+                        pos = 3;
+                        pos1 = 4;
+                    }
+                    else if (strcmp(option, "F") == 0)
+                    {
+                        pos = 2;
+                        pos1 = 3;
+                    }
+                    else if (strcmp(option, "Dfn") == 0)
+                    {
+                        pos = 2;
+                    }
+                    else if (strcmp(option, "Dfd") == 0)
+                    {
+                        pos = 6;
+                    }
+                    else if (strcmp(option, "Pnonc") == 0)
+                    {
+                        pos = 5;
+                        pos1 = 6;
+                    }
                 }
             }
             //cdfgam

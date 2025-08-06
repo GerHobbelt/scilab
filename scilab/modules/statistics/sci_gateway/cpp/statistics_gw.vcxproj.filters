@@ -60,6 +60,9 @@
     <ClCompile Include="sci_nanmean.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\c\sci_cdftnc.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\includes\statistics_gw.hxx">

@@ -310,6 +310,23 @@ C
 C
 C     Calculating X and Y
 C
+          IF (p.EQ.0.0D0) THEN
+C                Baudin - 2012 - Fix bug #9976
+                x = 0.0D0
+                y = 1.0D0
+                status = 0
+	        GO TO 330
+          ENDIF
+
+          IF (q.EQ.0.0D0) THEN
+c               Baudin - 2012 - Fix bug #9976
+                x = 1.0D0
+                y = 0.0D0
+                status = 0
+                GO TO 330
+          ENDIF
+
+c          CALL dstzr(0.0D0,1.0D0,spmpar(2),2*spmpar(1))
           CALL dstzr(0.0D0,1.0D0,atol,tol)
           IF (.NOT. (qporq)) GO TO 340
           status = 0
