@@ -656,11 +656,6 @@ nn
                 <revnumber>5.5.0</revnumber>
                 <revdescription>daskr solver added</revdescription>
             </revision>
-        </revhistory>
-    </refsection>
-    <refsection>
-        <title>History</title>
-        <revhistory>
             <revision>
                 <revnumber>2024.1.0</revnumber>
                 <revremark>
