@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2006 - INRIA - Allan CORNET
 *
@@ -296,7 +296,7 @@ types::Function::ReturnValue sci_genlib(types::typed_list &in, int _iRetCount, t
                     wstrErr += errmsg;
 
                     char* str = wide_string_to_UTF8(wstrErr.c_str());
-                    Scierror(999, str);
+                    Scierror(999, "%s", str);
                     FREE(str);
 
                     FREE(pstParsePath);
