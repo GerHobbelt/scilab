@@ -31,6 +31,7 @@ function [binary] = compile_executable(srcFile, cflags, ldflags)
         CC =  """"+listfiles(dlwGetVisualStudioPath() + "\VC\Tools\MSVC\*")(1) + "\bin\Host" + arch + "\" + arch + "\cl.exe""";
         CFLAGS = "/I """ + WSCI + [
                     "\modules\call_scilab\includes"
+                    "\modules\api_scilab\includes"
                     "\modules\core\includes"
                     "\modules\ast\includes\ast"
                     "\modules\ast\includes\system_env"
@@ -55,6 +56,7 @@ function [binary] = compile_executable(srcFile, cflags, ldflags)
         else
             CFLAGS = "-I" + SCI + [
                         "/modules/call_scilab/includes"
+                        "/modules/api_scilab/includes"
                         "/modules/core/includes"
                         "/modules/ast/includes/ast"
                         "/modules/ast/includes/types"

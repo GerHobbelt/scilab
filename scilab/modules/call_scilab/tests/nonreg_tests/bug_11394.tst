@@ -17,7 +17,7 @@
 // <-- Short Description -->
 // In call_scilab, TerminateScilab did not allow a restart in NW mode.
 
-exec("SCI/modules/call_scilab/tests/nonreg_tests/compileHelpers.sce");
+exec("SCI/modules/call_scilab/tests/unit_tests/compileHelpers.sce");
 
 // Define Variables as decribed in the Makefile
 // make bug_11394

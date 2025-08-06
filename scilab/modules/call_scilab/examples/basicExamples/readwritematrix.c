@@ -9,12 +9,16 @@
  * This example works from Scilab 5.2
  * but the previous way of doing is also described as comment
  */
+#ifdef _MSC_VER
+#pragma comment(lib, "api_scilab.lib")
+#pragma comment(lib, "call_scilab.lib")
+#endif
+/*------------------------------------------------------------*/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include "api_scilab.h"
 #include "call_scilab.h" /* Provide functions to call Scilab engine */
-
 /*------------------------------------------------------------*/
 int main(void)
 {
@@ -84,8 +88,8 @@ int main(void)
 
     /* Load the previously set variable A */
     {
-        int rowA_ = 0, colA_ = 0, lp = 0;
-        int i = 0, j = 0;
+        int rowA_ = 0, colA_ = 0;
+        int i = 0;
         double *matrixOfDouble = NULL;
 
         char variableToBeRetrieved[] = "A";
@@ -125,7 +129,7 @@ int main(void)
 
     /* Load the previously set variable B */
     {
-        int rowB_ = 0, colB_ = 0, lp_ = 0;
+        int rowB_ = 0, colB_ = 0;
         double *matrixOfDoubleB = NULL;
         int i = 0, j = 0;
 

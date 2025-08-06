@@ -6,13 +6,17 @@
  *
  * This example shows how to read / write a matrix of string from Scilab engine
  */
+#ifdef _MSC_VER
+#pragma comment(lib, "api_scilab.lib")
+#pragma comment(lib, "call_scilab.lib")
+#endif
+/*------------------------------------------------------------*/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "api_scilab.h"
 #include "call_scilab.h" /* Provide functions to call Scilab engine */
-
 /*------------------------------------------------------------*/
 int main(void)
 {
@@ -94,7 +98,6 @@ int main(void)
         int iRows       = 0;
         int iCols       = 0;
         int i, j;
-        int* piAddr     = NULL;
         int* piLen      = NULL;
         char** pstData  = NULL;
         SciErr sciErr;
@@ -156,7 +159,6 @@ int main(void)
         int iRows       = 0;
         int iCols       = 0;
         int i, j;
-        int* piAddr     = NULL;
         int* piLen      = NULL;
         char** pstData  = NULL;
         SciErr sciErr;

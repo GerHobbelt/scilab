@@ -7,6 +7,11 @@
  * This example shows how to read / write a matrix of complex from Scilab
  * engine
  */
+#ifdef _MSC_VER
+#pragma comment(lib, "api_scilab.lib")
+#pragma comment(lib, "call_scilab.lib")
+#endif
+/*------------------------------------------------------------*/
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -85,8 +90,8 @@ int main(void)
 
     /* Load the previously set variable A */
     {
-        int rowA_ = 0, colA_ = 0, lp = 0;
-        int i = 0, j = 0;
+        int rowA_ = 0, colA_ = 0;
+        int i = 0;
         double *matrixOfComplex = NULL;
         double *matrixOfComplex_img = NULL;
 
@@ -138,7 +143,7 @@ int main(void)
 
     /* Load the previously set variable B */
     {
-        int rowB_ = 0, colB_ = 0, lp_ = 0;
+        int rowB_ = 0, colB_ = 0;
         int i = 0, j = 0;
 
         double *matrixOfComplexB = NULL;

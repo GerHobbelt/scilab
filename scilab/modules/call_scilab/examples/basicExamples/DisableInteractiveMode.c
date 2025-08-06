@@ -5,26 +5,30 @@
  * This file is released under the 3-clause BSD license. See COPYING-BSD.
  *
  */
+#ifdef _MSC_VER
+#pragma comment(lib, "api_scilab.lib")
+#pragma comment(lib, "call_scilab.lib")
+#endif
+/*------------------------------------------------------------*/
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h> /* getenv */
-
 #include "call_scilab.h" /* Provide functions to call Scilab engine */
-
 /*------------------------------------------------------------*/
 int main(void)
 {
+    DisableInteractiveMode();
+
 #ifdef _MSC_VER
-    if ( StartScilab(NULL, NULL, NULL) == FALSE )
+    if ( StartScilab(NULL, NULL, 0) == FALSE )
 #else
-    if ( StartScilab(getenv("SCI"), NULL, NULL) == FALSE )
+    if ( StartScilab(getenv("SCI"), NULL, 0) == FALSE )
 #endif
     {
         fprintf(stderr, "Error while calling StartScilab\n");
         return -1;
     }
 
-    DisableInteractiveMode();
     int code = SendScilabJob("plot3d()"); /* This will failed since plot3d is
 										   among the disable features*/
     if (code != 0)
