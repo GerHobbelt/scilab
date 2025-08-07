@@ -203,7 +203,11 @@ function test_run_result = test_run(varargin)
         test_count = size(module_mat,"*");
         for i = 1:test_count
             if params.reference <> "list" then
-                printf(" Module  %03d/%03d - [%s] : \n\n", i, test_count, module_mat(i));
+                if part(module_mat(i),1:length(TMPDIR)) == TMPDIR then // when called from example_run()
+                    printf(" Module  %03d/%03d - [%s] : \n\n", i, test_count, "TMPDIR" + part(module_mat(i),length(TMPDIR)+1:length(module_mat(i))));
+                else
+                    printf(" Module  %03d/%03d - [%s] : \n\n", i, test_count, module_mat(i));
+                end
             end
 
             params.tests_mat    = [];
@@ -296,34 +300,34 @@ function test_run_result = test_run(varargin)
 
     if params.full_summary then
         printf("\n");
-        printf("   --------------------------------------------------------------------------\n");
+        printf("   -----------------------------------------------------------------------------\n");
         printf("   Summary\n\n");
         printf("   tests           %4d - 100 %%\n", status.test_count);
         printf("   passed          %4d - %3d %%\n", status.test_passed_count, test_passed_percent);
         printf("   failed          %4d - %3d %%\n", status.test_failed_count, test_failed_percent);
         printf("   skipped         %4d\n", status.test_skipped_count);
         printf("   length             %4.2f sec\n", status.totalTime);
-        printf("   --------------------------------------------------------------------------\n");
+        printf("   -----------------------------------------------------------------------------\n");
 
         if isfield(params, "exportFile") then
             printf("   Export to          %s\n", params.exportFile);
-            printf("   --------------------------------------------------------------------------\n");
+            printf("   -----------------------------------------------------------------------------\n");
         end
 
         if status.test_failed_count > 0 then
             printf("   Details\n\n");
             printf("%s\n",status.detailled_failures);
             printf("\n");
-            printf("   --------------------------------------------------------------------------\n");
+            printf("   -----------------------------------------------------------------------------\n");
         end
     else
         printf("\n");
-        printf("   --------------------------------------------------------------------------\n");
+        printf("   -----------------------------------------------------------------------------\n");
         printf("   Tests: %4d, ", status.test_count);
         printf("   Passed: %4d, ", status.test_passed_count);
         printf("   Failed: %4d, ", status.test_failed_count);
         printf("   Skipped: %4d\n", status.test_skipped_count);
-        printf("   --------------------------------------------------------------------------\n");
+        printf("   -----------------------------------------------------------------------------\n");
     end
 
     //   Returns %t if no error has been detected
@@ -433,6 +437,8 @@ function status = test_module(_params)
             moduleName = "SCI" + part(moduleName,length(SCI)+1:length(moduleName));
         elseif part(moduleName,1:length(SCIHOME)) == SCIHOME then
             moduleName = "SCIHOME" + part(moduleName,length(SCIHOME)+1:length(moduleName));
+        elseif part(moduleName,1:length(TMPDIR)) == TMPDIR then // when called from example_run()
+            moduleName = "TMPDIR" + part(moduleName,length(TMPDIR)+1:length(moduleName));
         end
     end
 
@@ -488,18 +494,26 @@ function status = test_module(_params)
         printf("   %03d/%03d - ",i, test_count);
 
         if size(name, "*") > 1 then
-            displayModuleName = sprintf("[%s", name(1));
+            if part(name(1),1:length(TMPDIR)) == TMPDIR then // when called from example_run()
+                displayModuleName = sprintf("[%s", "TMPDIR" + part(name(1),length(TMPDIR)+1:length(name(1))));
+            else
+                displayModuleName = sprintf("[%s", name(1));
+            end
             for j=2:size(name, "*")
                 displayModuleName = displayModuleName + sprintf("|%s", name(j));
             end
             displayModuleName = displayModuleName + sprintf("] %s", tests(i,2));
         else
-            displayModuleName = sprintf("[%s] %s", name(1), tests(i,2));
+            if part(name(1),1:length(TMPDIR)) == TMPDIR then // when called from example_run()
+                displayModuleName = sprintf("[%s] %s", "TMPDIR" + part(name(1),length(TMPDIR)+1:length(name(1))), tests(i,2));
+            else
+                displayModuleName = sprintf("[%s] %s", name(1), tests(i,2));
+            end
         end
 
         printf("%s ", displayModuleName);
-        if length(displayModuleName) < 49 then
-            for j = length(displayModuleName):48
+        if length(displayModuleName) < 59 then
+            for j = length(displayModuleName):58
                 printf(".");
             end
             printf(" ");

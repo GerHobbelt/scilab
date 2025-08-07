@@ -73,9 +73,9 @@ Start Xcos toolbox skeleton
 test_run("TMPDIR/xcos_toolbox_skeleton/", [], "short_summary");
    001/001 - [TMPDIR/xcos_toolbox_skeleton/] : 
 
-   001/001 - [TMPDIR/xcos_toolbox_skeleton/] tbx_sum .......... passed
+   001/001 - [TMPDIR/xcos_toolbox_skeleton/] tbx_sum .................... passed
 
 
-   --------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
    Tests:    1,    Passed:    1,    Failed:    0,    Skipped:    0
-   --------------------------------------------------------------------------
+   -----------------------------------------------------------------------------
