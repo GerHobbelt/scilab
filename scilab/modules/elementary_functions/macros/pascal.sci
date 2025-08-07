@@ -9,7 +9,7 @@ function p = pascal(n, k)
         n {mustBeA(n, "double"), mustBeScalarOrEmpty, mustBeNonnegative}
         k {mustBeA(k, "double"), mustBeScalarOrEmpty, mustBeMember(k, [0 1 2])} = 0
     end
-    
+
     p = %_gallery("pascal", n, k);
 
     if k == 2 then

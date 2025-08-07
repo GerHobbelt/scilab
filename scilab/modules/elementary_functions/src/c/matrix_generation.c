@@ -264,8 +264,6 @@ void wilkinson_matrix(int _iSize, double *_pData)
 void hankel_matrix(int _iSizeC, int _iSizeR, double *_C, double *_R, double *_pData)
 {
     int iIndex1		= 0;
-    int iIndex2		= 0;
-    int iOne		= 1;
     int N = _iSizeC + (_iSizeR - 1);
 
     double* _pDataX = (double*)malloc(sizeof(double) * N);
@@ -287,4 +285,113 @@ void hankel_matrix(int _iSizeC, int _iSizeR, double *_C, double *_R, double *_pD
         memcpy(_pData + iIndex1 * _iSizeC, _pDataX + iIndex1, _iSizeC * sizeof(double));
     }
     free(_pDataX);
+}
+
+void circul_matrix(int _iSize, double *_pIn,  double *_pData)
+{
+    int iOne        = 1;
+
+    if (_iSize == 1)
+    {
+        _pData[0] = 1;
+        return;
+    }
+
+    C2F(dcopy)(&_iSize, _pIn, &iOne, _pData, &_iSize);
+  
+    for (int iIndex1 = 1; iIndex1 < _iSize; iIndex1++)
+    {
+        int idx = _iSize - iIndex1;
+        C2F(dcopy)(&idx, _pIn, &iOne, _pData + (_iSize * iIndex1 + iIndex1), &_iSize);
+        C2F(dcopy)(&iIndex1, _pIn + idx, &iOne, _pData + iIndex1, &_iSize);
+    }
+}
+
+void cauchy_matrix(int _iSize, double *_pInX, double *_pInXI, double *_pInY, double *_pInYI, double *_pData, double *_pDataImg)
+{
+    if (_pInXI == NULL && _pInYI == NULL) // real case
+    {
+        for (int iIndex1 = 0; iIndex1 < _iSize; iIndex1++)
+        {
+            double pdblY = _pInY[iIndex1];
+            for (int iIndex2 = 0; iIndex2 < _iSize; iIndex2++)
+            {
+                _pData[iIndex1 * _iSize + iIndex2] = 1 / (_pInX[iIndex2] + pdblY);
+            }
+        }
+        return;
+    }
+
+    double *XITemp = _pInXI;
+    int totalSize = _iSize *_iSize;
+    if (XITemp == NULL)
+    {
+        XITemp = (double *)malloc(totalSize * sizeof(double));
+        memset(XITemp, 0x00, totalSize * sizeof(double));
+    }
+
+    double *YITemp = _pInYI;
+    if (YITemp == NULL)
+    {
+        YITemp = (double *)malloc(totalSize * sizeof(double));
+        memset(YITemp, 0x00, totalSize * sizeof(double));
+    }
+    
+    for (int iIndex1 = 0; iIndex1 < _iSize; iIndex1++)
+    {
+        for (int iIndex2 = 0; iIndex2 < _iSize; iIndex2++)
+        {
+            double a = _pInX[iIndex2] + _pInY[iIndex1];
+            double b = XITemp[iIndex2] + YITemp[iIndex1];
+
+            if (a == 0 && b != 0)
+            {
+                _pDataImg[iIndex1 * _iSize + iIndex2] = 1 / b;
+                _pData[iIndex1 * _iSize + iIndex2] = 0;
+            }
+            else if (a != 0 && b == 0)
+            {
+                _pData[iIndex1 * _iSize + iIndex2] = 1 / a;
+                _pDataImg[iIndex1 * _iSize + iIndex2] = 0;
+            }
+            else
+            {
+                double d = pow(a, 2) + pow(b, 2);
+                _pData[iIndex1 * _iSize + iIndex2] = a / d;
+                _pDataImg[iIndex1 * _iSize + iIndex2] = -b / d;
+            }        
+        }
+    }
+
+    if (_pInXI == NULL)
+    {
+        free(XITemp);
+    }
+
+    if (_pInYI == NULL)
+    {
+        free(YITemp);
+    }
+}
+
+void ris_matrix(int _iSize, double *_pData)
+{
+    int iIndex1		= 0;
+    int iIndex2		= 0;
+    double dblVal	= 0;
+    double N = _iSize;
+
+    if (_iSize == 1)
+    {
+        _pData[0] = 1;
+        return;
+    }
+
+    for (int i = 0; i < _iSize; i++)
+    {
+        for (int j = 0; j < _iSize; j++)
+        {
+            _pData[i * _iSize + j] = 0.5/(_iSize - (i + 1) - (j + 1) + 1.5);
+        }
+    }
 }

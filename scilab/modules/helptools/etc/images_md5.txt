@@ -301,6 +301,7 @@ _LaTeX_frank.xml_1.png=f37e723a60f8c8c274e99bcd9a4a25ea
 _LaTeX_fsolve.xml_1.png=a6fc63aa1efb41cce557cf8cb517441f
 _LaTeX_fsolve.xml_2.png=332cc365a4987aacce0ead01b8bdcc0b
 _LaTeX_fsolve.xml_3.png=cda9758d61a39ef5c4d3e3e01b55c438
+_LaTeX_gallery.xml_1.png=4254222f45eb67d780e50708922c3982
 _LaTeX_gamma.xml_1.png=960350f434595f88477814ea577e1359
 _LaTeX_gamma.xml_2.png=3c98a6fd836c18394e05939979158ebf
 _LaTeX_gamma.xml_3.png=7aeff606c2524edc54dd085a53d673af

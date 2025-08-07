@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *  Copyright (C) 2011-2011 - DIGITEO - Bruno JOFRET
@@ -58,7 +58,7 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"eye", &sci_eye, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"floor", &sci_floor, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"frexp", &sci_frexp, MODULE_NAME));
-    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_gallery", &sci_gallery, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"gallery", &sci_gallery, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"gsort", &sci_gsort, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"imag", &sci_imag, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"imult", &sci_imult, MODULE_NAME));
@@ -105,6 +105,7 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"issquare", &sci_issquare, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"vander", &sci_vander, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"isempty", &sci_isempty, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_gallery", &sci_percent_gallery, MODULE_NAME));
     return 1;
 }
 

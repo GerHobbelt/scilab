@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *  Copyright (C) 2010-2011 - DIGITEO - Bruno JOFRET
@@ -103,6 +103,7 @@ CPP_GATEWAY_PROTOTYPE(sci_triu);
 CPP_GATEWAY_PROTOTYPE(sci_vander);
 CPP_GATEWAY_PROTOTYPE(sci_zeros);
 CPP_GATEWAY_PROTOTYPE(sci_isempty);
+CPP_GATEWAY_PROTOTYPE(sci_percent_gallery);
 
 
 bool getDimsFromArguments(types::typed_list& in, const std::string& _pstName, int* _iDims, int** _piDims, bool* _alloc);
