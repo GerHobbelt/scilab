@@ -22,6 +22,7 @@ STATISTICS_FORTRAN_SOURCES = \
     src/dcdflib/apser.f \
     src/dcdflib/gamln1.f \
     src/dcdflib/cdft.f \
+    src/dcdflib/cdftnc.f \
     src/dcdflib/gaminv.f \
     src/dcdflib/cumnbn.f \
     src/dcdflib/cdffnc.f \
@@ -47,6 +48,7 @@ STATISTICS_FORTRAN_SOURCES = \
     src/dcdflib/betaln.f \
     src/dcdflib/stvaln.f \
     src/dcdflib/cumt.f \
+    src/dcdflib/cumtnc.f \
     src/dcdflib/esum.f \
     src/dcdflib/bpser.f \
     src/dcdflib/cdfnor.f \
@@ -76,6 +78,7 @@ STATISTICS_FORTRAN_SOURCES = \
 GATEWAY_C_SOURCES = \
 	sci_gateway/c/sci_cdfchi.c \
 	sci_gateway/c/sci_cdft.c \
+	sci_gateway/c/sci_cdftnc.c \
 	sci_gateway/c/sci_cdfgam.c \
 	sci_gateway/c/sci_cdff.c \
 	sci_gateway/c/sci_cdffnc.c \
