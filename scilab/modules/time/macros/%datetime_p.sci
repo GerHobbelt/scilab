@@ -16,12 +16,19 @@ function %datetime_p(dt)
 
     res = [];
     current_len = 0;
+    col_s = 1;
+    nbcolsdefault = 10;
     l = lines();
-    l(2) = 50;
-    col_s = 1
+
+    if l(1) > nbcolsdefault & l(2) == 0 then
+        // display max 50 rows of dt. 
+        // if the number of rows is greater than 50, 
+        // displays the first three lines of dt and the last three separated by ...
+        l(2) = 50;
+    end
 
     nb_rows = size(dt.date, 1);
-    if nb_rows > l(2) then
+    if l(2) <> 0 & and(nb_rows > [6, l(2)]) then
         output = string(dt([1:3, nb_rows-2:nb_rows], :));
     else
         output = string(dt);
@@ -30,26 +37,30 @@ function %datetime_p(dt)
     for c = 1:size(dt.date, 2)
         max_len = max(length(output(: , c)));
         current_len = current_len + max_len + 3;
-        if current_len >= l(1) then
-            printf("         column %d to %d\n\n", col_s, c - 1);
+        if l(1) > nbcolsdefault & current_len >= l(1) then
+            if c == 1 then
+                l(1) == nbcolsdefault
+            else
+                printf("         column %d to %d\n\n", col_s, c - 1);
 
-            res = strcat(res, "", "c");
-            res = strcat(res, "\n");
+                res = strcat(res, "", "c");
+                res = strcat(res, "\n");
 
-            printf(res);
-            printf("\n\n");
+                printf(res);
+                printf("\n\n");
 
-            if mode() > 1
-                printf("\n");
+                if mode() > 1
+                    printf("\n");
+                end
+
+                res = [];
+                col_s = c;
+                current_len = max_len + 3;
             end
-
-            res = [];
-            col_s = c;
-            current_len = max_len + 3;
         end
 
         f = sprintf("   %%%ds\\n", max_len);
-        if l(2) <> 0 && nb_rows > l(2) then
+        if l(2) <> 0 && and(nb_rows > [6, l(2)]) then
             left = floor((max_len-3)/2);
             subres = sprintf(f, output(1:3, c));
             subres($+1) = "   " + sprintf("%*s", -max_len, sprintf("%*s", left+3, "..."));
@@ -60,9 +71,12 @@ function %datetime_p(dt)
         end
     end
 
-    if col_s <> 1 then
-        printf("         column %d to %d\n\n", col_s, c);
-    end
+    if l(1) > nbcolsdefault & col_s <> 1 then
+        printf("         column %d to %d\n", col_s, c);
+        if mode() > 1
+            mprintf("\n");
+        end
+    end  
 
     res = strcat(res, "", "c");
     res = strcat(res, "\n");

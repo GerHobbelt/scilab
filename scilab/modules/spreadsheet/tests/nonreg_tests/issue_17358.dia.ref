@@ -14,6 +14,7 @@
 //
 // <-- Short Description -->
 // when lines function is set to [0,0], the whole table is displayed
+l = lines();
 NameContinent = ["Africa"; "North America"; "Oceania"; "Antarctica"; "Asia"; "Europe"; "South America"];
 Area = [30065000; 24256000; 7687000; 13209000; 44579000; 9938000; 17819000]; // in km2
 bigNames = strcat(NameContinent(:, ones(100, 1)), " ", "c");
@@ -95,3 +96,415 @@ disp(t)
    0.8906225   0.6117004   0.2590428   0.3389102   0.900707    0.6787058   0.6536925   0.3157836   0.4096657   0.4435066   0.7427882   0.3303114   0.4136229   0.7611138   0.7480402   0.3537155   0.8911246   0.7502102   0.9360806   0.6833898
    0.5042213   0.6783956   0.4139087   0.3921976   0.8094316   0.082201    0.1996896   0.3785823   0.1769565   0.7234078   0.2176611   0.3589146   0.8581691   0.6907918   0.2455637   0.0264621   0.0634272   0.6883629   0.8326222   0.5022272
    0.3493615   0.3320095   0.3599928   0.4681552   0.0251954   0.2552731   0.6014125   0.4619523   0.3312931   0.876191    0.9788486   0.2780528   0.239609    0.2873229   0.0257789   0.0861647   0.6263942   0.0167756   0.742478    0.0540434
+// same behavior for duration, datetime, calendarDuration and timeseries
+lines(l(2), l(1))
+h = floor(rand(100,1)*23)+1;
+mn = floor(rand(100,1)*59)+1;
+s = floor(rand(100,1)*59)+1;
+d = duration(h, mn, s)
+ d = [100x1 duration]
+   01:40:01
+   14:34:48
+   07:01:36
+     ...   
+   01:06:50
+   05:42:26
+   14:51:37
+lines(0,0);
+disp(d)
+   01:40:01
+   14:34:48
+   07:01:36
+   15:10:07
+   22:56:48
+   13:07:31
+   23:20:12
+   22:27:47
+   03:36:47
+   17:22:42
+   20:16:26
+   22:07:21
+   02:45:39
+   04:03:01
+   22:25:54
+   22:40:19
+   03:12:11
+   16:55:32
+   17:39:07
+   13:10:59
+   18:20:41
+   21:56:45
+   15:05:28
+   06:32:44
+   18:43:29
+   07:45:44
+   03:36:06
+   11:24:42
+   05:40:20
+   02:07:54
+   19:13:49
+   17:52:27
+   22:16:25
+   02:43:52
+   02:03:03
+   16:12:33
+   08:57:10
+   15:56:05
+   05:04:57
+   14:52:28
+   10:31:10
+   21:52:04
+   01:55:54
+   09:12:56
+   02:03:39
+   14:01:45
+   08:42:11
+   04:31:55
+   23:04:48
+   01:29:16
+   21:48:15
+   03:23:36
+   10:26:15
+   09:45:31
+   17:01:36
+   04:59:24
+   17:57:07
+   22:42:31
+   14:57:05
+   10:49:21
+   03:32:52
+   03:14:11
+   12:51:11
+   01:01:08
+   20:41:40
+   02:10:57
+   12:50:55
+   20:26:43
+   11:21:47
+   19:37:45
+   07:45:58
+   08:54:10
+   23:36:30
+   04:33:45
+   19:51:24
+   12:33:30
+   02:30:46
+   04:44:21
+   13:55:53
+   16:43:12
+   13:31:54
+   02:55:56
+   01:38:59
+   14:27:08
+   22:39:48
+   16:17:53
+   08:35:43
+   18:03:33
+   18:56:49
+   13:57:06
+   19:33:29
+   19:34:01
+   09:19:58
+   04:59:46
+   06:48:37
+   05:51:47
+   21:30:26
+   01:06:50
+   05:42:26
+   14:51:37
+lines(l(2), l(1))
+y = 2025*ones(100,1);
+m = floor(rand(100,1)*12)+1;
+dd = floor(rand(100,1)*28)+1;
+dt = datetime(y,m, dd) + d
+ dt = [100x1 datetime]
+   2025-11-05 01:40:01
+   2025-05-03 14:34:48
+   2025-12-10 07:01:36
+           ...        
+   2025-04-01 01:06:50
+   2025-11-22 05:42:26
+   2025-09-27 14:51:37
+lines(0,0);
+disp(dt)
+   2025-11-05 01:40:01
+   2025-05-03 14:34:48
+   2025-12-10 07:01:36
+   2025-05-03 15:10:07
+   2025-03-10 22:56:48
+   2025-05-13 13:07:31
+   2025-04-06 23:20:12
+   2025-07-02 22:27:47
+   2025-05-11 03:36:47
+   2025-04-16 17:22:42
+   2025-04-04 20:16:26
+   2025-01-28 22:07:21
+   2025-06-20 02:45:39
+   2025-09-04 04:03:01
+   2025-09-25 22:25:54
+   2025-04-22 22:40:19
+   2025-08-14 03:12:11
+   2025-09-26 16:55:32
+   2025-06-14 17:39:07
+   2025-03-08 13:10:59
+   2025-11-17 18:20:41
+   2025-12-13 21:56:45
+   2025-05-24 15:05:28
+   2025-06-02 06:32:44
+   2025-07-24 18:43:29
+   2025-09-08 07:45:44
+   2025-11-02 03:36:06
+   2025-04-17 11:24:42
+   2025-12-26 05:40:20
+   2025-02-12 02:07:54
+   2025-01-09 19:13:49
+   2025-09-12 17:52:27
+   2025-10-24 22:16:25
+   2025-10-06 02:43:52
+   2025-05-15 02:03:03
+   2025-07-02 16:12:33
+   2025-05-14 08:57:10
+   2025-04-09 15:56:05
+   2025-04-01 05:04:57
+   2025-12-06 14:52:28
+   2025-12-09 10:31:10
+   2025-02-03 21:52:04
+   2025-07-27 01:55:54
+   2025-03-09 09:12:56
+   2025-01-03 02:03:39
+   2025-07-26 14:01:45
+   2025-01-27 08:42:11
+   2025-04-23 04:31:55
+   2025-01-07 23:04:48
+   2025-02-05 01:29:16
+   2025-03-19 21:48:15
+   2025-05-05 03:23:36
+   2025-02-02 10:26:15
+   2025-04-18 09:45:31
+   2025-02-01 17:01:36
+   2025-10-27 04:59:24
+   2025-08-02 17:57:07
+   2025-04-22 22:42:31
+   2025-05-08 14:57:05
+   2025-06-09 10:49:21
+   2025-02-02 03:32:52
+   2025-12-14 03:14:11
+   2025-09-21 12:51:11
+   2025-11-23 01:01:08
+   2025-12-02 20:41:40
+   2025-04-06 02:10:57
+   2025-08-06 12:50:55
+   2025-03-26 20:26:43
+   2025-08-11 11:21:47
+   2025-08-27 19:37:45
+   2025-07-17 07:45:58
+   2025-02-24 08:54:10
+   2025-01-12 23:36:30
+   2025-10-12 04:33:45
+   2025-07-18 19:51:24
+   2025-08-27 12:33:30
+   2025-09-13 02:30:46
+   2025-01-24 04:44:21
+   2025-01-08 13:55:53
+   2025-11-25 16:43:12
+   2025-07-13 13:31:54
+   2025-06-26 02:55:56
+   2025-04-21 01:38:59
+   2025-11-11 14:27:08
+   2025-12-26 22:39:48
+   2025-01-21 16:17:53
+   2025-06-03 08:35:43
+   2025-09-16 18:03:33
+   2025-03-08 18:56:49
+   2025-12-05 13:57:06
+   2025-09-09 19:33:29
+   2025-02-15 19:34:01
+   2025-05-27 09:19:58
+   2025-06-17 04:59:46
+   2025-07-26 06:48:37
+   2025-07-03 05:51:47
+   2025-10-23 21:30:26
+   2025-04-01 01:06:50
+   2025-11-22 05:42:26
+   2025-09-27 14:51:37
+lines(l(2), l(1))
+Y = floor(rand(100,1)*2);
+M = floor(rand(100,1)*12)+1;
+D = floor(rand(100,1)*2);
+c = calendarDuration(Y, M, D);
+lines(0,0);
+disp(c)
+     1y 7m 1d
+          10m
+        1y 1d
+       1y 11m
+        9m 1d
+           4m
+     1y 5m 1d
+        3m 1d
+        1y 2m
+          11m
+     1y 8m 1d
+        1y 2m
+        1y 9m
+           3m
+     1y 3m 1d
+           1m
+        2y 1d
+           2m
+        2y 1d
+        1y 8m
+           1m
+        5m 1d
+       1y 10m
+        1m 1d
+        5m 1d
+     1y 5m 1d
+        3m 1d
+        2y 1d
+     1y 7m 1d
+           8m
+        4m 1d
+        1y 5m
+        8m 1d
+     1y 2m 1d
+           9m
+           4m
+        5m 1d
+           9m
+           1m
+    1y 11m 1d
+        1y 9m
+     1y 7m 1d
+       10m 1d
+           4m
+          10m
+     1y 5m 1d
+        1y 1d
+           9m
+        1y 9m
+           1m
+        2y 1d
+     1y 8m 1d
+     1y 9m 1d
+        1y 4m
+        1y 7m
+    1y 10m 1d
+       1y 11m
+           7m
+        1y 2m
+        1y 7m
+     1y 8m 1d
+        4m 1d
+        8m 1d
+     1y 4m 1d
+        1y 1d
+           1y
+        1y 1d
+           3m
+        4m 1d
+     1y 8m 1d
+        8m 1d
+        1m 1d
+        7m 1d
+        4m 1d
+       1y 10m
+           1y
+        7m 1d
+       1y 11m
+       10m 1d
+        1y 9m
+           4m
+     1y 8m 1d
+     1y 5m 1d
+          10m
+          10m
+        1y 5m
+           3m
+       11m 1d
+           5m
+           4m
+          11m
+          11m
+          11m
+        1y 8m
+    1y 10m 1d
+        2y 1d
+       10m 1d
+     1y 3m 1d
+        2m 1d
+    1y 11m 1d
+lines(l(2), l(1))
+ts = timeseries(d(1:7), NameContinent, Area, bigNames)
+ ts = [7x3 timeseries]
+         column 1 to 3
+     Time         Var1          Var2  
+   ________   _____________   ________
+                                      
+   01:40:01   Africa          30065000
+   14:34:48   North America   24256000
+   07:01:36   Oceania         7687000 
+   15:10:07   Antarctica      13209000
+   22:56:48   Asia            44579000
+   13:07:31   Europe          9938000 
+   23:20:12   South America   17819000
+         column 4 to 4
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Var3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America
+   Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+   Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica                                                                                                                                                                                                                                                                                                            
+   Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+   Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America
+lines(0, 0);
+disp(ts)
+     Time         Var1          Var2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Var3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   ________   _____________   ________   _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+   01:40:01   Africa          30065000   Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   14:34:48   North America   24256000   North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America
+   07:01:36   Oceania         7687000    Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+   15:10:07   Antarctica      13209000   Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica                                                                                                                                                                                                                                                                                                            
+   22:56:48   Asia            44579000   Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+   13:07:31   Europe          9938000    Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   23:20:12   South America   17819000   South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America
+lines(l(2), l(1))
+ts = timeseries(dt(1:7), NameContinent, Area, bigNames)
+ ts = [7x3 timeseries]
+         column 1 to 3
+          Time               Var1          Var2  
+   ___________________   _____________   ________
+                                                 
+   2025-11-05 01:40:01   Africa          30065000
+   2025-05-03 14:34:48   North America   24256000
+   2025-12-10 07:01:36   Oceania         7687000 
+   2025-05-03 15:10:07   Antarctica      13209000
+   2025-03-10 22:56:48   Asia            44579000
+   2025-05-13 13:07:31   Europe          9938000 
+   2025-04-06 23:20:12   South America   17819000
+         column 4 to 4
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            Var3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America
+   Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+   Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica                                                                                                                                                                                                                                                                                                            
+   Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+   Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America
+lines(0, 0);
+disp(ts)
+          Time               Var1          Var2                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                              Var3                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                          
+   ___________________   _____________   ________   _______________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________________
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                           
+   2025-11-05 01:40:01   Africa          30065000   Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa Africa                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   2025-05-03 14:34:48   North America   24256000   North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America North America
+   2025-12-10 07:01:36   Oceania         7687000    Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania Oceania                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+   2025-05-03 15:10:07   Antarctica      13209000   Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica Antarctica                                                                                                                                                                                                                                                                                                            
+   2025-03-10 22:56:48   Asia            44579000   Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia Asia                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+   2025-05-13 13:07:31   Europe          9938000    Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe Europe                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+   2025-04-06 23:20:12   South America   17819000   South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America South America

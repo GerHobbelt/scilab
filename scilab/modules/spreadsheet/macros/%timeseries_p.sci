@@ -16,12 +16,19 @@ function %timeseries_p(ts)
 
     res = [];
     current_len = 0;
+    col_s = 1;
+    nbcolsdefault = 10;
     l = lines();
-    l(2) = 50;
-    col_s = 1
+
+    if l(1) > nbcolsdefault & l(2) == 0 then
+        // display max 50 rows of dura. 
+        // if the number of rows is greater than 50, 
+        // displays the first three lines of dura and the last three separated by ...
+        l(2) = 50;
+    end
 
     nb_rows = size(ts, 1);
-    if nb_rows > l(2) then
+    if l(2) <> 0 & and(nb_rows > [6, l(2)]) then
         output = string(ts([1:3, nb_rows-2:nb_rows], :));
     else
         output = string(ts);
@@ -34,20 +41,24 @@ function %timeseries_p(ts)
         max_len = max(max_len, len, 3);
 
         current_len = current_len + max_len + 3;
-        if current_len >= l(1) then
-            printf("         column %d to %d\n", col_s, c - 1);
-            if mode() > 1
-                printf("\n");
-            end
-            res = strcat(res, "", "c");
-            mprintf("%s\n", res);
-            if mode() > 1
-                printf("\n");
-            end
+        if l(1) > nbcolsdefault & current_len >= l(1) then
+            if c == 1 then
+                l(1) == nbcolsdefault
+            else
+                printf("         column %d to %d\n", col_s, c - 1);
+                if mode() > 1
+                    printf("\n");
+                end
+                res = strcat(res, "", "c");
+                mprintf("%s\n", res);
+                if mode() > 1
+                    printf("\n");
+                end
 
-            res = [];
-            col_s = c;
-            current_len = max_len + 3;
+                res = [];
+                col_s = c;
+                current_len = max_len + 3;
+            end
         end
     
         shift = floor((max_len - len) / 2);
@@ -62,7 +73,7 @@ function %timeseries_p(ts)
             f = sprintf("   %%-%ds\\n", max_len);
         end
 
-        if l(2) <> 0 && nb_rows > l(2) then
+        if l(2) <> 0 & and(nb_rows > [6, l(2)]) then
             left = floor((max_len-3)/2);
             subres = sprintf(f, [header ; separator ; "" ; output(1:3, c)]);
             subres($+1) = "   " + sprintf("%*s", -max_len, sprintf("%*s", left+3, "..."));
@@ -73,10 +84,10 @@ function %timeseries_p(ts)
         end
     end
 
-    if col_s <> 1 then
+    if l(1) > nbcolsdefault & col_s <> 1 then
         printf("         column %d to %d\n", col_s, c);
         if mode() > 1
-            printf("\n");
+            mprintf("\n");
         end
     end
 

@@ -92,6 +92,13 @@
             output window size, these parameters are also automatically modified when
             the window is resized.
         </para>
+        <para>
+            For <link linkend="duration">duration</link>, <link linkend="datetime">datetime</link>, 
+            <link linkend="calendarDuration">calendarDuration</link>, <link linkend="timeseries">timeseries</link> and 
+            <link linkend="table">table</link> objects, <literal>lines(0)</literal> and <literal>lines(0,0)</literal> displays 
+            them in full. By default, if these objects have more than 50 lines, the display is truncated and only the 
+            first three and last three lines are displayed.
+        </para>
     </refsection>
     <refsection>
         <title>Examples</title>
