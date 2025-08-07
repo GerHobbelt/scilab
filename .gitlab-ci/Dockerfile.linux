@@ -128,7 +128,7 @@ LABEL description="Scilab builder image used by CI/CD runners"
 # Install system dependencies without asking anything
 ARG DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y \
-        locales xz-utils zip \
+        locales xz-utils zip bzip2 \
         curl rsync git \
         make binutils libc-dev \
         gettext ccache \

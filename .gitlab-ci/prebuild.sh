@@ -2,7 +2,7 @@
 
 ARCH=$(cc -print-multiarch)
 
-if test $# -eq 0; then
+function usage() {
     echo "This script compiles dependencies of Scilab for Linux $ARCH."
     echo
     echo "Syntax : $0 <dependency> with dependency equal to:"
@@ -11,10 +11,35 @@ if test $# -eq 0; then
     echo " - 'all': compile all dependencies,"
     echo " - 'binary': configure dev-tools for binary version of Scilab,"
     echo " - 'jar': configure JARs for binary version of Scilab,"
-    echo " - 'fromscratch': 'init' + 'download' + 'all' + 'binary',"
+    echo " - 'fromscratch': 'download' + 'all' + 'binary',"
     echo " - 'archive': Create prerequirements archive."
     echo
+}
+
+if test $# -eq 0; then
+    usage
     exit 42
+fi
+
+# Generate needed variables
+if [ -z "$BRANCH" ]; then
+    BRANCH=$(git rev-parse --abbrev-ref HEAD)
+    echo "BRANCH was not set, set to $BRANCH via git" >&2
+fi
+if [ -z "$CI_DEFAULT_BRANCH" ]; then
+    CI_DEFAULT_BRANCH="main"
+    echo "CI_DEFAULT_BRANCH was not set, set to $CI_DEFAULT_BRANCH" >&2
+fi
+if [ -z "$CI_COMMIT_SHORT_SHA" ]; then
+    CI_COMMIT_SHORT_SHA=$(git rev-parse --short HEAD)
+    echo "CI_COMMIT_SHORT_SHA was not set, set to $CI_COMMIT_SHORT_SHA via git" >&2
+fi
+if [ -z "$ARCH" ]; then
+    ARCH=$(cc -print-multiarch)
+    echo "ARCH was not set, set to $ARCH vi cc." >&2
+fi
+if [ -z "$SCI_VERSION_STRING" ]; then
+    echo "SCI_VERSION_STRING was not set, set to scilab-branch-${BRANCH}-${CI_COMMIT_SHORT_SHA}" >&2
 fi
 
 echo "Scilab prerequirements for $ARCH in branch $BRANCH"
@@ -435,7 +460,7 @@ make_jar() {
     rm -rf thirdparty
     mkdir thirdparty
     cd thirdparty || exit 1
-    unzip "$DOWNLOADDIR/thirdparty.zip"
+    unzip -o "$DOWNLOADDIR/thirdparty.zip"
     # remove .jar already managed
     rm gluegen*.jar jogl*.jar jcef*.jar
     # Copy all JARs from thirdparty.zip
@@ -1078,7 +1103,7 @@ build_jcef() {
 
     cd "$BUILDDIR" || exit 1
 
-    unzip "$DOWNLOADDIR/chromiumembedded-java-cef-$JCEF_VERSION.zip"
+    unzip -o "$DOWNLOADDIR/chromiumembedded-java-cef-$JCEF_VERSION.zip"
     tar -xjf "$DOWNLOADDIR/cef_binary_${CEF_VERSION}_linux64.tar.bz2" -C "chromiumembedded-java-cef-$JCEF_VERSION/third_party/cef/"
     cd chromiumembedded-java-cef-$JCEF_VERSION || exit 1
 
@@ -1262,6 +1287,13 @@ do
         shift
         ;;
     *)
+        if declare -F "build_$1" > /dev/null; then
+            echo "Building $1"
+        else
+            echo "Unknown function: build_$1"
+            usage
+            exit 1
+        fi
         create_folders
         eval "build_$1"
         shift
