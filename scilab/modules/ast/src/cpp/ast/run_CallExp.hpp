@@ -229,12 +229,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
             }
             else
             {
-                ret = pIT->invoke(in, opt, iRetCount, out, e);
-                if (ret == false && pIT->isUserType())
-                {
-                    // call overload
-                    ret = Overload::call(L"%" + pIT->getShortTypeStr() + L"_e", in, iRetCount, out, true, true, e.getLocation());
-                }
+                ret = pIT->invoke(in, opt, iRetCount, out, e);               
             }
 
             if (ret)

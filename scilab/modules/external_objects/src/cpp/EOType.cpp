@@ -13,16 +13,25 @@
 *
 */
 #include "EOType.hxx"
+#include "configvariable.hxx"
+#include "exp.hxx"
+
 namespace org_modules_external_objects
 {
 types::Callable* EOType::pFunc = nullptr;
-bool EOType::invoke(types::typed_list & in, types::optional_list & opt, int _iRetCount, types::typed_list & out, const ast::Exp & /*e*/)
+bool EOType::invoke(types::typed_list& in, types::optional_list& opt, int _iRetCount, types::typed_list& out, const ast::Exp& e)
 {
     //check some flag before call invoke
     ScilabAbstractEnvironment & env = ScilabEnvironments::getEnvironment(id);
     ScilabGatewayOptions & options = env.getGatewayOptions();
     options.setIsNew(isNew);
     in.push_back(new types::Double(static_cast<double>(id)));
-    return pFunc->call(in, opt, _iRetCount, out) == types::Function::OK;
+    auto Ret = pFunc->call(in, opt, _iRetCount, out);
+    if (Ret == types::Callable::Error)
+    {
+        throw ast::InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+    }
+    
+    return true;
 }
 }

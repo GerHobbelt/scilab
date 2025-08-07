@@ -78,6 +78,11 @@ public :
         return true;
     }
 
+    inline bool isUserType(void) override
+    {
+        return false;
+    }
+
     bool invoke(types::typed_list & in, types::optional_list & /*opt*/, int /*_iRetCount*/, types::typed_list & out, const ast::Exp & /*e*/) override;
 
 private:

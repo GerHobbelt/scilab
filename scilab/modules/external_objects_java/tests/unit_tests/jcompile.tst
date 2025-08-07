@@ -67,3 +67,38 @@ house.replaceDoor(newDoor);
 
 assert_checkequal(house.toString(), "This is a house painted in white, has a red door, and 2 windows");
 
+MyObject = jcompile("MyObject", ...
+["public class MyObject {";
+"	private String description;";
+"";
+"	public MyObject() {";
+"		description = null;";
+"	}";
+"";	
+"	public MyObject(String description) {";
+"		this.description = description;";
+"	}";
+"";	
+"	public MyObject(double value) throws Exception {";
+"		throw new Exception(""Don''t know how to create MyObject with double"");";
+"	}";
+"";	
+"	public String toString() {";
+"		if (description != null) {";
+"			return ""I''m a MyObject "" + description;";
+"		} else {";
+"			return ""I''m a MyObject without description :-("";";
+"		}";
+"	}";
+"";
+"}"]);
+
+assert_checkequal(jgetclassname(MyObject),"MyObject");
+
+mo1 = MyObject.new();
+assert_checkequal(mo1.toString(), "I''m a MyObject without description :-(");
+
+mo2 = MyObject.new("Ready to roll out !");
+assert_checkequal(mo2.toString(), "I''m a MyObject Ready to roll out !");
+
+assert_checkerror("mo3 = MyObject.new(42)",   ["Method invocation: An error occurred: Exception when calling Java method : An exception has been thrown in calling the constructor of class MyObject:";"null";" at org.scilab.modules.external_objects_java.ScilabJavaConstructor.invoke(Unknown Source)";" at org.scilab.modules.external_objects_java.ScilabJavaClass.newInstance(Unknown Source)";"An exception has been thrown in calling the constructor of class MyObject:";"null";" at org.scilab.modules.external_objects_java.ScilabJavaConstructor.invoke(Unknown Source)";" at org.scilab.modules.external_objects_java.ScilabJavaClass.newInstance(Unknown Source)"]);
