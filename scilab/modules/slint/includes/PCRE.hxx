@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
  *
@@ -17,7 +17,9 @@
 #define __PCRE_TRAITS_HXX__
 
 #include <cstring>
-#include <pcre.h>
+#include "pcre2_private.h"
+#include <pcre2.h>
+
 
 extern "C"
 {

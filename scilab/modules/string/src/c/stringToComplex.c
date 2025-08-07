@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010-2011 - DIGITEO - Allan CORNET
  *
@@ -601,7 +601,7 @@ static stringToComplexError ParseComplexValue(const char* tx, BOOL bConvertByNAN
             }
             if (inum_string[1] == 'i' || inum_string[1] == 'j') // The imaginary part looks like "%i*a". For instance if string() has been used
             {
-                int len_inum_string = strlen(inum_string);
+                int len_inum_string = (int)strlen(inum_string);
                 for (i = 1; i < len_inum_string; ++i)
                 {
                     inum_string[i] = inum_string[i + 1]; // Removing the "i"
@@ -623,7 +623,7 @@ static stringToComplexError ParseComplexValue(const char* tx, BOOL bConvertByNAN
                 if (strcmp(inum_string, "-") == 0)
                 {
                     FREE(inum_string);
-                    inum_string = strdup("-1");
+                    inum_string = os_strdup("-1");
                 }
                 haveImagI = TRUE;
             }
@@ -1027,7 +1027,7 @@ static stringToComplexError ParseComplexValueWInPlace(wchar_t* tx, BOOL bConvert
         }
         else if (inum_string[1] == L'i' || inum_string[1] == L'j') // The imaginary part looks like "%i*a". For instance if string() has been used
         {
-            int len_inum_string = wcslen(inum_string);
+            int len_inum_string = (int)wcslen(inum_string);
             for (i = 1; i < len_inum_string; ++i)
             {
                 inum_string[i] = inum_string[i + 1]; // Removing the "i"

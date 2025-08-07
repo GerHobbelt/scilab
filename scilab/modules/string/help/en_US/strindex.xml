@@ -104,10 +104,9 @@
         <para>--&gt;[k,w]=strindex('aab',['a','ab'])</para>
         <para>w = 1. 1. k = 1. 2.</para>
         <para>
-            The rules of regular expression are similar to Perl language. For a
-            quick start, see <ulink url="http://perldoc.perl.org/perlrequick.html">http://perldoc.perl.org/perlrequick.html</ulink>.
-            For a more in-depth tutorial on, see <ulink url="http://perldoc.perl.org/perlretut.html">http://perldoc.perl.org/perlretut.html</ulink>
-            and for the reference page, see <ulink url="http://perldoc.perl.org/perlre.html">http://perldoc.perl.org/perlre.html</ulink>
+            The rules of regular expression are processed by PCRE2. For a
+            quick syntax tour, see <link linkend="regexp"/>.
+            For full syntax specification, see the <ulink url="https://www.pcre.org/current/doc/html/pcre2pattern.html">regular expressions supported by PCRE2</ulink>.
         </para>
     </refsection>
     <refsection>

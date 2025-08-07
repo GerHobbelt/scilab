@@ -14,25 +14,27 @@ function [strs, matched_separators] = %_strsplit(varargin)
 
     //====== private macros ==================
     function out_str = replace_regexp_char(in_str)
-        out_str = strsubst(in_str, "\", "\\");
-        out_str = strsubst(out_str, "/", "\/");
-        out_str = strsubst(out_str, "|", "\|");
-        out_str = strsubst(out_str, ".", "\.");
+        // see pcre2pattern doc
+        // Outside square brackets, the metacharacters are
+        out_str = in_str;
+        out_str = strsubst(out_str, "\", "\\");
+        out_str = strsubst(out_str, "^", "\^");
         out_str = strsubst(out_str, "$", "\$");
+        out_str = strsubst(out_str, ".", "\.");
         out_str = strsubst(out_str, "[", "\[");
-        out_str = strsubst(out_str, "]", "\]");
+        out_str = strsubst(out_str, "|", "\|");
         out_str = strsubst(out_str, "(", "\(");
         out_str = strsubst(out_str, ")", "\)");
-        out_str = strsubst(out_str, "{", "\{");
-        out_str = strsubst(out_str, "}", "\}");
-        out_str = strsubst(out_str, "^", "\^");
-        out_str = strsubst(out_str, "?", "\?");
         out_str = strsubst(out_str, "*", "\*");
         out_str = strsubst(out_str, "+", "\+");
-        out_str = strsubst(out_str, "-", "\-");
+        out_str = strsubst(out_str, "?", "\?");
+        out_str = strsubst(out_str, "{", "\{");
+        // escape non printable char
+        out_str = strsubst(out_str, "/[^[:print:]]/", "", "r");
     endfunction
     //========================================
     function bOK = isPattern(str)
+        // No regexp option can be used after the trailing "/" delimiter.
         bOK = %f;
         lenstr = length(str);
         if lenstr > 1 then

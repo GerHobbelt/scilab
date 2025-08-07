@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010-2011 - DIGITEO - Allan CORNET
  * Copyright (C) 2019-2019 - ESI Group - Clement DAVID
@@ -25,7 +25,7 @@
 #include "mgetl.h"
 #include "mopen.h"
 #include "os_string.h"
-#include "pcre_private.h"
+#include "pcre2_private.h"
 #include "sci_malloc.h"
 #include "sciprint.h"
 #include "splitLine.h"
@@ -126,17 +126,14 @@ csvResult* csvRead(const wchar_t* filename, const wchar_t* separator, const wcha
 
         pComments = extractComments(pwstLines, &nbLines, regexpcomments, &nbComments, &iErr);
 
-        if ((iErr == CAN_NOT_COMPILE_PATTERN) || (iErr == DELIMITER_NOT_ALPHANUMERIC))
+        if (iErr != 0)
         {
             result = (csvResult*)(CALLOC(1, sizeof(csvResult)));
             if (result)
             {
-                if ((iErr == CAN_NOT_COMPILE_PATTERN) || (iErr == DELIMITER_NOT_ALPHANUMERIC))
-                {
-                    iErr = CSV_READ_REGEXP_ERROR;
-                }
-                result->err = (csvReadError)iErr;
+                result->err = (csvReadError)CSV_READ_REGEXP_ERROR;
             }
+
             freeArrayOfWideString(pHeader, nbHeader);
             freeArrayOfWideString(pwstLines, nbLines);
             return result;
@@ -677,13 +674,15 @@ static wchar_t** extractComments(wchar_t** lines, int* nbLines,
     wchar_t** pComments = NULL;
     int i = 0;
 
+    //check regex
+
     for (i = 0; i < *nbLines; i++)
     {
         int Output_Start = 0;
         int Output_End = 0;
-        pcre_error_code answer = wide_pcre_private(lines[i], regexpcomments, &Output_Start, &Output_End, NULL, NULL);
+        pcre2_error_code answer = pcre2_private(lines[i], regexpcomments, &Output_Start, &Output_End, NULL, NULL, NULL);
 
-        if ((answer == CAN_NOT_COMPILE_PATTERN) || (answer == DELIMITER_NOT_ALPHANUMERIC))
+        if (answer < 0 && answer != PCRE2_PRIV_NO_MATCH) //error
         {
             if (pComments)
             {
@@ -696,7 +695,7 @@ static wchar_t** extractComments(wchar_t** lines, int* nbLines,
             return NULL;
         }
 
-        if (answer == PCRE_FINISHED_OK)
+        if (answer == 0) //match
         {
             (*nbcomments)++;
             if (pComments == NULL)

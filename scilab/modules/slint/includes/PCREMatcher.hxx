@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
  *
@@ -17,7 +17,9 @@
 #define __PCRE_MATCHER_HXX__
 
 #include <string>
-#include <pcre.h>
+#include "pcre2_private.h"
+#include <pcre2.h>
+
 
 #include "PCREException.hxx"
 
@@ -28,7 +30,7 @@ class PCREMatcher
 {
 
     const std::wstring pattern;
-    pcre * re;
+    pcre2_code* re;
 
 public:
 

@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2015 - Scilab Enterprises - Antoine ELIAS
 *
@@ -22,8 +22,6 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib, "../../bin/pcre.lib")
-#pragma comment(lib, "../../bin/pcreposix.lib")
 #pragma comment(lib, "../../bin/libintl.lib")
 #pragma comment(lib, "../../bin/libxml2.lib")
 /*--------------------------------------------------------------------------*/

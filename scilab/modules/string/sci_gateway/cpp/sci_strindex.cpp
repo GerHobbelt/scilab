@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2008 - INRIA - Cong WU
  *
@@ -26,10 +26,8 @@ extern "C"
 {
 #include <string.h>
 #include <stdio.h>
-#include "pcre.h"
 #include "localization.h"
-#include "pcre_private.h"
-#include "pcre_error.h"
+#include "pcre2_private.h"
 #include "Scierror.h"
 }
 /*------------------------------------------------------------------------*/
@@ -127,7 +125,7 @@ types::Function::ReturnValue sci_strindex(types::typed_list &in, int _iRetCount,
     if (bRegExp)
     {
         //pcre
-        pcre_error_code iPcreStatus = PCRE_FINISHED_OK;
+        pcre2_error_code iPcreStatus = PCRE2_PRIV_FINISHED_OK;
         for (int i = 0 ; i < pS->getSize() ; i++)
         {
             int iStart      = 0;
@@ -136,26 +134,23 @@ types::Function::ReturnValue sci_strindex(types::typed_list &in, int _iRetCount,
 
             do
             {
-                iPcreStatus = wide_pcre_private(pwstData + iStep, pwstSearch[i], &iStart, &iEnd, NULL, NULL);
-                if (iPcreStatus == PCRE_FINISHED_OK)
+                wchar_t* formattedErrorMessage = NULL;
+                iPcreStatus = pcre2_private(pwstData + iStep, pwstSearch[i], &iStart, &iEnd, NULL, NULL, &formattedErrorMessage);
+                if (iPcreStatus == PCRE2_PRIV_FINISHED_OK)
                 {
                     pstrResult[iValues].data        = iStart + iStep + 1;
                     pstrResult[iValues].position    = i + 1;
                     iStep                           += iEnd;
                     iValues++;
                 }
-                else
+                else if (iPcreStatus != PCRE2_PRIV_NO_MATCH)
                 {
-                    if (iPcreStatus != NO_MATCH)
-                    {
-                        pcre_error("strindex", iPcreStatus);
-                        delete[] pstrResult;
-                        return types::Function::Error;
-                    }
-                    break;
+                    pcre2_error("strindex", iPcreStatus, formattedErrorMessage);
+                    delete[] pstrResult;
+                    return types::Function::Error;
                 }
             }
-            while (iPcreStatus == PCRE_FINISHED_OK && iStart != iEnd);
+            while (iPcreStatus == PCRE2_PRIV_FINISHED_OK && iStart != iEnd);
         }
     }
     else

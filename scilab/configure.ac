@@ -1807,14 +1807,23 @@ AM_CONDITIONAL(KLU, test "$with_klu" != no)
 
 
 #######################
-## Test for PCRE
+## Test for PCRE2
 #######################
 if $WITH_DEVTOOLS; then # Scilab thirdparties
-    PCRE_CFLAGS="-I$DEVTOOLS_INCDIR"
-    PCRE_LIBS="-L$DEVTOOLS_LIBDIR -lpcre -lpcreposix"
+    PCRE2_CFLAGS="-I$DEVTOOLS_INCDIR"
+    PCRE2_LDFLAGS="-L$DEVTOOLS_LIBDIR"
+    PCRE2_LIBS="-lpcre2-32"
 else
-    AC_PCRE()
+    AC_RUN_LOG([$PKG_CONFIG --exists --print-errors libpcre2-32]) || {
+        AC_MSG_ERROR([cannot find pkg-config package for libpcre2-32])
+    }
+    PCRE2_CFLAGS=`$PKG_CONFIG --cflags libpcre2-32`
+    PCRE2_LDFLAGS=`$PKG_CONFIG --libs-only-L libpcre2-32`
+    PCRE2_LIBS=`$PKG_CONFIG --libs-only-l libpcre2-32`
 fi
+AC_SUBST(PCRE2_CFLAGS)
+AC_SUBST(PCRE2_LDFLAGS)
+AC_SUBST(PCRE2_LIBS)
 
 #######################
 ## Test for CURL
@@ -2601,10 +2610,10 @@ echo "  HDF5 CFLAGS ......... = $HDF5_CFLAGS"
 echo "  HDF5 LIBS ........... = $HDF5_LIBS"
 
 echo ""
-echo "PCRE configuration:"
-echo "  PCRE_CFLAGS ........ = $PCRE_CFLAGS"
-echo "  PCRE_LIBS .......... = $PCRE_LIBS"
-echo "  PCRE_VERSION ....... = $PCRE_VERSION"
+echo "PCRE2 configuration:"
+echo "  PCRE2_CFLAGS ........ = $PCRE2_CFLAGS"
+echo "  PCRE2_LDFLAGS ....... = $PCRE2_LDFLAGS"
+echo "  PCRE2_LIBS .......... = $PCRE2_LIBS"
 
 echo ""
 echo "Regenerate Scilab's parser"

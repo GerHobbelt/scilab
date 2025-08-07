@@ -214,4 +214,11 @@ c = "י";
 [r_1,r_2] = strsplit(v,c);
 assert_checkequal(strcat(r_1,r_2), v);
 //===============================
+// splitting a multi-line text
+text = strcat(STR_SPLITED, ascii(10));
+assert_checkequal(strsplit(text, ascii(10)), STR_SPLITED);
+// with regexp
+text = strcat(STR_SPLITED, ascii(10));
+assert_checkequal(strsplit(text, "/(*ANYCRLF)\n/"), STR_SPLITED);
+//===============================
 funcprot(1);

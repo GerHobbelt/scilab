@@ -8,7 +8,7 @@ f2c
 intl
 libxml2
 matio
-pcre
+pcre2
 umfpack
 zlib
 hdf5

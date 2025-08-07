@@ -127,7 +127,7 @@ libscislint_la_CPPFLAGS = \
     -I$(top_srcdir)/modules/dynamic_link/includes \
     -I$(top_srcdir)/modules/threads/includes/ \
     $(XML_FLAGS) \
-    $(PCRE_CFLAGS) \
+    $(PCRE2_CFLAGS) \
     $(SLINT_FLAGS) \
     $(AM_CPPFLAGS)
 

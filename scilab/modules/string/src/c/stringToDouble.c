@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Copyright (C) 2010-2011 - DIGITEO - Allan CORNET
 *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
@@ -26,13 +26,6 @@
 #include "sci_malloc.h"
 #include "os_string.h"
 #include "numericconstants_interface.h"
-#ifndef _MSC_VER
-#ifndef stricmp
-#define stricmp strcasecmp
-#endif
-#else
-#define stricmp _stricmp
-#endif
 /* ========================================================================== */
 #define DEFAULT_DOUBLE_MAX_DIGIT_FORMAT "%lg"
 /* ========================================================================== */

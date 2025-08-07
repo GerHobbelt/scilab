@@ -6,7 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
-
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 3102 -->
 //
@@ -18,11 +18,10 @@
 
 
 r="/^b.*b.*b.*b.*b$/";
-b = "b"; 
+b = "b";
 for i = 1:123
   b = b + "b";
 end;
 b = b + "r";
 ierr=execstr("regexp(b, r)","errcatch");
-if ierr <> 999 then pause,end
-
+assert_checkequal(ierr, 0);

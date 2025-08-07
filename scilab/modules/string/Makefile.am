@@ -16,8 +16,7 @@ STRING_C_SOURCES = \
     src/c/partfunction.c \
     src/c/cvstr.c \
     src/c/getfastcode.c \
-    src/c/pcre_private.c \
-    src/c/pcre_error.c \
+    src/c/pcre2_private.c \
     src/c/isletter.c \
     src/c/isdigit.c \
     src/c/strsubst.c \
@@ -69,7 +68,7 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_emptystr.cpp
 
 libscistring_la_CFLAGS= \
-    $(PCRE_CFLAGS) \
+    $(PCRE2_CFLAGS) \
 	-I$(srcdir)/src/c \
 	-I$(srcdir)/includes/ \
     -I$(top_srcdir)/modules/ast/includes/ast/ \
@@ -85,7 +84,7 @@ libscistring_la_CFLAGS= \
 	-I$(top_srcdir)/modules/output_stream/includes
 
 libscistring_la_CPPFLAGS= \
-    $(PCRE_CFLAGS) \
+    $(PCRE2_CFLAGS) \
 	-I$(srcdir)/src/c \
 	-I$(srcdir)/src/cpp \
 	-I$(srcdir)/includes/ \
@@ -127,7 +126,7 @@ CHECK_SRC= $(STRING_C_SOURCES) $(GATEWAY_C_SOURCES)
 INCLUDE_FLAGS = $(libscistring_la_CFLAGS)
 
 # commented since it is the first module to be processed
-libscistring_la_LIBADD = libscistring-algo.la $(PCRE_LIBS)
+libscistring_la_LIBADD = libscistring-algo.la $(PCRE2_LIBS)
 
 #### Target ######
 modulename=string
@@ -156,7 +155,7 @@ includes/men_Sutils.h \
 includes/os_string.h \
 includes/os_wcstok.h \
 includes/os_wcstod.h \
-includes/pcre_private.h \
+includes/pcre2_private.h \
 includes/scistrtostr.h \
 includes/StringConvert.h \
 includes/string_gw.hxx \

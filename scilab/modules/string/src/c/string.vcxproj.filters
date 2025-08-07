@@ -50,12 +50,6 @@
     <ClCompile Include="partfunction.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="pcre_error.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="pcre_private.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="scistrtostr.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -119,6 +113,9 @@
     <ClCompile Include="os_wcstod.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="pcre2_private.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <None Include="core_import.def">
@@ -152,9 +149,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\includes\men_Sutils.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\includes\pcre_private.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\includes\scistrtostr.h">
@@ -191,12 +185,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="partfunction.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pcre_error.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="pcre_internal.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="stringsCompare.h">
@@ -245,6 +233,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\includes\os_wcstod.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\includes\pcre2_private.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

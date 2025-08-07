@@ -140,12 +140,12 @@ linux:
       export DEBIAN_FRONTEND=noninteractive &&
       apt update &&
       apt upgrade -y &&
-      apt install -y gcc g++ gfortran libxml2-dev libhdf5-dev libmatio-dev libfftw3-dev libncurses-dev libeigen3-dev gettext libblas-dev liblapack-dev libarpack2-dev libsuitesparse-dev libpcre3-dev tcl-dev tk-dev libcurl3-dev libarchive-dev rapidjson-dev >/dev/null
+      apt install -y gcc g++ gfortran libxml2-dev libhdf5-dev libmatio-dev libfftw3-dev libncurses-dev libeigen3-dev gettext libblas-dev liblapack-dev libarpack2-dev libsuitesparse-dev libpcre2-dev tcl-dev tk-dev libcurl3-dev libarchive-dev rapidjson-dev >/dev/null
     - >
       [ -x /usr/bin/dnf ] &&
       dnf update -y &&
       dnf install -y util-linux &&
-      dnf install -y gcc gcc-c++ gcc-fortran libxml2-devel hdf5-devel matio-devel fftw-devel ncurses-devel eigen3-devel gettext blas-devel lapack-devel arpack-devel suitesparse-devel pcre-devel tcl-devel tk-devel libcurl-devel libarchive-devel rapidjson-devel >/dev/null
+      dnf install -y gcc gcc-c++ gcc-fortran libxml2-devel hdf5-devel matio-devel fftw-devel ncurses-devel eigen3-devel gettext blas-devel lapack-devel arpack-devel suitesparse-devel pcre2-devel tcl-devel tk-devel libcurl-devel libarchive-devel rapidjson-devel >/dev/null
     - useradd scilab
     - cd scilab
     - su -c './configure --without-jdk --without-modelica' scilab

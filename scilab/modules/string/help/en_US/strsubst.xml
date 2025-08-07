@@ -91,6 +91,11 @@
             string of regular expression. And then <function>strsubst</function> is going to match it with
             <varname>string_in</varname> and replace according to the regular expression rules.
         </para>
+        <para>
+            The rules of regular expression are processed by PCRE2. For a
+            quick syntax tour, see <link linkend="regexp"/>.
+            For full syntax specification, see the <ulink url="https://www.pcre.org/current/doc/html/pcre2pattern.html">regular expressions supported by PCRE2</ulink>.
+        </para>
     </refsection>
     <refsection>
         <title>Examples</title>
@@ -108,6 +113,9 @@ strsubst('2' ,'/2(]*)?$\1/' ,'0','r')
             </member>
             <member>
                 <link linkend="strings">strings</link>
+            </member>
+            <member>
+                <link linkend="regexp"/>
             </member>
         </simplelist>
     </refsection>

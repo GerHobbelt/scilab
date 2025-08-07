@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2008 - INRIA - Cong WU
 * Copyright (C) 2008 - 2009 - DIGITEO - Allan CORNET
@@ -27,9 +27,7 @@ extern "C"
 {
 #include "sci_malloc.h"
 #include "localization.h"
-#include "pcre.h"
-#include "pcre_private.h"
-#include "pcre_error.h"
+#include "pcre2_private.h"
 #include "Scierror.h"
 #include "charEncoding.h"
 #include "os_string.h"
@@ -129,8 +127,9 @@ types::Function::ReturnValue sci_regexp(types::typed_list &in, int _iRetCount, t
 
     do
     {
-        iPcreStatus = wide_pcre_private(pwstInput + iStep, pwstPattern, &iStart, &iEnd, &pwstCapturedString[iOccurs], &piCapturedStringCount[iOccurs]);
-        if (iPcreStatus == PCRE_FINISHED_OK)
+        wchar_t* formattedErrorMessage = NULL;
+        iPcreStatus = pcre2_private(pwstInput + iStep, pwstPattern, &iStart, &iEnd, &pwstCapturedString[iOccurs], &piCapturedStringCount[iOccurs], &formattedErrorMessage);
+        if (iPcreStatus == PCRE2_PRIV_FINISHED_OK)
         {
             if (iEnd != iStart)
             {
@@ -144,9 +143,9 @@ types::Function::ReturnValue sci_regexp(types::typed_list &in, int _iRetCount, t
                 iStep++;
             }
         }
-        else if (iPcreStatus != NO_MATCH)
+        else if (iPcreStatus != PCRE2_PRIV_NO_MATCH)
         {
-            pcre_error("regexp", iPcreStatus);
+            pcre2_error("regexp", iPcreStatus, formattedErrorMessage);
             delete[] piStart;
             delete[] piEnd;
             for (int i = 0; i < iOccurs; i++)
@@ -159,7 +158,7 @@ types::Function::ReturnValue sci_regexp(types::typed_list &in, int _iRetCount, t
             return types::Function::Error;
         }
     }
-    while (iOccurs < inputSize && iPcreStatus == PCRE_FINISHED_OK && iStart != iEnd && wcType != WSTR_ONCE);
+    while (iOccurs < inputSize && iPcreStatus == PCRE2_PRIV_FINISHED_OK && iStart != iEnd && wcType != WSTR_ONCE);
 
     if (iOccurs == 0)
     {

@@ -26,10 +26,7 @@ function y = asciimat(x)
     if typeof(x) == "string" // convert string to ascii code
         dims = size(x)
         x = strcat(matrix(permute(x,[2 1 3:length(dims)]), dims(2), -1),"","r")'
-        tmp = ascii(1:127);
-        for c = ["\" "/" "]"]
-            tmp = strsubst(tmp, c, "\"+c);
-        end
+        tmp = strcat("\x" + dec2hex(1:127))
         kUTF = grep(x, "/[^" + tmp + "]/", "regexp")
         if kUTF == [] then
             L = length(x)

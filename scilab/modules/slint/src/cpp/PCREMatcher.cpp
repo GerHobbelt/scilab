@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
  *
@@ -33,19 +33,16 @@ PCREMatcher::PCREMatcher(const std::wstring & _pattern) : pattern(_pattern)
     }
     else
     {
-        const char * error = nullptr;
-        int errorOffset = -1;
-        re = pcre_compile(scilab::UTF8::toUTF8(pattern).c_str(), PCRE_UTF8, &error, &errorOffset, nullptr);
+        int errorcode;
+        PCRE2_SIZE errorOffset;
+        uint32_t options = PCRE2_UTF;
+        re = pcre2_compile((PCRE2_SPTR)pattern.c_str(), PCRE2_ZERO_TERMINATED, options, &errorcode, &errorOffset, nullptr);
         if (!re)
         {
-            if (error)
-            {
-                throw PCREException(pattern, error, errorOffset);
-            }
-            else
-            {
-                throw PCREException(pattern, "No error message from PCRE", 0);
-            }
+            PCRE2_UCHAR buffer[256];
+            pcre2_get_error_message(errorcode, buffer, sizeof(buffer));
+
+            throw PCREException(pattern, (char*)buffer, errorOffset);
         }
     }
 }
@@ -54,7 +51,7 @@ PCREMatcher::~PCREMatcher()
 {
     if (re)
     {
-        pcre_free(re);
+        pcre2_code_free(re);
     }
 }
 
@@ -78,7 +75,8 @@ bool PCREMatcher::match(const wchar_t * str, const unsigned int len, const bool 
     {
         int resVect[3];
         char * _str = wide_string_to_UTF8(str);
-        int result = pcre_exec(re, nullptr, _str, len, 0, 0, resVect, sizeof(resVect) / sizeof(int));
+        pcre2_match_data* match_data = pcre2_match_data_create_from_pattern(re, NULL);
+        int result = pcre2_match(re, (PCRE2_SPTR)_str, len, 0, 0, match_data, NULL);
         FREE(_str);
         if (full)
         {

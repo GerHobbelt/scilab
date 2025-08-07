@@ -70,8 +70,7 @@ Source: bin\scilab_windows.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\scilab_windows.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\libxml2.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\libcurl.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
-Source: bin\pcre.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
-Source: bin\pcreposix.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
+Source: bin\pcre2-16.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 ;
 Source: bin\libf2c.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\lapack.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}

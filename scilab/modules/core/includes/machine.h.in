@@ -188,12 +188,6 @@
 /* Define to 1 if you have the `matio' library (-lmatio). */
 #undef HAVE_LIBMATIO
 
-/* Define to 1 if you have the `pcre' library (-lpcre). */
-#undef HAVE_LIBPCRE
-
-/* Define to 1 if you have the `pcreposix' library (-lpcreposix). */
-#undef HAVE_LIBPCREPOSIX
-
 /* Define to 1 if you have the `scincurses' library (-lscincurses). */
 #undef HAVE_LIBSCINCURSES
 
@@ -250,9 +244,6 @@
 
 /* Define to 1 if you have the <omp.h> header file. */
 #undef HAVE_OMP_H
-
-/* Define to 1 if you have the <pcre.h> header file. */
-#undef HAVE_PCRE_H
 
 /* Define to 1 if you have the `pow' function. */
 #undef HAVE_POW
@@ -480,15 +471,6 @@
 
 /* The default path separator character. */
 #undef PATH_SEPARATOR
-
-/* PCRE flags */
-#undef PCRE_CFLAGS
-
-/* PCRE library */
-#undef PCRE_LIBS
-
-/* PCRE version */
-#undef PCRE_VERSION
 
 /* Using rapidjson master branch */
 #undef RAPIDJSON_MASTER

@@ -118,6 +118,5 @@
     <Library Include="..\..\..\..\bin\blasplus.lib" />
     <Library Include="..\..\..\..\bin\lapack.lib" />
     <Library Include="..\..\..\..\bin\libintl.lib" />
-    <Library Include="..\..\..\..\bin\pcre.lib" />
   </ItemGroup>
 </Project>

@@ -69,7 +69,7 @@ NCURSES_VERSION=6.4
 LIBXML2_VERSION=2.9.9
 MATIO_VERSION=1.5.28
 OPENSSL_VERSION=1.1.1c
-PCRE_VERSION=8.38
+PCRE2_VERSION=10.43
 SUITESPARSE_VERSION=4.4.5
 TCL_VERSION=8.5.15
 TK_VERSION=8.5.15
@@ -111,7 +111,7 @@ make_versions() {
     echo "LIBXML2_VERSION       = $LIBXML2_VERSION"
     echo "MATIO_VERSION         = $MATIO_VERSION"
     echo "OPENSSL_VERSION       = $OPENSSL_VERSION"
-    echo "PCRE_VERSION          = $PCRE_VERSION"
+    echo "PCRE2_VERSION         = $PCRE2_VERSION"
     echo "SUITESPARSE_VERSION   = $SUITESPARSE_VERSION"
     echo "TCL_VERSION           = $TCL_VERSION"
     echo "TK_VERSION            = $TK_VERSION"
@@ -150,7 +150,7 @@ download_dependencies() {
     [ ! -f matio-$MATIO_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/matio-$MATIO_VERSION.tar.gz
     [ ! -f openssl-$OPENSSL_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/openssl-$OPENSSL_VERSION.tar.gz
     [ ! -f SuiteSparse-$SUITESPARSE_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/SuiteSparse-$SUITESPARSE_VERSION.tar.gz
-    [ ! -f pcre-$PCRE_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/pcre-$PCRE_VERSION.tar.gz
+    [ ! -f pcre2-$PCRE2_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/pcre2-$PCRE2_VERSION.tar.gz
     [ ! -f ncurses-$NCURSES_VERSION.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/ncurses-$NCURSES_VERSION.tar.gz
     [ ! -f tcl$TCL_VERSION-src.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/tcl$TCL_VERSION-src.tar.gz
     [ ! -f tk$TK_VERSION-src.tar.gz ] && curl -LO https://oos.eu-west-2.outscale.com/scilab-releases-dev/prerequirements-sources/tk$TK_VERSION-src.tar.gz
@@ -210,7 +210,7 @@ make_all() {
     build_zlib
     build_lzma
     build_hdf5
-    build_pcre
+    build_pcre2
     build_fftw
     build_libxml2
     build_arpack
@@ -252,7 +252,7 @@ make_binary_directory() {
     cp -R "$INSTALLUSRDIR/include/Eigen/" "$INSTALLROOTDIR/include/"
     cp -R "$INSTALLUSRDIR/include/rapidjson/" "$INSTALLROOTDIR/include/"
     cp -R "$INSTALLUSRDIR/include/libxml2/" "$INSTALLROOTDIR/include/"
-    cp -R "$INSTALLUSRDIR/include/pcre.h" "$INSTALLROOTDIR/include/"
+    cp -R "$INSTALLUSRDIR/include/pcre2.h" "$INSTALLROOTDIR/include/"
 
     #####################################
     ##### lib/thirdparty/ directory #####
@@ -300,11 +300,8 @@ make_binary_directory() {
     rm -f "$LIBTHIRDPARTYDIR"/libmatio.*
     cp -d "$INSTALLUSRDIR"/lib/libmatio.* "$LIBTHIRDPARTYDIR/"
 
-    rm -f "$LIBTHIRDPARTYDIR"/libpcreposix.*
-    cp -d "$INSTALLUSRDIR"/lib/libpcreposix.* "$LIBTHIRDPARTYDIR/"
-
-    rm -f "$LIBTHIRDPARTYDIR"/libpcre.*
-    cp -d "$INSTALLUSRDIR"/lib/libpcre.* "$LIBTHIRDPARTYDIR/"
+    rm -f "$LIBTHIRDPARTYDIR"/libpcre*.*
+    cp -d "$INSTALLUSRDIR"/lib/libpcre2*.* "$LIBTHIRDPARTYDIR/"
 
     rm -f "$LIBTHIRDPARTYDIR"/libssl.*
     cp -d "$INSTALLUSRDIR"/lib/libssl.* "$LIBTHIRDPARTYDIR/"
@@ -801,23 +798,24 @@ build_ncurses() {
     patchelf --set-soname libscincurses.so.6 "$INSTALLUSRDIR/lib/libscincurses.so.$NCURSES_VERSION"
 }
 
-build_pcre() {
+build_pcre2() {
     cd "$BUILDDIR" || exit 1
 
-    INSTALL_DIR=$BUILDDIR/pcre-$PCRE_VERSION/install_dir
+    INSTALL_DIR=$BUILDDIR/pcre2-$PCRE2_VERSION/install_dir
 
-    tar -xzf "$DOWNLOADDIR/pcre-$PCRE_VERSION.tar.gz"
-    cd pcre-$PCRE_VERSION || exit 1
-    ./configure --enable-utf8 --enable-unicode-properties --prefix=
-    make "-j$(nproc)"
-    make install DESTDIR="$INSTALL_DIR"
+    tar -xzf "$DOWNLOADDIR/pcre2-$PCRE2_VERSION.tar.gz"
+    cd pcre2-$PCRE2_VERSION || exit 1
+    cmake -B build . \
+        -DBUILD_SHARED_LIBS=ON \
+        -DBUILD_STATIC_LIBS=OFF \
+        -DPCRE2_BUILD_PCRE2_8=OFF \
+        -DPCRE2_BUILD_PCRE2_16=OFF \
+        -DPCRE2_BUILD_PCRE2_32=ON
 
-    # shellcheck disable=SC2016
-    sed -i -e 's|^prefix=.*|prefix=$( cd -- "$(dirname "$0")" >/dev/null 2>\&1 ; pwd -P )/..|' "$INSTALL_DIR/bin/pcre-config"
-    cp "$INSTALL_DIR/bin/pcre-config" "$INSTALLUSRDIR/bin/"
+    cmake --build build/
 
-    cp -a "$INSTALL_DIR"/lib/*.so* "$INSTALLUSRDIR/lib/"
-    cp -a "$INSTALL_DIR"/include/* "$INSTALLUSRDIR/include/"
+    cp -a build/*.so* "$INSTALLUSRDIR/lib/"
+    cp -a build/pcre2.h "$INSTALLUSRDIR/include/"
 }
 
 build_libxml2() {
@@ -896,7 +894,7 @@ build_libarchive() {
     LDFLAGS="$LDFLAGS -L$INSTALLUSRDIR/lib"
 
     ./configure --prefix= \
-        --enable-posix-regex-lib=libpcreposix
+        --disable-posix-regex-lib
     make "-j$(nproc)"
     make install DESTDIR="$INSTALL_DIR"
 

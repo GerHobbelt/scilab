@@ -130,11 +130,10 @@ am__aclocal_m4_deps = $(top_srcdir)/m4/ax_cxx_compile_stdcxx.m4 \
 	$(top_srcdir)/m4/ltoptions.m4 $(top_srcdir)/m4/ltsugar.m4 \
 	$(top_srcdir)/m4/ltversion.m4 $(top_srcdir)/m4/lt~obsolete.m4 \
 	$(top_srcdir)/m4/mpi.m4 $(top_srcdir)/m4/ocaml.m4 \
-	$(top_srcdir)/m4/pcre.m4 $(top_srcdir)/m4/pkg.m4 \
-	$(top_srcdir)/m4/rapidjson.m4 $(top_srcdir)/m4/relocatable.m4 \
-	$(top_srcdir)/m4/swig.m4 $(top_srcdir)/m4/symlinks.m4 \
-	$(top_srcdir)/m4/tcltk.m4 $(top_srcdir)/m4/umfpack.m4 \
-	$(top_srcdir)/configure.ac
+	$(top_srcdir)/m4/pkg.m4 $(top_srcdir)/m4/rapidjson.m4 \
+	$(top_srcdir)/m4/relocatable.m4 $(top_srcdir)/m4/swig.m4 \
+	$(top_srcdir)/m4/symlinks.m4 $(top_srcdir)/m4/tcltk.m4 \
+	$(top_srcdir)/m4/umfpack.m4 $(top_srcdir)/configure.ac
 am__configure_deps = $(am__aclocal_m4_deps) $(CONFIGURE_DEPENDENCIES) \
 	$(ACLOCAL_M4)
 DIST_COMMON = $(srcdir)/Makefile.am $(libscistring_la_include_HEADERS) \
@@ -184,8 +183,7 @@ am__objects_1 = src/c/libscistring_algo_la-convstr.lo \
 	src/c/libscistring_algo_la-partfunction.lo \
 	src/c/libscistring_algo_la-cvstr.lo \
 	src/c/libscistring_algo_la-getfastcode.lo \
-	src/c/libscistring_algo_la-pcre_private.lo \
-	src/c/libscistring_algo_la-pcre_error.lo \
+	src/c/libscistring_algo_la-pcre2_private.lo \
 	src/c/libscistring_algo_la-isletter.lo \
 	src/c/libscistring_algo_la-isdigit.lo \
 	src/c/libscistring_algo_la-strsubst.lo \
@@ -316,8 +314,7 @@ am__depfiles_remade =  \
 	src/c/$(DEPDIR)/libscistring_algo_la-os_wcstod.Plo \
 	src/c/$(DEPDIR)/libscistring_algo_la-os_wcstok.Plo \
 	src/c/$(DEPDIR)/libscistring_algo_la-partfunction.Plo \
-	src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Plo \
-	src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Plo \
+	src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Plo \
 	src/c/$(DEPDIR)/libscistring_algo_la-scistrtostr.Plo \
 	src/c/$(DEPDIR)/libscistring_algo_la-stringToComplex.Plo \
 	src/c/$(DEPDIR)/libscistring_algo_la-stringToDouble.Plo \
@@ -605,10 +602,9 @@ PACKAGE_TARNAME = @PACKAGE_TARNAME@
 PACKAGE_URL = @PACKAGE_URL@
 PACKAGE_VERSION = @PACKAGE_VERSION@
 PATH_SEPARATOR = @PATH_SEPARATOR@
-PCRE_CFLAGS = @PCRE_CFLAGS@
-PCRE_CONFIG = @PCRE_CONFIG@
-PCRE_LIBS = @PCRE_LIBS@
-PCRE_VERSION = @PCRE_VERSION@
+PCRE2_CFLAGS = @PCRE2_CFLAGS@
+PCRE2_LDFLAGS = @PCRE2_LDFLAGS@
+PCRE2_LIBS = @PCRE2_LIBS@
 PKG_CONFIG = @PKG_CONFIG@
 POSUB = @POSUB@
 POW_LIB = @POW_LIB@
@@ -738,8 +734,7 @@ STRING_C_SOURCES = \
     src/c/partfunction.c \
     src/c/cvstr.c \
     src/c/getfastcode.c \
-    src/c/pcre_private.c \
-    src/c/pcre_error.c \
+    src/c/pcre2_private.c \
     src/c/isletter.c \
     src/c/isdigit.c \
     src/c/strsubst.c \
@@ -791,7 +786,7 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_emptystr.cpp
 
 libscistring_la_CFLAGS = \
-    $(PCRE_CFLAGS) \
+    $(PCRE2_CFLAGS) \
 	-I$(srcdir)/src/c \
 	-I$(srcdir)/includes/ \
     -I$(top_srcdir)/modules/ast/includes/ast/ \
@@ -807,7 +802,7 @@ libscistring_la_CFLAGS = \
 	-I$(top_srcdir)/modules/output_stream/includes
 
 libscistring_la_CPPFLAGS = \
-    $(PCRE_CFLAGS) \
+    $(PCRE2_CFLAGS) \
 	-I$(srcdir)/src/c \
 	-I$(srcdir)/src/cpp \
 	-I$(srcdir)/includes/ \
@@ -842,7 +837,7 @@ CHECK_SRC = $(STRING_C_SOURCES) $(GATEWAY_C_SOURCES)
 INCLUDE_FLAGS = $(libscistring_la_CFLAGS)
 
 # commented since it is the first module to be processed
-libscistring_la_LIBADD = libscistring-algo.la $(PCRE_LIBS)
+libscistring_la_LIBADD = libscistring-algo.la $(PCRE2_LIBS)
 
 #### Target ######
 modulename = string
@@ -871,7 +866,7 @@ includes/men_Sutils.h \
 includes/os_string.h \
 includes/os_wcstok.h \
 includes/os_wcstod.h \
-includes/pcre_private.h \
+includes/pcre2_private.h \
 includes/scistrtostr.h \
 includes/StringConvert.h \
 includes/string_gw.hxx \
@@ -1054,9 +1049,7 @@ src/c/libscistring_algo_la-cvstr.lo: src/c/$(am__dirstamp) \
 	src/c/$(DEPDIR)/$(am__dirstamp)
 src/c/libscistring_algo_la-getfastcode.lo: src/c/$(am__dirstamp) \
 	src/c/$(DEPDIR)/$(am__dirstamp)
-src/c/libscistring_algo_la-pcre_private.lo: src/c/$(am__dirstamp) \
-	src/c/$(DEPDIR)/$(am__dirstamp)
-src/c/libscistring_algo_la-pcre_error.lo: src/c/$(am__dirstamp) \
+src/c/libscistring_algo_la-pcre2_private.lo: src/c/$(am__dirstamp) \
 	src/c/$(DEPDIR)/$(am__dirstamp)
 src/c/libscistring_algo_la-isletter.lo: src/c/$(am__dirstamp) \
 	src/c/$(DEPDIR)/$(am__dirstamp)
@@ -1264,8 +1257,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-os_wcstod.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-os_wcstok.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-partfunction.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-scistrtostr.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-stringToComplex.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistring_algo_la-stringToDouble.Plo@am__quote@ # am--include-marker
@@ -1358,19 +1350,12 @@ src/c/libscistring_algo_la-getfastcode.lo: src/c/getfastcode.c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -c -o src/c/libscistring_algo_la-getfastcode.lo `test -f 'src/c/getfastcode.c' || echo '$(srcdir)/'`src/c/getfastcode.c
 
-src/c/libscistring_algo_la-pcre_private.lo: src/c/pcre_private.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -MT src/c/libscistring_algo_la-pcre_private.lo -MD -MP -MF src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Tpo -c -o src/c/libscistring_algo_la-pcre_private.lo `test -f 'src/c/pcre_private.c' || echo '$(srcdir)/'`src/c/pcre_private.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Tpo src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/pcre_private.c' object='src/c/libscistring_algo_la-pcre_private.lo' libtool=yes @AMDEPBACKSLASH@
+src/c/libscistring_algo_la-pcre2_private.lo: src/c/pcre2_private.c
+@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -MT src/c/libscistring_algo_la-pcre2_private.lo -MD -MP -MF src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Tpo -c -o src/c/libscistring_algo_la-pcre2_private.lo `test -f 'src/c/pcre2_private.c' || echo '$(srcdir)/'`src/c/pcre2_private.c
+@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Tpo src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Plo
+@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/pcre2_private.c' object='src/c/libscistring_algo_la-pcre2_private.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -c -o src/c/libscistring_algo_la-pcre_private.lo `test -f 'src/c/pcre_private.c' || echo '$(srcdir)/'`src/c/pcre_private.c
-
-src/c/libscistring_algo_la-pcre_error.lo: src/c/pcre_error.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -MT src/c/libscistring_algo_la-pcre_error.lo -MD -MP -MF src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Tpo -c -o src/c/libscistring_algo_la-pcre_error.lo `test -f 'src/c/pcre_error.c' || echo '$(srcdir)/'`src/c/pcre_error.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Tpo src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/pcre_error.c' object='src/c/libscistring_algo_la-pcre_error.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -c -o src/c/libscistring_algo_la-pcre_error.lo `test -f 'src/c/pcre_error.c' || echo '$(srcdir)/'`src/c/pcre_error.c
+@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -c -o src/c/libscistring_algo_la-pcre2_private.lo `test -f 'src/c/pcre2_private.c' || echo '$(srcdir)/'`src/c/pcre2_private.c
 
 src/c/libscistring_algo_la-isletter.lo: src/c/isletter.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistring_algo_la_CPPFLAGS) $(CPPFLAGS) $(libscistring_algo_la_CFLAGS) $(CFLAGS) -MT src/c/libscistring_algo_la-isletter.lo -MD -MP -MF src/c/$(DEPDIR)/libscistring_algo_la-isletter.Tpo -c -o src/c/libscistring_algo_la-isletter.lo `test -f 'src/c/isletter.c' || echo '$(srcdir)/'`src/c/isletter.c
@@ -1997,8 +1982,7 @@ distclean: distclean-am
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-os_wcstod.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-os_wcstok.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-partfunction.Plo
-	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Plo
-	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Plo
+	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-scistrtostr.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-stringToComplex.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-stringToDouble.Plo
@@ -2103,8 +2087,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-os_wcstod.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-os_wcstok.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-partfunction.Plo
-	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre_error.Plo
-	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre_private.Plo
+	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-pcre2_private.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-scistrtostr.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-stringToComplex.Plo
 	-rm -f src/c/$(DEPDIR)/libscistring_algo_la-stringToDouble.Plo

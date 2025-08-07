@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) INRIA - Cong WU , Allan CORNET
  * Copyright (C) DIGITEO - 2009 - Allan CORNET
@@ -23,10 +23,9 @@
 extern "C"
 {
 #include "strsubst.h"
+#include "pcre2_private.h"
 #include "localization.h"
 #include "Scierror.h"
-#include "pcre_error.h"
-#include "pcre_private.h"
 #include "freeArrayOfString.h"
 }
 /*-------------------------------------------------------------------------------------*/
@@ -97,12 +96,13 @@ types::Function::ReturnValue sci_strsubst(types::typed_list &in, int _iRetCount,
 
     if (bRegExp)
     {
-        int iErr = 0;
-        wchar_t** pwstOutput = wcssubst_reg(const_cast<const wchar_t**>(pS->get()), pS->getSize(), pwstSearch, pwstReplace, &iErr);
-        if (iErr != NO_MATCH && iErr != PCRE_FINISHED_OK && iErr != PCRE_EXIT)
+        int err = 0;
+        wchar_t* formattedErrorMessage = NULL;
+        wchar_t** pwstOutput = strsubst_reg(const_cast<const wchar_t**>(pS->get()), pS->getSize(), pwstSearch, pwstReplace, &err, &formattedErrorMessage);
+        if (err != PCRE2_PRIV_FINISHED_OK)
         {
             freeArrayOfWideString(pwstOutput, pOut->getSize());
-            pcre_error("strsubst", iErr);
+            pcre2_error("strsubst", err, formattedErrorMessage);
             delete pOut;
             return types::Function::Error;
         }

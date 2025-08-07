@@ -93,10 +93,7 @@
                     </para>
                     <para>
                         The same character is expected as delimiter at the beginning and at the
-                        end of the string. If it is needed in the expression's body, it must be
-                        escaped with "\" (Here is a
-                       <ulink url="https://www.php.net/manual/en/reference.pcre.pattern.syntax.php">
-                       good online page</ulink> explaining the syntax of regular expressions).
+                        end of the string. Regexp syntax is compatible with <link linkend="regexp"/>.
                     </para>
                 </listitem>
             </varlistentry>

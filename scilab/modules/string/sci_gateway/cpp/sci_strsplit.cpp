@@ -29,6 +29,8 @@ extern "C"
 #include "freeArrayOfString.h"
 }
 
+static int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t delimiter, int limit);
+
 types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
     types::String* pStrIn = NULL;
@@ -187,6 +189,32 @@ types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount,
                     }
                 }
             }
+            else if (wcslen(pStr->get(0)) == 1)
+            {
+                // a single delimiter to split on
+                types::String* pStrOut = new types::String(1, 1);
+                int i = strsplit_delimiter(pStrIn->get(0), pStrOut, *pStr->get(0), iValueThree);
+                
+                out.push_back(pStrOut);
+                if (_iRetCount > 1)
+                {
+                    if (i == 0)
+                    {
+                        out.push_back(types::Double::Empty());
+                    }
+                    else
+                    {
+                        types::String* pMatch = new types::String(i, 1);
+                        while(i > 0)
+                        {
+                            pMatch->set(--i, pStr->get(0));
+                        }
+                        out.push_back(pMatch);
+                    }
+                }
+                return types::Function::OK;
+
+            }
         }
         else
         {
@@ -196,5 +224,33 @@ types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount,
     }
 
     return Overload::call(L"%_strsplit", in, _iRetCount, out);
+}
+/*-------------------------------------------------------------------------------------*/
+int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t delimiter, int limit)
+{
+    wchar_t* remaining =  in;
+    int i = 0;
+    if (limit < 1)
+    {
+        limit = INT_MAX;
+    }
+    
+    wchar_t* next;
+    while((next = wcschr(remaining, delimiter)) != nullptr && i < limit)
+    {
+        // assign in-place (swap delimiter with end-of-line)
+        *next = '\0';
+        pStrOut->set(i, remaining);
+        *next = delimiter;
+
+        // iterate
+        remaining = next + 1;
+        i++;
+
+        // reserve place for the remaining part
+        pStrOut->resize(i+1, 1);
+    }
+    pStrOut->set(i, remaining);
+    return i;
 }
 /*-------------------------------------------------------------------------------------*/

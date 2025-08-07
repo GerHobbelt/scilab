@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2008 - INRIA - Allan CORNET
  *
@@ -25,7 +25,8 @@
 #include "getstaticDebugInfo_Windows.h"
 #include "localization.h"
 #include "getversion.h"
-#include "..\..\..\..\libs\pcre\pcre.h"
+#include "pcre2_private.h"
+#include <pcre2.h>
 #include "getBlasType.h"
 /*--------------------------------------------------------------------------*/
 extern BOOL BuildWithVS8ExpressF2C(void);
@@ -172,7 +173,7 @@ char **getStaticDebugInfo_Windows(int *sizeArray)
     str_info = (char*)MALLOC(sizeof(char) * BUFFER_LEN);
     if (str_info)
     {
-        sprintf(str_info, "PCRE Version: %d.%d", PCRE_MAJOR, PCRE_MINOR);
+        sprintf(str_info, "PCRE2 Version: %d.%d", PCRE2_MAJOR, PCRE2_MINOR);
         outputDynamicList = appendStringStaticDebugInfo(outputDynamicList, &nb_info, str_info);
     }
 

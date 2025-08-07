@@ -68,14 +68,14 @@ char **getStaticDebugInfo(int *sizeArray)
 #ifdef LIBXML_LIBS
         {"XML libraries", LIBXML_LIBS},
 #endif
-#ifdef PCRE_VERSION
-        {"PCRE version", PCRE_VERSION},
+#ifdef PCRE2_CFLAGS
+        {"PCRE2 compilation flags", PCRE2_CFLAGS},
 #endif
-#ifdef PCRE_FLAGS
-        {"PCRE compilation flags", PCRE_FLAGS},
+#ifdef PCRE2_LDFLAGS
+        {"PCRE2 link flags", PCRE2_LDFLAGS},
 #endif
-#ifdef PCRE_LIBS
-        {"PCRE libraries", PCRE_LIBS},
+#ifdef PCRE2_LIBS
+        {"PCRE2 libraries", PCRE2_LIBS},
 #endif
 #ifdef TCL_PATCH_LEVEL
         {"TCL version", TCL_PATCH_LEVEL},

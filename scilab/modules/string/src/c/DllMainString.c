@@ -1,4 +1,4 @@
-
+﻿
 /*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) INRIA - Allan CORNET
@@ -23,8 +23,7 @@
 #include <vld.h>
 #endif
 /*--------------------------------------------------------------------------*/
-#pragma comment(lib,"../../../../bin/pcre.lib")
-#pragma comment(lib,"../../../../bin/pcreposix.lib")
+#pragma comment(lib, "../../../../bin/pcre2-16.lib")
 #pragma comment(lib,"../../../../bin/libintl.lib")
 /*--------------------------------------------------------------------------*/
 int WINAPI DllMain (HINSTANCE hInstance , DWORD reason, PVOID pvReserved)
