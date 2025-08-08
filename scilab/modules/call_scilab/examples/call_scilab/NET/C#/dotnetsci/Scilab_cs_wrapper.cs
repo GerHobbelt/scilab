@@ -52,7 +52,7 @@ namespace DotNetScilab
         [DllImport(CALL_SCILAB_DLL, CharSet = CharSet.Ansi)]
         public static extern int StartScilab([In] String SCIpath,
                                               [In] String ScilabStartup,
-                                              [In] Int32[] Stacksize);
+                                              [In] Int32 Stacksize);
         //=============================================================================
         /// <summary>
         /// import TerminateScilab from C (see call_scilab.h)

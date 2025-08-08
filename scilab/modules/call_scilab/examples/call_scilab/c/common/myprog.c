@@ -145,9 +145,9 @@ static int third_example(void)
 int main(void)
 {
 #ifdef _MSC_VER
-    if ( StartScilab(NULL, NULL, NULL) == FALSE )
+    if ( StartScilab(NULL, NULL, 0) == FALSE )
 #else
-    if ( StartScilab(getenv("SCI"), NULL, NULL) == FALSE )
+    if ( StartScilab(getenv("SCI"), NULL, 0) == FALSE )
 #endif
     {
         fprintf(stderr, "Error while calling StartScilab\n");

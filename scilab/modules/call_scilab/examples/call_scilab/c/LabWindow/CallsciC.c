@@ -137,7 +137,7 @@ static int example3(void)
 int main(void)
 /* int WINAPI WinMain (HINSTANCE hInstance, HINSTANCE hPrevInstance,LPSTR szCmdLine, int iCmdShow) */
 {
-    if ( StartScilab(NULL, NULL, NULL) == FALSE )
+    if ( StartScilab(NULL, NULL, 0) == FALSE )
     {
         printf("Error : StartScilab\n");
     }

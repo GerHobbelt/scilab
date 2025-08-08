@@ -62,7 +62,7 @@ namespace DotNetScilab
             withGraphics = false;
 
             // start Scilab engine configurated without java
-            Scilab_cs_wrapper.StartScilab(null, null, null);
+            Scilab_cs_wrapper.StartScilab(null, null, 0);
         }
         //=============================================================================
         public Scilab(Boolean _bWithGraphics)
