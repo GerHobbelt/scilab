@@ -750,6 +750,25 @@ void CodePrinterVisitor::visit(const ast::VarDec & e)
 
 void CodePrinterVisitor::visit(const ast::FunctionDec & e)
 {
+    // Lambda
+    if (e.isLambda())
+    {
+        printer.handleExpStart(&e);
+        printer.handleFunctionKwds(SCI_LAMBDA); 
+        printer.handleOpenClose(SCI_OPEN_ARGS);
+        e.getArgs().accept(*this);
+        printer.handleOpenClose(SCI_CLOSE_ARGS);
+        printer.handleNothing(L" ");
+        printer.handleFunctionKwds(L"->");
+        printer.handleNothing(L" ");
+        printer.handleOpenClose(SCI_OPEN_LAMBDA);
+        e.getBody().accept(*this);
+        printer.handleOpenClose(SCI_CLOSE_LAMBDA);
+        printer.handleExpEnd(&e);
+
+        return;
+    }
+
     printer.handleExpStart(&e);
     printer.handleFunctionKwds(SCI_FUNCTION);
     printer.handleNothing(L" ");

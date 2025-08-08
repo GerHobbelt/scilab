@@ -73,8 +73,8 @@
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-covStart(isempty)                      // instrument isempty by macro value
-for i=1:1e5; isempty(i); end           // run
+covStart(isnan)                        // instrument isnan by macro value
+for i=1:1e5; isnan(i); end             // run
 covWrite("html", "TMPDIR/coverage")    // write runtime information to a directory
 covStop();                             // remove any instrumentation
     ]]></programlisting>
@@ -90,7 +90,7 @@ covStart(["SCI\modules\xcos\macros"                 "xcos" ; ..
           "SCI\modules\scicos\macros\scicos_utils"  "scicos_utils"]);
 
 // run the bench
-importXcosDiagram("modules\xcos\demos\Cont.Disc-Observer.zcos");
+importXcosDiagram("SCI\modules\xcos\demos\Cont.Disc-Observer.zcos");
 scicos_simulate(scs_m, list(), "nw");
 
 // write the output

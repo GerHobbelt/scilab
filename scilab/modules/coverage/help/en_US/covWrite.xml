@@ -80,29 +80,39 @@
         <refsect3>
             <title>Basic example</title>
             <programlisting role="example"><![CDATA[
-covStart(isempty)                      // activate isempty for performance measurement
-for i = 1:1e5; isempty(i); end         // run it
+covStart(isnan)                        // activate isnan for performance measurement
+for i = 1:1e5; isnan(i); end           // run it
 covWrite("html", "TMPDIR/coverage")    // write runtime performance results to a directory
 covStop();                             // deactivate runtime measurement mode for all functions
 
-winopen(fullfile(TMPDIR, "coverage/isempty.html"))   // Displays results (For Windows users)
+f = figure("infobar_visible", "off", "toolbar_visible", "off", ...
+    "menubar", "none", "default_axes", "off", ...
+    "axes_size", [800 600], ...
+    "layout", "border");
+
+fr = uicontrol(f, "style", "frame", "backgroundcolor", [1 1 1], "layout", "border");
+
+browser = uicontrol(fr, ...
+    "style", "browser", ...
+    "string", fullfile(TMPDIR, "coverage/isnan.html"), ...
+    "tag", "browser"); // Displays results
         ]]></programlisting>
         </refsect3>
         <refsect3>
         <title>Create two binaries, merge them, and export merged results into HTML</title>
             <programlisting role="example"><![CDATA[
-covStart(isempty)
-for i=1:1e5; isempty(i); end
-covWrite("binary", "TMPDIR/isempty1")  // write the 1st binary
+covStart(isnan)
+for i=1:1e5; isnan(i); end
+covWrite("binary", "TMPDIR/isnan1")    // write the 1st binary
 covStop();                             // stop the measurement mode
 
-covStart(isempty)
-for i=1:1e5; isempty(string(i)); end
-covWrite("binary", "TMPDIR/isempty2")  // write other runtime results
+covStart(isnan)
+for i=1:1e5; isnan(string(i)); end
+covWrite("binary", "TMPDIR/isnan2")  // write other runtime results
 covStop();
 
-covMerge(["TMPDIR/isempty1" "TMPDIR/isempty2"], "TMPDIR/isempty") // merge them
-covWrite("html", "TMPDIR/isempty", "TMPDIR/coverage") // render the results as HTML
+covMerge(["TMPDIR/isnan1" "TMPDIR/isnan2"], "TMPDIR/isnan") // merge them
+covWrite("html", "TMPDIR/isnan", "TMPDIR/coverage") // render the results as HTML
         ]]></programlisting>
         </refsect3>
     </refsection>
@@ -132,4 +142,3 @@ covWrite("html", "TMPDIR/isempty", "TMPDIR/coverage") // render the results as H
         </revhistory>
     </refsection>
 </refentry>
-

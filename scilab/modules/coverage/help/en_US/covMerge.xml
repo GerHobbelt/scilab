@@ -38,18 +38,18 @@
     <refsection>
         <title>Example</title>
         <programlisting role="example"><![CDATA[
-covStart(isempty)
-for i=1:1e5; isempty(i); end
-covWrite("binary", "TMPDIR/isempty1")  // write runtime information
+covStart(isnan)
+for i=1:1e5; isnan(i); end
+covWrite("binary", "TMPDIR/isnan1")  // write runtime information
 covStop();                             // clear instrumentation
 
-covStart(isempty)
-for i=1:1e5; isempty(string(i)); end
-covWrite("binary", "TMPDIR/isempty2")  // write other runtime information
+covStart(isnan)
+for i=1:1e5; isnan(string(i)); end
+covWrite("binary", "TMPDIR/isnan2")  // write other runtime information
 covStop();
 
-covMerge(["TMPDIR/isempty1" "TMPDIR/isempty2"], "TMPDIR/isempty") // merge them
-covWrite("html", "TMPDIR/isempty", "TMPDIR/coverage") // render the information as HTML
+covMerge(["TMPDIR/isnan1" "TMPDIR/isnan2"], "TMPDIR/isnan") // merge them
+covWrite("html", "TMPDIR/isnan", "TMPDIR/coverage") // render the information as HTML
     ]]></programlisting>
     </refsection>
     <refsection role="see also">
@@ -67,4 +67,3 @@ covWrite("html", "TMPDIR/isempty", "TMPDIR/coverage") // render the information 
         </simplelist>
     </refsection>
 </refentry>
-
