@@ -92,7 +92,17 @@ public class AxesRulerSpriteFactory implements RulerSpriteFactory {
             if (axisProperty.getLogFlag()) {
                 return createScientificStyleSprite(value, textureManager);
             } else {
-                return createSimpleSprite(adaptedFormat.format(value), textureManager);
+                String text;
+                if (axisProperty.getFormat().isEmpty()) {
+                	text = adaptedFormat.format(value);
+                } else {
+                	// x_s*(X-x_t)
+                    // default [x_s, x_t] = {1., 0.}
+                    Double[] x_st = axisProperty.getSTFactors();
+                    double displayValue = x_st[0] * (value - x_st[1]);
+                	text = String.format(axisProperty.getFormat(), displayValue);
+                }
+                return createSimpleSprite(text, textureManager);
             }
         } else {
             FormattedText formattedText = getTextAtValue(value);
