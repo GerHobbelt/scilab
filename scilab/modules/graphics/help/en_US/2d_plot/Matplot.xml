@@ -35,7 +35,7 @@
                 <term>a</term>
                 <listitem>
                     <para>
-                        a real matrix of size (<literal>n1</literal>, <literal>n2</literal>).
+                        <literal>m</literal>-by-<literal>n</literal> matrix or <literal>m</literal>-by-<literal>n</literal>-by-<literal>nc</literal> hypermatrix of decimal, (u)int8, (u)int16, or (u)int32 numbers representing a matrix of <literal>m</literal>-by-<literal>n</literal> colors on <literal>nc</literal> (1, 3 or 4) channels to be plotted. See <link linkend="Matplot_properties">Matplot properties</link> for more information.
                     </para>
                 </listitem>
             </varlistentry>
