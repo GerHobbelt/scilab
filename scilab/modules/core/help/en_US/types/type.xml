@@ -102,7 +102,7 @@
             <varlistentry>
                 <term>10</term>
                 <listitem>
-                    <link linkend="strings">text objects</link>.
+                    <link linkend="strings">character string</link>.
                 </listitem>
             </varlistentry>
             <varlistentry>

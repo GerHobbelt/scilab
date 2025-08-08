@@ -20,7 +20,7 @@
           xmlns:scilab="http://www.scilab.org" xml:id="string" xml:lang="en">
     <refnamediv>
         <refname>string</refname>
-        <refpurpose>conversion to string</refpurpose>
+        <refpurpose>conversion to character string</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -53,7 +53,7 @@
     <refsection>
         <title>Description</title>
         <para>
-            The <function>string</function> function converts a matrix <varname>x</varname> into a matrix of strings.
+            The <function>string</function> function converts a matrix <varname>x</varname> into a matrix of strings (eg. text).
         </para>
         <para>
             If <varname>SciFun</varname> is a function, <literal>[out,in,text] = string(SciFun)</literal>
@@ -114,6 +114,9 @@
         <title>See also</title>
         <simplelist type="inline">
             <member>
+                <link linkend="strings"/>
+            </member>
+            <member>
                 <link linkend="format">format</link>
             </member>
             <member>
@@ -123,16 +126,7 @@
                 <link linkend="msprintf">msprintf</link>
             </member>
             <member>
-                <link linkend="tree2code">tree2code</link>
-            </member>
-            <member>
-                <link linkend="pol2str">pol2str</link>
-            </member>
-            <member>
                 <link linkend="execstr">execstr</link>
-            </member>
-            <member>
-                <link linkend="evstr">evstr</link>
             </member>
             <member>
                 <link linkend="strtod">strtod</link>

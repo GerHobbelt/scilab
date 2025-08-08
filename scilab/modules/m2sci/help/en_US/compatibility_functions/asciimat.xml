@@ -110,7 +110,7 @@ asciimat(['ab';'cd']) - asciimat(['ef';'gh'])
                 <emphasis role="bold">For any <varname>text</varname> array of any sizes,
                 made only of empty strings ""</emphasis>, <literal>asciimat(text)</literal>
                 returns []. Indeed, <literal>asciimat(…)</literal> considers "" as a void vector
-                of (indexed) characters as in Octave/Matlab, not as a Scilab text object.
+                of (indexed) characters as in Octave/Matlab, not as a Scilab character string.
                 </warning>
             </para>
             <para>
