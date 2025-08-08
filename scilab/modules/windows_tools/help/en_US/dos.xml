@@ -22,7 +22,7 @@
         <refname>dos</refname>
         <refpurpose>
         executes some DOS instructions (Windows only)
-        <emphasis role="bold">This function is obsolete. Please use <link linkend="system">system</link> instead.</emphasis>
+        <emphasis role="bold">This function is obsolete. Please use <link linkend="host">host</link> instead.</emphasis>
         </refpurpose>
     </refnamediv>
     <refsynopsisdiv>
@@ -199,7 +199,7 @@ getenv TEST
             <revision>
                 <revnumber>2026.0.0</revnumber>
                 <revdescription>
-                    <para>dos is obsolete, use system instead.</para>
+                    <para>Tagged obsolete, use host instead.</para>
                 </revdescription>
             </revision>
         </revhistory>
