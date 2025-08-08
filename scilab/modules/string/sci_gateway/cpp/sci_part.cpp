@@ -40,6 +40,24 @@ extern "C"
 #include <string.h>
 }
 /*--------------------------------------------------------------------------*/
+inline double evaluate_poly(int dollar, types::SinglePoly* pSP)
+{
+    double oR, oC;
+    pSP->evaluate(dollar, 0, &oR, &oC);
+    return oR;
+};
+inline double evaluate_poly(types::String* pS, types::Polynom* pP)
+{
+    if(!pP->isScalar())
+        return std::numeric_limits<double>::quiet_NaN();
+    if(pP->getVariableName() != L"$")
+        return std::numeric_limits<double>::signaling_NaN();
+    types::SinglePoly* pSP = pP->get(0);
+
+    int dollar = (int) wcslen(pS->get(0));
+    return evaluate_poly(dollar, pSP);
+};
+/*--------------------------------------------------------------------------*/
 types::Function::ReturnValue sci_part(types::typed_list& in, int _iRetCount, types::typed_list& out)
 {
     if (in.size() != 2)
@@ -70,35 +88,20 @@ types::Function::ReturnValue sci_part(types::typed_list& in, int _iRetCount, typ
     types::String* pS = in[0]->getAs<types::String>();
     std::vector<int> index;
 
-    auto evaluate_poly = [](types::String* pS, types::Polynom* pP)
-    {
-        if(!pP->isScalar())
-            return std::numeric_limits<double>::quiet_NaN();
-        if(pP->getVariableName() != L"$")
-            return std::numeric_limits<double>::signaling_NaN();
-
-        types::SinglePoly* pSP = pP->get(0);
-
-        int dollar = (int) wcslen(pS->get(0));
-        double* coefs = pSP->get();
-        const int size = pSP->getSize();
-        double acc = coefs[0];
-        for (int i = 1; i < size; i++)
-        {
-            acc += coefs[i] * dollar;
-        }
-
-        return acc;
-    };
-
     // corner case: for '$' on a single string we don't need to call the overload
-    if (in[1]->isPoly() && pS->isScalar())
+    if (in[1]->isPoly() &&
+        in[1]->getAs<types::Polynom>()->getVariableName() == L"$" &&
+        pS->isScalar())
     {
+        int dollar = (int) wcslen(pS->get(0));
         types::Polynom* pP = in[1]->getAs<types::Polynom>();
-        double acc = evaluate_poly(pS, pP);
-        if (acc > 0) // handle negative values, %inf and %nan
+        for (int pos = 0; pos < pP->getSize(); pos++)
         {
-            index.push_back((int) acc);
+            double acc = evaluate_poly(dollar, pP->get(pos));
+            if (acc > 0) // handle negative values, %inf and %nan
+            {
+                index.push_back((int) acc);
+            }
         }
     }
 
