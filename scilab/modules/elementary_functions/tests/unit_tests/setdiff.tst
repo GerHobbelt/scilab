@@ -148,6 +148,134 @@ for f = list(string, double, int8, uint8, int16, uint16, int32, uint32, int64, u
     assert_checkequal(k,    [7 11]');
 end
 
+// duration
+A = hours([ 1 8 4 5 2 1]);
+B = hours([ 1 7 4]);
+s = setdiff(A, B);
+assert_checkequal(s, hours([2 5 8]));
+
+[s, ka] = setdiff(A, B);
+assert_checkequal(s, hours([2 5 8]));
+assert_checkequal(ka, [5 4 2]);
+
+s = setdiff(A', B');
+assert_checkequal(s, hours([2; 5; 8]));
+
+[s, ka] = setdiff(A', B');
+assert_checkequal(s, hours([2; 5; 8]));
+assert_checkequal(ka, [5; 4; 2]);
+
+A = hours([1 2 2 1;3 1 2 2]);
+B = hours([0 3 0 3;0 2 1 0]);
+ref = hours([1 1 2 2;2 3 1 2]);
+[s, k] = setdiff(A, B, "c");
+assert_checkequal(s, ref);
+assert_checkequal(k, [4 1 2 3]);
+
+[s, k] = setdiff(A, B, "r");
+assert_checkequal(s, A);
+assert_checkequal(k, [1;2]);
+
+// datetime
+A = datetime(2025, 8, [ 1 8 4 5 2 1]);
+B = datetime(2025, 8, [ 1 7 4]);
+s = setdiff(A, B);
+assert_checkequal(s, datetime(2025, 8, [2 5 8]));
+
+[s, ka] = setdiff(A, B);
+assert_checkequal(s, datetime(2025, 8, [2 5 8]));
+assert_checkequal(ka, [5 4 2]);
+
+s = setdiff(A', B');
+assert_checkequal(s, datetime(2025, 8, [2; 5; 8]));
+
+[s, ka] = setdiff(A', B');
+assert_checkequal(s, datetime(2025, 8, [2; 5; 8]));
+assert_checkequal(ka, [5; 4; 2]);
+
+A = datetime(2025, 7, 1) + hours([1 2 2 1;3 1 2 2]);
+B = datetime(2025, 7, 1) + hours([0 3 0 3;0 2 1 0]);
+ref = datetime(2025, 7, 1) + hours([1 1 2 2;2 3 1 2]);
+[s, k] = setdiff(A, B, "c");
+assert_checkequal(s, ref);
+assert_checkequal(k, [4 1 2 3]);
+
+[s, k] = setdiff(A, B, "r");
+assert_checkequal(s, A);
+assert_checkequal(k, [1;2]);
+
+// table
+A = table([1; 8; 4; 5; 2; 1]);
+B = table([9; 7; 4; 2; 1; 4]);
+s = setdiff(A, B);
+assert_checkequal(s, table([5; 8]));
+
+[s, k] = setdiff(A, B);
+assert_checkequal(k, [4; 2]);
+
+A = table([0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = table([1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+[s, k] = setdiff(A,B);
+assert_checkequal(s, A(k, :));
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = table([2;3;4;1], ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[s, k] = setdiff(A,B);
+assert_checkequal(s, A(k, :));
+
+A = table([1;3;4;2], ["d";"c";"f";"h"], [%f;%t;%t; %f], "VariableNames", ["double", "string", "boolean"]);
+B = table([2;3;4;1], [%t;%t;%t;%t], ["d";"c";"f";"h"], "VariableNames", ["double", "boolean", "string"]);
+[s, k] = setdiff(A,B);
+assert_checkequal(s, A(k, :));
+
+// timeseries
+// timeseries
+A = timeseries(hours(1:6)', [1; 8; 4; 5; 2; 1]);
+B = timeseries(hours([1; 2; 3; 5; 1; 7]), [9; 7; 4; 2; 1; 4]);
+s = setdiff(A, B);
+assert_checkequal(s, timeseries(hours([2;4;6]), [8;5;1]));
+
+[s, k] = setdiff(A, B);
+assert_checkequal(k, [2;4;6]);
+
+A = timeseries(hours(1:5)',[0,0,1,1,1;
+      0,1,1,1,1;
+      2,0,1,1,1;
+      0,2,2,2,2;
+      2,0,1,1,1;
+      0,0,1,1,3]');
+B = timeseries(hours([5; 1; 10]),[1,0,1;
+     1,0,2;
+     1,2,3;
+     2,0,4;
+     1,2,5;
+     3,0,6]');
+[s, k] = setdiff(A,B);
+assert_checkequal(s, A(k, :));
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t;%f]);
+B = timeseries(hours([2;3;4;1]), ["d";"c";"f";"h"], [%t;%t;%t;%t]);
+
+[s, k] = setdiff(A,B);
+assert_checkequal(s, A(k, :));
+
+A = timeseries(hours([1;3;4;2]), ["d";"c";"f";"h"], [%f;%t;%t;%f], 'VariableNames', ["Time", "string", "boolean"]);
+B = timeseries(hours([2;3;4;1]), [%t;%t;%t;%t], ["d";"c";"f";"h"], 'VariableNames', ["Time", "boolean", "string"]);
+[s, k] = setdiff(A, B);
+assert_checkequal(s, A(k, :));
+
+
 // ===================================================================
 // Error messages
 msg = "%s: Wrong number of input arguments: %d to %d expected.\n";
