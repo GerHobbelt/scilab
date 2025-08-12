@@ -23,6 +23,7 @@ extern "C"
 
 static pipeinfo pipeSpawnOut = {INVALID_PIPE, NULL, 0};
 static pipeinfo pipeSpawnErr = {INVALID_PIPE, NULL, 0};
+static void setEmptyOutputs(int _iOutputs, types::String** _pStrOut, types::String** _pStrErr);
 
 int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String** _pStrOut, types::String** _pStrErr, int _iEcho)
 {
@@ -36,17 +37,8 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
 
     if (_pstCommand.empty())
     {
-        if (_iOutputs > 0)
-        {
-            *_pStrOut = new types::String("");
-        }
-
-        if (_iOutputs == 2)
-        {
-            *_pStrErr = new types::String("");
-        }
-
-        return 1;
+        setEmptyOutputs(_iOutputs, _pStrOut, _pStrErr);
+        return iExitCode;
     }
 
     pipeSpawnOut.echo = _iEcho;
@@ -126,7 +118,8 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
 
     if (!ok)
     {
-        return 2;
+        setEmptyOutputs(_iOutputs, _pStrOut, _pStrErr);
+        return -1;
     }
 
     // close our references to the write handles that have now been inherited
@@ -153,7 +146,8 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
     {
         if(pipe(pipeOut) == -1)
         {
-            return 1;
+            setEmptyOutputs(_iOutputs, _pStrOut, _pStrErr);
+            return -1;
         }
     }
 
@@ -161,14 +155,16 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
     {
         if(pipe(pipeErr) == -1)
         {
-            return 1;
+            setEmptyOutputs(_iOutputs, _pStrOut, _pStrErr);
+            return -1;
         }
     }
 
     pid = fork();
     if (pid == -1)
     {
-        return 1;
+        setEmptyOutputs(_iOutputs, _pStrOut, _pStrErr);
+        return -1;
     }
 
     if (pid == 0)
@@ -251,10 +247,6 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
     iExitCode = (int)ExitCode;
 #else
     waitpid(pid, &status, 0);
-    if (WIFEXITED(status) == false)
-    {
-        return -1;
-    }
     iExitCode = WEXITSTATUS(status);
 #endif
 
@@ -296,4 +288,17 @@ int spawncommand(const std::wstring& _pstCommand, int _iOutputs, types::String**
     }
 
     return iExitCode;
+}
+
+void setEmptyOutputs(int _iOutputs, types::String** _pStrOut, types::String** _pStrErr)
+{
+    if (_iOutputs > 0)
+    {
+        *_pStrOut = new types::String("");
+    }
+
+    if (_iOutputs == 2)
+    {
+        *_pStrErr = new types::String("");
+    }
 }
