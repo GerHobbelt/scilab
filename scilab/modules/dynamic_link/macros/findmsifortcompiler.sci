@@ -1,5 +1,5 @@
 // Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-// Copyright (C) 2023 - Dassault Systèmes S.E. - Antoine ELIAS
+// Copyright (C) 2025 - Dassault Systèmes S.E. - Antoine ELIAS
 //
 // This file is hereby licensed under the terms of the GNU GPL v2.0,
 // pursuant to article 5.3.4 of the CeCILL v.2.1.
@@ -12,10 +12,8 @@
 function ifortCompiler = findmsifortcompiler()
     ifortCompiler = "unknown"; // unknown
     if getos() == "Windows" then
-        if getenv("IFORT_COMPILER23", "") <> "" then
-            ifortCompiler = "Intel oneAPI HPC 2023";
-        elseif getenv("IFORT_COMPILER22", "") <> "" then
-            ifortCompiler = "Intel oneAPI HPC 2022";
+        if getenv("IFORT_COMPILER25", "") <> "" then
+            ifortCompiler = "Intel oneAPI HPC 2025";
         end
     else // NOT Windows
         ifortCompiler = "unknown"; // unknown
