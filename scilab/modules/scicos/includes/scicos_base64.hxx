@@ -204,10 +204,11 @@ std::errc from_string(const std::string_view& str, T& result)
         }
         return {};
     }
-    // default implementation is provided by std::from_chars
-#ifdef __APPLE__
+    // implementation may be provided by https://github.com/fastfloat/fast_float
+#ifdef FASTFLOAT_VERSION_MAJOR 
     auto [ptr, ec] = fast_float::from_chars(str.data(), str.data() + str.size(), result);
 #else
+    // use std::from_chars otherwise (eg. C++17)
     auto [ptr, ec] = std::from_chars(str.data(), str.data() + str.size(), result);
 #endif
     return ec;
