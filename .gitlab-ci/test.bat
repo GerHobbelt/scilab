@@ -1,7 +1,6 @@
 REM Execute module test for a module named %TEST%, download and install latest build if needed
 
 @echo on
-set INSTALLER_DIR=%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%
 set INSTALL_DIR=%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\install
 set INSTALL_LOCK=%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\install.lock
 set INSTALL_FAIL=%SCILAB_COMMON_PATH%\%SCI_VERSION_STRING%\install.failed
@@ -39,7 +38,7 @@ if errorlevel 1 (
   goto :wait_install
 )
 
-call "%INSTALLER_DIR%\%SCI_VERSION_STRING%.bin.%ARCH%.exe" ^
+call "%SCI_VERSION_STRING%.bin.%ARCH%.exe" ^
   /TASKS=!desktopicon,!AssociateSCESCI,!AssociateTSTDEM,!AssociateSCICOS,!AssociateSOD ^
   /NOICONS /SUPPRESSMSGBOXES /SILENT /SP- ^
   /LOG="%LOG_PATH%\test_iss_install_%CI_COMMIT_SHORT_SHA%.log" ^

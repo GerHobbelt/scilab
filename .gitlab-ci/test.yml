@@ -9,7 +9,7 @@
 
 .windows_test:
   stage: test
-  tags: [x64_windows, scilab]
+  tags: [x64_windows, shell, scilab]
   variables:
     ARTIFACT_DOWNLOAD_ATTEMPTS: 3
     GET_SOURCES_ATTEMPTS: 3
