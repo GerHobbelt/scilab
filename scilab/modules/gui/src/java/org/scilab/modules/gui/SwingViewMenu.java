@@ -106,7 +106,7 @@ public final class SwingViewMenu {
                             ((SwingScilabMenuItem) uimenu).setIcon(new ImageIcon(icon));
                         } else if (uimenu instanceof SwingScilabMenu) {
                             ((SwingScilabMenu) uimenu).setIcon(new ImageIcon(icon));
-                        } else if (uimenu instanceof SwingScilabMenu) {
+                        } else if (uimenu instanceof SwingScilabCheckBoxMenuItem) {
                             ((SwingScilabCheckBoxMenuItem) uimenu).setIcon(new ImageIcon(icon));
                         }
                     } catch (IOException e) {
