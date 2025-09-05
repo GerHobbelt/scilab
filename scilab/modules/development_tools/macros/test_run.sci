@@ -1237,6 +1237,9 @@ function status = test_single(_module, _testPath, _testName)
     // The try/catch is desactived ~line 513 by "try_catch     = %f;"
     // and the following line remove empty lines to reproduce the old operation.
     dia(find(dia == "")) = [];
+    
+    // Ignore some warnings (when run in VMware environment)
+    dia(grep(dia, "vm3dgl: ")) = []; 
 
     //Check for execution errors
     dia_tmp = dia;
@@ -1535,6 +1538,7 @@ endfunction
 
 function name = splitModule(name)
     if ~isempty( regexp(stripblanks(name),"/\|/") ) then
+
         name = stripblanks( strsubst( strsplit(name,regexp(stripblanks(name),"/\|/")) , "/\|$/","","r" ) );
     end
 endfunction
