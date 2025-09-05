@@ -20,7 +20,9 @@ extern "C"
 #include "charEncoding.h"
 #include "BOOL.h"
 #include "sci_malloc.h"
+#ifdef WITH_GUI
 #include "getScilabJavaVM.h"
+#endif
 }
 
 #define CR '\r'
@@ -73,6 +75,7 @@ void* ReadFromPipe(void* data)
         pi->buffer = os_strdup(ss.str().data());
     }
 
+#ifdef WITH_GUI
     if(getScilabMode() == SCILAB_STD)
     {
         // scilabWrite and scilabError will attach this thread
@@ -82,6 +85,7 @@ void* ReadFromPipe(void* data)
         JavaVM* vm = getScilabJavaVM();
         vm->DetachCurrentThread();
     }
+#endif
 
 #ifndef _MSC_VER
     fclose(file);
