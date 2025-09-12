@@ -205,7 +205,7 @@ std::errc from_string(const std::string_view& str, T& result)
         return {};
     }
     // implementation may be provided by https://github.com/fastfloat/fast_float
-#ifdef FASTFLOAT_VERSION_MAJOR 
+#ifdef FASTFLOAT_FLOAT_COMMON_H 
     auto [ptr, ec] = fast_float::from_chars(str.data(), str.data() + str.size(), result);
 #else
     // use std::from_chars otherwise (eg. C++17)
