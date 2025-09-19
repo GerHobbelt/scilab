@@ -241,6 +241,21 @@ assert_checkequal(ts.Properties.TimeStep, days(1));
 assert_checkequal(ts.Properties.StartTime, ts.Time(1));
 assert_checkequal(ts.Properties.SampleRate, seconds(1)/days(1));
 
+// with integers
+inttyp = ["int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64"];
+mat = [1 2;3 4];
+for i = inttyp
+    execstr("m = " + i + "(mat)");
+    t = timeseries(hours([1;2]), m);
+    assert_checkequal(typeof(t("Var1")), i);
+    assert_checkequal(typeof(t.Var2), i);
+
+    execstr("b = t(""Var1"") == " + i + "([1; 3])");
+    assert_checktrue(b);
+    execstr("b = t.Var2 == " + i + "([2; 4])");
+    assert_checktrue(b);
+end
+
 // -----------------------------------------------------------------------
 // Errors
 // -----------------------------------------------------------------------

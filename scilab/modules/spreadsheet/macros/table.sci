@@ -2,10 +2,6 @@
 // Copyright (C) 2022 - Dassault Systèmes S.E. - Adeline CARNIS
 // Copyright (C) 2022 - Dassault Systèmes S.E. - Antoine ELIAS
 //
-// This file is hereby licensed under the terms of the GNU GPL v2.0,
-// pursuant to article 5.3.4 of the CeCILL v.2.1.
-// This file was originally licensed under the terms of the CeCILL v2.1,
-// and continues to be available under such terms.
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
@@ -81,8 +77,9 @@ function t = table(varargin)
     ref_size = size(varargin(1));
     for i = 1:rhs
         tmp = varargin(i);
-        if and(typeof(tmp) <> ["constant", "boolean", "string", "duration", "datetime", "calendarduration"]) then
-            error(msprintf(_("%s: Wrong type for input argument #%d: double, boolean or string matrix expected.\n"), fname, i, varargin(i)));
+        typ = ["constant", "boolean", "string", "duration", "datetime", "calendarduration", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64"];
+        if and(typeof(tmp) <> typ) then
+            error(msprintf(_("%s: Wrong type for input argument #%d: Must be %s.\n"), fname, i, varargin(i), sci2exp(typ)));
         end
 
         s = size(tmp);

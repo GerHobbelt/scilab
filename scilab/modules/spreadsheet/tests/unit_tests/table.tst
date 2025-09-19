@@ -298,6 +298,21 @@ assert_checkequal(t, table([0 1; 1 2; 2 3; 3 4], "VariableNames", ["A", "B"], "R
 t.Row($) = "d";
 assert_checkequal(t.Row, ["a"; "b"; "c"; "d"]);
 
+// table with integers
+inttyp = ["int8", "int16", "int32", "int64", "uint8", "uint16", "uint32", "uint64"];
+mat = [1 2;3 4];
+for i = inttyp
+    execstr("m = " + i + "(mat)");
+    t = table(m);
+    assert_checkequal(typeof(t("Var1")), i);
+    assert_checkequal(typeof(t.Var2), i);
+
+    execstr("b = t(""Var1"") == " + i + "([1; 3])");
+    assert_checktrue(b);
+    execstr("b = t.Var2 == " + i + "([2; 4])");
+    assert_checktrue(b);
+end
+
 // Test case-sensitivity on options
 assert_checktrue(execstr("table([1;2;3], [4;5;6], [7;8;9], ""rowNames"", [""R1"";""R2"";""R3""], ""variableNames"", [""a"", ""b"", ""c""])", "errcatch") == 0);
 assert_checktrue(execstr("table([1;2], [4;5], ""variablenames"", [""a1"", ""a2""], ""roWnameS"", [""b1"";""b2""])", "errcatch") == 0);

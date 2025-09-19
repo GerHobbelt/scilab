@@ -32,14 +32,16 @@
                 <term>var1, ..., varN</term>
                 <listitem>
                     <para>vector or matrix with the same number of rows.</para>
-                    <para>Each var can be different type: double, boolean, string, datetime or duration</para>
+                    <para>Each var can be different type: double, boolean, string, integers, 
+                        <link linkend="datetime">datetime</link>, <link linkend="duration">duration</link>
+                         and <link linkend="calendarDuration">calendarDuration</link></para>
                     <para/>
                 </listitem>
             </varlistentry>
             <varlistentry>
                 <term>m</term>
                 <listitem>
-                    <para>double, boolean, string, datetime or duration matrix</para>
+                    <para>double, boolean, string, integers, datetime, duration or calendarDuration matrix</para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -261,6 +263,12 @@
                 <revnumber>2024.0.0</revnumber>
                 <revdescription>
                     Introduction in Scilab.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Support for integers types added.
                 </revdescription>
             </revision>
         </revhistory>

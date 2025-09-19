@@ -39,7 +39,9 @@
                 <term>var1, ..., varN</term>
                 <listitem>
                     <para>vector with the same number of rows.</para>
-                    <para>Each var can be different type.</para>
+                    <para>Each var can be different type: double, boolean, string, integers, 
+                        <link linkend="datetime">datetime</link>, <link linkend="duration">duration</link>
+                         and <link linkend="calendarDuration">calendarDuration</link></para>
                     <para/>
                 </listitem>
             </varlistentry>
@@ -368,6 +370,12 @@
                 <revnumber>2024.0.0</revnumber>
                 <revdescription>
                     Introduction in Scilab.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    Support for integers types added.
                 </revdescription>
             </revision>
         </revhistory>
