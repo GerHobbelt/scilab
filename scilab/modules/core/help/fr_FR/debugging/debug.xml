@@ -5,7 +5,7 @@
           xml:lang="fr" xml:id="debug">
     <refnamediv>
         <refname>debug</refname>
-        <refpurpose>Lance le mode débogage de Scilab</refpurpose>
+        <refpurpose>Lance le mode de débogage CLI de Scilab</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Séquence d'appel</title>
@@ -17,13 +17,18 @@
         <title>Description</title>
         <para>
             <literal>debug</literal> met Scilab en mode débogage pour les fonctions écrites en
-            langage Scilab. The prompt becomes <literal>debug> </literal>.
+            langage Scilab. Le prompt devient alors <literal>debug> </literal>.
         </para>
         <para>
             Ce mode permet de définir et gérer des points d'arrêt au sein des fonctions,
             d'exécuter des fonctions pas à pas, de lancer des exécutions avec arrêt sur erreur,
             etc.
         </para>
+        <warning>
+            <note>
+                Pour une version GUI, vous pouvez installer <link xlink:href="https://marketplace.visualstudio.com/items?itemName=scilab.scilab">l'extension Scilab Language Support</link> de Visual Studio Code (VS Code) afin de déboguer vos scripts Scilab en utilisant le débogeur intégré à Visual Studio Code.
+            </note>
+        </warning>
         <refsect3>
             <title>Commandes en mode débogage</title>
             <para>

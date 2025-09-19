@@ -5,7 +5,7 @@
           xml:lang="ru" xml:id="debug">
     <refnamediv>
         <refname>debug</refname>
-        <refpurpose>Среда отладки в Scilab</refpurpose>
+        <refpurpose>Среда отладки CLI в Scilab</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Синтаксис</title>
@@ -23,6 +23,11 @@
              Этот режим позволяет вам управлять <literal> точками останова </literal>,
              запускать выполнение с остановкой при ошибке, выполнять функцию шаг за шагом, ...
         </para>
+        <warning>
+            <note>
+                For a GUI version, you can install <link xlink:href="https://marketplace.visualstudio.com/items?itemName=scilab.scilab">Scilab Language Support extension</link> for Visual Studio Code (VS Code) and then debug your Scilab scripts using Visual Studio Code integrated debugger.
+            </note>
+        </warning>
         <refsect3>
             <title>Команды in debug mode</title>
             <para>

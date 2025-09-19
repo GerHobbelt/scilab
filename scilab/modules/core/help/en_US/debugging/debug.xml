@@ -5,7 +5,7 @@
           xml:lang="en" xml:id="debug">
     <refnamediv>
         <refname>debug</refname>
-        <refpurpose>enters the Scilab debugger mode</refpurpose>
+        <refpurpose>enters the Scilab CLI debugger mode</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -23,6 +23,11 @@
             This mode allows you to manage <literal>breakpoints</literal>,
             launch execution with stop on error, execute a function step by step, ...
         </para>
+        <note>
+            <para>
+                For a GUI version, you can install <link xlink:href="https://marketplace.visualstudio.com/items?itemName=scilab.scilab">Scilab Language Support extension</link> for Visual Studio Code (VS Code) and then debug your Scilab scripts using Visual Studio Code integrated debugger.
+            </para>
+        </note>
         <refsect3>
             <title>Commands available in debugging mode</title>
             <para>
