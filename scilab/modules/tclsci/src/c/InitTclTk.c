@@ -200,9 +200,13 @@ static void *DaemonOpenTCLsci(void* in)
             if ( Tk_Init(getTclInterp()) == TCL_ERROR)
             {
                 releaseTclInterp();
-                releaseTclInterpOnError();
                 Scierror(999, _("Tcl Error: Error during the TK initialization (Tk_Init): %s\n"), Tcl_GetStringResult(getTclInterp()));
                 releaseTclInterp();
+                FREE(SciPathShort);
+                SciPathShort = NULL;
+                FREE(TkScriptpathShort);
+                TkScriptpathShort = NULL;
+                releaseTclInterpOnError();
                 return (0);
             }
             else

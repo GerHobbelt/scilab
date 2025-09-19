@@ -69,6 +69,7 @@ extern "C"
 #include "scicurdir.h"
 #include "FileBrowserChDir.h"
 #include "InitializePreferences.h"
+#include "Scierror.h"
 
 #ifdef _MSC_VER
 #include "InitializeWindows_tools.h"
@@ -278,6 +279,7 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
     BOOL bConsoleStartupSucceeded = TRUE;
     if (_pSEI->iNoJvm == 0) // With JVM
     {
+
         bTCLStartupSucceeded = InitializeTclTk();
         bJVMStartupSucceeded = InitializeJVM();
         bGUIStartupSucceeded = InitializeGUI();
@@ -308,35 +310,31 @@ int StartScilabEngine(ScilabEngineInfo* _pSEI)
     }
 
     // Report initialization failure after startup but before user commands
+    // using fprintf(stderr, ...) to enforce proper reporting
     {
         if(bTCLStartupSucceeded == FALSE)
         {
-            std::wcerr << L"TCL Initialization failed." << std::endl;
-            std::wcerr << ConfigVariable::getLastErrorMessage() << std::endl;
+            fprintf(stderr, "TCL Initialization failed.\n%ls\n", ConfigVariable::getLastErrorMessage().c_str());
             // do not exit, this is an acceptable error on some systems
         }
         if(bJVMStartupSucceeded == FALSE)
         {
-            std::wcerr << L"JVM Initialization failed." << std::endl;
-            std::wcerr << ConfigVariable::getLastErrorMessage() << std::endl;
+            fprintf(stderr, "JVM Initialization failed.\n%ls\n", ConfigVariable::getLastErrorMessage().c_str());
             exit(-1);
         }
         if(bGUIStartupSucceeded == FALSE)
         {
-            std::wcerr << L"GUI Initialization failed." << std::endl;
-            std::wcerr << ConfigVariable::getLastErrorMessage() << std::endl;
+            fprintf(stderr, "GUI Initialization failed.\n%ls\n", ConfigVariable::getLastErrorMessage().c_str());
             exit(-1);
         }
         if(bClasspathStartupSucceeded == FALSE)
         {
-            std::wcerr << L"Classpath Initialization failed." << std::endl;
-            std::wcerr << ConfigVariable::getLastErrorMessage() << std::endl;
+            fprintf(stderr, "JVM Classpath Initialization failed.\n%ls\n", ConfigVariable::getLastErrorMessage().c_str());
             exit(-1);
         }
         if(bConsoleStartupSucceeded == FALSE)
         {
-            std::wcerr << L"Console Initialization failed." << std::endl;
-            std::wcerr << ConfigVariable::getLastErrorMessage() << std::endl;
+            fprintf(stderr, "Console Initialization failed.\n%ls\n", ConfigVariable::getLastErrorMessage().c_str());
             exit(-1);
         }
     }
