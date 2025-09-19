@@ -190,7 +190,7 @@ types::Function::ReturnValue sci_matrix(types::typed_list &in, int _iRetCount, t
 
     if (bOk == false)
     {
-        Scierror(999, _("%s: Input and output matrices must have the same number of elements.\n"), "matrix");
+        Scierror(999, _("%s: Wrong value for input arguments : Input array has size %d but requested dimensions have size %d.\n"), "matrix", pGTIn->getSize(), newSize);
         pGTOut->killMe();
         return types::Function::Error;
     }
