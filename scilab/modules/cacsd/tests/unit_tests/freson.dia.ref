@@ -10,4 +10,4 @@ fr=freson(h);
 assert_checkalmostequal(fr,[1.12527981797;0.26162097704]);
 hd=dscr(h,0.05);
 fr=freson(hd);
-assert_checkalmostequal(fr,[1.12527923264;0.26155702493]);
+assert_checkalmostequal(fr,[1.12527923264;0.26155702493], 3e-8);

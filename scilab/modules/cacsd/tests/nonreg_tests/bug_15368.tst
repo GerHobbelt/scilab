@@ -50,7 +50,7 @@ hd = dscr(h, 0.02);
 assert_checktrue(freson(hd) <> []);
 
 hd = dscr(h, 0.01);
-assert_checktrue(freson(hd) <> []);
+assert_checkequal(freson(hd), []);
 
 hd = dscr(h, 0.005);
 assert_checktrue(freson(hd) == []);

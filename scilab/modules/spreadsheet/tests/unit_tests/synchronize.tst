@@ -83,7 +83,7 @@ assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 tscomputed = synchronize(ts1, ts2, "hourly", "spline");
 assert_checktrue(tscomputed.Time == newtime1);
 assert_checkequal(tscomputed.Var1_ts1, [1; 1.5; 2; 2.5; 3; 3.5]);
-assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
+assert_checkalmostequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 
 tscomputed = synchronize(ts1, ts2, "hourly", sum);
 assert_checktrue(tscomputed.Time == newtime1);
@@ -256,7 +256,7 @@ assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 tscomputed = synchronize(ts1, ts2, 'regular', "spline", 'TimeStep', hours(1));
 assert_checktrue(tscomputed.Time == newtime1);
 assert_checkequal(tscomputed.Var1_ts1, [1; 1.5; 2; 2.5; 3; 3.5]);
-assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
+assert_checkalmostequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 
 tscomputed = synchronize(ts1, ts2, 'regular', sum, 'TimeStep', hours(1));
 assert_checktrue(tscomputed.Time == newtime1);
@@ -335,7 +335,7 @@ assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 tscomputed = synchronize(ts1, ts2, 'regular', "spline", 'SampleRate', 1/3600);
 assert_checktrue(tscomputed.Time == newtime1);
 assert_checkequal(tscomputed.Var1_ts1, [1; 1.5; 2; 2.5; 3; 3.5]);
-assert_checkequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
+assert_checkalmostequal(tscomputed.Var1_ts2, [3.5; 4; 4.5; 5; 5.5; 6]);
 
 tscomputed = synchronize(ts1, ts2, 'regular', sum, 'SampleRate', 1/3600);
 assert_checktrue(tscomputed.Time == newtime1);

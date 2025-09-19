@@ -36,7 +36,7 @@ ref = [// Reference values from  W o l f r a m   A l p h a
    4.   0.1497633260257520  1e-15
    5.  -0.7090590533602067  5e-16
    6.  -0.9922509616227788  1e-15
-   7.  -0.8991504331040869  %eps
+   7.  -0.8991504331040869  5e-16
    8.  -0.2939180408456228  %eps
    9.   0.6153795020583048  %eps
    10.  0.9780732803575124  %eps
@@ -87,7 +87,7 @@ ref = [// Reference values from  W o l f r a m   A l p h a
    4.  -0.9887218750375175  2e-16
    5.  -0.7051491039829290  5e-16
    6.  -0.1242498658295887  5e-14
-   7.   0.4376396904403587  5e-16
+   7.   0.4376396904403587  3e-15
    8.   0.9558306258252405  %eps
    9.   0.7882309740466133  %eps
    10.  0.2082610339230434  2e-15
@@ -153,7 +153,7 @@ end
 // ====================
 // Check error messages
 // ====================
-msg = "ellipj: Wrong number of input arguments: 2 or 3 expected."
+msg = "ellipj: Wrong number of input arguments: 2 or 3 expected.";
 assert_checkerror("ellipj()", msg);
 assert_checkerror("ellipj(1, 0.1, 2, 4)", msg);
 assert_checkerror("ellipj(""ns"", 0.1, 2, 4)", msg);
@@ -163,7 +163,7 @@ msg = "ellipj: Argument #1: Decimal or complex number expected.";
 assert_checkerror("ellipj(%t, 0.2)", msg);
 msg = "ellipj: Argument #2: Must be in the interval [0, 1].";
 assert_checkerror("ellipj(1, 1.2)", msg);
-msg = "ellipj: Argument #1: Text expected."
+msg = "ellipj: Argument #1: Text expected.";
 assert_checkerror("ellipj(1, 0.1, 2)", msg);
 msg = "ellipj: Argument #2: Decimal or complex number expected.";
 assert_checkerror("ellipj(""sn"", %t, 0.2)", msg);

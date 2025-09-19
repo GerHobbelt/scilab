@@ -105,7 +105,7 @@ assert_checktrue(T==lft(P,[2,2],R));
 P=[1 2 3; 4 5 6;7,8,9]/(s-1);R=[1 0;0 2]/s;
 T=lft(P,R);
 T_ref=(27*s-s^2+s^3)/(-6+23*s-22*s^2-2*s^3+s^4);
-assert_checkalmostequal (coeff((T-T_ref).num),[0 0 0],1e-10,1e-10);
+assert_checkalmostequal (coeff((T-T_ref).num, 0:2),[0 0 0],1e-10,1e-10);
 assert_checktrue(T==lft(P,[2,2],R));
 
 P=[1 2 3; 4 5 6]/(s-1);R=[1 0;0 2]/s;

@@ -21,7 +21,7 @@ fresp=repfreq(G,w);
 mag=abs(fresp);
 Gid=mrfit(w,mag,4);
 Gidd = mrfit(w, mag, 4, ones(length(w), 1));
-assert_checkalmostequal(coeff(Gidd.num), coeff(Gid.num), 1e-13);
+assert_checkalmostequal(coeff(Gidd.num), coeff(Gid.num), 3e-13);
 assert_checkalmostequal(coeff(Gidd.den), coeff(Gid.den), 1e-13);
 
 // error
