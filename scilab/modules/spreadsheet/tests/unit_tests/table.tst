@@ -316,3 +316,13 @@ end
 // Test case-sensitivity on options
 assert_checktrue(execstr("table([1;2;3], [4;5;6], [7;8;9], ""rowNames"", [""R1"";""R2"";""R3""], ""variableNames"", [""a"", ""b"", ""c""])", "errcatch") == 0);
 assert_checktrue(execstr("table([1;2], [4;5], ""variablenames"", [""a1"", ""a2""], ""roWnameS"", [""b1"";""b2""])", "errcatch") == 0);
+
+// RowNames 
+a = ["A" "B" "C" "0101"; "" "" "" ""];
+t = matrix2table(a, "RowNames", ["values" "non-values"]);
+assert_checkequal(t.Row, ["values"; "non-values"]);
+t = matrix2table(a, "RowNames", ["values" "non-values"]');
+assert_checkequal(t.Row, ["values"; "non-values"]);
+
+msg = msprintf(_("%s: Wrong size for ""%s"" argument: Must be a vector containing %d elements.\n"), "table", "RowNames", 2);
+assert_checkerror("matrix2table(a, ""RowNames"", ""values"")", msg);

@@ -70,7 +70,7 @@ archive_test_results:
       dirs = ls(getenv("SCI_VERSION_STRING") + "/*");
       results = ls(dirs + "/*.xml");
 
-      csv = emptystr(size(dirs, 1), 4);
+      csv = emptystr(size(results, 1), 4);
       names = basename(results);
       for i=1:size(results, 1)
           doc = xmlRead(results(i));
@@ -80,6 +80,7 @@ archive_test_results:
               continue
           end
           testsuite = xp(1);
+          names(i) = testsuite.attributes.name;
 
           csv(i, 1) = xmlXPath(testsuite, "./@tests").content;
           csv(i, 2) = xmlXPath(testsuite, "./@errors").content;
@@ -92,6 +93,8 @@ archive_test_results:
           csv(i, 4) = strcat(gsort(buggy, "lr", "i"), " ");
           xmlDelete(doc)
       end
+      [names, k_names] = gsort(names, "lr", "i");
+      csv = csv(k_names, :);
 
       t = matrix2table(csv, "VariableNames", ["tests", "errors", "failures", "test names"], "RowNames", names);
       t.Properties.Description = strcat([getenv("SCI_VERSION_STRING") getenv("CI_COMMIT_TIMESTAMP", "") getenv("CI_COMMIT_SHORT_SHA", "")], " ");

@@ -108,8 +108,12 @@ function t = table(varargin)
     end
 
     if rowNames <> [] then
-        if size(rowNames, 1) <> size(data(1).data, 1) then
-            rowNames = rowNames';
+        if isvector(rowNames) && (size(rowNames, "*") == size(data(1).data, 1)) then
+            if isrow(rowNames) then
+                rowNames = rowNames';
+            end
+        else
+            error(msprintf(_("%s: Wrong size for ""%s"" argument: Must be a vector containing %d elements.\n"), "table", "RowNames", size(data(1).data, 1)));
         end
     end
 
