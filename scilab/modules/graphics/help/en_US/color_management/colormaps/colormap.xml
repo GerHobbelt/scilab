@@ -17,7 +17,7 @@
           xml:lang="en" xml:id="colormap">
     <refnamediv>
         <refname>colormap</refname>
-        <refpurpose>set and/or get a figure colormap.</refpurpose>
+        <refpurpose>set and/or get a figure/axes colormap.</refpurpose>
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
@@ -39,7 +39,7 @@
                 <term>h</term>
                 <listitem>
                     <para>
-                        A figure handle. If not given the current figure is used (See <link linkend="gcf">gcf</link>).
+                        A figure or axes handle. If not given the current figure is used (See <link linkend="gcf">gcf</link>).
                     </para>
                 </listitem>
             </varlistentry>
@@ -62,23 +62,36 @@
             <literal>cmap = colormap()</literal> returns the current figure colormap.
         </para>
         <para>
-            <literal>cmap = colormap(h)</literal> returns the colormap of the figure handle <literal>h</literal>.
+            <literal>cmap = colormap(h)</literal> returns the colormap of the figure/axes handle <literal>h</literal>.
         </para>
         <para>
             <literal>[cmap =] colormap(m)</literal> sets the colormap <literal>m</literal> to the current figure. <literal>cmap</literal> is only returned when the output of the function is assigned.
         </para>
         <para>
-            <literal>[cmap =] colormap(h, m)</literal> sets the colormap <literal>m</literal> to the figure handle <literal>h</literal>. <literal>cmap</literal> is only returned when the output of the function is assigned.
+            <literal>[cmap =] colormap(h, m)</literal> sets the colormap <literal>m</literal> to the figure/axes handle <literal>h</literal>. <literal>cmap</literal> is only returned when the output of the function is assigned.
         </para>
     </refsection>
     <refsection>
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
-plot3d();
+x = %pi * [-1:0.05:1]';
+z = sin(x)*cos(x)';
+
+f=scf();
 // Change colormap to parula (32 values)
 colormap(parula(32));
+
+ax1 = subplot(1, 2, 1);
+ax1.title.text = "plot3d() using figure colormap";
+e = plot3d(x, x, z, 70, 70);
+e.color_flag = 1;
+
+ax2 = subplot(1, 2, 2);
+ax2.title.text = "plot3d() using axes colormap"
 // Change colormap to jet (default size)
-colormap(jet); // Equivalent to colormap("jet")
+colormap(ax2, jet); // Equivalent to colormap(ax2, "jet")
+e = plot3d(x, x, z, 70, 70);
+e.color_flag = 1;
             ]]></programlisting>
     </refsection>
     <refsection role="see also">
@@ -105,6 +118,12 @@ colormap(jet); // Equivalent to colormap("jet")
                 <revnumber>2024.1.0</revnumber>
                 <revremark>
                     Function <literal>colormap</literal> introduced.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revremark>
+                    <literal>Axes</literal> handles are now managed as input.
                 </revremark>
             </revision>
         </revhistory>

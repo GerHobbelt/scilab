@@ -676,7 +676,6 @@ void PolylineDecomposer::fillColors(int id, float* buffer, int bufferLength, int
     int nPoints = 0;
     int *piNPoints = &nPoints;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
     int bufferOffset = 0;
     int* interpColorVector = NULL;
 
@@ -736,9 +735,8 @@ void PolylineDecomposer::fillColors(int id, float* buffer, int bufferLength, int
         }
 
         getGraphicObjectProperty(id, __GO_INTERP_COLOR_VECTOR__, jni_int_vector, (void**) &interpColorVector);
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
-
+        colormapSize = ColorComputer::getClosestColormap(id, &colormap);
+        
         if (nPoints > 4)
         {
             nPoints = 4;
@@ -798,10 +796,9 @@ void PolylineDecomposer::fillColors(int id, float* buffer, int bufferLength, int
         }
 
         min = nPoints < numColors ? nPoints : numColors;
-
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
-
+        
+        colormapSize = ColorComputer::getClosestColormap(id, &colormap);
+        
         for (int i = 0; i < min; i++)
         {
             ColorComputer::getDirectColor(colors[i] - 1.0, colormap, colormapSize, &buffer[bufferOffset]);
@@ -832,7 +829,6 @@ void PolylineDecomposer::fillTextureCoordinates(int id, float* buffer, int buffe
     int nPoints = 0;
     int *piNPoints = &nPoints;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
     int bufferOffset = 0;
     int* interpColorVector = NULL;
 
@@ -889,8 +885,7 @@ void PolylineDecomposer::fillTextureCoordinates(int id, float* buffer, int buffe
     }
 
     getGraphicObjectProperty(id, __GO_INTERP_COLOR_VECTOR__, jni_int_vector, (void**) &interpColorVector);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
 
     if (nPoints > 4)
     {

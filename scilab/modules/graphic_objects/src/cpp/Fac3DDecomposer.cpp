@@ -130,7 +130,6 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
 
     int colorsNumber = 0.;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
 
     int colorFlag = 0;
     int* piColorFlag = &colorFlag;
@@ -172,9 +171,8 @@ void Fac3DDecomposer::fillTextureCoordinates(int id, float* buffer, int bufferLe
         return;
     }
 
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(id, __GO_COLOR_RANGE__, jni_int_vector, (void**) &colorRange);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
+    getGraphicObjectProperty(id, __GO_COLOR_RANGE__, jni_int_vector, (void**)&colorRange);   
 
     if (colorRange[0] != 0 || colorRange[1] != 0)
     {

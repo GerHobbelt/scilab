@@ -45,7 +45,6 @@ void NgonGridGrayplotDataDecomposer::fillColors(int id, float* buffer, int buffe
     int numY = 0;
     int* piNumY = &numY;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
     int dataMapping = 0;
     int* piDataMapping = &dataMapping;
 
@@ -71,8 +70,7 @@ void NgonGridGrayplotDataDecomposer::fillColors(int id, float* buffer, int buffe
         return;
     }
 
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
 
     getGraphicObjectProperty(id, __GO_DATA_MAPPING__, jni_int, (void**) &piDataMapping);
 

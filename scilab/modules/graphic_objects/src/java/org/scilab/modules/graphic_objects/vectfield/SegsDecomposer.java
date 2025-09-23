@@ -17,6 +17,8 @@ package org.scilab.modules.graphic_objects.vectfield;
 
 import java.nio.IntBuffer;
 import java.nio.FloatBuffer;
+
+import org.scilab.modules.graphic_objects.axes.Axes;
 import org.scilab.modules.graphic_objects.figure.ColorMap;
 import org.scilab.modules.graphic_objects.figure.Figure;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
@@ -59,6 +61,7 @@ public class SegsDecomposer extends VectFieldDecomposer {
         Integer[] segmentColors = (Integer[]) GraphicController.getController().getProperty(id, __GO_SEGS_COLORS__);
 
         Integer parentFigureId = (Integer) GraphicController.getController().getProperty(id, __GO_PARENT_FIGURE__);
+        Integer parentAxesId = (Integer) GraphicController.getController().getProperty(id, __GO_PARENT_AXES__);
 
         /* To be sure that the object has a parent Figure, though it should not occur. */
         if (parentFigureId == 0) {
@@ -66,7 +69,13 @@ public class SegsDecomposer extends VectFieldDecomposer {
         }
 
         Figure parentFigure = (Figure) GraphicController.getController().getObjectFromId(parentFigureId);
-        ColorMap colorMap = parentFigure.getColorMap();
+        Axes parentAxes = (Axes) GraphicController.getController().getObjectFromId(parentAxesId);
+        ColorMap colorMap;
+        if (parentAxes.getColorMap().getSize() != 0) {
+        	colorMap = parentAxes.getColorMap();
+        } else {
+        	colorMap = parentFigure.getColorMap();
+        }
 
         GraphicController.getController().getProperty(id, __GO_ARROW_SIZE__);
 

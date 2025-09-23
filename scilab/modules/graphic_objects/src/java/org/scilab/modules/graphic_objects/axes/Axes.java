@@ -29,6 +29,8 @@ import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProp
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_CLIP_BOX_SET__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_CLIP_BOX__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_CLIP_STATE__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_COLORMAP_SIZE__;
+import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_COLORMAP__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_CUBE_SCALING__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_DATA_BOUNDS__;
 import static org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties.__GO_FILLED__;
@@ -127,11 +129,13 @@ import org.scilab.modules.graphic_objects.contouredObject.Line.LineType;
 import org.scilab.modules.graphic_objects.contouredObject.Mark;
 import org.scilab.modules.graphic_objects.contouredObject.Mark.MarkPropertyType;
 import org.scilab.modules.graphic_objects.contouredObject.Mark.MarkSizeUnitType;
+import org.scilab.modules.graphic_objects.figure.ColorMap;
 import org.scilab.modules.graphic_objects.figure.Figure;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
 import org.scilab.modules.graphic_objects.graphicObject.ClippableProperty;
 import org.scilab.modules.graphic_objects.graphicObject.ClippableProperty.ClipStateType;
 import org.scilab.modules.graphic_objects.graphicObject.ClippableProperty.ClippablePropertyType;
+import org.scilab.modules.graphic_objects.graphicObject.GraphicObject.UpdateStatus;
 import org.scilab.modules.graphic_objects.graphicObject.GraphicObject;
 import org.scilab.modules.graphic_objects.graphicObject.GraphicObjectProperties;
 import org.scilab.modules.graphic_objects.graphicObject.Visitor;
@@ -157,7 +161,8 @@ public class Axes extends GraphicObject {
         FONT_STYLE, FONT_SIZE, FONT_COLOR, FONT_FRACTIONAL,
         GRIDPOSITION, TITLE, AUTOCLEAR, FILLED, BACKGROUND,
         MARGINS, AUTO_MARGINS, AXESBOUNDS,
-        HIDDENCOLOR
+        HIDDENCOLOR,
+        COLORMAP, COLORMAPSIZE
     };
 
     /** Specifies the grid position relative to the graphics entities */
@@ -245,7 +250,11 @@ public class Axes extends GraphicObject {
     
     //////////////
 
-
+    /**
+     * Default ColorMap: (3 x N) matrix, where N is the number of colors and 3
+     * the number of color channels
+     */
+    private ColorMap colorMap;
 
 
     /** TODO: add comment*
@@ -271,6 +280,7 @@ public class Axes extends GraphicObject {
         mark = new Mark();
         arcDrawingMethod = ArcDrawingMethod.LINES;
         clipProperty = new ClippableProperty();
+        colorMap = new ColorMap();
     }
 
     public Axes clone() {
@@ -306,6 +316,8 @@ public class Axes extends GraphicObject {
         copy.clipProperty = new ClippableProperty(this.clipProperty);
         copy.setValid(true);
 
+        copy.colorMap = new ColorMap(colorMap);
+        
         return copy;
     }
 
@@ -513,6 +525,10 @@ public class Axes extends GraphicObject {
                 return ClippablePropertyType.CLIPBOXSET;
             case __GO_ARC_DRAWING_METHOD__ :
                 return ArcProperty.ARCDRAWINGMETHOD;
+            case __GO_COLORMAP__:
+            	return AxesProperty.COLORMAP;
+            case __GO_COLORMAP_SIZE__:
+            	return AxesProperty.COLORMAPSIZE;
             default :
                 return super.getPropertyFromName(propertyName);
         }
@@ -657,6 +673,10 @@ public class Axes extends GraphicObject {
                     return getAxesBounds();
                 case HIDDENCOLOR:
                     return getHiddenColor();
+                case COLORMAP:
+                	return colorMap.getData();
+                case COLORMAPSIZE:
+                	return colorMap.getSize();
             }
         } else if (property instanceof Camera.CameraProperty) {
             Camera.CameraProperty cp = (Camera.CameraProperty) property;
@@ -879,6 +899,10 @@ public class Axes extends GraphicObject {
                     return setAxesBounds((Double[]) value);
                 case HIDDENCOLOR:
                     return setHiddenColor((Integer) value);
+                case COLORMAP:
+                    return colorMap.setData((Double[]) value);
+                case COLORMAPSIZE:
+                    return UpdateStatus.NoChange;
             }
         } else if (property instanceof Camera.CameraProperty) {
             Camera.CameraProperty cp = (Camera.CameraProperty) property;
@@ -2900,6 +2924,10 @@ public class Axes extends GraphicObject {
         return UpdateStatus.NoChange;
     }
 
+    public ColorMap getColorMap() {
+    	return colorMap;
+    }
+    
     public Integer getType() {
         return GraphicObjectProperties.__GO_AXES__;
     }

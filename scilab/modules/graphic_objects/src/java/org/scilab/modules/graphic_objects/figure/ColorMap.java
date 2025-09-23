@@ -115,7 +115,7 @@ public class ColorMap {
      * This function is package to avoid bad use (update model without using the controller).
      * @param data the new data.
      */
-    UpdateStatus setData(Double[] data) {
+    public UpdateStatus setData(Double[] data) {
         // Do not update colormap if it's the same
         if (Arrays.equals(data, this.data)) {
             return UpdateStatus.NoChange;

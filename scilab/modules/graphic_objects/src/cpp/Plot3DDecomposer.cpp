@@ -104,7 +104,6 @@ void Plot3DDecomposer::fillColors(int id, float* buffer, int bufferLength, int e
     int numY = 0;
     int* piNumY = &numY;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
 
     Plot3DDecomposer* decomposer = get();
 
@@ -128,8 +127,7 @@ void Plot3DDecomposer::fillColors(int id, float* buffer, int bufferLength, int e
         return;
     }
 
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
 
     decomposer->fillNormalizedZGridColors(buffer, bufferLength, elementsSize, colormap, colormapSize, z, numX, numY);
 

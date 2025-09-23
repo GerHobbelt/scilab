@@ -241,6 +241,17 @@ public :
      * @return the computed index.
      */
     static double getIndex(double s, double smin, double srange, double indexOffset, int minIndex, int maxIndex);
+
+    /**
+    * Returns size of the closest colormap in graphical object hierarchy.
+    * If one axes has a dedicated colormap, use it, otherwise use the figure one.
+    * /!\ Do not forget to release object pointed by pdblColormap
+    * @param[in] the graphical object ID.
+    * @param[out] the colormap.
+    * @return the size of the colormap.
+    */
+    static int getClosestColormap(int iObject, double** pdblColormap);
+
 };
 
 #endif

@@ -17,6 +17,8 @@ package org.scilab.modules.graphic_objects.vectfield;
 
 import java.nio.FloatBuffer;
 import java.nio.IntBuffer;
+
+import org.scilab.modules.graphic_objects.axes.Axes;
 import org.scilab.modules.graphic_objects.figure.ColorMap;
 import org.scilab.modules.graphic_objects.figure.Figure;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
@@ -165,14 +167,21 @@ public class ChampDecomposer extends VectFieldDecomposer {
         int bufferOffset = 0;
 
         Integer parentFigureId = (Integer) GraphicController.getController().getProperty(id, __GO_PARENT_FIGURE__);
-
+        Integer parentAxesId = (Integer) GraphicController.getController().getProperty(id, __GO_PARENT_AXES__);
+        
         /* To be sure that the object has a parent Figure, though it should not occur. */
         if (parentFigureId == 0) {
             return;
         }
 
         Figure parentFigure = (Figure) GraphicController.getController().getObjectFromId(parentFigureId);
-        ColorMap colorMap = parentFigure.getColorMap();
+        Axes parentAxes = (Axes) GraphicController.getController().getObjectFromId(parentAxesId);
+        ColorMap colorMap;
+        if (parentAxes.getColorMap().getSize() != 0) {
+        	colorMap = parentAxes.getColorMap();
+        } else {
+        	colorMap = parentFigure.getColorMap();
+        }
         int colorMapSize = colorMap.getSize();
 
         GraphicController.getController().getProperty(id, __GO_NUMBER_ARROWS__);

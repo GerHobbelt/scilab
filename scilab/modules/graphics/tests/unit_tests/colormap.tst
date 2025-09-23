@@ -12,10 +12,10 @@
 
 // error cases
 assert_checkerror("colormap(list())", msprintf(gettext("%s: Wrong type for input argument #%d: a string, a function, or a Nx3 matrix expected.\n"), "colormap", 1));
-assert_checkerror("colormap(gca())", msprintf(gettext("%s: Wrong type for input argument #%d: a ''Figure'' handle expected.\n"), "colormap", 1));
+assert_checkerror("colormap(uicontrol())", msprintf(gettext("%s: Wrong type for input argument #%d: a ''Figure'' or an ''Axes'' handle expected.\n"), "colormap", 1));
 assert_checkerror("colormap([""a"", ""b""])", msprintf(gettext("%s: Wrong size for input argument #%d: a string expected.\n"), "colormap", 1));
 assert_checkerror("colormap(12)", msprintf(gettext("%s: Wrong size for input argument #%d: a Nx3 matrix expected.\n"), "colormap", 1));
-assert_checkerror("colormap([gcf(),gcf()])", msprintf(gettext("%s: Wrong size for input argument #%d: a ''Figure'' handle expected.\n"), "colormap", 1));
+assert_checkerror("colormap([gcf(),gcf()])", msprintf(gettext("%s: Wrong size for input argument #%d: a ''Figure'' or an ''Axes'' handle expected.\n"), "colormap", 1));
 assert_checkerror("colormap(1, 1, 1)", msprintf(gettext("%s: Wrong number of input argument(s): %d to %d expected.\n"), "colormap", 0, 2));
 
 // test with a function returning a matrix of wrong size
@@ -36,6 +36,8 @@ assert_checkerror("colormap(gcf(), 12)", msprintf(gettext("%s: Wrong size for in
 // working cases
 assert_checkequal(colormap(), gcf().color_map);
 assert_checkequal(colormap(gcf()), gcf().color_map);
+assert_checkequal(gda().color_map, []); // Check that default axes colormap is []
+assert_checkequal(colormap(gca()), []); // No colormap on current axes
 
 //assert_checkequal(colormap(jet), jet());
 
@@ -45,6 +47,9 @@ assert_checkequal(gcf().color_map, jet(32)); // Check that current figure colorm
 h=scf(42);
 assert_checkequal(colormap(h, jet(32)), jet(32)); // Set new colormap to figure #42
 assert_checkequal(h.color_map, jet(32)); // Check that figure #42 colormap is OK
+;
+assert_checkequal(colormap(gca(), parula(32)), parula(32)); // Set new colormap to current axes
+assert_checkequal(gca().color_map, parula(32)); // Check that current axes colormap is OK
 
 assert_checkequal(colormap("default"), gdf().color_map); // Set default colormap to current figure
 assert_checkequal(gcf().color_map, gdf().color_map); // Check that current figure colormap is "default"
@@ -95,7 +100,7 @@ for cmapFun = cmapFunctions
     assert_checkequal(size(cmap3), [42, 3]);
 
     assert_checkequal(cmap1, cmap3);
-    
+
     // Test with 0 as input
     execstr("cmap4 = " + cmapFun + "(0);");
     assert_checkequal(cmap4, []);

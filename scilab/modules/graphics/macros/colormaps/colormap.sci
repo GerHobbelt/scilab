@@ -42,10 +42,10 @@ function varargout = colormap(varargin)
     end
 
     // Test h value
-    if type(h) <> 9 | h.type <> "Figure" then
-        error(msprintf(gettext("%s: Wrong type for input argument #%d: a ''Figure'' handle expected.\n"), "colormap", hPos));
+    if type(h) <> 9 | (h.type <> "Figure" && h.type <> "Axes") then
+        error(msprintf(gettext("%s: Wrong type for input argument #%d: a ''Figure'' or an ''Axes'' handle expected.\n"), "colormap", hPos));
     elseif size(h, "*") <> 1 then
-        error(msprintf(gettext("%s: Wrong size for input argument #%d: a ''Figure'' handle expected.\n"), "colormap", hPos));
+        error(msprintf(gettext("%s: Wrong size for input argument #%d: a ''Figure'' or an ''Axes'' handle expected.\n"), "colormap", hPos));
     end
 
     if setCmap then

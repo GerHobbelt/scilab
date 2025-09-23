@@ -354,9 +354,16 @@ public class DrawerVisitor implements Visitor, Drawer, GraphicView {
         synchronized (axes) {
             if (axes.isValid() && axes.getVisible()) {
                 try {
+                	ColorMap cmap = getColorMap();
+                    if (axes.getColorMap().getSize() != 0) {
+                    	// override colormap using axes
+                    	colorMap = axes.getColorMap();
+                    } 
                     currentAxes = axes;
                     axesDrawer.computeRulers(axes);
                     axesDrawer.draw(axes);
+                    // Restore figure colormap
+                    colorMap = cmap;
                 } catch (SciRendererException e) {
                     invalidate(axes, e);
                 }

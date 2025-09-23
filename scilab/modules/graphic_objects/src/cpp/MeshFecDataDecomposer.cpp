@@ -185,8 +185,6 @@ void MeshFecDataDecomposer::fillTextureCoordinates(int id, float* buffer, int bu
 void MeshFecDataDecomposer::fillColors(int id, float* buffer, int bufferLength, int elementsSize)
 {
     int parent = 0;
-    int parentFigure = 0;
-    int * piParentFigure = &parentFigure;
 
     double* values = NULL;
     double* zBounds = NULL;
@@ -220,10 +218,7 @@ void MeshFecDataDecomposer::fillColors(int id, float* buffer, int bufferLength, 
         return;
     }
 
-    getGraphicObjectProperty(id, __GO_PARENT_FIGURE__, jni_int, (void**) &piParentFigure);
-
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
 
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_VERTICES__, jni_int, (void**) &piNumVertices);
 

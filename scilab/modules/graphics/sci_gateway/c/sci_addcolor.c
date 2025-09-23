@@ -19,6 +19,9 @@
 #include "addColor.h"
 #include "CurrentFigure.h"
 #include "createGraphicObject.h"
+#include "graphicObjectProperties.h"
+#include "getGraphicObjectProperty.h"
+#include "CurrentSubwin.h"
 #include "sciprint.h"
 
 int checkValue(double dblValue)
@@ -43,14 +46,16 @@ int checkValues(double* pdblValues, int iRows)
 int sci_addcolor(char *fname, void* pvApiCtx)
 {
     SciErr sciErr;
-    int i = 0;
     int* piAddr = NULL;
     int iRows = 0;
     int iCols = 0;
     double* pdblColor = NULL;
-    double color[3];
 
     int iCurrentFigure = 0;
+    int iCurrentSubwin = 0;
+    int iColormapTarget = 0;
+    int iColorMapSize = 0;
+    int* piColorMapSize = &iColorMapSize;
     double* pdblReturnColor = NULL;
 
     CheckInputArgument(pvApiCtx, 1, 1);
@@ -93,9 +98,20 @@ int sci_addcolor(char *fname, void* pvApiCtx)
     {
         iCurrentFigure = createNewFigureWithAxes();
     }
+    iCurrentSubwin = getCurrentSubWin();
+    getGraphicObjectProperty(iCurrentSubwin, __GO_COLORMAP_SIZE__, jni_int, (void**)&piColorMapSize);
+
+    if (iColorMapSize != 0)
+    {
+        iColormapTarget = iCurrentSubwin; 
+    }
+    else
+    {
+        iColormapTarget = iCurrentFigure;
+    }
 
     allocMatrixOfDouble(pvApiCtx, 2, 1, iRows, &pdblReturnColor);
-    addColors(iCurrentFigure, pdblColor, iRows, &pdblReturnColor);
+    addColors(iColormapTarget, pdblColor, iRows, &pdblReturnColor);
 
     AssignOutputVariable(pvApiCtx, 1) = 2;
     ReturnArguments(pvApiCtx);

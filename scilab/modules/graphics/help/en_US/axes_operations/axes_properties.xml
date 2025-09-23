@@ -802,6 +802,22 @@
                             </listitem>
                         </varlistentry>
                         <varlistentry>
+                            <term>color_map: </term>
+                            <listitem>
+                                <para>Property which defines the colormap used by this axes. The
+                                    colormap is a <literal>m</literal> by <literal>3</literal> matrix.
+                                    <literal>m</literal> is the number of colors. Color number i is given as
+                                    a 3-uple <literal>R</literal>, <literal>G</literal>, <literal>B</literal>
+                                    corresponding respectively to red, green and blue intensity
+                                    between 0 and 1.
+                                </para>
+                                <para>
+                                    When this property is not defined (value set to <literal>[]</literal>),
+                                    then the colormap of the parent figure is used.
+                                </para>
+                            </listitem>
+                        </varlistentry>
+                        <varlistentry>
                             <term>hidden_axis_color: </term>
                             <listitem>
                                 <para>
@@ -1369,6 +1385,12 @@ gcf().axes_size = [420 320];
                 <revnumber>2023.0.0</revnumber>
                 <revremark>
                     <literal>.auto_stretch</literal> property added.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revremark>
+                    <literal>.color_map</literal> property added.
                 </revremark>
             </revision>
         </revhistory>

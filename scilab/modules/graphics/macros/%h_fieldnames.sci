@@ -109,6 +109,7 @@ function fields = %h_fieldnames(h)
             "auto_scale"
             "auto_stretch"
             " "
+            "color_map"
             "hidden_axis_color"
             "hiddencolor"
             "line_mode"

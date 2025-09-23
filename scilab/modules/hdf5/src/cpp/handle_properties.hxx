@@ -227,6 +227,7 @@ struct AxesHandle
         m.emplace_back("background", std::vector<int>({SAVE_LOAD, __GO_BACKGROUND__, jni_int}));
         m.emplace_back("clip_state", std::vector<int>({SAVE_LOAD, __GO_CLIP_STATE__, jni_int}));
         m.emplace_back("clip_box", std::vector<int>({SAVE_LOAD, __GO_CLIP_BOX__, jni_double_vector, -1, -4}));
+        m.emplace_back("color_map", std::vector<int>({SAVE_LOAD, __GO_COLORMAP__, jni_double_vector, __GO_COLORMAP_SIZE__, -3}));
 
         //@end
 

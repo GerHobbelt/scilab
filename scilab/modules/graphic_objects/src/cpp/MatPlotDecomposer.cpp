@@ -52,11 +52,8 @@ int MatPlotDecomposer::fillTextureData(int id, unsigned char* buffer, int buffer
 {
     // Indexed colors
     void * data = NULL;
-    int parentFigure = 0;
-    int * piParentFigure = &parentFigure;
-    double * colormap = NULL;
+    double* colormap = NULL;
     int colormapSize = 0;
-    int * piColormapSize = &colormapSize;
     int datatype = -1;
     int * pidataType = &datatype;
     const int h = getTextureHeight(id);
@@ -64,9 +61,8 @@ int MatPlotDecomposer::fillTextureData(int id, unsigned char* buffer, int buffer
 
     getGraphicObjectProperty(id, __GO_DATA_MODEL_Z__, jni_double_vector, &data);
     getGraphicObjectProperty(id, __GO_DATA_MODEL_MATPLOT_DATA_TYPE__, jni_int, (void**) &pidataType);
-    getGraphicObjectProperty(id, __GO_PARENT_FIGURE__, jni_int, (void**) &piParentFigure);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+    
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
 
     switch ((DataType)datatype)
     {
@@ -164,10 +160,9 @@ int MatPlotDecomposer::fillTextureData(int id, unsigned char* buffer, int buffer
         int * piParentFigure = &parentFigure;
         double* colormap = NULL;
         int colormapSize = 0;
-        int* piColormapSize = &colormapSize;
-        getGraphicObjectProperty(id, __GO_PARENT_FIGURE__, jni_int, (void**) &piParentFigure);
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-        getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
+
+        colormapSize = ColorComputer::getClosestColormap(id, &colormap);
+
         int textureHeight = getTextureHeight(id);
         int k = 0;
         for (int j = y ; j < y + height ; j++)

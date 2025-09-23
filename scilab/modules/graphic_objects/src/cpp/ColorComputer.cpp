@@ -209,3 +209,31 @@ void ColorComputer::getClampedDirectColor(double s, double* colormap, int colorm
         returnedColor[2] = (float)colormap[2 * colormapSize + index];
     }
 }
+
+int ColorComputer::getClosestColormap(int iObject, double** pdblColormap)
+{
+    int parentFigure = 0;
+    int* piParentFigure = &parentFigure;
+    int parentAxes = 0;
+    int* piparentAxes = &parentAxes;
+    
+    int iColormapSize = 0;
+    int* piColormapSize = &iColormapSize;
+    
+    getGraphicObjectProperty(iObject, __GO_PARENT_FIGURE__, jni_int, (void**)&piParentFigure);
+    getGraphicObjectProperty(iObject, __GO_PARENT_AXES__, jni_int, (void**)&piparentAxes);
+
+    getGraphicObjectProperty(parentAxes, __GO_COLORMAP_SIZE__, jni_int, (void**)&piColormapSize);
+    if (iColormapSize != 0)
+    {
+        // Use axes colormap
+        getGraphicObjectProperty(parentAxes, __GO_COLORMAP__, jni_double_vector, (void**)pdblColormap);
+    }
+    else
+    {
+        // use figure colormap
+        getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**)pdblColormap);
+        getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**)&piColormapSize);
+    }
+    return iColormapSize;
+}

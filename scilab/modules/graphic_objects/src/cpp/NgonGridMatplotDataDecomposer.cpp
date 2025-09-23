@@ -215,9 +215,7 @@ void NgonGridMatplotDataDecomposer::fillGridVertices(float* buffer, int bufferLe
 void NgonGridMatplotDataDecomposer::fillColors(int id, float* buffer, int bufferLength, int elementsSize)
 {
     int parent = 0;
-    int parentFigure = 0;
-    int* pparentFigure = &parentFigure;
-
+ 
     void * data = NULL;
     double* colormap = NULL;
 
@@ -226,7 +224,6 @@ void NgonGridMatplotDataDecomposer::fillColors(int id, float* buffer, int buffer
     int numY = 0;
     int* piNumY = &numY;
     int colormapSize = 0;
-    int* piColormapSize = &colormapSize;
     int datatype = -1;
     int * pidataType = &datatype;
     int imagetype = 0;
@@ -242,7 +239,6 @@ void NgonGridMatplotDataDecomposer::fillColors(int id, float* buffer, int buffer
         return;
     }
 
-    getGraphicObjectProperty(id, __GO_PARENT_FIGURE__, jni_int, (void**) &pparentFigure);
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_X__, jni_int, (void**) &piNumX);
     getGraphicObjectProperty(id, __GO_DATA_MODEL_NUM_Y__, jni_int, (void**) &piNumY);
     getGraphicObjectProperty(id, __GO_DATA_MODEL_MATPLOT_IMAGE_DATA__, jni_double_vector, &data);
@@ -256,9 +252,8 @@ void NgonGridMatplotDataDecomposer::fillColors(int id, float* buffer, int buffer
         return;
     }
 
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP__, jni_double_vector, (void**) &colormap);
-    getGraphicObjectProperty(parentFigure, __GO_COLORMAP_SIZE__, jni_int, (void**) &piColormapSize);
-
+    colormapSize = ColorComputer::getClosestColormap(id, &colormap);
+ 
 #if PER_VERTEX_VALUES
     for (int j = 0; j < numY - 1; j++)
     {
