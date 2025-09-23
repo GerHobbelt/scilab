@@ -63,6 +63,9 @@
     <ClCompile Include="..\c\sci_cdftnc.c">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="sci_percent_meanshift.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\includes\statistics_gw.hxx">

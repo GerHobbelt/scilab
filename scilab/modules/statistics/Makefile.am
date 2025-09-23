@@ -10,8 +10,8 @@ STATISTICS_C_SOURCES = \
 	src/c/sci_string_matrix.c
 
 STATISTICS_FORTRAN_SOURCES = \
-	src/dcdflib/psi.f \
-	src/dcdflib/alngam.f \
+    src/dcdflib/psi.f \
+    src/dcdflib/alngam.f \
     src/dcdflib/erfc1.f \
     src/dcdflib/cdff.f \
     src/dcdflib/spmpar.f \
@@ -88,8 +88,9 @@ GATEWAY_C_SOURCES = \
 	sci_gateway/c/sci_cdfbet.c \
 	sci_gateway/c/sci_cdfnbn.c \
 	sci_gateway/c/sci_cdfnor.c
-	
+
 GATEWAY_CPP_SOURCES = \
+	sci_gateway/cpp/sci_percent_meanshift.cpp \
 	sci_gateway/cpp/sci_percent_cov.cpp \
 	sci_gateway/cpp/sci_nansum.cpp \
 	sci_gateway/cpp/sci_mean.cpp \

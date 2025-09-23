@@ -230,6 +230,7 @@ am__objects_3 = sci_gateway/c/libscistatistics_la-sci_cdfchi.lo \
 	sci_gateway/c/libscistatistics_la-sci_cdfnbn.lo \
 	sci_gateway/c/libscistatistics_la-sci_cdfnor.lo
 am__objects_4 =  \
+	sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo \
 	sci_gateway/cpp/libscistatistics_la-sci_percent_cov.lo \
 	sci_gateway/cpp/libscistatistics_la-sci_nansum.lo \
 	sci_gateway/cpp/libscistatistics_la-sci_mean.lo \
@@ -268,6 +269,7 @@ am__depfiles_remade =  \
 	sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nanmean.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nansum.Plo \
 	sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_cov.Plo \
+	sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Plo \
 	src/c/$(DEPDIR)/libscistatistics_algo_la-CdfBase.Plo \
 	src/c/$(DEPDIR)/libscistatistics_algo_la-ipmpar1.Plo \
 	src/c/$(DEPDIR)/libscistatistics_algo_la-sci_string_matrix.Plo
@@ -688,8 +690,8 @@ STATISTICS_C_SOURCES = \
 	src/c/sci_string_matrix.c
 
 STATISTICS_FORTRAN_SOURCES = \
-	src/dcdflib/psi.f \
-	src/dcdflib/alngam.f \
+    src/dcdflib/psi.f \
+    src/dcdflib/alngam.f \
     src/dcdflib/erfc1.f \
     src/dcdflib/cdff.f \
     src/dcdflib/spmpar.f \
@@ -768,6 +770,7 @@ GATEWAY_C_SOURCES = \
 	sci_gateway/c/sci_cdfnor.c
 
 GATEWAY_CPP_SOURCES = \
+	sci_gateway/cpp/sci_percent_meanshift.cpp \
 	sci_gateway/cpp/sci_percent_cov.cpp \
 	sci_gateway/cpp/sci_nansum.cpp \
 	sci_gateway/cpp/sci_mean.cpp \
@@ -1167,6 +1170,9 @@ sci_gateway/cpp/$(am__dirstamp):
 sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp):
 	@$(MKDIR_P) sci_gateway/cpp/$(DEPDIR)
 	@: > sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
+sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo:  \
+	sci_gateway/cpp/$(am__dirstamp) \
+	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
 sci_gateway/cpp/libscistatistics_la-sci_percent_cov.lo:  \
 	sci_gateway/cpp/$(am__dirstamp) \
 	sci_gateway/cpp/$(DEPDIR)/$(am__dirstamp)
@@ -1213,6 +1219,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nanmean.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nansum.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_cov.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistatistics_algo_la-CdfBase.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistatistics_algo_la-ipmpar1.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/$(DEPDIR)/libscistatistics_algo_la-sci_string_matrix.Plo@am__quote@ # am--include-marker
@@ -1375,6 +1382,13 @@ sci_gateway/c/libscistatistics_la-sci_cdfnor.lo: sci_gateway/c/sci_cdfnor.c
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='$<' object='$@' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LTCXXCOMPILE) -c -o $@ $<
+
+sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo: sci_gateway/cpp/sci_percent_meanshift.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistatistics_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Tpo -c -o sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo `test -f 'sci_gateway/cpp/sci_percent_meanshift.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_percent_meanshift.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Tpo sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='sci_gateway/cpp/sci_percent_meanshift.cpp' object='sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistatistics_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o sci_gateway/cpp/libscistatistics_la-sci_percent_meanshift.lo `test -f 'sci_gateway/cpp/sci_percent_meanshift.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_percent_meanshift.cpp
 
 sci_gateway/cpp/libscistatistics_la-sci_percent_cov.lo: sci_gateway/cpp/sci_percent_cov.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscistatistics_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT sci_gateway/cpp/libscistatistics_la-sci_percent_cov.lo -MD -MP -MF sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_cov.Tpo -c -o sci_gateway/cpp/libscistatistics_la-sci_percent_cov.lo `test -f 'sci_gateway/cpp/sci_percent_cov.cpp' || echo '$(srcdir)/'`sci_gateway/cpp/sci_percent_cov.cpp
@@ -1638,6 +1652,7 @@ distclean: distclean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nanmean.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nansum.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_cov.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-CdfBase.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-ipmpar1.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-sci_string_matrix.Plo
@@ -1705,6 +1720,7 @@ maintainer-clean: maintainer-clean-am
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nanmean.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_nansum.Plo
 	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_cov.Plo
+	-rm -f sci_gateway/cpp/$(DEPDIR)/libscistatistics_la-sci_percent_meanshift.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-CdfBase.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-ipmpar1.Plo
 	-rm -f src/c/$(DEPDIR)/libscistatistics_algo_la-sci_string_matrix.Plo
