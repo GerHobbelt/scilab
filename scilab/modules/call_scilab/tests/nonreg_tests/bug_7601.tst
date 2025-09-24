@@ -26,4 +26,4 @@ exec("SCI/modules/call_scilab/tests/unit_tests/compileHelpers.sce");
 [status, stdout, stderr] = run_executable(compile_executable("SCI/modules/call_scilab/tests/nonreg_tests/bug_7601.c"));
 assert_checkequal(stderr, "SendScilabJob: call_scilab engine is not started.");
 assert_checkfalse(status == 0);
-assert_checkequal(stdout(2), "  -42.   42.");
+assert_checkequal(stdout($), "  -42.   42.");
