@@ -180,17 +180,21 @@ function [flag, errmsg] = assert_checkequal(computed, expected)
             end
         end
         //
-        if isdef("k","l") & k <> [] & length(computed)>1
-            estr = msprintf(_("expected(%d)= "),k) + estr
-            cstr = msprintf(_("computed(%d)= "),k) + cstr
+        if isdef("k","l") & k <> [] & length(computed)>1 & size(ncom, 2) > 1
+            sub = strcat(string(ind2sub(ncom, k)), ",");
+            estr = msprintf(_("expected(%s) = "),sub) + estr
+            cstr = msprintf(_("computed(%s) = "),sub) + cstr
+        elseif isdef("k","l") & k <> [] & length(computed)>1
+            estr = msprintf(_("expected(%d) = "),k) + estr
+            cstr = msprintf(_("computed(%d) = "),k) + cstr
         else
-            estr = _("expected= ") + estr
-            cstr = _("computed= ") + cstr
+            estr = _("expected = ") + estr
+            cstr = _("computed = ") + cstr
         end
         //
-        ierr = execstr("mdiff = string(mean(computed - expected))", "errcatch");
+        ierr = execstr("mdiff = string(sum(computed <> expected))", "errcatch");
         if ( ierr == 0 ) then
-            errmsg = msprintf(gettext("%s: Assertion failed: %s  while %s (mean diff = %s)"),"assert_checkequal",estr, cstr, mdiff)
+            errmsg = msprintf(gettext("%s: Assertion failed: %s  while %s (%s values are different)"),"assert_checkequal",estr, cstr, mdiff)
         else
             errmsg = msprintf(gettext("%s: Assertion failed: %s  while %s"),"assert_checkequal", estr, cstr)
         end

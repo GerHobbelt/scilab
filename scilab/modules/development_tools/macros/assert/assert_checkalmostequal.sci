@@ -39,12 +39,13 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
         xreg = x(kreg)
     endfunction
 
-    function areequal = assert_arealmostequal ( computed , expected , reltol , abstol , comptype )
+    function [areequal, k] = assert_arealmostequal ( computed , expected , reltol , abstol , comptype )
         //
         // Decompose the expected value into nan indices, inf indices and regular indices
         // This allows to solve the following issue:
         // if computed is %inf and expected is %inf, the difference is %nan,
         // which makes the computations fail.
+        k = [];
         if ( computed == [] & expected == []) then
             areequal = %t
             return
@@ -65,6 +66,7 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
                 entries = ( abs(creg-ereg) <= reltol * max(abs(ereg),abs(creg)) + abstol )
                 // Compute the global condition from the entries conditions
                 areclose = and(entries)
+                k = find(~entries, 1)
             end
         end
         // The regular values must be almost equal and
@@ -178,9 +180,9 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
         expected = coeff(expected(:));
     end
     //
-    areequal_re = assert_arealmostequal ( real(computed) , real(expected) , reltol , abstol , comptype )
+    [areequal_re, k] = assert_arealmostequal ( real(computed) , real(expected) , reltol , abstol , comptype )
     if ( areequal_re ) then
-        areequal = assert_arealmostequal ( imag(computed) , imag(expected) , reltol , abstol , comptype )
+        [areequal, k] = assert_arealmostequal ( imag(computed) , imag(expected) , reltol , abstol , comptype )
     else
         areequal = %f
     end
@@ -195,20 +197,27 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
             expected = expected0;
         end
         // Change the message if the matrix contains more than one value
+        sub = "";
         if ( size(expected,"*") == 1 ) then
             estr = string(expected)
+        elseif ( size(nexp, 2) > 1 ) then
+            sub = strcat(string(ind2sub(nexp, k)), ",");
+            estr = string(expected(k))
         else
             estr = "[" + string(expected(1)) + " ...]"
         end
         if ( size(computed,"*") == 1 ) then
             cstr = string(computed)
+        elseif ( size(ncom, 2) > 1 ) then
+            sub = strcat(string(ind2sub(ncom, k)), ",");
+            cstr = string(computed(k))
         else
             cstr = "[" + string(computed(1)) + " ...]"
         end
         relstr = string(reltol)
         absstr = string(abstol)
-        errmsg = gettext("%s: Assertion failed: expected = %s while computed = %s")
-        errmsg = msprintf(errmsg, "assert_checkalmostequal", estr, cstr)
+        errmsg = gettext("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s")
+        errmsg = msprintf(errmsg, "assert_checkalmostequal", sub, estr, sub, cstr)
         if ( lhs < 2 ) then
             // If no output variable is given, generate an error
             assert_generror ( errmsg )
