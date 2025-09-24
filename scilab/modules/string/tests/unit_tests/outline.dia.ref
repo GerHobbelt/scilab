@@ -450,6 +450,7 @@ Hello world
   auto_scale = "on"
   auto_stretch = "on"
   
+  color_map = []
   hidden_axis_color = 4
   hiddencolor = 4
   line_mode = "on"
@@ -524,6 +525,7 @@ Hello world
   auto_scale = "on"
   auto_stretch = "on"
   
+  color_map = []
   hidden_axis_color = 4
   hiddencolor = 4
   line_mode = "on"
