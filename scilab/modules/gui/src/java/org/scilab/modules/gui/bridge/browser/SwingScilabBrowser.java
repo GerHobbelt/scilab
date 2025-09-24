@@ -83,7 +83,7 @@ public class SwingScilabBrowser extends JPanel implements SwingViewObject, Widge
     private Integer uid;
     private CefClient client_;
     private CefBrowser browser_;
-    private JFrame devToolsDialog;
+    private boolean devToolsOpened = false;
     private Boolean debug = false;
     private String url = "";
     private String helpers;
@@ -390,10 +390,9 @@ public class SwingScilabBrowser extends JPanel implements SwingViewObject, Widge
 
     @Override
     public void removeNotify() {
-        if (devToolsDialog != null) {
-            browser_.getDevTools().close(true);
-            devToolsDialog.dispose();
-            devToolsDialog = null;
+        if (devToolsOpened == true) {
+            browser_.closeDevTools();
+            devToolsOpened = false;
         }
 
         if (browser_ != null) {
@@ -405,20 +404,21 @@ public class SwingScilabBrowser extends JPanel implements SwingViewObject, Widge
     }
 
     public void openDebug(boolean toggle) {
-        if (devToolsDialog == null) {
-            devToolsDialog = new JFrame();
-            devToolsDialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-            devToolsDialog.setSize(800, 600);
-            devToolsDialog.add(browser_.getDevTools().getUIComponent());
-        }
-
         if (toggle)
         {
-            devToolsDialog.setVisible(!devToolsDialog.isVisible());
+            if (devToolsOpened == true) {
+                browser_.closeDevTools();
+            } else {
+                browser_.openDevTools();
+            }
+            devToolsOpened = !devToolsOpened;
         }
         else
         {
-            devToolsDialog.setVisible(true);
+            if (devToolsOpened == false) {
+                browser_.openDevTools();
+                devToolsOpened = true;
+            }
         }
     }
 

@@ -64,7 +64,7 @@ antlr.jar=${thirdparty.dir}/antlr4-runtime-4.13.1.jar
 avalon-framework.jar=${thirdparty.dir}/avalon-framework-4.1.4.jar
 
 ; webview jcef
-jcef.jar=${thirdparty.dir}/jcef-127.3.1.jar
+jcef.jar=${thirdparty.dir}/jcef-135.0.20.jar
 gson.jar=${thirdparty.dir}/gson-2.10.1.jar
 
 library.scirenderer.dir=${modules.dir}/scirenderer/${build.jar.dir}/
