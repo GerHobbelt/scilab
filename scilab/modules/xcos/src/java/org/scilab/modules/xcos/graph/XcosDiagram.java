@@ -136,11 +136,6 @@ public class XcosDiagram extends ScilabGraph {
     public static final String EOUT = "eout";
 
     /**
-     * Prefix used to tag text node.
-     */
-    public static final String HASH_IDENTIFIER = "#identifier";
-
-    /**
      * Constructor
      *
      * @param controller the shared controller
@@ -1600,7 +1595,7 @@ public class XcosDiagram extends ScilabGraph {
     }
 
     /**
-     * A cell is deletable if it is not a locked block or an identifier cell
+     * A cell is deletable if it is not a locked block
      *
      * @param cell the cell
      * @return status
@@ -1609,15 +1604,10 @@ public class XcosDiagram extends ScilabGraph {
     @Override
     public boolean isCellDeletable(final Object cell) {
         final boolean isALockedBLock = cell instanceof BasicBlock && ((BasicBlock) cell).isLocked();
-        final boolean isAnIdentifier = cell.getClass().equals(mxCell.class);
-
+        
         if (isALockedBLock) {
             return false;
         }
-        if (isAnIdentifier) {
-            return true;
-        }
-
         return super.isCellDeletable(cell);
     }
 
@@ -1639,23 +1629,34 @@ public class XcosDiagram extends ScilabGraph {
      * @param cell the cell to check
      * @return the identifier cell
      */
-    public mxCell getOrCreateCellIdentifier(final mxCell cell) {
-        if (cell.getId().endsWith(HASH_IDENTIFIER)) {
+    public XcosCell getOrCreateCellIdentifier(final XcosCell cell) {
+        if (cell.getKind() == Kind.ANNOTATION) {
             return cell;
         }
 
+        JavaController controller = new JavaController();
+        long[] label = {0};
+        controller.getObjectProperty(cell.getUID(), cell.getKind(), ObjectProperties.LABEL, label);
+
+        String[] label_uid = {""};
+        if (label[0] != 0) {
+            controller.getObjectProperty(label[0], Kind.ANNOTATION, ObjectProperties.UID, label_uid);
+        }
+
         final mxGraphModel graphModel = (mxGraphModel) getModel();
-
-        final mxCell identifier;
-        final String cellId = cell.getId() + HASH_IDENTIFIER;
-        if (graphModel.getCell(cellId) == null) {
+        XcosCell identifier = (XcosCell) graphModel.getCell(label_uid[0]);
+        if (identifier == null)
+        {
             // create the identifier
-            identifier = createCellIdentifier(cell);
+            label[0] = controller.createObject(Kind.ANNOTATION);
+            controller.setObjectProperty(cell.getUID(), cell.getKind(), ObjectProperties.LABEL, label[0]);
+            identifier = XcosCellFactory.createAnnotation(controller, label[0], Kind.ANNOTATION);
 
-            // add the identifier
-            graphModel.add(cell, identifier, cell.getChildCount());
-        } else {
-            identifier = (mxCell) graphModel.getCell(cellId);
+            // set geometry from the parent cell
+            identifier.setGeometry(controller, deriveIdentifierGeometry(cell));
+
+            // add it to the graph
+            graphModel.add(cell, identifier, 0);
         }
         return identifier;
     }
@@ -1664,13 +1665,30 @@ public class XcosDiagram extends ScilabGraph {
      * Return the identifier for the cell
      *
      * @param cell the cell to check
-     * @return the identifier cell
+     * @return the identifier cell or null if not found
      */
-    public mxCell getCellIdentifier(final mxCell cell) {
-        final mxGraphModel graphModel = (mxGraphModel) getModel();
-        final String cellId = cell.getId() + HASH_IDENTIFIER;
+    public XcosCell getCellIdentifier(final XcosCell cell) {
+        if (cell.getKind() == Kind.ANNOTATION) {
+            return cell;
+        }
 
-        return (mxCell) graphModel.getCell(cellId);
+        JavaController controller = new JavaController();
+        long[] label = {0};
+        controller.getObjectProperty(cell.getUID(), cell.getKind(), ObjectProperties.LABEL, label);
+        if (label[0] == 0) {
+            return null;
+        }
+
+        String[] label_uid = {""};
+        if (label[0] != 0) {
+            controller.getObjectProperty(label[0], Kind.ANNOTATION, ObjectProperties.UID, label_uid);
+        }
+        if (label_uid[0] == "") {
+            return null;
+        }
+
+        final mxGraphModel graphModel = (mxGraphModel) getModel();
+        return (XcosCell) graphModel.getCell(label_uid[0]);
     }
 
     /**
@@ -1679,31 +1697,67 @@ public class XcosDiagram extends ScilabGraph {
      * @param cell the cell
      * @return the cell identifier.
      */
-    public mxCell createCellIdentifier(final mxCell cell) {
+    public XcosCell createCellIdentifier(final XcosCell cell) {
+        if (cell.getKind() == Kind.ANNOTATION) {
+            return cell;
+        }
+
+        final mxGraphModel graphModel = (mxGraphModel) getModel();
         final XcosCell identifier;
-        final String cellId = cell.getId() + HASH_IDENTIFIER;
+        final String cellId = graphModel.createId(null);
 
         JavaController controller = new JavaController();
         long uid = controller.createObject(Kind.ANNOTATION);
 
-        final mxGeometry geom;
-        if (cell.isVertex()) {
-            // the vertex label position is relative to its parent
-            geom = new mxGeometry(cell.getGeometry().getWidth() * 0.5, cell.getGeometry().getHeight() * 1.1, 0., 0.);
-        } else {
-            // the edge label position is absolute, its initial position should be computed
-            mxPoint src = cell.getGeometry().getSourcePoint();
-            mxPoint trgt = cell.getGeometry().getTargetPoint();
-
-            geom = new mxGeometry(src.getX(), src.getY(), 0., 0.);
-            geom.translate((trgt.getX() - src.getX()) / 2, (trgt.getY() - src.getY()) / 2);
-        }
+        final mxGeometry geom = deriveIdentifierGeometry(cell);
 
         identifier = new XcosCell(new JavaController(), uid, Kind.ANNOTATION, null, geom, "noLabel=0;opacity=0;", cellId);
         identifier.setVertex(true);
         identifier.setConnectable(false);
 
         return identifier;
+    }
+
+    /**
+     * Derive the identifier geometry from its parent cell
+     */
+    private static mxGeometry deriveIdentifierGeometry(final XcosCell cell) {
+        final mxGeometry geom;
+
+        // the edge label position is absolute, its initial position should be computed
+        mxPoint src = cell.getGeometry().getSourcePoint();
+        mxPoint trgt = cell.getGeometry().getTargetPoint();
+
+        // second try, get the geometry of the source/target port
+        if (src == null && cell.getSource() != null && cell.getSource().getParent() != null) {
+            mxGeometry source = cell.getSource().getGeometry();
+            mxPoint parent = cell.getSource().getParent().getGeometry();
+            double x = parent.getX();
+            x += source.getCenterX();
+            double y = parent.getY();
+            y += source.getCenterY();
+            src = new mxPoint(x, y);
+        }
+        if (trgt == null && cell.getTarget() != null && cell.getTarget().getParent() != null) {
+            mxGeometry target = cell.getTarget().getGeometry();
+            mxPoint parent = cell.getTarget().getParent().getGeometry();
+            double x = parent.getX();
+            x += target.getCenterX();
+            double y = parent.getY();
+            y += target.getCenterY();
+            trgt = new mxPoint(x, y);
+        }
+
+        if (src == null || trgt == null) {
+            // add at the bottom of a block (relative)
+            geom = new mxGeometry(cell.getGeometry().getWidth() / 2, cell.getGeometry().getHeight() + 2*BasicPort.DEFAULT_PORTSIZE, 0., 0.);
+        } else {
+            // center over the link, absolute as link geometry is (0,0)
+            geom = new mxGeometry(src.getX(), src.getY() + BasicPort.DEFAULT_PORTSIZE, 0., 0.);
+            geom.translate((trgt.getX() - src.getX()) / 2, (trgt.getY() - src.getY()) / 2);
+        }
+
+        return geom;
     }
 
     /**
@@ -2174,6 +2228,9 @@ public class XcosDiagram extends ScilabGraph {
             return getToolTipForCell((BasicPort) cell);
         } else if (cell instanceof BasicLink) {
             return getToolTipForCell((BasicLink) cell);
+        } else if (cell instanceof XcosCell) {
+            // raw value
+            return getToolTipForCell((XcosCell) cell);
         }
         return "";
     }
@@ -2336,6 +2393,35 @@ public class XcosDiagram extends ScilabGraph {
             formatDatatype(result, intVecValue)
             .append(ScilabGraphConstants.HTML_END_CODE).append(ScilabGraphConstants.HTML_NEWLINE);
         }
+
+        controller.getObjectProperty(o.getUID(), o.getKind(), ObjectProperties.STYLE, strValue);
+        result.append(XcosMessages.TOOLTIP_STYLE).append(ScilabGraphConstants.HTML_BEGIN_CODE);
+        appendReduced(result, strValue[0])
+        .append(ScilabGraphConstants.HTML_END_CODE).append(ScilabGraphConstants.HTML_NEWLINE);
+
+        result.append(ScilabGraphConstants.HTML_END);
+        return result.toString();
+    }
+
+    private String getToolTipForCell(final XcosCell o) {
+        JavaController controller = new JavaController();
+        String[] strValue = {""};
+
+        StringBuilder result = new StringBuilder();
+        result.append(ScilabGraphConstants.HTML_BEGIN);
+
+        result.append(ScilabGraphConstants.HTML_BEGIN_CODE);
+        appendReduced(result, "[ " + o.getUID() + " , " + o.getKind().name() + " ]")
+        .append(ScilabGraphConstants.HTML_END_CODE).append(ScilabGraphConstants.HTML_NEWLINE);
+        
+        controller.getObjectProperty(o.getUID(), o.getKind(), ObjectProperties.NAME, strValue);
+        result.append(ScilabGraphConstants.HTML_BEGIN_CODE);
+        result.append(strValue[0])
+        .append(ScilabGraphConstants.HTML_END_CODE).append(ScilabGraphConstants.HTML_NEWLINE);
+        controller.getObjectProperty(o.getUID(), o.getKind(), ObjectProperties.DESCRIPTION, strValue);
+        result.append(ScilabGraphConstants.HTML_BEGIN_CODE);
+        result.append(strValue[0])
+        .append(ScilabGraphConstants.HTML_END_CODE).append(ScilabGraphConstants.HTML_NEWLINE);
 
         controller.getObjectProperty(o.getUID(), o.getKind(), ObjectProperties.STYLE, strValue);
         result.append(XcosMessages.TOOLTIP_STYLE).append(ScilabGraphConstants.HTML_BEGIN_CODE);

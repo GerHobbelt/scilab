@@ -712,7 +712,7 @@ public final class XcosCellFactory {
      * Annotation management
      */
 
-    private static XcosCell createAnnotation(JavaController controller, long uid, Kind kind) {
+    public static XcosCell createAnnotation(JavaController controller, long uid, Kind kind) {
         String[] description = new String[] { "" };
         controller.getObjectProperty(uid, kind, ObjectProperties.DESCRIPTION, description);
 
@@ -730,6 +730,13 @@ public final class XcosCellFactory {
 
         String[] style = new String[1];
         controller.getObjectProperty(uid, kind, ObjectProperties.STYLE, style);
+        if (!style[0].startsWith("TEXT_f")) {
+            String styleWithPrefix = "TEXT_f";
+            if (!style[0].isEmpty()) {
+                styleWithPrefix = styleWithPrefix + ";" + style[0];
+            }
+            style[0] = styleWithPrefix;
+        }
 
         XcosCell label = new XcosCell(controller, uid, kind, description[0], geometry, style[0], strUID[0]);
         label.setConnectable(false);

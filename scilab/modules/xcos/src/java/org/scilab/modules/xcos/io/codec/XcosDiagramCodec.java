@@ -279,7 +279,8 @@ public class XcosDiagramCodec extends ScilabGraphCodec {
         }
 
         // remove dual identifier cells
-        if (idValue.endsWith(XcosDiagram.HASH_IDENTIFIER + XcosDiagram.HASH_IDENTIFIER)) {
+        final String HASH_IDENTIFIER = "#identifier";
+        if (idValue.endsWith(HASH_IDENTIFIER + HASH_IDENTIFIER)) {
             trash.add(cell);
         }
     }

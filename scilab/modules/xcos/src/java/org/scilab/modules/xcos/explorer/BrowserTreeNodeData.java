@@ -123,6 +123,10 @@ public class BrowserTreeNodeData {
 
     private void htmlAnnotation(final StringBuilder str, final Controller controller) {
         tag(str, "h1", "Annotation");
+        
+        String[] description = new String[1];
+        controller.getObjectProperty(uid, kind, ObjectProperties.DESCRIPTION, description);
+        tag(str, "code", description[0]);
     }
 
     private void htmlBlock(final StringBuilder str, final Controller controller) {
@@ -140,6 +144,22 @@ public class BrowserTreeNodeData {
         controller.getObjectProperty(uid, kind, ObjectProperties.UID, uuid);
 
         tag(str, "h1", "Block " + interf[0] + " : " + title[0]);
+        
+        /*
+         * Extract documentation information
+         */
+        
+        String[] description = new String[1];
+        controller.getObjectProperty(uid, kind, ObjectProperties.DESCRIPTION, description);
+        tag(str, "code", description[0]);
+
+        long[] labelID = { 0 };
+        controller.getObjectProperty(uid, kind, ObjectProperties.LABEL, labelID);
+        controller.getObjectProperty(labelID[0], Kind.ANNOTATION, ObjectProperties.DESCRIPTION, description);
+        if (labelID[0] != 0 && description[0] != "") {
+            tag(str, "strong", "Label");
+            tag(str, "p", description[0]);
+        }
 
         /*
          * Render some graphics elements
@@ -186,6 +206,22 @@ public class BrowserTreeNodeData {
 
     private void htmlLink(final StringBuilder str, final Controller controller) {
         tag(str, "h1", "Link");
+        
+        /*
+         * Extract documentation information
+         */
+        
+        String[] description = new String[1];
+        controller.getObjectProperty(uid, kind, ObjectProperties.DESCRIPTION, description);
+        tag(str, "code", description[0]);
+
+        long[] labelID = { 0 };
+        controller.getObjectProperty(uid, kind, ObjectProperties.LABEL, labelID);
+        controller.getObjectProperty(labelID[0], Kind.ANNOTATION, ObjectProperties.DESCRIPTION, description);
+        if (labelID[0] != 0 && description[0] != "") {
+            tag(str, "strong", "Label");
+            tag(str, "p", description[0]);
+        }
     }
 
     private static StringBuilder tag(StringBuilder str, String tag, CharSequence content) {
@@ -271,32 +307,61 @@ public class BrowserTreeNodeData {
             return "Root";
         }
 
+        String str = "";
+        boolean status;
+        String[] interf = { "" };
+        String[] name = { "" };
         final boolean ALWAYS_DISPLAY_ID = true;
         JavaController controller = new JavaController();
         switch (kind) {
             case ANNOTATION:
-                return "Annotation" + " : " + uid;
-            case BLOCK: {
-                String[] interf = { "" };
-                boolean status = controller.getObjectProperty(uid, kind, ObjectProperties.INTERFACE_FUNCTION, interf);
-                if (!status || interf[0].isEmpty() || ALWAYS_DISPLAY_ID) {
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
+                if (!status || name[0].isEmpty()) {
+                    return "Annotation" + " : " + uid;
+                }
+                str = "Annotation " + name[0];
+                break;
+            case BLOCK:
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.INTERFACE_FUNCTION, interf);
+                if (!status || interf[0].isEmpty()) {
                     return "Block" + " : " + uid;
                 }
-                return interf[0];
-            }
-            case DIAGRAM: {
-                String[] name = { "" };
-                boolean status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
-                if (!status || name[0].isEmpty() || ALWAYS_DISPLAY_ID) {
-                    return "Untitled" + " : " + uid;
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
+                if (!status || name[0].isEmpty()) {
+                    str = "Block " + interf[0];
+                    break;
                 }
-                return name[0];
+                str = "Block " + interf[0] + " \"" + name[0] + "\"";
+                break;
+            case DIAGRAM: {
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
+                if (!status || name[0].isEmpty()) {
+                    return "Diagram" + " : " + uid;
+                }
+                str = "Diagram " + name[0];
+                break;
             }
             case LINK:
-                return "Link" + " : " + uid;
-            default:
-                return "";
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
+                if (!status || name[0].isEmpty()) {
+                    return "Link" + " : " + uid;
+                }
+                str = "Link " + name[0];
+                break;
+            case PORT:
+                status = controller.getObjectProperty(uid, kind, ObjectProperties.NAME, name);
+                if (!status || name[0].isEmpty()) {
+                    return "Port" + " : " + uid;
+                }
+                str = "Port " + name[0];
+                break;
         }
+
+        if (ALWAYS_DISPLAY_ID) {
+            str = str + " : " + uid;
+        }
+
+        return str;
     }
 
     /*

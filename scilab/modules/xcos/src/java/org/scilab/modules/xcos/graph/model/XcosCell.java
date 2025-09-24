@@ -31,8 +31,6 @@ import com.mxgraph.model.mxGeometry;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxPoint;
 import java.rmi.server.UID;
-import java.util.regex.Pattern;
-import org.scilab.modules.xcos.block.BasicBlock;
 import org.scilab.modules.xcos.block.TextBlock;
 
 /**
@@ -46,7 +44,6 @@ import org.scilab.modules.xcos.block.TextBlock;
  */
 public class XcosCell extends mxCell {
     private static final long serialVersionUID = 1L;
-    private static Pattern validCIdentifier = null;
 
     private transient ScicosObjectOwner owner;
 
@@ -54,16 +51,19 @@ public class XcosCell extends mxCell {
      * Construct an Xcos graphical object.
      *
      * @param controller
-     *            the shared controller
+     *                   the shared controller
      * @param uid
-     *            the associated MVC identifier
+     *                   the associated MVC identifier
      * @param kind
-     *            the associated MVC kind
+     *                   the associated MVC kind
      */
-    public XcosCell(final JavaController controller, final long uid, final Kind kind, Object value, mxGeometry geometry, String style, String id) {
+    public XcosCell(final JavaController controller, final long uid, final Kind kind, Object value, mxGeometry geometry,
+            String style, String id) {
         this(controller, new ScicosObjectOwner(controller, uid, kind), value, geometry, style, id);
     }
-    public XcosCell(final JavaController controller, ScicosObjectOwner owner, Object value, mxGeometry geometry, String style, String id) {
+
+    public XcosCell(final JavaController controller, ScicosObjectOwner owner, Object value, mxGeometry geometry,
+            String style, String id) {
         super();
 
         // defensive programming
@@ -111,12 +111,41 @@ public class XcosCell extends mxCell {
         setMVCValue(controller, value);
     }
 
+    // Valid C identifier definition helper : alphabet with '_'
+    public static boolean is_nondigit(int c) {
+        return ('A' <= c && c <= 'Z') || ('a' <= c && c <= 'z') || '_' == c;
+    }
+
+    // Valid C identifier definition helper : digit
+    public static boolean is_digit(int c) {
+        return ('0' <= c && c <= '9');
+    }
+
+    // Valid C identifier definition
+    // https://msdn.microsoft.com/en-us/library/e7f8y25b.aspx
+    public static boolean isValidCIdentifier(String name) {
+        // is a valid but empty string
+        if (name.isEmpty())
+        {
+            return true;
+        }
+        // the first character should be a non digit
+        if (!is_nondigit(name.codePoints().findFirst().getAsInt()))
+        {
+            return false;
+        }
+        // others should be either a digit or a non digit
+        boolean found = name.codePoints().skip(1).allMatch(c -> (is_nondigit(c) || is_digit(c)));
+        return found;
+    }
+
+
     /**
      * Store the value on the C++ model.
+     * 
      * @param controller the controller
-     * @param value the value to store
+     * @param value      the value to store
      */
-    @SuppressWarnings("fallthrough")
     protected void setMVCValue(JavaController controller, Object value) {
         if (value == null) {
             return;
@@ -124,13 +153,10 @@ public class XcosCell extends mxCell {
 
         switch (getKind()) {
             case BLOCK:
-                if (validCIdentifier == null) {
-                    validCIdentifier = Pattern.compile("[a-zA-Z_][a-zA-Z0-9_]*");
-                }
-                String description = String.valueOf(value);
-                if (validCIdentifier.matcher(description).matches()) {
+                String name = String.valueOf(value);
+                if (name.isEmpty() || isValidCIdentifier(name)) {
                     // a block name should be a valid C / Scilab identifier to ease codegeneration
-                    controller.setObjectProperty(getUID(), getKind(), ObjectProperties.NAME, description);
+                    controller.setObjectProperty(getUID(), getKind(), ObjectProperties.NAME, name);
                 }
                 break;
             case ANNOTATION:
@@ -216,17 +242,20 @@ public class XcosCell extends mxCell {
             }
             case LINK: {
                 /*
-                 * try to find the origin of the source and target accordingly to the JGraphX implementation
+                 * try to find the origin of the source and target accordingly to the JGraphX
+                 * implementation
                  */
                 mxPoint sourcePoint = null;
                 mxPoint targetPoint = null;
                 mxICell sourceCell = getSource();
                 mxICell targetCell = getTarget();
                 if (sourceCell != null && sourceCell.getGeometry() != null) {
-                    sourcePoint = new mxPoint(sourceCell.getGeometry().getCenterX(), sourceCell.getGeometry().getCenterY());
+                    sourcePoint = new mxPoint(sourceCell.getGeometry().getCenterX(),
+                            sourceCell.getGeometry().getCenterY());
                 }
                 if (targetCell != null && targetCell.getGeometry() != null) {
-                    targetPoint = new mxPoint(targetCell.getGeometry().getCenterX(), targetCell.getGeometry().getCenterY());
+                    targetPoint = new mxPoint(targetCell.getGeometry().getCenterX(),
+                            targetCell.getGeometry().getCenterY());
                 }
                 if (sourcePoint == null) {
                     sourcePoint = geometry.getSourcePoint();
@@ -246,7 +275,8 @@ public class XcosCell extends mxCell {
                 }
 
                 /*
-                 * At that point, the sourcePoint, targetPoint and points are valid values (but may be unknown) encode them to the the CONTROL_POINTS
+                 * At that point, the sourcePoint, targetPoint and points are valid values (but
+                 * may be unknown) encode them to the the CONTROL_POINTS
                  */
 
                 // Allocate some space to contains them all
@@ -316,7 +346,8 @@ public class XcosCell extends mxCell {
     public void removeFromParent() {
         super.removeFromParent();
 
-        // do not remove from parent on SUPER_f diagram creation : there is an MVC parent but no JGraphX one
+        // do not remove from parent on SUPER_f diagram creation : there is an MVC
+        // parent but no JGraphX one
         if (parent == null) {
             return;
         }
@@ -494,6 +525,8 @@ public class XcosCell extends mxCell {
         switch (getKind()) {
             case BLOCK:
                 switch (c.getKind()) {
+                    case DIAGRAM:
+                        break;
                     case ANNOTATION:
                         if (c instanceof TextBlock) {
                             // a TEXT_f block inside a superblock
@@ -505,7 +538,7 @@ public class XcosCell extends mxCell {
                         break;
                     case BLOCK:
                     case LINK:
-                        insertChild(c, index);
+                        insertLabel(c);
                         break;
                     case PORT:
                         insertPort(c, index);
@@ -513,7 +546,14 @@ public class XcosCell extends mxCell {
                 }
                 break;
             case DIAGRAM:
+                // an annotation as a block inside a diagram
                 insertChild(c, index);
+                break;
+            case LINK:
+                if (c.getKind() == Kind.ANNOTATION) {
+                    // an annotation attached to the link
+                    insertLabel(c);
+                }
                 break;
             default:
                 break;
@@ -532,7 +572,8 @@ public class XcosCell extends mxCell {
 
         if (property != null) {
             controller.getObjectProperty(getUID(), getKind(), property, children);
-            // do no use the index argument as it is not possible to insert out of order on the MVC (as we have kind of port)
+            // do no use the index argument as it is not possible to insert out of order on
+            // the MVC (as we have kind of port)
             children.add(c.getUID());
             controller.setObjectProperty(getUID(), getKind(), property, children);
         }
@@ -549,7 +590,7 @@ public class XcosCell extends mxCell {
 
     private void insertLabel(XcosCell c) {
         JavaController controller = new JavaController();
-
+        
         controller.setObjectProperty(getUID(), getKind(), ObjectProperties.LABEL, c.getUID());
     }
 
@@ -572,6 +613,8 @@ public class XcosCell extends mxCell {
         switch (getKind()) {
             case BLOCK:
                 switch (c.getKind()) {
+                    case DIAGRAM:
+                        break;
                     case ANNOTATION:
                         if (c instanceof TextBlock) {
                             // a TEXT_f block inside a superblock

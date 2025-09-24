@@ -47,7 +47,6 @@ import org.scilab.modules.xcos.block.TextBlock;
 import org.scilab.modules.xcos.graph.XcosDiagram;
 import org.scilab.modules.xcos.utils.XcosMessages;
 
-import com.mxgraph.model.mxCell;
 import com.mxgraph.model.mxGraphModel;
 import com.mxgraph.model.mxICell;
 import com.mxgraph.util.mxConstants;
@@ -55,6 +54,7 @@ import com.mxgraph.util.mxEvent;
 import com.mxgraph.util.mxEventObject;
 import com.mxgraph.util.mxUtils;
 import java.util.List;
+
 import org.scilab.modules.xcos.JavaController;
 import org.scilab.modules.xcos.Kind;
 import org.scilab.modules.xcos.ObjectProperties;
@@ -129,7 +129,7 @@ public final class EditFormatAction extends DefaultAction {
      * @param graph
      *            the current graph
      */
-    public static void showDialog(ScilabComponent c, String name, mxCell selectedCell, XcosDiagram graph) {
+    public static void showDialog(ScilabComponent c, String name, XcosCell selectedCell, XcosDiagram graph) {
         /*
          * Looking for the parent window
          */
@@ -156,7 +156,7 @@ public final class EditFormatAction extends DefaultAction {
      */
     // CSOFF: NPathComplexity
     // CSOFF: JavaNCSS
-    private static EditFormatDialog createDialog(final mxCell cell, final XcosDiagram graph, final Frame window) {
+    private static EditFormatDialog createDialog(XcosCell cell, final XcosDiagram graph, final Frame window) {
         String working;
         Color border;
         Color fill;
@@ -169,16 +169,24 @@ public final class EditFormatAction extends DefaultAction {
         String image = null;
 
         final mxGraphModel model = (mxGraphModel) graph.getModel();
-        final StyleMap cellStyle = new StyleMap(cell.getStyle());
+        StyleMap cellStyle = new StyleMap(cell.getStyle());
 
-        final mxCell identifier;
-        final StyleMap identifierStyle;
+        XcosCell identifier = null;
+        StyleMap identifierStyle = new StyleMap("");
+        
         if (cell instanceof TextBlock) {
             identifier = cell;
             identifierStyle = cellStyle;
+        } else if (cell.getKind() == Kind.ANNOTATION) {
+            identifier = cell;
+            identifierStyle = cellStyle;
+            cell = (XcosCell) cell.getParent();
+            cellStyle = new StyleMap(cell.getStyle());
         } else {
-            identifier = graph.getOrCreateCellIdentifier(cell);
-            identifierStyle = new StyleMap(identifier.getStyle());
+            identifier = graph.getCellIdentifier(cell);
+            if (identifier != null) {
+                identifierStyle.putAll(identifier.getStyle());
+            }
         }
 
         /*
@@ -311,10 +319,10 @@ public final class EditFormatAction extends DefaultAction {
         final XcosDiagram graph = dialog.getGraph();
         final mxGraphModel model = (mxGraphModel) graph.getModel();
 
-        final mxCell cell = dialog.getCell();
+        final XcosCell cell = dialog.getCell();
         final StyleMap cellStyle = new StyleMap(cell.getStyle());
 
-        final mxCell identifier;
+        final XcosCell identifier;
         final StyleMap identifierStyle;
         if (cell instanceof TextBlock) {
             identifier = cell;
@@ -364,17 +372,26 @@ public final class EditFormatAction extends DefaultAction {
         }
 
         // convert to a C / Scilab compatible variable name
+        // @see XcosCell.isValidCIdentifier
         StringBuilder str = new StringBuilder(oneliner.length());
-        for (char c : oneliner.toCharArray()) {
-            if (('0' <= c && c <= '9') || ('a' <= c && c <= 'z') || ('A' <= c && c <= 'Z') || ( c == '_')) {
-                str.append(c);
-            }
-            if (c == ' ') {
-                str.append('_');
-            }
-        }
-        if (str.length() > 0 && '0' <= str.charAt(0) && str.charAt(0) <= '9') {
+        oneliner.codePoints()
+            .dropWhile(c -> !XcosCell.is_nondigit(c))
+            .map(c -> Character.isWhitespace(c) ? '_' : c)
+            .filter(c -> XcosCell.is_nondigit(c) || XcosCell.is_digit(c))
+            .forEach(c -> str.append((char) c));
+        // on failure, the input might containing only numbers
+        // add a leading '_'
+        if (str.isEmpty()) {
             str.insert(0, '_');
+            oneliner.codePoints()
+                .dropWhile(c -> !XcosCell.is_nondigit(c) && !XcosCell.is_digit(c))
+                .map(c -> Character.isWhitespace(c) ? '_' : c)
+                .filter(c -> XcosCell.is_nondigit(c) || XcosCell.is_digit(c))
+                .forEach(c -> str.append((char) c));
+        }
+        // still on failure, set as empty
+        if (str.length() == 1 && str.charAt(0) == '_') {
+            str.setLength(0);
         }
         oneliner = str.toString();
 
@@ -433,10 +450,10 @@ public final class EditFormatAction extends DefaultAction {
         final XcosDiagram graph = dialog.getGraph();
         final mxGraphModel model = (mxGraphModel) graph.getModel();
 
-        final mxCell cell = dialog.getCell();
+        final XcosCell cell = dialog.getCell();
         final StyleMap cellStyle = new StyleMap(cell.getStyle());
 
-        final mxCell identifier;
+        final XcosCell identifier;
         if (cell instanceof TextBlock) {
             identifier = cell;
         } else {
@@ -512,6 +529,10 @@ public final class EditFormatAction extends DefaultAction {
      */
     @Override
     public void actionPerformed(ActionEvent e) {
+        actionPerformed();
+    }
+    
+    public void actionPerformed() {
         XcosDiagram graph = (XcosDiagram) getGraph(null);
         final Object selectedCell = graph.getSelectionCell();
 
@@ -519,7 +540,7 @@ public final class EditFormatAction extends DefaultAction {
             return;
         }
 
-        EditFormatAction.showDialog((ScilabComponent) graph.getAsComponent(), NAME, (mxCell) selectedCell, graph);
+        EditFormatAction.showDialog((ScilabComponent) graph.getAsComponent(), NAME, (XcosCell) selectedCell, graph);
 
         graph.getView().clear(selectedCell, true, true);
         graph.refresh();
@@ -575,7 +596,7 @@ public final class EditFormatAction extends DefaultAction {
         private javax.swing.JPanel buttonPane;
 
         private XcosDiagram graph;
-        private mxCell cell;
+        private XcosCell cell;
 
         private final transient ChangeListener defaultChangeListener = new ChangeListener() {
             /**
@@ -680,7 +701,7 @@ public final class EditFormatAction extends DefaultAction {
          * @param selectedCell
          *            the current cell
          */
-        public void setCell(mxCell selectedCell) {
+        public void setCell(XcosCell selectedCell) {
             cell = selectedCell;
 
             // enable/disable the fill color pane
@@ -696,7 +717,7 @@ public final class EditFormatAction extends DefaultAction {
         /**
          * @return the currently selected cell
          */
-        public mxCell getCell() {
+        public XcosCell getCell() {
             return cell;
         }
 
@@ -881,12 +902,27 @@ public final class EditFormatAction extends DefaultAction {
                  */
                 @Override
                 public void actionPerformed(ActionEvent e) {
-                    graph.getModel().beginUpdate();
-                    EditFormatAction.updateFromDialog(getDialog(), borderColorChooser.getColor(), backgroundColorChooser.getColor(),
-                                                      (String) fontNameComboBox.getSelectedItem(), (Integer) fontSizeSpinner.getValue(), textColorChooser.getColor(),
-                                                      fontStyleBold.isSelected(), fontStyleItalic.isSelected(), labelArea.getText(), mxUtils.getBodyMarkup(textArea.getText(), false), imagePath.getText());
-                    graph.getModel().endUpdate();
-                    getDialog().dispose();
+                    try
+                    {
+                        graph.getModel().beginUpdate();
+
+                        EditFormatAction.updateFromDialog(getDialog(),
+                                borderColorChooser.getColor(),
+                                backgroundColorChooser.getColor(),
+                                (String) fontNameComboBox.getSelectedItem(),
+                                (Integer) fontSizeSpinner.getValue(),
+                                textColorChooser.getColor(),
+                                fontStyleBold.isSelected(),
+                                fontStyleItalic.isSelected(),
+                                labelArea.getText(),
+                                mxUtils.getBodyMarkup(textArea.getText(), false),
+                                imagePath.getText());
+                    }
+                    finally
+                    {
+                        graph.getModel().endUpdate();
+                        getDialog().dispose();
+                    }
                 }
             });
 

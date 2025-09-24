@@ -866,21 +866,4 @@ public class BasicBlock extends XcosCell implements Serializable {
     public boolean isConnectable() {
         return false;
     }
-
-    /**
-     * {@inheritDoc}
-     *
-     * Sync the specific child {@link EditFormatAction#HASH_IDENTIFIER}
-     */
-    @Override
-    public mxICell insert(mxICell child, int index) {
-        /*
-         * Update the id if this is an identifier cell (herited identifier)
-         */
-        if (child.getId().endsWith(XcosDiagram.HASH_IDENTIFIER)) {
-            child.setId(getId() + XcosDiagram.HASH_IDENTIFIER);
-        }
-
-        return super.insert(child, index);
-    }
 }

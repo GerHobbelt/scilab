@@ -26,10 +26,12 @@ import javax.swing.SwingUtilities;
 
 import org.scilab.modules.graph.ScilabGraph;
 import org.scilab.modules.graph.actions.base.GraphActionManager;
+import org.scilab.modules.xcos.actions.EditFormatAction;
 import org.scilab.modules.xcos.block.BasicBlock;
 import org.scilab.modules.xcos.block.TextBlock;
 import org.scilab.modules.xcos.block.actions.BlockParametersAction;
 import org.scilab.modules.xcos.graph.model.BlockInterFunction;
+import org.scilab.modules.xcos.graph.model.XcosCell;
 import org.scilab.modules.xcos.graph.model.XcosCellFactory;
 import org.scilab.modules.xcos.graph.swing.GraphComponent;
 import org.scilab.modules.xcos.link.BasicLink;
@@ -108,6 +110,8 @@ public class GraphHandler extends mxGraphHandler {
                 } else if (cell instanceof BasicPort) {
                     // translated to the parent
                     openBlock(graphComponent, e, (BasicBlock) ((BasicPort) cell).getParent());
+                } else if (cell instanceof XcosCell) {
+                    openCell(graphComponent, e, (XcosCell) cell);
                 } else if (cell == null) {
                     createTextBlock(e);
                 }
@@ -225,6 +229,14 @@ public class GraphHandler extends mxGraphHandler {
      */
     private void openBlock(mxGraphComponent comp, MouseEvent e, BasicBlock cell) {
         BlockParametersAction action = GraphActionManager.getInstance((ScilabGraph) comp.getGraph(), BlockParametersAction.class);
+        action.actionPerformed();
+
+        e.consume();
+    }
+
+    
+    private void openCell(mxGraphComponent comp, MouseEvent e, XcosCell cell) {
+        EditFormatAction action = GraphActionManager.getInstance((ScilabGraph) comp.getGraph(), EditFormatAction.class);
         action.actionPerformed();
 
         e.consume();
