@@ -116,6 +116,11 @@
                         along the colorbar. The formatting syntaxes are described in the
                         <link linkend="printf_conversion">printf_conversion</link> page.
                     </para>
+                    <warning>
+                        <para>
+                            If provided value is an invalid C-format, then graduated values labels will be displayed using default format.
+                        </para>
+                    </warning>
                 </listitem>
             </varlistentry>
             <varlistentry>

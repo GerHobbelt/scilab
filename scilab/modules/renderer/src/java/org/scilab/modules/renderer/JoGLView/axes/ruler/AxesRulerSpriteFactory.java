@@ -24,7 +24,6 @@ import org.scilab.modules.graphic_objects.axes.Axes;
 import org.scilab.modules.graphic_objects.axes.AxesContainer;
 import org.scilab.modules.graphic_objects.axes.AxisProperty;
 import org.scilab.modules.graphic_objects.figure.ColorMap;
-import org.scilab.modules.graphic_objects.figure.Figure;
 import org.scilab.modules.graphic_objects.graphicController.GraphicController;
 import org.scilab.modules.graphic_objects.textObject.FormattedText;
 import org.scilab.modules.renderer.JoGLView.util.ColorFactory;
@@ -35,6 +34,8 @@ import java.awt.Dimension;
 import java.awt.Font;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
+import java.util.IllegalFormatConversionException;
+import java.util.UnknownFormatConversionException;
 
 /**
  * This implementation of {@see RulerSpriteFactory} create ruler labels for the given {@see Axes}.
@@ -92,7 +93,7 @@ public class AxesRulerSpriteFactory implements RulerSpriteFactory {
             if (axisProperty.getLogFlag()) {
                 return createScientificStyleSprite(value, textureManager);
             } else {
-                String text;
+                String text = null;
                 if (axisProperty.getFormat().isEmpty()) {
                 	text = adaptedFormat.format(value);
                 } else {
@@ -100,7 +101,18 @@ public class AxesRulerSpriteFactory implements RulerSpriteFactory {
                     // default [x_s, x_t] = {1., 0.}
                     Double[] x_st = axisProperty.getSTFactors();
                     double displayValue = x_st[0] * (value - x_st[1]);
-                	text = String.format(axisProperty.getFormat(), displayValue);
+                    try {
+                        text = String.format(axisProperty.getFormat(), displayValue);
+                    } catch (IllegalFormatConversionException e) {
+                        // Try to convert value to int as C-printf() supports %d for double values (but Java String.format() does not)
+                        try {
+                            text = String.format(axisProperty.getFormat(), (int) displayValue);
+                        } catch (IllegalFormatConversionException ee) {
+                            text = adaptedFormat.format(value); // Illegal format => Use default format
+                        }
+                    } catch (UnknownFormatConversionException e) {
+                        text = adaptedFormat.format(value); // Unknown format => Use default format
+                    }
                 }
                 return createSimpleSprite(text, textureManager);
             }

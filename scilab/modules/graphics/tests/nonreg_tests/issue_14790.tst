@@ -20,17 +20,17 @@ plot(1:10, 1:10);
 a = gca();
 x_ticks_locations = a.x_ticks.locations;
 x_ticks_labels = a.x_ticks.labels;
-assert_checkequal(x_ticks_locations, (1:10)')
-assert_checkequal(x_ticks_labels, string(1:10)')
+assert_checkequal(x_ticks_locations, (1:10)');
+assert_checkequal(x_ticks_labels, string(1:10)');
 y_ticks_locations = a.y_ticks.locations;
 y_ticks_labels = a.y_ticks.labels;
-assert_checkequal(y_ticks_locations, (1:10)')
-assert_checkequal(y_ticks_labels, string(1:10)')
+assert_checkequal(y_ticks_locations, (1:10)');
+assert_checkequal(y_ticks_labels, string(1:10)');
 
 // change ticks format => check display us updated
-x_ticks_format = "** %.2f @@"
-y_ticks_format = "## %.3f $$"
-a.ticks_format = [x_ticks_format, y_ticks_format, ""]
+x_ticks_format = "** %.2f @@";
+y_ticks_format = "## %.3f $$";
+a.ticks_format = [x_ticks_format, y_ticks_format, ""];
 
 x_ticks_locations = a.x_ticks.locations;
 x_ticks_labels = a.x_ticks.labels;
@@ -47,7 +47,7 @@ end
 
 // restore ticks format
 // change ticks_st
-a.ticks_format = ["", "", ""]
+a.ticks_format = ["", "", ""];
 x_s = 10;
 x_t = 0.5;
 y_s = 0.1;
@@ -70,13 +70,25 @@ x_ticks_locations = a.x_ticks.locations;
 x_ticks_labels = a.x_ticks.labels;
 N = size(x_ticks_locations, '*');
 for i = 1:N
-    display_x = x_s * (x_ticks_locations(i) - x_t)
-    assert_checkequal(x_ticks_labels(i), sprintf(x_ticks_format, display_x))
+    display_x = x_s * (x_ticks_locations(i) - x_t);
+    assert_checkequal(x_ticks_labels(i), sprintf(x_ticks_format, display_x));
 end
 y_ticks_locations = a.y_ticks.locations;
 y_ticks_labels = a.y_ticks.labels;
 N = size(y_ticks_locations, '*');
 for i = 1:N
-    display_y = y_s * (y_ticks_locations(i) - y_t)
+    display_y = y_s * (y_ticks_locations(i) - y_t);
     assert_checkequal(y_ticks_labels(i), sprintf(y_ticks_format, display_y));
 end
+// now add invalid format
+x_ticks_format = "** %.2i @@";
+y_ticks_format = "## %.3i $$";
+a.ticks_format = [x_ticks_format, y_ticks_format, ""];
+x_ticks_locations = a.x_ticks.locations;
+x_ticks_labels = a.x_ticks.labels;
+N = size(x_ticks_locations, '*');
+assert_checkequal(x_ticks_labels, string(1:10)');
+y_ticks_locations = a.y_ticks.locations;
+y_ticks_labels = a.y_ticks.labels;
+N = size(y_ticks_locations, '*');
+assert_checkequal(y_ticks_labels, string(1:10)');

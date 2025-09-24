@@ -423,7 +423,7 @@
                                 <para>
                                     This property specifies the format to use for each axes.
                                     It is a row vector with at most 3 columns containing strings
-                                    format (as specified for <link linkend="mprintf">mprintf</link>).
+                                    format as specified in the <link linkend="printf_conversion">printf_conversion</link> page.
                                     Each ticks position will be used to format the string used as label.
                                 </para>
                                 <para>
@@ -431,12 +431,19 @@
                                     in using scientific notation with two decimals.
                                 </para>
                                 <warning>
-                                   Labels are actually updated according to the newly set
-                                   <literal>.ticks_format(i)</literal> only if the
-                                   <literal>.auto_ticks(i)</literal> status of the axis #i is
-                                   <literal>"on"</literal>. Otherwise,
-                                   <literal>.ticks_format(i)</literal> is recorded without being
-                                   immediately used.
+                                    <para>
+                                        Labels are actually updated according to the newly set
+                                        <literal>.ticks_format(i)</literal> only if the
+                                        <literal>.auto_ticks(i)</literal> status of the axis #i is
+                                        <literal>"on"</literal>. Otherwise,
+                                        <literal>.ticks_format(i)</literal> is recorded without being
+                                        immediately used.
+                                    </para>
+                                </warning>
+                                <warning>
+                                    <para>
+                                        If provided value is an invalid C-format, then labels will be displayed using default format.
+                                    </para>
                                 </warning>
                             </listitem>
                         </varlistentry>
