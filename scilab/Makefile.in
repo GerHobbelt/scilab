@@ -123,38 +123,50 @@ host_triplet = @host@
 @GUI_TRUE@bin_PROGRAMS = scilab-bin$(EXEEXT) scilab-cli-bin$(EXEEXT)
 @IS_MACOSX_TRUE@am__append_1 = bin/checkmacosx.applescript
 
+# with devtools, we want to ensure that all symbols are resolved at link time
+
 #
 # using the static system libs might produce linkage issue (eg.
 # std::nothrow for instance) but it seems to be the only acceptable
 # solution for now.
 #
-@USE_STATIC_SYSTEM_LIB_TRUE@am__append_2 = -static-libstdc++ -static-libgcc -static-libgfortran
-@USE_STATIC_SYSTEM_LIB_TRUE@am__append_3 = -static-libstdc++ -static-libgcc -static-libgfortran
+@WITH_DEVTOOLS_TRUE@am__append_2 = -Wl,--no-undefined \
+@WITH_DEVTOOLS_TRUE@	-Wl,--no-allow-shlib-undefined \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libscigfortran.so.5 \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libsciquadmath.so.0 \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libscigcc_s.so.1
+@WITH_DEVTOOLS_TRUE@am__append_3 = -Wl,--no-undefined \
+@WITH_DEVTOOLS_TRUE@	-Wl,--no-allow-shlib-undefined \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libscigfortran.so.5 \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libsciquadmath.so.0 \
+@WITH_DEVTOOLS_TRUE@	usr/lib/libscigcc_s.so.1
+@USE_STATIC_SYSTEM_LIB_TRUE@@WITH_DEVTOOLS_FALSE@am__append_4 = -static-libstdc++ -static-libgcc -static-libgfortran
+@USE_STATIC_SYSTEM_LIB_TRUE@@WITH_DEVTOOLS_FALSE@am__append_5 = -static-libstdc++ -static-libgcc -static-libgfortran
 # Clang (for example) needs an explicit reference to the lib
-@USE_STATIC_SYSTEM_LIB_FALSE@am__append_4 = -lstdc++ -lgfortran
-@USE_STATIC_SYSTEM_LIB_FALSE@am__append_5 = -lstdc++ -lgfortran
-@IS_MACOSX_TRUE@am__append_6 = -framework Cocoa
-@NEED_JAVA_TRUE@am__append_7 = \
+@USE_STATIC_SYSTEM_LIB_FALSE@@WITH_DEVTOOLS_FALSE@am__append_6 = -lstdc++ -lgfortran
+@USE_STATIC_SYSTEM_LIB_FALSE@@WITH_DEVTOOLS_FALSE@am__append_7 = -lstdc++ -lgfortran
+@IS_MACOSX_TRUE@am__append_8 = -framework Cocoa
+@NEED_JAVA_TRUE@am__append_9 = \
 @NEED_JAVA_TRUE@			$(top_builddir)/modules/console/libsciconsole.la \
 @NEED_JAVA_TRUE@			$(top_builddir)/modules/jvm/libscijvm.la \
 @NEED_JAVA_TRUE@			$(top_builddir)/modules/commons/libscicommons.la
 
-@NEED_JAVA_FALSE@am__append_8 = \
+@NEED_JAVA_FALSE@am__append_10 = \
 @NEED_JAVA_FALSE@			$(top_builddir)/modules/console/libsciconsole-minimal.la \
 @NEED_JAVA_FALSE@			$(top_builddir)/modules/jvm/libscijvm-disable.la
 
-@MPI_TRUE@am__append_9 = modules/startup/src/c/initMPI.c
-@MPI_TRUE@am__append_10 = $(OPENMPI_CXXFLAGS)
 @MPI_TRUE@am__append_11 = modules/startup/src/c/initMPI.c
 @MPI_TRUE@am__append_12 = $(OPENMPI_CXXFLAGS)
+@MPI_TRUE@am__append_13 = modules/startup/src/c/initMPI.c
+@MPI_TRUE@am__append_14 = $(OPENMPI_CXXFLAGS)
 
 # Don't do it for scilab_cli_bin. We want to be able to call it without
 # the java libs
-@NEED_JAVA_TRUE@am__append_13 = $(JAVA_JNI_LIBS)
+@NEED_JAVA_TRUE@am__append_15 = $(JAVA_JNI_LIBS)
 
 #  The user wants to compile the localization files
-@GENERATE_LOCALIZATION_FILES_TRUE@am__append_14 = localization
-@COMPILATION_TESTS_TRUE@am__append_15 = check-java
+@GENERATE_LOCALIZATION_FILES_TRUE@am__append_16 = localization
+@COMPILATION_TESTS_TRUE@am__append_17 = check-java
 check_PROGRAMS = call_scilab_c_simple$(EXEEXT) call_scilab_c$(EXEEXT) \
 	call_scilab_c_getlastjob$(EXEEXT) \
 	call_scilab_c_DisableInteractiveMode$(EXEEXT) \
@@ -280,8 +292,8 @@ am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
 @NEED_JAVA_TRUE@am__DEPENDENCIES_3 = $(am__DEPENDENCIES_1)
 scilab_bin_DEPENDENCIES = $(top_builddir)/modules/libscilab.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
-	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) $(am__append_7) \
-	$(am__append_8) $(top_builddir)/modules/libscilab.la \
+	$(am__DEPENDENCIES_2) $(am__DEPENDENCIES_1) $(am__append_9) \
+	$(am__append_10) $(top_builddir)/modules/libscilab.la \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_1) \
 	$(am__DEPENDENCIES_1) $(am__DEPENDENCIES_3)
 scilab_bin_LINK = $(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) \
@@ -907,9 +919,9 @@ AM_LDFLAGS = $(SCI_LDFLAGS)
 @GUI_TRUE@bin_SCRIPTS = bin/scilab bin/scilab-adv-cli bin/scilab-cli \
 @GUI_TRUE@	bin/scinotes bin/xcos $(am__append_1)
 scilab_bin_LDFLAGS = $(AM_LDFLAGS) $(OPENMPI_LIBS) $(am__append_2) \
-	$(am__append_4) $(am__append_6)
+	$(am__append_4) $(am__append_6) $(am__append_8)
 scilab_cli_bin_LDFLAGS = $(AM_LDFLAGS) $(OPENMPI_LIBS) $(am__append_3) \
-	$(am__append_5)
+	$(am__append_5) $(am__append_7)
 scilab_bin_CPPFLAGS = -I$(top_srcdir)/modules/ast/includes/ast/ \
 	-I$(top_srcdir)/modules/ast/includes/exps/ \
 	-I$(top_srcdir)/modules/ast/includes/operations/ \
@@ -930,7 +942,7 @@ scilab_bin_CPPFLAGS = -I$(top_srcdir)/modules/ast/includes/ast/ \
 	-I$(top_srcdir)/modules/core/src/c/ \
 	-I$(top_srcdir)/modules/dynamic_link/includes/ \
 	-I$(top_srcdir)/modules/startup/src/c/ $(AM_CPPFLAGS) \
-	$(am__append_10)
+	$(am__append_12)
 
 # --no-undefined --relax
 
@@ -938,7 +950,7 @@ scilab_bin_CPPFLAGS = -I$(top_srcdir)/modules/ast/includes/ast/ \
 # (causing issues on some platform)
 COMMON_LIBS = $(LTLIBINTL)
 scilab_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \
-	$(am__append_9)
+	$(am__append_11)
 
 # the scilab-bin object file itself uses symbols from at least libscilab-cli.la,
 # libsciconsole-minimal.la and libscijvm-disable.la, so we have to link with these
@@ -950,15 +962,15 @@ scilab_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \
 # xerbla function
 scilab_bin_LDADD = $(top_builddir)/modules/libscilab.la \
 	$(OPENMPI_LIBS) $(XML_LIBS) $(COMMON_LIBS) $(FLIBS) \
-	$(am__append_7) $(am__append_8) \
+	$(am__append_9) $(am__append_10) \
 	$(top_builddir)/modules/libscilab.la $(BLAS_LIBS) \
-	$(LAPACK_LIBS) $(FLIBS) $(am__append_13)
+	$(LAPACK_LIBS) $(FLIBS) $(am__append_15)
 
 # Match scilab -nwni (ie command line without graphics)
 scilab_cli_bin_SOURCES = modules/startup/src/cpp/scilab.cpp \
-	$(am__append_11)
+	$(am__append_13)
 scilab_cli_bin_CPPFLAGS = -DWITHOUT_GUI $(scilab_bin_CPPFLAGS) \
-	$(am__append_12)
+	$(am__append_14)
 @IS_MACOSX_FALSE@scilab_cli_bin_LDADD = $(COMMON_LIBS) $(top_builddir)/modules/libscilab-cli.la $(BLAS_LIBS) $(LAPACK_LIBS) $(FLIBS)
 
 # See the comment about scilab_bin_LDADD (relative to BLAS_LIBS & LAPACK_LIBS)
@@ -980,7 +992,7 @@ scilab_cli_bin_CPPFLAGS = -DWITHOUT_GUI $(scilab_bin_CPPFLAGS) \
 @IS_MACOSX_TRUE@    $(BLAS_LIBS) $(LAPACK_LIBS) $(FLIBS)
 
 LANG_DOMAIN = scilab
-TARGETS_ALL = macros $(am__append_14) $(am__append_15)
+TARGETS_ALL = macros $(am__append_16) $(am__append_17)
 
 # check is performed with scilab, so use the serial-tests on purpose
 TESTS_ENVIRONMENT = LANG=C HOME=/tmp $(top_builddir)/bin/scilab-cli -nb -noatomsautoload -nouserstartup -f

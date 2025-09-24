@@ -41,6 +41,7 @@ else
     DEVTOOLS_INCDIR=
     DEVTOOLS_LIBDIR=
 fi
+AM_CONDITIONAL(WITH_DEVTOOLS, [test x$WITH_DEVTOOLS = xtrue])
 
 # Change version here, other files will be updated at the end of configure
 SCILAB_VERSION_MAJOR=2026
@@ -1829,7 +1830,16 @@ AC_SUBST(PCRE2_LIBS)
 ## Test for CURL
 #######################
 
-AC_CURL()
+if $WITH_DEVTOOLS; then # Scilab thirdparties
+    CURL_CFLAGS="-I$DEVTOOLS_INCDIR"
+    CURL_LIBS="-L$DEVTOOLS_LIBDIR -lscicurl -lssl -lcrypto -lsciz"
+    CURL_VERSION=$($DEVTOOLS_LIBDIR/curl-config --version)
+else
+    AC_CURL()
+fi
+AC_SUBST(CURL_CFLAGS)
+AC_SUBST(CURL_LIBS)
+AC_SUBST(CURL_VERSION)
 
 #################
 ## Tcl/Tk library

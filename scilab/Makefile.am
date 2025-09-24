@@ -44,11 +44,21 @@ endif
 scilab_bin_LDFLAGS      = $(AM_LDFLAGS) $(OPENMPI_LIBS)
 scilab_cli_bin_LDFLAGS  = $(AM_LDFLAGS) $(OPENMPI_LIBS)
 
+# with devtools, we want to ensure that all symbols are resolved at link time
+if WITH_DEVTOOLS
+scilab_bin_LDFLAGS      += -Wl,--no-undefined -Wl,--no-allow-shlib-undefined
+scilab_cli_bin_LDFLAGS  += -Wl,--no-undefined -Wl,--no-allow-shlib-undefined
+endif
+
 #
 # using the static system libs might produce linkage issue (eg.
 # std::nothrow for instance) but it seems to be the only acceptable
 # solution for now.
 #
+if WITH_DEVTOOLS
+scilab_bin_LDFLAGS += usr/lib/libscigfortran.so.5 usr/lib/libsciquadmath.so.0 usr/lib/libscigcc_s.so.1
+scilab_cli_bin_LDFLAGS += usr/lib/libscigfortran.so.5 usr/lib/libsciquadmath.so.0 usr/lib/libscigcc_s.so.1
+else
 if USE_STATIC_SYSTEM_LIB
 scilab_bin_LDFLAGS += -static-libstdc++ -static-libgcc -static-libgfortran
 scilab_cli_bin_LDFLAGS += -static-libstdc++ -static-libgcc -static-libgfortran
@@ -57,7 +67,7 @@ else
 scilab_bin_LDFLAGS += -lstdc++ -lgfortran
 scilab_cli_bin_LDFLAGS += -lstdc++ -lgfortran
 endif
-
+endif
 
 if IS_MACOSX
 scilab_bin_LDFLAGS 		+= -framework Cocoa
