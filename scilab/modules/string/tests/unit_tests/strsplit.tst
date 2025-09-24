@@ -4,34 +4,24 @@
 // Copyright (C) 2009 - DIGITEO - Allan CORNET
 // Copyright (C) 2014 - Scilab Enterprises - Anais AUBERT
 // Copyright (C) 2021 - Samuel GOUGEON
+// Copyright (C) 2025 - Dassault Systèmes S.E. - Clément DAVID
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
+
 //===============================
 // unit tests strsplit
 //===============================
-funcprot(0);
 STR_SPLITED = ["strsplit splits";"a string";"into";"a vector of strings"];
 STR = "strsplit splits a string into a vector of strings";
 INDICES = [15 25 30];
 R = stripblanks(strsplit(STR,INDICES));
 assert_checkequal(R, STR_SPLITED);
-//===============================
 assert_checkequal(strsplit([],[1 1 1]), []);
-//===============================
-// Scilab 4.x
-//if execstr('strsplit([],[3 2 1])','errcatch') <> 99  then pause,end
-// Scilab 5.x
 assert_checkequal(strsplit([],[3 2 1]), []);
-//===============================
 assert_checkequal(execstr("strsplit('''',[0 1])","errcatch"), 999);
-// Scilab 4.x
-//if execstr('strsplit([])','errcatch') <> 39  then pause,end
-// Scilab 5.1
-//if execstr('strsplit([])','errcatch') <> 77  then pause,end
-// Scilab 5.2
 assert_checkequal(execstr("strsplit([])","errcatch"), 0);
 assert_checkequal(strsplit([]), []);
 //===============================
@@ -220,5 +210,13 @@ assert_checkequal(strsplit(text, ascii(10)), STR_SPLITED);
 // with regexp
 text = strcat(STR_SPLITED, ascii(10));
 assert_checkequal(strsplit(text, "/(*ANYCRLF)\n/"), STR_SPLITED);
-//===============================
-funcprot(1);
+
+//After PCRE2 migration, strsubst and strsplit were not escaping $ properly.
+// single char search
+assert_checkequal(strsplit("this is a $string$", "$"), ["this is a ";"string";""]);
+// string search
+assert_checkequal(strsplit("this is a $€£string$€£", "$€£"), ["this is a ";"string";""]);
+// string pattern search
+assert_checkequal(strsplit("this is a $€£string$€£", "/\$€£/"), ["this is a ";"string";""]);
+// multi-string search (will trigger the overload and convert to a regexp)
+assert_checkequal(strsplit("this is a $€£string$€£", ["$€£" " "]), ["this";"is";"a";"";"string";""]);

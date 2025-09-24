@@ -61,20 +61,22 @@ function y = asciimat(x)
 
     else  // convert ascii codes to string
         dims = size(x)
-        x = permute(x, [2 1 3:ndims(x)]);
-        x = matrix(x,size(x,1),-1);
-        // Tags the EOL:
+        x_p = permute(x, [2 1 3:ndims(x)]);
+        x_column = matrix(x_p,size(x_p,1),-1);
+        // Add a separator between encoded values
         for c = ascii("$€£")
-            x($+1,:) = c;
+            x_column($+1,:) = c;
         end
-        //
-        x = matrix(x,1,-1)
-        // Any zero will block ascii(): https://gitlab.com/scilab/scilab/-/issues/15101
-        x(x==0) = []  // 0 <=> ""
-        x = [x, 65]   // works around https://gitlab.com/scilab/scilab/-/issues/16686
-        y = strsplit(ascii(x), "$€£");
-        y($) = []     // removes the ending ascii(65)
-        y = matrix(y, [dims(1) 1 dims(3:$)]); // dims#2 not squeezed (Matlab, Octave)
-        y = stripblanks(y,%f,1) // Matlab & Octave trim trailing ascii(32)(not \t)
+        // Any zero will block ascii(), avoid that
+        // see https://gitlab.com/scilab/scilab/-/issues/15101
+        x_column(x_column==0) = []  // 0 <=> ""
+        // convert and remove the separator
+        y_column = strsplit(ascii(x_column), "$€£");
+        // remove the trailing "" (added after last tag)
+        y_column = y_column(1:$-1,:);
+        // dims#2 not squeezed (Matlab, Octave)
+        y = matrix(y_column, [dims(1) 1 dims(3:$)]);
+        // Matlab & Octave trim trailing ascii(32)(not \t)
+        y = stripblanks(y,%f,1)
     end
 endfunction

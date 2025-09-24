@@ -148,7 +148,7 @@ types::Function::ReturnValue sci_regexp(types::typed_list &in, int _iRetCount, t
             pcre2_error("regexp", iPcreStatus, formattedErrorMessage);
             delete[] piStart;
             delete[] piEnd;
-            for (int i = 0; i < iOccurs; i++)
+            for (int i = 0; i < inputSize; i++)
             {
                 freeArrayOfWideString(pwstCapturedString[i], piCapturedStringCount[i]);
             }
@@ -269,7 +269,7 @@ types::Function::ReturnValue sci_regexp(types::typed_list &in, int _iRetCount, t
         out.push_back(pS);
     }
 
-    for (int i = 0; i < iOccurs; i++)
+    for (int i = 0; i < inputSize; i++)
     {
         freeArrayOfWideString(pwstCapturedString[i], piCapturedStringCount[i]);
     }

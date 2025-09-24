@@ -3,6 +3,7 @@
 // Copyright (C) 2023 - Dassault Systèmes S.E. - Antoine ELIAS
 //
 // <-- NO CHECK REF -->
+// <-- CLI SHELL MODE -->
 
 // <-- Non-regression test for bug 17137 -->
 //

@@ -26,10 +26,11 @@ extern "C"
 #include "Scierror.h"
 #include "localization.h"
 #include "strsplit.h"
+#include "pcre2_private.h"
 #include "freeArrayOfString.h"
 }
 
-static int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t delimiter, int limit);
+static int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t* delimiter, int limit);
 
 types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount, types::typed_list &out)
 {
@@ -172,28 +173,11 @@ types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount,
         else if (in[1]->isString())
         {
             types::String* pStr = in[1]->getAs<types::String>();
-            if (pStr->isScalar() == false)
+            if (pStr->isScalar() && pcre2_split_pattern(*pStr->get(), nullptr, nullptr, nullptr) == nullptr)
             {
-                // checks that 2nd parameter is not an array of regexp pattern
-                wchar_t** pwcsStr = pStr->get();
-                for (int i = 0; i < pStr->getSize(); i++)
-                {
-                    if (pwcsStr[i])
-                    {
-                        int iLen = (int)wcslen(pwcsStr[i]);
-                        if (iLen > 2 && pwcsStr[i][0] == L'/' && pwcsStr[i][iLen - 1] == L'/')
-                        {
-                            Scierror(999, _("%s: Wrong value for input argument #%d: a string expected, not a regexp pattern.\n"), "strsplit", 2);
-                            return types::Function::Error;
-                        }
-                    }
-                }
-            }
-            else if (wcslen(pStr->get(0)) == 1)
-            {
-                // a single delimiter to split on
+                // a string delimiter to split on
                 types::String* pStrOut = new types::String(1, 1);
-                int i = strsplit_delimiter(pStrIn->get(0), pStrOut, *pStr->get(0), iValueThree);
+                int i = strsplit_delimiter(pStrIn->get(0), pStrOut, pStr->get(0), iValueThree);
                 
                 out.push_back(pStrOut);
                 if (_iRetCount > 1)
@@ -213,7 +197,19 @@ types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount,
                     }
                 }
                 return types::Function::OK;
-
+            }
+            else if (!pStr->isScalar())
+            {
+                // checks that 2nd parameter is not an array of regexp pattern
+                wchar_t** pwcsStr = pStr->get();
+                for (int i = 0; i < pStr->getSize(); i++)
+                {
+                    if (pwcsStr[i] && pcre2_split_pattern(pwcsStr[i], nullptr, nullptr, nullptr) != nullptr)
+                    {
+                        Scierror(999, _("%s: Wrong value for input argument #%d: strings expected, not a regexp pattern.\n"), "strsplit", 2);
+                        return types::Function::Error;
+                    }
+                }
             }
         }
         else
@@ -226,31 +222,70 @@ types::Function::ReturnValue sci_strsplit(types::typed_list &in, int _iRetCount,
     return Overload::call(L"%_strsplit", in, _iRetCount, out);
 }
 /*-------------------------------------------------------------------------------------*/
-int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t delimiter, int limit)
+int strsplit_delimiter(wchar_t* in, types::String* pStrOut, wchar_t* delimiter, int limit)
 {
     wchar_t* remaining =  in;
+    size_t delimiter_len = wcslen(delimiter);
+
     int i = 0;
+
     if (limit < 1)
     {
         limit = INT_MAX;
     }
-    
-    wchar_t* next;
-    while((next = wcschr(remaining, delimiter)) != nullptr && i < limit)
+
+    auto next_delimiter = [delimiter_len](wchar_t* str, wchar_t* delimiter) -> wchar_t*
     {
+        // empty delimiter case : split on every character
+        if (delimiter_len == 0)
+        {    
+            // ensure we are not at the end
+            if (*str == L'\0')
+            {
+                return nullptr;
+            }
+            return str + 1;
+        }
+        // common delimiter case : split on a string
+        return wcsstr(str, delimiter);
+    };
+
+    // assign all parts till limit
+    wchar_t* next;
+    wchar_t* last_delimiter = nullptr;
+    while((next = next_delimiter(remaining, delimiter)) != nullptr && i < limit)
+    {
+        // reserve place for the part
+        pStrOut->resize(i+1, 1);
+
         // assign in-place (swap delimiter with end-of-line)
-        *next = '\0';
+        wchar_t pre = *next;
+        *next = L'\0';
         pStrOut->set(i, remaining);
-        *next = delimiter;
+        *next = pre;
 
         // iterate
-        remaining = next + 1;
+        last_delimiter = next;
+        remaining = next + delimiter_len;
         i++;
-
-        // reserve place for the remaining part
-        pStrOut->resize(i+1, 1);
     }
-    pStrOut->set(i, remaining);
+
+    // special case of empty delimiter and empty input string
+    if (i == 0 && delimiter_len == 0)
+    {
+        pStrOut->set(0, L"");
+        return 1;
+    }
+
+    // push the remaining:
+    //  * no delimiter found, the whole string is stored
+    //  * the limit is reached, there might be trailing content
+    //  * last delimiter is at the end of the input string, an empty string is added
+    if (i == 0 || i == limit || (delimiter_len > 0 && remaining == last_delimiter + delimiter_len))
+    {
+        pStrOut->resize(i+1, 1);
+        pStrOut->set(i, remaining);
+    }
     return i;
 }
 /*-------------------------------------------------------------------------------------*/

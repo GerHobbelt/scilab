@@ -19,7 +19,8 @@ pcre2_error_code pcre2_private(const wchar_t* INPUT_LINE, const wchar_t* INPUT_P
     }
 
     int compile_opts = 0;
-    wchar_t* pat = splitPattern(INPUT_PAT, &compile_opts, formattedErrorMessage);
+    size_t pat_len = 0;
+    wchar_t* pat = pcre2_split_pattern(INPUT_PAT, &pat_len, &compile_opts, formattedErrorMessage);
     if (pat == NULL)
     {
         return PCRE2_PRIV_DELIMITER_NOT_ALPHANUMERIC;
@@ -27,8 +28,7 @@ pcre2_error_code pcre2_private(const wchar_t* INPUT_LINE, const wchar_t* INPUT_P
 
     int errcode = 0;
     PCRE2_SIZE erroff = 0;
-    pcre2_code* re = pcre2_compile(pat, PCRE2_ZERO_TERMINATED, compile_opts, &errcode, &erroff, NULL);
-    FREE(pat);
+    pcre2_code* re = pcre2_compile(pat, pat_len, compile_opts, &errcode, &erroff, NULL);
     if (!re)
     {
         if (formattedErrorMessage)
@@ -151,8 +151,29 @@ void pcre2_error(const char* fname, int error, wchar_t* formattedErrorMessage)
     }
 }
 
-wchar_t* splitPattern(const wchar_t* pattern, int* options, wchar_t** formattedErrorMessage)
+wchar_t* pcre2_split_pattern(const wchar_t* pattern, size_t* pat_len, int* options, wchar_t** formattedErrorMessage)
 {
+    // cleared in case of error
+    if (pat_len)
+    {
+        *pat_len = 0;
+    }
+    // will be used to check options validity
+    int options_storage = 0;
+    if (options)
+    {
+        *options = 0;
+    }
+    else
+    {
+        options = &options_storage;
+    }
+    // cleared in case of success
+    if (formattedErrorMessage)
+    {
+        *formattedErrorMessage = NULL;
+    }
+
     size_t pattern_len = wcslen(pattern);
     wchar_t* charOptions = pattern + pattern_len - 1;
 
@@ -232,10 +253,12 @@ wchar_t* splitPattern(const wchar_t* pattern, int* options, wchar_t** formattedE
         return NULL;
     }
 
-    size_t pat_len = charOptions - pattern - 1;
-    wchar_t* pat = (wchar_t*)MALLOC(sizeof(wchar_t*) * (pat_len + 1));
     // Getting the pattern without the delimiters and options.
-    os_swprintf(pat, pat_len + 1, L"%.*ls", pat_len, pattern + 1);
+    if (pat_len)
+    {
+        *pat_len = charOptions - pattern - 1;
+    }
+    wchar_t* pat = pattern + 1;
 
     return pat;
 }

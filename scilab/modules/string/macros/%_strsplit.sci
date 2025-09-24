@@ -29,8 +29,6 @@ function [strs, matched_separators] = %_strsplit(varargin)
         out_str = strsubst(out_str, "+", "\+");
         out_str = strsubst(out_str, "?", "\?");
         out_str = strsubst(out_str, "{", "\{");
-        // escape non printable char
-        out_str = strsubst(out_str, "/[^[:print:]]/", "", "r");
     endfunction
     //========================================
     function bOK = isPattern(str)

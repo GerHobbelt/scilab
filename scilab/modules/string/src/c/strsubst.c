@@ -230,7 +230,8 @@ wchar_t* strsub_reg(const wchar_t* input_string, const wchar_t* string_to_search
 
     *formattedErrorMessage = NULL;
     int compile_opts = 0;
-    wchar_t* pat = splitPattern(string_to_search, &compile_opts, formattedErrorMessage);
+    size_t pat_len = 0;
+    wchar_t* pat = pcre2_split_pattern(string_to_search, &pat_len, &compile_opts, formattedErrorMessage);
     if (*formattedErrorMessage != NULL)
     {
         *ierr = PCRE2_PRIV_DELIMITER_NOT_ALPHANUMERIC;
@@ -240,8 +241,7 @@ wchar_t* strsub_reg(const wchar_t* input_string, const wchar_t* string_to_search
     int errornumber;
     PCRE2_SIZE erroroffset;
     // Compilation du pattern
-    pcre2_code* re = pcre2_compile(pat, PCRE2_ZERO_TERMINATED, compile_opts, &errornumber, &erroroffset, NULL);
-    FREE(pat);
+    pcre2_code* re = pcre2_compile(pat, pat_len, compile_opts, &errornumber, &erroroffset, NULL);
     if (re == NULL)
     {
         // Erreur de compilation
@@ -276,6 +276,9 @@ wchar_t* strsub_reg(const wchar_t* input_string, const wchar_t* string_to_search
     {
         // equivalent to PCRE2_ERROR_NOMATCH
         *ierr = 0;
+        pcre2_match_data_free(match_data);
+        pcre2_code_free(re);
+        FREE(result_buffer);
         return os_wcsdup(input_string);
     }
     else if (rc < 0)
@@ -297,6 +300,9 @@ wchar_t* strsub_reg(const wchar_t* input_string, const wchar_t* string_to_search
     wchar_t* ret = MALLOC(len * sizeof(wchar_t));
     memcpy(ret, result_buffer, result_len * sizeof(wchar_t));
     ret[result_len] = L'\0';
+    
+    pcre2_match_data_free(match_data);
+    pcre2_code_free(re);
     FREE(result_buffer);
 
     *ierr = 0;
