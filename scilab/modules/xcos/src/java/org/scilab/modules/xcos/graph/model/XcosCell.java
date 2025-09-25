@@ -538,7 +538,7 @@ public class XcosCell extends mxCell {
                         break;
                     case BLOCK:
                     case LINK:
-                        insertLabel(c);
+                        insertChild(c, index);
                         break;
                     case PORT:
                         insertPort(c, index);
