@@ -962,7 +962,11 @@ build_suitesparse() {
     AMD_MAJOR_VERSION=$(echo "$AMD_VERSION" | awk -F \. '{ print $1}')
     cd AMD/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libamd.so.${AMD_MAJOR_VERSION}" -o "libamd.so.${AMD_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libamd.so.${AMD_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libamd.so.${AMD_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libamd.so*
     cp "libamd.so.${AMD_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -972,7 +976,11 @@ build_suitesparse() {
     CAMD_MAJOR_VERSION=$(echo "$CAMD_VERSION" | awk -F \. '{print $1}')
     cd CAMD/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libcamd.so.${CAMD_MAJOR_VERSION}" -o "libcamd.so.${CAMD_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libcamd.so.${CAMD_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libcamd.so.${CAMD_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libcamd.so*
     cp "libcamd.so.${CAMD_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -982,7 +990,11 @@ build_suitesparse() {
     COLAMD_MAJOR_VERSION=$(echo "$COLAMD_VERSION" | awk -F \. '{print $1}')
     cd COLAMD/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libcolamd.so.${COLAMD_MAJOR_VERSION}" -o "libcolamd.so.${COLAMD_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libcolamd.so.${COLAMD_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libcolamd.so.${COLAMD_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libcolamd.so*
     cp "libcolamd.so.${COLAMD_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -992,7 +1004,11 @@ build_suitesparse() {
     CCOLAMD_MAJOR_VERSION=$(echo "$CCOLAMD_VERSION" | awk -F \. '{print $1}')
     cd CCOLAMD/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libccolamd.so.${CCOLAMD_MAJOR_VERSION}" -o "libccolamd.so.${CCOLAMD_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libccolamd.so.${CCOLAMD_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libccolamd.so.${CCOLAMD_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libccolamd.so*
     cp "libccolamd.so.${CCOLAMD_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -1002,7 +1018,11 @@ build_suitesparse() {
     CHOLMOD_MAJOR_VERSION=$(echo "$CHOLMOD_VERSION" | awk -F \. '{print $1}')
     cd CHOLMOD/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libcholmod.so.${CHOLMOD_MAJOR_VERSION}" -o "libcholmod.so.${CHOLMOD_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libcholmod.so.${CHOLMOD_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libcholmod.so.${CHOLMOD_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libcholmod.so*
     cp "libcholmod.so.${CHOLMOD_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -1012,7 +1032,11 @@ build_suitesparse() {
     BTF_MAJOR_VERSION=$(echo "$BTF_VERSION" | awk -F \. '{print $1}')
     cd BTF/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libbtf.so.${BTF_MAJOR_VERSION}" -o "libbtf.so.${BTF_VERSION}" $(ls ./*.o)
+    gcc -shared \
+        "-Wl,-soname,libbtf.so.${BTF_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libbtf.so.${BTF_VERSION}" \
+        $(ls ./*.o)
     rm -f "$INSTALLUSRDIR"/lib/libbtf.so*
     cp "libbtf.so.${BTF_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
@@ -1022,7 +1046,11 @@ build_suitesparse() {
     KLU_MAJOR_VERSION=$(echo "$KLU_VERSION" | awk -F \. '{print $1}')
     cd KLU/Lib/ || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libklu.so.${KLU_MAJOR_VERSION}" -o "libklu.so.${KLU_VERSION}" $(ls ./*.o) \
+    gcc -shared \
+        "-Wl,-soname,libklu.so.${KLU_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libklu.so.${KLU_VERSION}" \
+        $(ls ./*.o) \
         "$INSTALLUSRDIR/lib/libamd.so.${AMD_VERSION}" "$INSTALLUSRDIR/lib/libcolamd.so.${COLAMD_VERSION}" \
         "$INSTALLUSRDIR/lib/libbtf.so.${BTF_VERSION}"
     rm -f "$INSTALLUSRDIR"/lib/libklu.so*
@@ -1034,14 +1062,18 @@ build_suitesparse() {
     UMFPACK_MAJOR_VERSION=$(echo "$UMFPACK_VERSION" | awk -F \. '{print $1}')
     cd UMFPACK/Lib || exit 1
     # shellcheck disable=SC2046
-    gcc -shared "-Wl,-soname,libumfpack.so.${UMFPACK_MAJOR_VERSION}" -o "libumfpack.so.${UMFPACK_VERSION}" $(ls ./*.o) \
-      "$INSTALL_DIR/lib/libsuitesparseconfig.a" \
-      /usr/local/lib/libscigfortran.so.5 /usr/local/lib/libsciquadmath.so.0 \
-      "$INSTALLUSRDIR/lib/libblas.so.3" "$INSTALLUSRDIR/lib/liblapack.so.3" -lm -lrt \
-      "$INSTALLUSRDIR/lib/libcholmod.so.${CHOLMOD_VERSION}" "$INSTALLUSRDIR/lib/libcolamd.so.${COLAMD_VERSION}" \
-      "$INSTALLUSRDIR/lib/libccolamd.so.${CCOLAMD_VERSION}" "$INSTALLUSRDIR/lib/libcamd.so.${CAMD_VERSION}" \
-      "$INSTALLUSRDIR/lib/libbtf.so.${BTF_VERSION}" "$INSTALLUSRDIR/lib/libklu.so.${KLU_VERSION}" \
-      "$INSTALLUSRDIR/lib/libamd.so.${AMD_VERSION}"
+    gcc -shared \
+        "-Wl,-soname,libumfpack.so.${UMFPACK_MAJOR_VERSION}" \
+        -Wl,-rpath='$ORIGIN' \
+        -o "libumfpack.so.${UMFPACK_VERSION}" \
+        $(ls ./*.o) \
+        "$INSTALL_DIR/lib/libsuitesparseconfig.a" \
+        /usr/local/lib/libscigfortran.so.5 /usr/local/lib/libsciquadmath.so.0 \
+        "$INSTALLUSRDIR/lib/libblas.so.3" "$INSTALLUSRDIR/lib/liblapack.so.3" -lm -lrt \
+        "$INSTALLUSRDIR/lib/libcholmod.so.${CHOLMOD_VERSION}" "$INSTALLUSRDIR/lib/libcolamd.so.${COLAMD_VERSION}" \
+        "$INSTALLUSRDIR/lib/libccolamd.so.${CCOLAMD_VERSION}" "$INSTALLUSRDIR/lib/libcamd.so.${CAMD_VERSION}" \
+        "$INSTALLUSRDIR/lib/libbtf.so.${BTF_VERSION}" "$INSTALLUSRDIR/lib/libklu.so.${KLU_VERSION}" \
+        "$INSTALLUSRDIR/lib/libamd.so.${AMD_VERSION}"
     rm -f "$INSTALLUSRDIR"/lib/libumfpack.so*
     cp "libumfpack.so.${UMFPACK_VERSION}" "$INSTALLUSRDIR/lib/"
     cd ../..
