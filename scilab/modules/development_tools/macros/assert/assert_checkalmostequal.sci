@@ -66,7 +66,7 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
                 entries = ( abs(creg-ereg) <= reltol * max(abs(ereg),abs(creg)) + abstol )
                 // Compute the global condition from the entries conditions
                 areclose = and(entries)
-                k = find(~entries, 1)
+                k = find(~entries | or(kcpinf <> kepinf) | or(kcninf <> keninf) | or(kcnan <> kenan) , 1)
             end
         end
         // The regular values must be almost equal and

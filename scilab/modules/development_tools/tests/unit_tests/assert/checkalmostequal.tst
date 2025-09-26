@@ -95,7 +95,7 @@ instr = "assert_checkalmostequal ( 1 , 2 )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = msprintf(_("%s: Assertion failed: expected = %s while computed = %s"), "assert_checkalmostequal", "2", "1");
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "2", "", "1");
 MY_assert_equal ( errmsg , refmsg );
 //
 // Check that the error message is correctly handled.
@@ -103,7 +103,7 @@ instr = "assert_checkalmostequal ( 1 , 2 , %eps )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = msprintf(_("%s: Assertion failed: expected = %s while computed = %s"), "assert_checkalmostequal", "2", "1");
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "2", "", "1");
 MY_assert_equal ( errmsg , refmsg );
 //
 // Check that the error message is correctly handled.
@@ -118,7 +118,7 @@ instr = "assert_checkalmostequal ( zeros(10,1)+1.e-4 , zeros(10,1) , 1.e-5 )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = msprintf(_("%s: Assertion failed: expected = %s while computed = %s"), "assert_checkalmostequal", "[0 ...]", "[0.0001 ...]");
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,1", "0", "1,1", "0.0001");
 MY_assert_equal ( errmsg , refmsg );
 
 //////////////////////////////////////////

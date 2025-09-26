@@ -5,6 +5,7 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 // <-- CLI SHELL MODE -->
+// <-- NO ASSERT FAILURE -->
 // <-- Non-regression test for bug 9635 -->
 //
 // <-- GitLab URL -->
@@ -15,7 +16,5 @@
 A = [1e10 1e-2];
 B = [1e10 2e-2];
 instr = "assert_checkalmostequal(A,B)";
-lclmsg = "%s: Assertion failed: expected = %s while computed = %s";
-strA = "[" + string(A(1)) + " ...]";
-strB = "[" + string(B(1)) + " ...]";
-assert_checkerror(instr,lclmsg,[],"assert_checkalmostequal",strA,strB);
+lclmsg = "%s: Assertion failed: expected(%s) = %s while computed(%s) = %s";
+assert_checkerror(instr,lclmsg,[],"assert_checkalmostequal","1,2",string(B(1,2)),"1,2",string(A(1,2)));

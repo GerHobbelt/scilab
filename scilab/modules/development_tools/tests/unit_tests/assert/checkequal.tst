@@ -70,10 +70,11 @@ instr = "assert_checkequal ( [1 2], [3 4] )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = _("%s: Assertion failed: %s  while %s (mean diff = %s)");
+refmsg = _("%s: Assertion failed: %s  while %s (%s values are different)");
 refmsg = msprintf(refmsg, "assert_checkequal", ..
-                          msprintf(_("expected(%d)= "),1)+"3", ..
-                          msprintf(_("computed(%d)= "),1)+"1", "-2");
+                          msprintf(_("expected(%s) = "), "1,1")+"3", ..
+                          msprintf(_("computed(%s) = "), "1,1")+"1", ..
+                          "2");
 MY_assert_equal ( errmsg , refmsg );
 //
 [flag , errmsg] = assert_checkequal ( %T , %T );
@@ -141,10 +142,11 @@ assert_checkequal(s, s);
 ierr = execstr("assert_checkequal(list(2,,7), list(2,%F,8))","errcatch");
 MY_assert_equal(ierr, 10000);
 errmsg = lasterror();
-refmsg = _("%s: Assertion failed: %s  while %s");
+refmsg = _("%s: Assertion failed: %s  while %s (%s values are different)");
 refmsg = msprintf(refmsg, "assert_checkequal", ..
-    msprintf(_("expected(%d)= "),2) + "F", ..
-    msprintf(_("computed(%d)= "),2) + "(void)");
+    msprintf(_("expected(%d) = "),2) + "F", ..
+    msprintf(_("computed(%d) = "),2) + "(void)", ...
+    "2");
 MY_assert_equal( errmsg , refmsg );
 
 // void
@@ -297,19 +299,21 @@ assert_checkequal([gdf(),gda()], [gdf(),gda()]);
 ierr = execstr("assert_checkequal(gdf(), gda())","errcatch");
 MY_assert_equal(ierr, 10000);
 errmsg = lasterror();
-refmsg = _("%s: Assertion failed: expected= %s  while computed= %s");
+refmsg = _("%s: Assertion failed: %s  while %s (%s values are different)");
 refmsg = msprintf(refmsg, "assert_checkequal", ..
-                   msprintf("Axes(uid:%d)",gda().uid), ..
-                   msprintf("Figure(uid:%d)",gdf().uid));
+                   msprintf(_("expected = %s"), msprintf("Axes(uid:%d)",gda().uid)), ..
+                   msprintf(_("computed = %s"), msprintf("Figure(uid:%d)",gdf().uid)), ..
+                   "1");
 MY_assert_equal( errmsg , refmsg );
 assert_checkequal([gdf(),gda()], [gdf(),gda()]);
 
 ierr = execstr("assert_checkequal([gdf(),gda()],[gdf(),gdf()])","errcatch");
 MY_assert_equal(ierr, 10000);
 errmsg = lasterror();
-refmsg = _("%s: Assertion failed: %s  while %s");
+refmsg = _("%s: Assertion failed: %s  while %s (%s values are different)");
 refmsg = msprintf(refmsg, "assert_checkequal", ..
-    msprintf(_("expected(%d)= "),2) + msprintf("Figure(uid:%d)",gdf().uid), ..
-    msprintf(_("computed(%d)= "),2) + msprintf("Axes(uid:%d)",gda().uid));
+    msprintf(_("expected(%s) = "),"1,2") + msprintf("Figure(uid:%d)",gdf().uid), ..
+    msprintf(_("computed(%s) = "),"1,2") + msprintf("Axes(uid:%d)",gda().uid), ..
+    "1");
 MY_assert_equal( errmsg , refmsg );
 
