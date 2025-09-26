@@ -2,7 +2,7 @@
  * Programmer(s): Cody J. Balos @ LLNL
  * -----------------------------------------------------------------
  * SUNDIALS Copyright Start
- * Copyright (c) 2002-2023, Lawrence Livermore National Security
+ * Copyright (c) 2002-2025, Lawrence Livermore National Security
  * and Southern Methodist University.
  * All rights reserved.
  *
@@ -77,9 +77,10 @@ ARKodeSPRKTable ARKodeSPRKTable_Copy(ARKodeSPRKTable that_sprk_storage);
 SUNDIALS_EXPORT
 void ARKodeSPRKTable_Write(ARKodeSPRKTable sprk_table, FILE* outfile);
 
-SUNDIALS_EXPORT
+SUNDIALS_DEPRECATED_EXPORT_MSG(
+  "Work space functions will be removed in version 8.0.0")
 void ARKodeSPRKTable_Space(ARKodeSPRKTable sprk_storage, sunindextype* liw,
-                            sunindextype* lrw);
+                           sunindextype* lrw);
 SUNDIALS_EXPORT
 void ARKodeSPRKTable_Free(ARKodeSPRKTable sprk_storage);
 

@@ -17,7 +17,7 @@
 #define _DDASKR_H
 
 #include "sundials/sundials_extension.h"
-#include "sundials/sundials_types.h" // Definition of types 'realtype' and 'booleantype'
+#include "sundials/sundials_types.h" // Definition of types 'sunrealtype' and 'booleantype'
 #include "nvector/nvector_serial.h"  // Type 'N_Vector'
 
 #define MSG_BAD_KRY_INPUT  "One of the Krylov arguments is illegal (jacobian or psol functions)."
@@ -31,36 +31,36 @@
 /* By default, we set the maximum order to 5 */
 #define MAXORD_DEFAULT 5
 
-// realtype workspace
+// sunrealtype workspace
 struct DDrWork_t
 {
-    realtype tcrit;
-    realtype hmax;
-    realtype hnext;
-    realtype tfarthest;
-    realtype rwork5;
-    realtype rwork6;
-    realtype hlast;
-    realtype rwork8;
-    realtype rwork9;
-    realtype rwork10;
-    realtype rwork11;
-    realtype rwork12;
-    realtype rwork13;
-    realtype steptol;
-    realtype epinit;
-    realtype rwork[1];
+    sunrealtype tcrit;
+    sunrealtype hmax;
+    sunrealtype hnext;
+    sunrealtype tfarthest;
+    sunrealtype rwork5;
+    sunrealtype rwork6;
+    sunrealtype hlast;
+    sunrealtype rwork8;
+    sunrealtype rwork9;
+    sunrealtype rwork10;
+    sunrealtype rwork11;
+    sunrealtype rwork12;
+    sunrealtype rwork13;
+    sunrealtype steptol;
+    sunrealtype epinit;
+    sunrealtype rwork[1];
 };
 
 // Derivative computation, root functions, preconditioner calculation and application
-typedef void (*DDASResFn) (realtype *tOld, realtype *y, realtype *yp, realtype *res, int *flag, realtype *dummy1, int *dummy2);
-typedef void (*DDASRootFn) (int *neq, realtype *tOld, realtype *y, realtype *yp, int *ng, realtype *groot, realtype *dummy1, int *dummy2);
-typedef void (*DDASJacPsolFn) (realtype *res, int *ires, int *neq, realtype *tOld, realtype *actual, realtype *actualP,
-                               realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp,
-                               int *iwp, int *ier, realtype *dummy1, int *dummy2);
-typedef void (*DDASPsolFn) (int *neq, realtype *tOld, realtype *actual, realtype *actualP,
-                            realtype *savr, realtype *wk, realtype *cj, realtype *wght, realtype *wp,
-                            int *iwp, realtype *b, realtype *eplin, int *ier, realtype *dummy1, int *dummy2);
+typedef void (*DDASResFn) (sunrealtype *tOld, sunrealtype *y, sunrealtype *yp, sunrealtype *res, int *flag, sunrealtype *dummy1, int *dummy2);
+typedef void (*DDASRootFn) (int *neq, sunrealtype *tOld, sunrealtype *y, sunrealtype *yp, int *ng, sunrealtype *groot, sunrealtype *dummy1, int *dummy2);
+typedef void (*DDASJacPsolFn) (sunrealtype *res, int *ires, int *neq, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                               sunrealtype *rewt, sunrealtype *savr, sunrealtype *wk, sunrealtype *h, sunrealtype *cj, sunrealtype *wp,
+                               int *iwp, int *ier, sunrealtype *dummy1, int *dummy2);
+typedef void (*DDASPsolFn) (int *neq, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                            sunrealtype *savr, sunrealtype *wk, sunrealtype *cj, sunrealtype *wght, sunrealtype *wp,
+                            int *iwp, sunrealtype *b, sunrealtype *eplin, int *ier, sunrealtype *dummy1, int *dummy2);
 typedef void (*DDASErrHandlerFn) (int error_code, const char *module, const char *function, char *msg, void *user_data);
 
 // DDaskr problem memory structure
@@ -69,11 +69,11 @@ typedef struct DDaskrMemRec
     DDASResFn res;
     int * nEquations;
     void * user_data;
-    realtype tStart;
-    realtype relTol;
-    realtype absTol;
-    realtype * yVector;
-    realtype * yPrimeVector;
+    sunrealtype tStart;
+    sunrealtype relTol;
+    sunrealtype absTol;
+    sunrealtype * yVector;
+    sunrealtype * yPrimeVector;
     int iState;
     int * info;
     struct DDrWork_t * rwork;
@@ -88,7 +88,7 @@ typedef struct DDaskrMemRec
     int solver;
     DDASJacPsolFn jacpsol;
     DDASPsolFn psol;
-    realtype * rpar;
+    sunrealtype * rpar;
     int * ipar;
 } *DDaskrMem;
 
@@ -96,13 +96,13 @@ typedef struct DDaskrMemRec
 void * DDaskrCreate (int * neq, int ng, int solverIndex);
 
 // Allocating the problem
-int DDaskrInit (void * ddaskr_mem, DDASResFn Res, realtype t0, N_Vector yy0, N_Vector yp0, DDASJacPsolFn jacpsol, DDASPsolFn psol);
+int DDaskrInit (void * ddaskr_mem, DDASResFn Res, sunrealtype t0, N_Vector yy0, N_Vector yp0, DDASJacPsolFn jacpsol, DDASPsolFn psol);
 
 // Reinitializing the problem
-int DDaskrReInit (void * ddaskr_mem, realtype tOld, N_Vector yy0, N_Vector yp0);
+int DDaskrReInit (void * ddaskr_mem, sunrealtype tOld, N_Vector yy0, N_Vector yp0);
 
 // Specifying the tolerances
-int DDaskrSStolerances (void * ddaskr_mem, realtype reltol, realtype abstol);
+int DDaskrSStolerances (void * ddaskr_mem, sunrealtype reltol, sunrealtype abstol);
 
 // Initializing the root-finding problem
 int DDaskrRootInit (void * ddaskr_mem, int ng, DDASRootFn g);
@@ -111,10 +111,10 @@ int DDaskrRootInit (void * ddaskr_mem, int ng, DDASRootFn g);
 int DDaskrSetUserData (void * ddaskr_mem, void * User_data);
 
 // Specifying the maximum step size
-int DDaskrSetMaxStep (void * ddaskr_mem, realtype hmax);
+int DDaskrSetMaxStep (void * ddaskr_mem, sunrealtype hmax);
 
 // Specifying the time beyond which the integration is not to proceed
-int DDaskrSetStopTime (void * ddaskr_mem, realtype tcrit);
+int DDaskrSetStopTime (void * ddaskr_mem, sunrealtype tcrit);
 
 // Sets the maximum number of steps in an integration interval
 int DDaskrSetMaxNumSteps (void * ddaskr_mem, long int maxnh);
@@ -135,10 +135,10 @@ int DDaskrSetLineSearchOffIC (void * ddaskr_mem, int lsoff);
 int DDaskrSetId (void * ddaskr_mem, N_Vector xproperty);
 
 // Solving the problem
-int DDaskrSolve (void * ddaskr_mem, realtype tOut, realtype * tOld, N_Vector yOut, N_Vector ypOut, int itask);
+int DDaskrSolve (void * ddaskr_mem, sunrealtype tOut, sunrealtype * tOld, N_Vector yOut, N_Vector ypOut, int itask);
 
 // Computing consistent initial values for the problem
-int DDaskrCalcIC (void * ddaskr_mem, int icopt, realtype tout1);
+int DDaskrCalcIC (void * ddaskr_mem, int icopt, sunrealtype tout1);
 
 // Following on DDasCalcIC, copying yy0 and yp0 (computed consistent values) into the memory space
 int DDaskrGetConsistentIC (void * ddaskr_mem, N_Vector yy0, N_Vector yp0);

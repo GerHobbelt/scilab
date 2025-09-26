@@ -42,19 +42,16 @@
 
 /* Sundials includes */
 #include <cvodes/cvodes.h>            /* prototypes for CVODE fcts. and consts. */
-#include <cvodes/cvodes_direct.h>    /* prototypes for various SUNDlsMat operations */
 #include <idas/idas.h>
-#include <idas/idas_direct.h>
 #include <nvector/nvector_serial.h>   /* serial N_Vector types, fcts., and macros */
 #include <sundials/sundials_context.h>  /* prototypes for SUNDIALS context */
 #include <sundials/sundials_dense.h>  /* prototypes for various SUNDlsMat operations */
 #include <sundials/sundials_direct.h> /* definitions of SUNDlsMat and SUNDLS_DENSE_ELEM */
-#include <sundials/sundials_types.h>  /* definition of type realtype */
+#include <sundials/sundials_types.h>  /* definition of type sunrealtype */
 #include <sundials/sundials_math.h>
 #include <sunlinsol/sunlinsol_dense.h> /* access to dense SUNLinearSolver */
 #include <sunnonlinsol/sunnonlinsol_fixedpoint.h>
 #include <kinsol/kinsol.h>
-#include <kinsol/kinsol_direct.h>
 #include <sundials/sundials_extension.h> /* uses extension for scicos */
 
 #include "machine.h" /* C2F */
@@ -165,9 +162,9 @@ enum Solver
 	KINFree(&kin_mem);
 
 
-#define ONE   RCONST(1.0)
-#define ZERO  RCONST(0.0)
-#define T0    RCONST(0.0)
+#define ONE   SUN_RCONST(1.0)
+#define ZERO  SUN_RCONST(0.0)
+#define T0    SUN_RCONST(0.0)
 
 // Special values for elements of 'funtyp'
 #define FORTRAN_GATEWAY   0
@@ -270,26 +267,28 @@ static void ddoit(double *told);
 static void edoit(double *told, int *kiwa);
 static void reinitdoit(double *told);
 static int CallKinsol(double *told);
-static int simblk(realtype t, N_Vector yy, N_Vector yp, void *f_data);
-static int grblkdaskr(realtype t, N_Vector yy, N_Vector yp, realtype *gout, void *g_data);
-static int grblk(realtype t, N_Vector yy, realtype *gout, void *g_data);
-static void simblklsodar(int * nequations, realtype * tOld, realtype * actual, realtype * res);
-static void grblklsodar(int * nequations, realtype * tOld, realtype * actual, int * ngc, realtype * res);
-static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, realtype *res, int *flag, double *dummy1, int *dummy2);
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2);
-static void jacpsol(realtype *res, int *ires, int *nequations, realtype *tOld, realtype *actual, realtype *actualP,
-                    realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp,
+static int simblk(sunrealtype t, N_Vector yy, N_Vector yp, void *f_data);
+static int grblkdaskr(sunrealtype t, N_Vector yy, N_Vector yp, sunrealtype *gout, void *g_data);
+static int grblk(sunrealtype t, N_Vector yy, sunrealtype *gout, void *g_data);
+static void simblklsodar(int * nequations, sunrealtype * tOld, sunrealtype * actual, sunrealtype * res);
+static void grblklsodar(int * nequations, sunrealtype * tOld, sunrealtype * actual, int * ngc, sunrealtype * res);
+static void simblkddaskr(sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP, sunrealtype *res, int *flag, double *dummy1, int *dummy2);
+static void grblkddaskr(int *nequations, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP, int *ngc, sunrealtype *res, double *dummy1, int *dummy2);
+static void jacpsol(sunrealtype *res, int *ires, int *nequations, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                    sunrealtype *rewt, sunrealtype *savr, sunrealtype *wk, sunrealtype *h, sunrealtype *cj, sunrealtype *wp,
                     int *iwp, int *ier, double *dummy1, int *dummy2);
-static void psol(int *nequations, realtype *tOld, realtype *actual, realtype *actualP,
-                 realtype *savr, realtype *wk, realtype *cj, realtype *wght, realtype *wp,
-                 int *iwp, realtype *b, realtype *eplin, int *ier, double *dummy1, int *dummy2);
+static void psol(int *nequations, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                 sunrealtype *savr, sunrealtype *wk, sunrealtype *cj, sunrealtype *wght, sunrealtype *wp,
+                 int *iwp, sunrealtype *b, sunrealtype *eplin, int *ier, double *dummy1, int *dummy2);
 static void addevs(double t, int *evtnb, int *ierr1);
 static int synchro_g_nev(ScicosImport *scs_imp, double *g, int kf, int *ierr);
 static void Multp(double *A, double *B, double *R, int ra, int rb, int ca, int cb);
 static int read_id(ezxml_t *elements, char *id, double *value);
-static int simblkdaskr(realtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *rdata);
-static void SundialsErrHandler(int error_code, const char *module, const char *function, char *msg, void *user_data);
-static int Jacobians(realtype tt, realtype cj, N_Vector yy,
+static int simblkdaskr(sunrealtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *rdata);
+static void deprecatedSundialsErrHandler(int code, const char *module, const char *function, char *msg, void *user_data);
+static void SundialsErrHandler(int line, const char *func, const char *file, const char *msg, SUNErrCode code, void *user_data, SUNContext sunctx);
+
+static int Jacobians(sunrealtype tt, sunrealtype cj, N_Vector yy,
                      N_Vector yp, N_Vector resvec, SUNMatrix Jacque, void *jdata,
                      N_Vector tempv1, N_Vector tempv2, N_Vector tempv3);
 static void call_debug_scicos(scicos_block *block, scicos_flag *flag, int flagi, int deb_blk);
@@ -1432,7 +1431,7 @@ static void cossim(double *told)
     static int kpo = 0, kev = 0;
     int Discrete_Jump = 0;
     int *jroot = NULL, *zcros = NULL;
-    realtype reltol = 0., abstol = 0.;
+    sunrealtype reltol = 0., abstol = 0.;
     
     N_Vector y = NULL;
     SUNMatrix m_A = NULL;
@@ -1445,12 +1444,12 @@ static void cossim(double *told)
     int solver = C2F(cmsolver).solver;
     /* Defining function pointers, for more readability */
     void(* ODEFree) (void**);
-    int (* ODE) (void*, realtype, N_Vector, realtype*, int);
-    int (* ODEReInit) (void*, realtype, N_Vector);
-    int (* ODESetMaxStep) (void*, realtype);
-    int (* ODESetStopTime) (void*, realtype);
+    int (* ODE) (void*, sunrealtype, N_Vector, sunrealtype*, int);
+    int (* ODEReInit) (void*, sunrealtype, N_Vector);
+    int (* ODESetMaxStep) (void*, sunrealtype);
+    int (* ODESetStopTime) (void*, sunrealtype);
     int (* ODEGetRootInfo) (void*, int*);
-    int (* ODESStolerances) (void*, realtype, realtype);
+    int (* ODESStolerances) (void*, sunrealtype, sunrealtype);
     /* Generic flags for stop mode */
     int ODE_NORMAL   = 1;  /* ODE_NORMAL   = CV_NORMAL   = LS_NORMAL   = 1 */
     int ODE_ONE_STEP = 2;  /* ODE_ONE_STEP = CV_ONE_STEP = LS_ONE_STEP = 2 */
@@ -1520,8 +1519,8 @@ static void cossim(double *told)
         }
     }
 
-    reltol = (realtype) rtol;
-    abstol = (realtype) Atol;  /* Ith(abstol,1) = realtype) Atol;*/
+    reltol = (sunrealtype) rtol;
+    abstol = (sunrealtype) Atol;  /* Ith(abstol,1) = sunrealtype) Atol;*/
 
     if (*neq > 0) /* Unfortunately CVODE does not work with NEQ==0 */
     {
@@ -1591,11 +1590,11 @@ static void cossim(double *told)
 
         if (solver == LSodar_Dynamic)
         {
-            flag = LSodarSetErrHandlerFn(ode_mem, SundialsErrHandler, NULL);
+            flag = LSodarSetErrHandlerFn(ode_mem, deprecatedSundialsErrHandler, NULL);
         }
         else
         {
-            flag = CVodeSetErrHandlerFn(ode_mem, SundialsErrHandler, NULL);
+            flag = SUNContext_PushErrHandler(scicos_sunctx, SundialsErrHandler, NULL);
         }
         if (check_flag(&flag, "CVodeSetErrHandlerFn", 1))
         {
@@ -1672,7 +1671,7 @@ static void cossim(double *told)
 
         if (hmax > 0)
         {
-            flag = ODESetMaxStep(ode_mem, (realtype) hmax);
+            flag = ODESetMaxStep(ode_mem, (sunrealtype) hmax);
             if (check_flag(&flag, "CVodeSetMaxStep", 1))
             {
                 *ierr = 300 + (-flag);
@@ -1836,7 +1835,7 @@ L30:
 
                 if (hot == 0) /* hot==0 : cold restart*/
                 {
-                    flag = ODESetStopTime(ode_mem, (realtype)tstop);  /* Setting the stop time*/
+                    flag = ODESetStopTime(ode_mem, (sunrealtype)tstop);  /* Setting the stop time*/
                     if (check_flag(&flag, "CVodeSetStopTime", 1))
                     {
                         *ierr = 300 + (-flag);
@@ -1844,7 +1843,7 @@ L30:
                         return;
                     }
 
-                    flag = ODEReInit(ode_mem, (realtype)(*told), y);
+                    flag = ODEReInit(ode_mem, (sunrealtype)(*told), y);
                     if (check_flag(&flag, "CVodeReInit", 1))
                     {
                         *ierr = 300 + (-flag);
@@ -2155,10 +2154,10 @@ static void cossimdaskr(double *told)
     SUNLinearSolver m_LS = NULL;
     SUNNonlinearSolver m_NLS = NULL;
 
-    realtype reltol = 0., abstol = 0.;
+    sunrealtype reltol = 0., abstol = 0.;
     int Discrete_Jump = 0;
     N_Vector IDx = NULL;
-    realtype *scicos_xproperty = NULL;
+    sunrealtype *scicos_xproperty = NULL;
     SUNMatrix TJacque = NULL;
 
     void *dae_mem = NULL;
@@ -2175,15 +2174,15 @@ static void cossimdaskr(double *told)
     int DAE_Y_INIT      = 2;
     /* Defining function pointers, for more readability*/
     void(* DAEFree) (void**);
-    int (* DAESolve) (void*, realtype, realtype*, N_Vector, N_Vector, int);
-    int (* DAEReInit) (void*, realtype, N_Vector, N_Vector);
+    int (* DAESolve) (void*, sunrealtype, sunrealtype*, N_Vector, N_Vector, int);
+    int (* DAEReInit) (void*, sunrealtype, N_Vector, N_Vector);
     int (* DAESetId) (void*, N_Vector);
-    int (* DAECalcIC) (void*, int, realtype);
-    int (* DAESetMaxStep) (void*, realtype);
+    int (* DAECalcIC) (void*, int, sunrealtype);
+    int (* DAESetMaxStep) (void*, sunrealtype);
     int (* DAESetUserData) (void*, void*);
-    int (* DAESetStopTime) (void*, realtype);
+    int (* DAESetStopTime) (void*, sunrealtype);
     int (* DAEGetRootInfo) (void*, int*);
-    int (* DAESStolerances) (void*, realtype, realtype);
+    int (* DAESStolerances) (void*, sunrealtype, sunrealtype);
     int (* DAEGetConsistentIC) (void*, N_Vector, N_Vector);
     int (* DAESetMaxNumSteps) (void*, long int);
     int (* DAESetMaxNumJacsIC) (void*, int);
@@ -2293,8 +2292,8 @@ static void cossimdaskr(double *told)
         }
     }
 
-    reltol = (realtype) rtol;
-    abstol = (realtype) Atol;  /*  Ith(abstol,1) = (realtype) Atol;*/
+    reltol = (sunrealtype) rtol;
+    abstol = (sunrealtype) Atol;  /*  Ith(abstol,1) = (sunrealtype) Atol;*/
 
     if (*neq > 0)
     {
@@ -2410,11 +2409,11 @@ static void cossimdaskr(double *told)
 
         if (solver == DDaskr_BDF_Newton || solver == DDaskr_BDF_GMRes)
         {
-            flag = DDaskrSetErrHandlerFn(dae_mem, SundialsErrHandler, NULL);
+            flag = DDaskrSetErrHandlerFn(dae_mem, deprecatedSundialsErrHandler, NULL);
         }
         else
         {
-            flag = IDASetErrHandlerFn(dae_mem, SundialsErrHandler, NULL);
+            flag = SUNContext_PushErrHandler(scicos_sunctx, SundialsErrHandler, NULL);
         }
         if (check_flag(&flag, "IDASetErrHandlerFn", 1))
         {
@@ -2819,7 +2818,7 @@ static void cossimdaskr(double *told)
 
         if (hmax > 0)
         {
-            flag = DAESetMaxStep(dae_mem, (realtype) hmax);
+            flag = DAESetMaxStep(dae_mem, (sunrealtype) hmax);
             if (check_flag(&flag, "IDASetMaxStep", 1))
             {
                 *ierr = 200 + (-flag);
@@ -3008,7 +3007,7 @@ L30:
                 {
 
                     /* Setting the stop time*/
-                    flag = DAESetStopTime(dae_mem, (realtype)tstop);
+                    flag = DAESetStopTime(dae_mem, (sunrealtype)tstop);
                     if (check_flag(&flag, "IDASetStopTime", 1))
                     {
                         *ierr = 200 + (-flag);
@@ -3048,7 +3047,7 @@ L30:
                         }
                     }
                     /* CI=0.0;CJ=100.0; // for functions Get_Jacobian_ci and Get_Jacobian_cj
-                    Jacobians(*neq, (realtype) (*told), yy, yp,	bidon, (realtype) CJ, data, TJacque, tempv1, tempv2, tempv3);
+                    Jacobians(*neq, (sunrealtype) (*told), yy, yp,	bidon, (sunrealtype) CJ, data, TJacque, tempv1, tempv2, tempv3);
                     for (jj=0;jj<*neq;jj++){
                     Jacque_col=SUNDLS_DENSE_COL(TJacque,jj);
                     CI=ZERO;
@@ -3116,7 +3115,7 @@ L30:
                         }
 
                         /* yy->PH */
-                        flag = DAEReInit(dae_mem, (realtype)(*told), yy, yp);
+                        flag = DAEReInit(dae_mem, (sunrealtype)(*told), yy, yp);
                         if (check_flag(&flag, "IDAReInit", 1))
                         {
                             *ierr = 200 + (-flag);
@@ -3130,7 +3129,7 @@ L30:
                             IDAResetCurrentBDFMethodOrder(dae_mem);
                         }
                         // the initial conditons y0 and yp0 do not satisfy the DAE
-                        flagr = DAECalcIC(dae_mem, DAE_YA_YDP_INIT, (realtype)(t));
+                        flagr = DAECalcIC(dae_mem, DAE_YA_YDP_INIT, (sunrealtype)(t));
                         phase = 1;
                         flag = DAEGetConsistentIC(dae_mem, yy, yp); /* PHI->YY */
                         if (*ierr > 5)    /* *ierr>5 => singularity in block */
@@ -3208,7 +3207,7 @@ L30:
                         {
                             IDAResetCurrentBDFMethodOrder(dae_mem);
                         }
-                        flagr = DAECalcIC(dae_mem, DAE_YA_YDP_INIT, (realtype)(t));
+                        flagr = DAECalcIC(dae_mem, DAE_YA_YDP_INIT, (sunrealtype)(t));
                         phase = 1;
                         flag = DAEGetConsistentIC(dae_mem, yy, yp); /* PHI->YY */
                         if ((flagr < 0) || (*ierr > 5)) /* *ierr>5 => singularity in block */
@@ -4098,7 +4097,7 @@ static void call_debug_scicos(scicos_block *block, scicos_flag *flag, int flagi,
 } /* call_debug_scicos */
 /*--------------------------------------------------------------------------*/
 /* simblk */
-static int simblk(realtype t, N_Vector yy, N_Vector yp, void *f_data)
+static int simblk(sunrealtype t, N_Vector yy, N_Vector yp, void *f_data)
 {
     double tx = 0., *x = NULL, *xd = NULL;
     int i = 0, nantest = 0;
@@ -4139,7 +4138,7 @@ static int simblk(realtype t, N_Vector yy, N_Vector yp, void *f_data)
 } /* simblk */
 /*--------------------------------------------------------------------------*/
 /* grblk */
-static int grblk(realtype t, N_Vector yy, realtype *gout, void *g_data)
+static int grblk(sunrealtype t, N_Vector yy, sunrealtype *gout, void *g_data)
 {
     double tx = 0., *x = NULL;
     int jj = 0, nantest = 0;
@@ -4173,7 +4172,7 @@ static int grblk(realtype t, N_Vector yy, realtype *gout, void *g_data)
 } /* grblk */
 /*--------------------------------------------------------------------------*/
 /* simblklsodar */
-static void simblklsodar(int * nequations, realtype * tOld, realtype * actual, realtype * res)
+static void simblklsodar(int * nequations, sunrealtype * tOld, sunrealtype * actual, sunrealtype * res)
 {
     double tx = 0.;
     int i = 0;
@@ -4202,7 +4201,7 @@ static void simblklsodar(int * nequations, realtype * tOld, realtype * actual, r
 } /* simblklsodar */
 /*--------------------------------------------------------------------------*/
 /* grblklsodar */
-static void grblklsodar(int * nequations, realtype * tOld, realtype * actual, int * ngc, realtype * res)
+static void grblklsodar(int * nequations, sunrealtype * tOld, sunrealtype * actual, int * ngc, sunrealtype * res)
 {
     double tx = 0.;
     int jj = 0;
@@ -4227,15 +4226,15 @@ static void grblklsodar(int * nequations, realtype * tOld, realtype * actual, in
 } /* grblklsodar */
 /*--------------------------------------------------------------------------*/
 /* simblkdaskr */
-static int simblkdaskr(realtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *rdata)
+static int simblkdaskr(sunrealtype tres, N_Vector yy, N_Vector yp, N_Vector resval, void *rdata)
 {
     double tx = 0.;
     double *xc = NULL, *xcdot = NULL, *residual = NULL;
-    realtype alpha = 0.;
+    sunrealtype alpha = 0.;
 
     UserData data;
 
-    realtype hh = 0.;
+    sunrealtype hh = 0.;
     int qlast = 0;
     int jj = 0, flag = 0, nantest = 0;
 
@@ -4312,7 +4311,7 @@ static int simblkdaskr(realtype tres, N_Vector yy, N_Vector yp, N_Vector resval,
 }/* simblkdaskr */
 /*--------------------------------------------------------------------------*/
 /* grblkdaskr */
-static int grblkdaskr(realtype t, N_Vector yy, N_Vector yp, realtype *gout, void *g_data)
+static int grblkdaskr(sunrealtype t, N_Vector yy, N_Vector yp, sunrealtype *gout, void *g_data)
 {
     double tx = 0.;
     int jj = 0, nantest = 0;
@@ -4344,7 +4343,7 @@ static int grblkdaskr(realtype t, N_Vector yy, N_Vector yp, realtype *gout, void
 }/* grblkdaskr */
 /*--------------------------------------------------------------------------*/
 /* simblkddaskr */
-static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, realtype *res, int *flag, double *dummy1, int *dummy2)
+static void simblkddaskr(sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP, sunrealtype *res, int *flag, double *dummy1, int *dummy2)
 {
     double tx = 0.;
 
@@ -4389,7 +4388,7 @@ static void simblkddaskr(realtype *tOld, realtype *actual, realtype *actualP, re
 }/* simblkddaskr */
 /*--------------------------------------------------------------------------*/
 /* grblkddaskr */
-static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realtype *actualP, int *ngc, realtype *res, double *dummy1, int *dummy2)
+static void grblkddaskr(int *nequations, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP, int *ngc, sunrealtype *res, double *dummy1, int *dummy2)
 {
     double tx = 0.;
     int jj = 0;
@@ -4422,21 +4421,21 @@ static void grblkddaskr(int *nequations, realtype *tOld, realtype *actual, realt
 }/* grblkddaskr */
 /*--------------------------------------------------------------------------*/
 /* jacpsol */
-static void jacpsol(realtype *res, int *ires, int *neq, realtype *tOld, realtype *actual, realtype *actualP,
-                    realtype *rewt, realtype *savr, realtype *wk, realtype *h, realtype *cj, realtype *wp, int *iwp,
+static void jacpsol(sunrealtype *res, int *ires, int *neq, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                    sunrealtype *rewt, sunrealtype *savr, sunrealtype *wk, sunrealtype *h, sunrealtype *cj, sunrealtype *wp, int *iwp,
                     int *ier, double *dummy1, int *dummy2)
 {
     /* Here, we compute the system preconditioner matrix P, which is actually the jacobian matrix,
        so P(i,j) = dres(i)/dactual(j) + cj*dres(i)/dactualP(j), and we LU-decompose it. */
     int i = 0, j = 0, nrow = 0, info = 0;
-    realtype tx = 0, del = 0, delinv = 0, ysave = 0, ypsave = 0;
-    realtype * e = NULL;
+    sunrealtype tx = 0, del = 0, delinv = 0, ysave = 0, ypsave = 0;
+    sunrealtype * e = NULL;
 
     tx = *tOld;
 
     /* Work array used to evaluate res(*tOld, actual + small_increment, actualP + small_increment).
        savr already contains res(*tOld, actual, actualP). */
-    e = (realtype *) calloc(*neq, sizeof(realtype));
+    e = (sunrealtype *) calloc(*neq, sizeof(sunrealtype));
 
     for (i = 0; i < *neq; ++i)
     {
@@ -4489,9 +4488,9 @@ static void jacpsol(realtype *res, int *ires, int *neq, realtype *tOld, realtype
 }/* jacpsol */
 /*--------------------------------------------------------------------------*/
 /* psol */
-static void psol(int *neq, realtype *tOld, realtype *actual, realtype *actualP,
-                 realtype *savr, realtype *wk, realtype *cj, realtype *wght, realtype *wp,
-                 int *iwp, realtype *b, realtype *eplin, int *ier, double *dummy1, int *dummy2)
+static void psol(int *neq, sunrealtype *tOld, sunrealtype *actual, sunrealtype *actualP,
+                 sunrealtype *savr, sunrealtype *wk, sunrealtype *cj, sunrealtype *wght, sunrealtype *wp,
+                 int *iwp, sunrealtype *b, sunrealtype *eplin, int *ier, double *dummy1, int *dummy2)
 {
     /* This function "applies" the inverse of the preconditioner to 'b' (computes P^-1*b).
        It is done by solving P*x = b using the linpack routine 'dgesl'. */
@@ -6202,9 +6201,14 @@ void Coserror(const char *fmt, ...)
 /* SundialsErrHandler: in case of a Sundials error,
 * call Coserror() to write it in coserr.buf
 *
-* The unused parameters are there to square with Sundials' IDA error function, for better genericity.
+* The unused parameters are there to square with Sundials error function, for better genericity.
 */
-void SundialsErrHandler(int error_code, const char *module, const char *function, char *msg, void *user_data)
+static void SundialsErrHandler(int line, const char *function, const char *file, const char *msg, SUNErrCode code, void *user_data, SUNContext sunctx)
+{
+    deprecatedSundialsErrHandler(code, NULL, function, (char *)msg, user_data);
+}
+/* deprecatedSundialsErrHandler : for direct use with lsodar and ddaskr */
+static void deprecatedSundialsErrHandler(int code, const char *module, const char *function, char *msg, void *user_data)
 {
     Coserror("%s: %s", function, msg);
 }
@@ -6275,7 +6279,7 @@ double Get_Scicos_SQUR(void)
     return  SQuround;
 }
 /*--------------------------------------------------------------------------*/
-static int Jacobians(realtype tt, realtype cj, N_Vector yy,
+static int Jacobians(sunrealtype tt, sunrealtype cj, N_Vector yy,
                      N_Vector yp, N_Vector resvec, SUNMatrix Jacque, void *jdata,
                      N_Vector tempv1, N_Vector tempv2, N_Vector tempv3)
 {
@@ -6292,10 +6296,10 @@ static int Jacobians(realtype tt, realtype cj, N_Vector yy,
     double **u = NULL;
     /*  taill1= 3*n+(n+ni)*(n+no)+nx(2*nx+ni+2*m+no)+m*(2*m+no+ni)+2*ni*no*/
     double inc = 0., inc_inv = 0., xi = 0., xpi = 0., srur = 0.;
-    realtype *Jacque_col = NULL;
+    sunrealtype *Jacque_col = NULL;
 
     UserData data;
-    realtype hh = 0.;
+    sunrealtype hh = 0.;
     N_Vector ewt;
     double *ewt_data = NULL;
 
@@ -6326,7 +6330,7 @@ static int Jacobians(realtype tt, realtype cj, N_Vector yy,
     // CJ=(double)cj;  // for fonction Get_Jacobian_cj
     CJJ = (double)cj;  // returned by Get_Jacobian_parameter
 
-    srur = (double) SUNRsqrt(UNIT_ROUNDOFF);
+    srur = (double) SUNRsqrt(SUN_UNIT_ROUNDOFF);
 
     if (AJacobian_block > 0)
     {
@@ -6834,7 +6838,7 @@ int C2F(hfjac)(double *x, double *jac, int *col)
         *ierr = 10000;
         return *ierr;
     }
-    srur = (double) SUNRsqrt(UNIT_ROUNDOFF);
+    srur = (double) SUNRsqrt(SUN_UNIT_ROUNDOFF);
 
     fx_(x, work);
 
@@ -6925,7 +6929,7 @@ static int CallKinsol(double *told)
     /* double eta, egamma, ealpha, mxnewtstep, relfunc, fnormtol, scsteptol; */
     /* booleantype noInitSetup, noMinEps; */
     void *kin_mem = NULL;
-    realtype reltol = 0., abstol = 0.;
+    sunrealtype reltol = 0., abstol = 0.;
     int *Mode_save = NULL;
     int Mode_change = 0;
     static int PH = 0;
@@ -6938,8 +6942,8 @@ static int CallKinsol(double *told)
         return 0;
     }
 
-    reltol = (realtype) rtol;
-    abstol = (realtype) Atol;
+    reltol = (sunrealtype) rtol;
+    abstol = (sunrealtype) Atol;
 
     Mode_save = NULL;
     if (nmod > 0)

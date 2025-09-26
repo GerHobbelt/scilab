@@ -292,16 +292,34 @@
                   </tr>
                   <tr><td/><td/><td/><td/></tr>
                 <tr>
+                    <td>FORWARD_EULER_1_1</td> <td>explicit</td> <td align="center">1</td>
+                </tr>
+                <tr>
                     <td>HEUN_EULER_2_1_2</td> <td>explicit</td> <td align="center">2</td> <td>ERK_2</td>
+                </tr>
+                <tr>
+                    <td>RALSTON_EULER_2_1_2</td> <td>explicit</td> <td align="center">2</td> <td>ERK_2</td>
+                </tr>
+                <tr>
+                    <td>RALSTON_3_1_2</td> <td>explicit</td> <td align="center">2</td> 
+                </tr>
+                <tr>
+                    <td>EXPLICIT_MIDPOINT_EULER_2_1_2</td> <td>explicit</td> <td align="center">2</td> 
                 </tr>
                 <tr>
                     <td>BOGACKI_SHAMPINE_4_2_3</td> <td>explicit</td> <td align="center">3</td> <td>ERK_3</td>
                 </tr>
                 <tr>
-                    <td>ARK324L2SA_ERK_4_2_3</td> <td>explicit</td> <td align="center">3</td> 
+                    <td>SHU_OSHER_3_2_3</td> <td>explicit</td> <td align="center">3</td>
+                </tr>
+                <tr>
+                    <td>ARK324L2SA_ERK_4_2_3</td> <td>explicit</td> <td align="center">3</td>
                 </tr>
                 <tr>
                     <td>ZONNEVELD_5_3_4</td> <td>explicit</td> <td align="center">4</td> <td>ERK, ERK_4</td>
+                </tr>
+                <tr>
+                    <td>SOFRONIOU_SPALETTA_5_3_4</td> <td>explicit</td> <td align="center">4</td> <td>ERK, ERK_4</td>
                 </tr>
                 <tr>
                     <td>ARK436L2SA_ERK_6_3_4</td> <td>explicit</td>  <td align="center">4</td>
@@ -313,7 +331,10 @@
                     <td>ARK437L2SA_ERK_7_3_4</td> <td>explicit</td>  <td align="center">4</td>
                 </tr>
                 <tr>
-                    <td>CASH_KARP_6_4_5</td> <td>explicit</td>  <td align="center">5</td> <td>ERK_5</td>
+                    <td>TSITOURAS_7_4_5</td> <td>explicit</td>  <td align="center">5</td> <td>ERK_5</td>
+                </tr>
+                <tr>
+                    <td>CASH_KARP_6_4_5</td> <td>explicit</td>  <td align="center">5</td> 
                 </tr>
                 <tr>
                     <td>FEHLBERG_6_4_5</td> <td>explicit</td>  <td align="center">5</td>
@@ -328,11 +349,35 @@
                     <td>VERNER_8_5_6</td> <td>explicit</td>  <td align="center">6</td> <td>ERK_6</td>
                 </tr>
                 <tr>
+                    <td>VERNER_9_5_6</td> <td>explicit</td>  <td align="center">6</td>
+                </tr>
+                <tr>
+                    <td>VERNER_10_6_7</td> <td>explicit</td>  <td align="center">7</td> <td>ERK_7</td>
+                </tr>
+                <tr>
                     <td>FEHLBERG_13_7_8</td> <td>explicit</td>  <td align="center">8</td> <td>ERK_8</td>
+                </tr>
+                <tr>
+                    <td>VERNER_13_7_8</td> <td>explicit</td>  <td align="center">8</td>
+                </tr>
+                <tr>
+                    <td>VERNER_16_8_9</td> <td>explicit</td>  <td align="center">9</td>
                 </tr>
                 <tr><td/><td/><td/><td/></tr>
                 <tr>
-                    <td>SDIRK_2_1_2</td> <td>implicit</td>  <td align="center">2</td> <td>DIRK_2</td>
+                    <td>BACKWARD_EULER_1_1</td> <td>implicit</td>  <td align="center">1</td> 
+                </tr>
+                <tr>
+                    <td>IMPLICIT_MIDPOINT_1_2</td> <td>implicit</td>  <td align="center">2</td> 
+                </tr>
+                <tr>
+                    <td>IMPLICIT_TRAPEZOIDAL_2_2</td> <td>implicit</td>  <td align="center">2</td> 
+                </tr>
+                <tr>
+                    <td>ARK2_DIRK_3_1_2</td> <td>implicit</td>  <td align="center">2</td> <td>DIRK_2</td>
+                </tr>
+                <tr>
+                    <td>SDIRK_2_1_2</td> <td>implicit</td>  <td align="center">2</td> 
                 </tr>
                 <tr>
                     <td>BILLINGTON_3_3_2</td> <td>implicit</td>  <td align="center">2</td>
@@ -350,10 +395,10 @@
                     <td>ESDIRK325L2SA_5_2_3</td> <td>implicit</td>  <td align="center">3</td>
                 </tr>
                 <tr>
-                    <td>ESDIRK32I5L2SA_5_2_3</td> <td>implicit</td>  <td align="center">3</td>
+                    <td>ESDIRK32I5L2SA_5_2_3</td> <td>implicit</td>  <td align="center">3</td> <td>DIRK_3</td>
                 </tr>
                 <tr>
-                    <td>ARK324L2SA_DIRK_4_2_3</td> <td>implicit</td>  <td align="center">3</td> <td>DIRK_3</td>
+                    <td>ARK324L2SA_DIRK_4_2_3</td> <td>implicit</td>  <td align="center">3</td> 
                 </tr>
                 <tr>
                     <td>CASH_5_2_4</td> <td>implicit</td>  <td align="center">4</td>
@@ -368,7 +413,7 @@
                     <td>CASH_5_3_4</td> <td>implicit</td>  <td align="center">4</td>
                 </tr>
                 <tr>
-                    <td>SDIRK_5_3_4</td> <td>implicit</td>  <td align="center">4</td> <td>DIRK, DIRK_4</td>
+                    <td>SDIRK_5_3_4</td> <td>implicit</td>  <td align="center">4</td>
                 </tr>
                 <tr>
                     <td>KVAERNO_5_3_4</td> <td>implicit</td>  <td align="center">4</td>
@@ -383,7 +428,7 @@
                     <td>ESDIRK436L2SA_6_3_4</td> <td>implicit</td>  <td align="center">4</td>
                 </tr>
                 <tr>
-                    <td>ESDIRK43I6L2SA_6_3_4</td> <td>implicit</td>  <td align="center">4</td>
+                    <td>ESDIRK43I6L2SA_6_3_4</td> <td>implicit</td>  <td align="center">4</td> <td>DIRK, DIRK_4</td>
                 </tr>
                 <tr>
                     <td>QESDIRK436L2SA_6_3_4</td> <td>implicit</td>  <td align="center">4</td>
@@ -395,7 +440,7 @@
                     <td>KVAERNO_7_4_5</td> <td>implicit</td>  <td align="center">5</td>
                 </tr>
                 <tr>
-                    <td>ARK548L2SA_DIRK_8_4_5</td> <td>implicit</td>  <td align="center">5</td>  <td>DIRK_5</td>
+                    <td>ARK548L2SA_DIRK_8_4_5</td> <td>implicit</td>  <td align="center">5</td>  
                 </tr>
                 <tr>
                     <td>ARK548L2SAb_DIRK_8_4_5</td> <td>implicit</td>  <td align="center">5</td>
@@ -404,7 +449,7 @@
                     <td>ESDIRK547L2SA_7_4_5</td> <td>implicit</td>  <td align="center">5</td>
                 </tr>
                 <tr>
-                    <td>ESDIRK547L2SA2_7_4_5</td> <td>implicit</td>  <td align="center">5</td>
+                    <td>ESDIRK547L2SA2_7_4_5</td> <td>implicit</td>  <td align="center">5</td> <td>DIRK_5</td>
                 </tr>
                 <tr><td/><td/><td/><td/></tr>
                 <tr>

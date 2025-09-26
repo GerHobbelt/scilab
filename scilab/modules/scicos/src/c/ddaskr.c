@@ -60,7 +60,7 @@
  * Since we use ddaskr's built-in jacobian function, set jacpsol type to DDasJacPsolFn.
  */
 
-extern void C2F(ddaskr) (DDASResFn res, int *neq, realtype *t, realtype *y, realtype *yp, realtype *tout, int *info, realtype *reltol, realtype *abstol, int *istate, struct DDrWork_t *rwork, int *lrw, int *iwork, int *liw, double *dummy1, int *dummy2, DDASJacPsolFn jacpsol, DDASPsolFn psol, DDASRootFn grblk, int *ng, int *jroot);
+extern void C2F(ddaskr) (DDASResFn res, int *neq, sunrealtype *t, sunrealtype *y, sunrealtype *yp, sunrealtype *tout, int *info, sunrealtype *reltol, sunrealtype *abstol, int *istate, struct DDrWork_t *rwork, int *lrw, int *iwork, int *liw, double *dummy1, int *dummy2, DDASJacPsolFn jacpsol, DDASPsolFn psol, DDASRootFn grblk, int *ng, int *jroot);
 
 /* =============================
  *
@@ -166,7 +166,7 @@ void * DDaskrCreate (int * neq, int ng, int solverIndex)
  * Otherwise, it returns IDA_SUCCESS.
  */
 
-int DDaskrInit (void * ddaskr_mem, DDASResFn Res, realtype t0, N_Vector yy0, N_Vector yp0, DDASJacPsolFn Jacpsol, DDASPsolFn Psol)
+int DDaskrInit (void * ddaskr_mem, DDASResFn Res, sunrealtype t0, N_Vector yy0, N_Vector yp0, DDASJacPsolFn Jacpsol, DDASPsolFn Psol)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -228,7 +228,7 @@ int DDaskrInit (void * ddaskr_mem, DDASResFn Res, realtype t0, N_Vector yy0, N_V
 
     /* Allocate rwork and iwork workspaces and set them to zero.
        Their size is lrw and liw, respectively */
-    rwork = (struct DDrWork_t *) calloc(lrw, sizeof(realtype));
+    rwork = (struct DDrWork_t *) calloc(lrw, sizeof(sunrealtype));
     iwork = calloc(liw, sizeof(int));
 
     /* Save their lengths in iwork */
@@ -263,7 +263,7 @@ int DDaskrInit (void * ddaskr_mem, DDASResFn Res, realtype t0, N_Vector yy0, N_V
  * The return value is IDA_SUCCESS = 0 if no errors occurred, or a negative value otherwise.
  */
 
-int DDaskrReInit (void * ddaskr_mem, realtype tOld, N_Vector yy0, N_Vector yp0)
+int DDaskrReInit (void * ddaskr_mem, sunrealtype tOld, N_Vector yy0, N_Vector yp0)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -312,7 +312,7 @@ int DDaskrReInit (void * ddaskr_mem, realtype tOld, N_Vector yy0, N_Vector yp0)
  * It MUST be called before the first call to DDaskr.
  */
 
-int DDaskrSStolerances (void * ddaskr_mem, realtype reltol, realtype abstol)
+int DDaskrSStolerances (void * ddaskr_mem, sunrealtype reltol, sunrealtype abstol)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -424,7 +424,7 @@ int DDaskrSetUserData (void * ddaskr_mem, void * User_data)
  * Sets info[6] to 1 for rwork->hmax to be taken in consideration by ddaskr().
  */
 
-int DDaskrSetMaxStep (void * ddaskr_mem, realtype hMax)
+int DDaskrSetMaxStep (void * ddaskr_mem, sunrealtype hMax)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -454,7 +454,7 @@ int DDaskrSetMaxStep (void * ddaskr_mem, realtype hMax)
  * Sets info[3] to 1 for rwork->tcrit to be taken in consideration by ddaskr().
  */
 
-int DDaskrSetStopTime (void * ddaskr_mem, realtype tCrit)
+int DDaskrSetStopTime (void * ddaskr_mem, sunrealtype tCrit)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -674,7 +674,7 @@ int DDaskrSetLineSearchOffIC (void * ddaskr_mem, int lsoff)
 int DDaskrSetId (void * ddaskr_mem, N_Vector xproperty)
 {
     DDaskrMem ddas_mem = NULL;
-    realtype * temp = NULL;
+    sunrealtype * temp = NULL;
     int i = 0, LID = 0;
 
     if (ddaskr_mem == NULL)
@@ -733,7 +733,7 @@ int DDaskrSetId (void * ddaskr_mem, N_Vector xproperty)
  * or a corresponding error flag.
  */
 
-int DDaskrSolve (void * ddaskr_mem, realtype tOut, realtype * tOld, N_Vector yOut, N_Vector ypOut, int itask)
+int DDaskrSolve (void * ddaskr_mem, sunrealtype tOut, sunrealtype * tOld, N_Vector yOut, N_Vector ypOut, int itask)
 {
     DDaskrMem ddas_mem = NULL;
 
@@ -845,7 +845,7 @@ int DDaskrSolve (void * ddaskr_mem, realtype tOut, realtype * tOld, N_Vector yOu
  * (info[10] and info[13]).
  */
 
-int DDaskrCalcIC (void * ddaskr_mem, int icopt, realtype tout1)
+int DDaskrCalcIC (void * ddaskr_mem, int icopt, sunrealtype tout1)
 {
     DDaskrMem ddas_mem = NULL;
     double tdist = 0, troundoff = 0, maxnhTemp = 0;

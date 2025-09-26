@@ -115,7 +115,7 @@ void SUNDIALSManager::computeFunction(types::typed_list &in, functionKind what, 
     }
 }
 
-int SUNDIALSManager::colPackJac(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
+int SUNDIALSManager::colPackJac(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
                    SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     // compute Sparse Jacobian approximation using ColPack
@@ -602,8 +602,8 @@ void SUNDIALSManager::parseMatrixPattern(types::optional_list &opt, const wchar_
     opt.erase(_pwstLabel);
 }
 
-int SUNDIALSManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                  N_Vector v, N_Vector Jv, realtype c_j,
+int SUNDIALSManager::DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                  N_Vector v, N_Vector Jv, sunrealtype c_j,
                   N_Vector work1, N_Vector work2)
 {
     return 1;

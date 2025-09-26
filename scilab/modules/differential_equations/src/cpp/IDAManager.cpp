@@ -290,7 +290,7 @@ bool IDAManager::setSolverAndJacobian(char *errorMsg)
     return false;
 }
 
-int IDAManager::colPackJac(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR, SUNMatrix SUNMat_J, void *pManager, 
+int IDAManager::colPackJac(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR, SUNMatrix SUNMat_J, void *pManager, 
     N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     return SUNDIALSManager::colPackJac(t, c, N_VectorY, N_VectorYp, N_VectorR, SUNMat_J, pManager, tmp1, tmp2, tmp3);
@@ -480,7 +480,7 @@ void IDAManager::getInterpVectors(double *pdblNS, int iOrderPlusOne, int iIndex,
     }
 }
 
-int IDAManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, realtype c_j, N_Vector work2, N_Vector work3)
+int IDAManager::DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, sunrealtype c_j, N_Vector work2, N_Vector work3)
 {
 	IDAMem ida_mem = (IDAMem) m_prob_mem;
 	IDALsMem idals_mem = (IDALsMem) ida_mem->ida_lmem;
@@ -489,7 +489,7 @@ int IDAManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_V
 }
 
 
-int IDAManager::sensRes(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector resval, N_Vector *yS, N_Vector *ySdot,  N_Vector *resvalS,
+int IDAManager::sensRes(int Ns, sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector resval, N_Vector *yS, N_Vector *ySdot,  N_Vector *resvalS,
     void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     // This function computes the sensitivity residual for all sensitivity equation
@@ -559,7 +559,7 @@ int IDAManager::sensRes(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_Vecto
     return 0;
 }
 
-int IDAManager::quadratureRhs(realtype t, N_Vector N_VectorY,  N_Vector N_VectorYp, N_Vector N_VectorYQDot, void *pManager)
+int IDAManager::quadratureRhs(sunrealtype t, N_Vector N_VectorY,  N_Vector N_VectorYp, N_Vector N_VectorYQDot, void *pManager)
 {
     return function_t_Y1_Y2_Y3(QRHS, t, N_VectorY, N_VectorYp, N_VectorYQDot, pManager);
 }

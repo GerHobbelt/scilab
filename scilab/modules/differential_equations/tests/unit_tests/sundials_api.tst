@@ -11,7 +11,7 @@
 
 mputl([
 "#include <nvector/nvector_serial.h>"
-"int sunRhs(realtype t, N_Vector N_VectorY, N_Vector N_VectorYd, void *pManager)"
+"int sunRhs(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYd, void *pManager)"
 "{"
 "double *y = NV_DATA_S(N_VectorY);"
 "double *ydot = NV_DATA_S(N_VectorYd);"

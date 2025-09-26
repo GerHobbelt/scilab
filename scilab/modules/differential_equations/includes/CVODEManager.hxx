@@ -17,19 +17,18 @@
 #include <cvodes/cvodes_impl.h>
 #include <cvodes/cvodes_ls_impl.h>
 #include <cvodes/cvodes.h>            /* prototypes for CVODE fcts. and consts. */
-#include <cvodes/cvodes_direct.h>    /* prototypes for various DlsMat operations */
 #include <cvodes/cvodes_proj.h>
 #include <cvodes/cvodes_bandpre.h>
 
 extern "C"
 {
-    int SUN_dynrhs(realtype t, N_Vector Y, N_Vector Yd, void *user_data);
-    int SUN_dynrhspar(realtype t, N_Vector Y, N_Vector Yd, void *user_data);
-    int SUN_dynjac(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    int SUN_dynjacpar(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    int SUN_dyncb(realtype t, int iFlag, N_Vector N_VectorY, void *user_data);
-    int SUN_dynevent(realtype t, N_Vector Y, realtype *gout, void *user_data);
-    int SUN_dyneventpar(realtype t, N_Vector Y, realtype *gout, void *user_data);
+    int SUN_dynrhs(sunrealtype t, N_Vector Y, N_Vector Yd, void *user_data);
+    int SUN_dynrhspar(sunrealtype t, N_Vector Y, N_Vector Yd, void *user_data);
+    int SUN_dynjac(sunrealtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+    int SUN_dynjacpar(sunrealtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+    int SUN_dyncb(sunrealtype t, int iFlag, N_Vector N_VectorY, void *user_data);
+    int SUN_dynevent(sunrealtype t, N_Vector Y, sunrealtype *gout, void *user_data);
+    int SUN_dyneventpar(sunrealtype t, N_Vector Y, sunrealtype *gout, void *user_data);
 }
 
 typedef void(*dynlibFunPtr)();
@@ -65,7 +64,6 @@ public :
         setVTolerances = CVodeSVtolerances;
         setQuadSVTolerances = CVodeQuadSVtolerances;
         setQuadErrCon = CVodeSetQuadErrCon;
-        setErrHandlerFn = CVodeSetErrHandlerFn;
         getReturnFlagName = CVodeGetReturnFlagName;
         getDky = CVodeGetDky;
         // getSens = CVodeGetSens;
@@ -167,15 +165,15 @@ public :
     void getInterpVectors(double *pdblNS, int iOrderPlusOne, int iIndex, double dblt0, double dblTUser, double dblStep, double *pdblVect, double *pdblVectd);
     bool initSensitivity(char *errorMsg);
 
-    int DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                  N_Vector v, N_Vector Jv, realtype c_j,
+    int DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                  N_Vector v, N_Vector Jv, sunrealtype c_j,
                   N_Vector work1, N_Vector work2) final;
 
     // static methods
-    static int sensRhs(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector *yS, N_Vector *ySdot, void *pManager,
+    static int sensRhs(int Ns, sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector *yS, N_Vector *ySdot, void *pManager,
         N_Vector tmp1, N_Vector tmp2);
-    static int quadratureRhs(realtype t, N_Vector N_VectorY, N_Vector N_VectorYQDot, void *pManager);
-    static int projFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorCorr, realtype epsProj, N_Vector N_VectorErr, void *pManager);
+    static int quadratureRhs(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYQDot, void *pManager);
+    static int projFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorCorr, sunrealtype epsProj, N_Vector N_VectorErr, void *pManager);
 
     types::Struct *getStats();
 

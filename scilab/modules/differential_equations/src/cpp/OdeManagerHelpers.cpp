@@ -16,7 +16,7 @@
 
 // Static helpers
 
-int OdeManager::function_t_Y1_Y2(functionKind what, realtype t, N_Vector N_Vector1, N_Vector N_Vector2, void *pManager)
+int OdeManager::function_t_Y1_Y2(functionKind what, sunrealtype t, N_Vector N_Vector1, N_Vector N_Vector2, void *pManager)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionAPI fAPI = manager->getFunctionAPI(what);
@@ -44,7 +44,7 @@ int OdeManager::function_t_Y1_Y2(functionKind what, realtype t, N_Vector N_Vecto
     return 0;
 }
 
-int OdeManager::function_t_Y1_Y2_Y3(functionKind what, realtype t, N_Vector N_Vector1, N_Vector N_Vector2, N_Vector N_Vector3, void *pManager)
+int OdeManager::function_t_Y1_Y2_Y3(functionKind what, sunrealtype t, N_Vector N_Vector1, N_Vector N_Vector2, N_Vector N_Vector3, void *pManager)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionAPI fAPI = manager->getFunctionAPI(what);
@@ -72,28 +72,28 @@ int OdeManager::function_t_Y1_Y2_Y3(functionKind what, realtype t, N_Vector N_Ve
     return 0;
 }
 
-void OdeManager::errHandler(int error_code, const char *module, const char *function, char *msg, void *pManager)
+void OdeManager::errHandler(int line, const char *func, const char *file, const char *msg, SUNErrCode code, void *pManager, SUNContext sunctx)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
-    manager->errHandler(error_code, module, function, msg);
+    manager->solverErrHandler(code, msg);
 }
 
-int OdeManager::rhsFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager)
+int OdeManager::rhsFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager)
 {
     return function_t_Y1_Y2(RHS, t, N_VectorY, N_VectorYDot, pManager);
 }
 
-int OdeManager::rhsFunctionStiff(realtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager)
+int OdeManager::rhsFunctionStiff(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager)
 {
     return function_t_Y1_Y2(SRHS, t, N_VectorY, N_VectorYDot, pManager);
 }
 
-int OdeManager::resFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorRes, void *pManager)
+int OdeManager::resFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorRes, void *pManager)
 {
     return function_t_Y1_Y2_Y3(RES, t, N_VectorY, N_VectorYp, N_VectorRes, pManager);
 }
 
-int OdeManager::eventFunction(realtype t, N_Vector N_VectorY, realtype *pdblOut, void *pManager)
+int OdeManager::eventFunction(sunrealtype t, N_Vector N_VectorY, sunrealtype *pdblOut, void *pManager)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionKind what = EVENTS;
@@ -113,7 +113,7 @@ int OdeManager::eventFunction(realtype t, N_Vector N_VectorY, realtype *pdblOut,
     return 0;
 }
 
-int OdeManager::eventFunctionImpl(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, realtype *pdblOut, void *pManager)
+int OdeManager::eventFunctionImpl(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, sunrealtype *pdblOut, void *pManager)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionKind what = EVENTS;
@@ -133,7 +133,7 @@ int OdeManager::eventFunctionImpl(realtype t, N_Vector N_VectorY, N_Vector N_Vec
     return 0;
 }
 
-int OdeManager::jacFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorFy, SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
+int OdeManager::jacFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorFy, SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionKind what = JACY;
@@ -158,7 +158,7 @@ int OdeManager::jacFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorFy,
 }
 
 
-int OdeManager::jacResFunction(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
+int OdeManager::jacResFunction(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
                    SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
@@ -188,7 +188,7 @@ int OdeManager::jacResFunction(realtype t, realtype c, N_Vector N_VectorY, N_Vec
     return 0;
 }
 
-int OdeManager::massFunction(realtype t, SUNMatrix SUNMat_M, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
+int OdeManager::massFunction(sunrealtype t, SUNMatrix SUNMat_M, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionKind what = MASS;
@@ -212,14 +212,14 @@ int OdeManager::massFunction(realtype t, SUNMatrix SUNMat_M, void *pManager, N_V
     return 0;
 }
 
-int OdeManager::colPackJac(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
+int OdeManager::colPackJac(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     return SUNDIALSManager::colPackJac(t, 0, N_VectorY, N_VectorYp, NULL, SUNMat_J, pManager, tmp1, tmp2, tmp3);
 }
 
 // Dynamic helpers
 
-int OdeManager::intermediateCallback(realtype t, int iFlag, N_Vector N_VectorY, N_Vector N_VectorYp)
+int OdeManager::intermediateCallback(sunrealtype t, int iFlag, N_Vector N_VectorY, N_Vector N_VectorYp)
 {
     functionKind what = INTCB;
     functionAPI fAPI = getFunctionAPI(what);

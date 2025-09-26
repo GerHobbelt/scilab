@@ -384,7 +384,7 @@ void CVODEManager::getInterpVectors(double *pdblNS, int iOrderPlusOne, int iInde
     }
 }
 
-int CVODEManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, realtype c_j, N_Vector work2, N_Vector work3)
+int CVODEManager::DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, sunrealtype c_j, N_Vector work2, N_Vector work3)
 {
     CVodeMem cv_mem = (CVodeMem) m_prob_mem;
     CVLsMem cvls_mem = (CVLsMem) cv_mem->cv_lmem;
@@ -392,7 +392,7 @@ int CVODEManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N
     return cvls_mem->jtimes(v, Jv, tt, yy, yp, m_prob_mem, work2);
 }
 
-int CVODEManager::projFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorCorr, realtype epsProj, N_Vector N_VectorErr, void *pManager)
+int CVODEManager::projFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorCorr, sunrealtype epsProj, N_Vector N_VectorErr, void *pManager)
 {
     OdeManager *manager = static_cast<OdeManager *>(pManager);
     functionKind what = PROJ;
@@ -417,7 +417,7 @@ int CVODEManager::projFunction(realtype t, N_Vector N_VectorY, N_Vector N_Vector
     return 0;
 }
 
-int CVODEManager::sensRhs(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector *yS, N_Vector *ySdot, void *pManager, N_Vector tmp1, N_Vector tmp2)
+int CVODEManager::sensRhs(int Ns, sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector *yS, N_Vector *ySdot, void *pManager, N_Vector tmp1, N_Vector tmp2)
 {
     // we cannot use computeFunction or computeMatrix methods because sensitivity matrix
     // is given as an array of NVector
@@ -471,7 +471,7 @@ int CVODEManager::sensRhs(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_Vec
     return 0;
 }
 
-int CVODEManager::quadratureRhs(realtype t, N_Vector N_VectorY, N_Vector N_VectorYQDot, void *pManager)
+int CVODEManager::quadratureRhs(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYQDot, void *pManager)
 {
     return function_t_Y1_Y2(QRHS, t, N_VectorY, N_VectorYQDot, pManager);
 }

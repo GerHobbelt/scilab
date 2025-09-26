@@ -198,9 +198,9 @@ void OdeManager::init()
      throw ast::InternalError(errorMsg);
     }
 
-    if (setErrHandlerFn(m_prob_mem, errHandler, (void *)this) < 0)
+    if (SUNContext_PushErrHandler(m_sunctx, errHandler, (void *)this) < 0)
     {
-        sprintf(errorMsg,"setHandlerFunction error\n");
+        sprintf(errorMsg,"SUNContext_PushErrHandler error\n");
         throw ast::InternalError(errorMsg);
     }
 }

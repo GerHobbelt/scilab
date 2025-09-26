@@ -22,7 +22,7 @@ if with_openmp
     NUM_THREADS=4;
     mputl([
     "#include <nvector/nvector_openmp.h>"  
-    "int f(realtype t, N_Vector Y, N_Vector Yd, void *pManager)"
+    "int f(sunrealtype t, N_Vector Y, N_Vector Yd, void *pManager)"
     "{"
     "    double *y = N_VGetArrayPointer(Y);"
     "    double *yd = N_VGetArrayPointer(Yd);"

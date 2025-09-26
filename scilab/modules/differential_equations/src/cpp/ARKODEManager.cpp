@@ -20,7 +20,7 @@
 
 extern "C"
 {
-    int ARKStepSetMaxOrd(void *m_prob_mem, int i)
+    int ARKodeSetMaxOrd(void *m_prob_mem, int i)
     {
         return 1;
     }
@@ -188,6 +188,7 @@ void ARKODEManager::parseMethodAndOrder(types::optional_list &opt)
         // parse eventual "method" option
         std::wstring wStrDefaultMethod = m_odeIsExtension ? m_prevManager->m_wstrMethod : (m_odeIsImEx ? L"ARK" : hasJacobian() ? L"DIRK" : L"ERK");
         getStringInPlist(getSolverName().c_str(), opt, L"method", m_wstrMethod, wStrDefaultMethod, getAvailableMethods());        
+        
         m_iMethodOrder = ARKODEMethods[m_wstrMethod].order;
         m_iEmbeddedMethodOrder = ARKODEMethods[m_wstrMethod].embeddedOrder;
         // get standard SUNDIALS tableaux
@@ -321,7 +322,7 @@ void ARKODEManager::getButcherTabInPlist(types::optional_list &opt, const wchar_
 
 bool ARKODEManager::initialize(char *errorMsg)
 {
-    if (ARKStepSetFixedStep(m_prob_mem, m_dblFixedStep) != ARK_SUCCESS)
+    if (ARKodeSetFixedStep(m_prob_mem, m_dblFixedStep) != ARK_SUCCESS)
     {
         sprintf(errorMsg, "ARKStepSetFixedStep error");
         return true;                
@@ -334,8 +335,8 @@ bool ARKODEManager::initialize(char *errorMsg)
 
     // interpolant type and degree
     m_iInterpolationDegree = std::min(m_iMethodOrder-1,m_iInterpolationDegree);
-    ARKStepSetInterpolantType(m_prob_mem, m_iInterpolationMethod);
-    ARKStepSetInterpolantDegree(m_prob_mem, m_iInterpolationDegree);
+    ARKodeSetInterpolantType(m_prob_mem, m_iInterpolationMethod);
+    ARKodeSetInterpolantDegree(m_prob_mem, m_iInterpolationDegree);
 
     // Absolute residual tolerance (used by ARKODE only)
     if (m_dblVecRAtol.size() > 0)
@@ -351,7 +352,7 @@ bool ARKODEManager::initialize(char *errorMsg)
         }
         std::copy(m_dblVecRAtol.begin(), m_dblVecRAtol.end(), N_VGetArrayPointer(m_N_VectorRAtol));
     }
-    if (ARKStepResVtolerance(m_prob_mem, m_N_VectorRAtol) < 0)
+    if (ARKodeResVtolerance(m_prob_mem, m_N_VectorRAtol) < 0)
     {
         sprintf(errorMsg, "ARKStepResVtolerance error");
         return true;
@@ -369,12 +370,12 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
 
         setLinearSolver(MASS, m_N_VectorY, m_MASS, m_MASS_LS);
   
-        if(ARKStepSetMassLinearSolver(m_prob_mem, m_MASS_LS, m_MASS, bMassTimeDep) != ARK_SUCCESS)
+        if(ARKodeSetMassLinearSolver(m_prob_mem, m_MASS_LS, m_MASS, bMassTimeDep) != ARK_SUCCESS)
         {
             sprintf(errorMsg,"ARKStepSetMassLinearSolver error\n");
             return true;
         }
-        if (ARKStepSetMassFn(m_prob_mem, massFunction)  != ARK_SUCCESS)
+        if (ARKodeSetMassFn(m_prob_mem, massFunction)  != ARK_SUCCESS)
         {
             {
                 sprintf(errorMsg,"ARKStepSetMassFn error\n");
@@ -398,7 +399,7 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
 
     if (m_wstrNonLinSolver == L"Newton")
     {
-        if (ARKStepSetLinearSolver(m_prob_mem, m_LS, m_A) != ARK_SUCCESS)
+        if (ARKodeSetLinearSolver(m_prob_mem, m_LS, m_A) != ARK_SUCCESS)
         {
             sprintf(errorMsg,"ARKStepSetLinearSolver error\n");
             return true;
@@ -408,7 +409,7 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
 
         if (m_bHas[JACY])
         {
-            if (ARKStepSetJacFn(m_prob_mem, jacFunction) != ARK_SUCCESS)
+            if (ARKodeSetJacFn(m_prob_mem, jacFunction) != ARK_SUCCESS)
             {
                 sprintf(errorMsg,"ARKStepSetJacFn error\n");
                 return true;
@@ -417,13 +418,13 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
         else if (m_pIPattern[JACY] != NULL)
         {
             // Jacobian pattern has been provided
-            if (ARKStepSetJacFn(m_prob_mem, colPackJac) != ARK_SUCCESS)
+            if (ARKodeSetJacFn(m_prob_mem, colPackJac) != ARK_SUCCESS)
             {
                 sprintf(errorMsg,"ARKStepSetJacFn error\n");
                 throw ast::InternalError(errorMsg);
             }
         }
-        else if (ARKStepSetJacFn(m_prob_mem, NULL) != ARK_SUCCESS)
+        else if (ARKodeSetJacFn(m_prob_mem, NULL) != ARK_SUCCESS)
         {
             sprintf(errorMsg,"ARKStepSetJacFn error\n");
             return true;
@@ -431,7 +432,7 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
         // Jacobian of implicit part is constant or only time dependent
         if (m_pIConstFunction[JACY] != NULL || m_wstrIsLinear == L"constant")
         {
-            if (ARKStepSetLinear(m_prob_mem,0) != ARK_SUCCESS)
+            if (ARKodeSetLinear(m_prob_mem,0) != ARK_SUCCESS)
             {
                 sprintf(errorMsg,"ARKStepSetLinear error\n");
                 return true;
@@ -439,7 +440,7 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
         }
         else if (m_wstrIsLinear == L"timeDepend")
         {
-            if (ARKStepSetLinear(m_prob_mem,1) != ARK_SUCCESS)
+            if (ARKodeSetLinear(m_prob_mem,1) != ARK_SUCCESS)
             {
                 sprintf(errorMsg,"ARKStepSetLinear error\n");
                 return true;
@@ -458,14 +459,14 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
     }
 
     /* attach nonlinear solver object to ARKODE */
-    if (ARKStepSetNonlinearSolver(m_prob_mem, m_NLS) != ARK_SUCCESS)
+    if (ARKodeSetNonlinearSolver(m_prob_mem, m_NLS) != ARK_SUCCESS)
     {
         sprintf(errorMsg,"ARKStepSetNonlinearSolver error\n");
         return true;
     }
     if (m_iNonLinSolMaxIters > 0)
     {
-        ARKStepSetMaxNonlinIters(m_prob_mem, m_iNonLinSolMaxIters);
+        ARKodeSetMaxNonlinIters(m_prob_mem, m_iNonLinSolMaxIters);
     }
 
     return false;
@@ -473,13 +474,13 @@ bool ARKODEManager::setSolverAndJacobian(char *errorMsg)
 
 bool ARKODEManager::setEventFunction()
 {
-    if (ARKStepRootInit(m_prob_mem, m_iNbEvents, eventFunction) != ARK_SUCCESS)
+    if (ARKodeRootInit(m_prob_mem, m_iNbEvents, eventFunction) != ARK_SUCCESS)
     {
         return true;
     }
     if (m_iVecEventDirection.size() > 0)
     {
-        if (ARKStepSetRootDirection(m_prob_mem, m_iVecEventDirection.data()) != ARK_SUCCESS)
+        if (ARKodeSetRootDirection(m_prob_mem, m_iVecEventDirection.data()) != ARK_SUCCESS)
         {
             return true;
         }
@@ -498,7 +499,7 @@ OdeManager::solverReturnCode ARKODEManager::doStep(double dblFinalTime, double *
 {
     std::map<solverTaskCode, int> toARKODETask = {{ODE_ONE_STEP, ARK_ONE_STEP}, {ODE_NORMAL, ARK_NORMAL}};
 
-    int iFlag = ARKStepEvolve(m_prob_mem, dblFinalTime, m_N_VectorY, pdblTime, toARKODETask[iKind]);
+    int iFlag = ARKodeEvolve(m_prob_mem, dblFinalTime, m_N_VectorY, pdblTime, toARKODETask[iKind]);
     m_iLastOrder = m_iMethodOrder;
 
     return toODEReturn[iFlag];
@@ -537,16 +538,18 @@ void ARKODEManager::saveInterpBasisVectors()
     ARKInterp interp = ark_mem->interp;
     m_indexInterpBasis.push_back(m_indexInterpBasis.back()+getInterpBasisSize());
 
+    /* basis vectors are defined acording to arkInterpEvaluate_Hermite in arkode_interp.c */
+
     if (m_iInterpolationMethod == ARK_INTERP_HERMITE)
     {
         std::vector<double> basisVector (m_iNbRealEq);
         basisVector.assign(N_VGetArrayPointer(HINT_YOLD(interp)), N_VGetArrayPointer(HINT_YOLD(interp)) + m_iNbRealEq);
         interpBasisVectorList.push_back(basisVector);
-        basisVector.assign(N_VGetArrayPointer(HINT_YNEW(interp)), N_VGetArrayPointer(HINT_YNEW(interp)) + m_iNbRealEq);
+        basisVector.assign(N_VGetArrayPointer(ark_mem->yn), N_VGetArrayPointer(ark_mem->yn) + m_iNbRealEq);
         interpBasisVectorList.push_back(basisVector);
         if (m_iInterpolationDegree > 1)
         {
-            basisVector.assign(N_VGetArrayPointer(HINT_FNEW(interp)), N_VGetArrayPointer(HINT_FNEW(interp)) + m_iNbRealEq);
+            basisVector.assign(N_VGetArrayPointer(ark_mem->fn), N_VGetArrayPointer(ark_mem->fn) + m_iNbRealEq);
             interpBasisVectorList.push_back(basisVector);
         }
         if (m_iInterpolationDegree > 2)
@@ -623,32 +626,32 @@ void ARKODEManager::getInterpVectors(double *pdblNS, int iOrderPlusOne, int iInd
 
             case(4):    /* quartic interpolant */
             // [2] and [3] are inverted since we store YOLD,YNEW,FNEW,FOLD,FA (in that order)
-            pdblVect[0] = -SIX*tau2 - RCONST(16.0)*tau3 - RCONST(9.0)*tau4;
-            pdblVect[1] = ONE + SIX*tau2 + RCONST(16.0)*tau3 + RCONST(9.0)*tau4;
-            pdblVect[3] = h*FOURTH*(-FIVE*tau2 - RCONST(14.0)*tau3 - RCONST(9.0)*tau4);
+            pdblVect[0] = -SIX*tau2 - SUN_RCONST(16.0)*tau3 - SUN_RCONST(9.0)*tau4;
+            pdblVect[1] = ONE + SIX*tau2 + SUN_RCONST(16.0)*tau3 + SUN_RCONST(9.0)*tau4;
+            pdblVect[3] = h*FOURTH*(-FIVE*tau2 - SUN_RCONST(14.0)*tau3 - SUN_RCONST(9.0)*tau4);
             pdblVect[2] = h*(tau + TWO*tau2 + tau3);
-            pdblVect[4] = h*RCONST(27.0)*FOURTH*(-tau4 - TWO*tau3 - tau2);
-            pdblVectd[0] = (-TWELVE*tau - RCONST(48.0)*tau2 - RCONST(36.0)*tau3)/h;
-            pdblVectd[1] = (TWELVE*tau + RCONST(48.0)*tau2 + RCONST(36.0)*tau3)/h;
-            pdblVectd[3] = HALF*(-FIVE*tau - RCONST(21.0)*tau2 - RCONST(18.0)*tau3);
+            pdblVect[4] = h*SUN_RCONST(27.0)*FOURTH*(-tau4 - TWO*tau3 - tau2);
+            pdblVectd[0] = (-TWELVE*tau - SUN_RCONST(48.0)*tau2 - SUN_RCONST(36.0)*tau3)/h;
+            pdblVectd[1] = (TWELVE*tau + SUN_RCONST(48.0)*tau2 + SUN_RCONST(36.0)*tau3)/h;
+            pdblVectd[3] = HALF*(-FIVE*tau - SUN_RCONST(21.0)*tau2 - SUN_RCONST(18.0)*tau3);
             pdblVectd[2] = (ONE + FOUR*tau + THREE*tau2);
-            pdblVectd[4] = -RCONST(27.0)*HALF*(TWO*tau3 + THREE*tau2 + tau);
+            pdblVectd[4] = -SUN_RCONST(27.0)*HALF*(TWO*tau3 + THREE*tau2 + tau);
             break;
 
             case(5):    /* quintic interpolant */
             // [2] and [3] are inverted since we store YOLD,YNEW,FNEW,FOLD,FA,FB (in that order)
-            pdblVect[0] = RCONST(54.0)*tau5 + RCONST(135.0)*tau4 + RCONST(110.0)*tau3 + RCONST(30.0)*tau2;
+            pdblVect[0] = SUN_RCONST(54.0)*tau5 + SUN_RCONST(135.0)*tau4 + SUN_RCONST(110.0)*tau3 + SUN_RCONST(30.0)*tau2;
             pdblVect[1] = ONE - pdblVect[0];
-            pdblVect[3] = h/FOUR*(RCONST(27.0)*tau5 + RCONST(63.0)*tau4 + RCONST(49.0)*tau3 + RCONST(13.0)*tau2);
-            pdblVect[2] = h/FOUR*(RCONST(27.0)*tau5 + RCONST(72.0)*tau4 + RCONST(67.0)*tau3 + RCONST(26.0)*tau2 + FOUR*tau);
-            pdblVect[4] = h/FOUR*(RCONST(81.0)*tau5 + RCONST(189.0)*tau4 + RCONST(135.0)*tau3 + RCONST(27.0)*tau2);
-            pdblVect[5] = h/FOUR*(RCONST(81.0)*tau5 + RCONST(216.0)*tau4 + RCONST(189.0)*tau3 + RCONST(54.0)*tau2);
-            pdblVectd[0] = (RCONST(270.0)*tau4 + RCONST(540.0)*tau3 + RCONST(330.0)*tau2 + RCONST(60.0)*tau)/h;
+            pdblVect[3] = h/FOUR*(SUN_RCONST(27.0)*tau5 + SUN_RCONST(63.0)*tau4 + SUN_RCONST(49.0)*tau3 + SUN_RCONST(13.0)*tau2);
+            pdblVect[2] = h/FOUR*(SUN_RCONST(27.0)*tau5 + SUN_RCONST(72.0)*tau4 + SUN_RCONST(67.0)*tau3 + SUN_RCONST(26.0)*tau2 + FOUR*tau);
+            pdblVect[4] = h/FOUR*(SUN_RCONST(81.0)*tau5 + SUN_RCONST(189.0)*tau4 + SUN_RCONST(135.0)*tau3 + SUN_RCONST(27.0)*tau2);
+            pdblVect[5] = h/FOUR*(SUN_RCONST(81.0)*tau5 + SUN_RCONST(216.0)*tau4 + SUN_RCONST(189.0)*tau3 + SUN_RCONST(54.0)*tau2);
+            pdblVectd[0] = (SUN_RCONST(270.0)*tau4 + SUN_RCONST(540.0)*tau3 + SUN_RCONST(330.0)*tau2 + SUN_RCONST(60.0)*tau)/h;
             pdblVectd[1] = -pdblVectd[0];
-            pdblVectd[3] = (RCONST(135.0)*tau4 + RCONST(252.0)*tau3 + RCONST(147.0)*tau2 + RCONST(26.0)*tau)/FOUR;
-            pdblVectd[2] = (RCONST(135.0)*tau4 + RCONST(288.0)*tau3 + RCONST(201.0)*tau2 + RCONST(52.0)*tau + FOUR)/FOUR;
-            pdblVectd[4] = (RCONST(405.0)*tau4 + RCONST(4.0)*189*tau3 + RCONST(405.0)*tau2 + RCONST(54.0)*tau)/FOUR;
-            pdblVectd[5] = (RCONST(405.0)*tau4 + RCONST(864.0)*tau3 + RCONST(567.0)*tau2 + RCONST(108.0)*tau)/FOUR;
+            pdblVectd[3] = (SUN_RCONST(135.0)*tau4 + SUN_RCONST(252.0)*tau3 + SUN_RCONST(147.0)*tau2 + SUN_RCONST(26.0)*tau)/FOUR;
+            pdblVectd[2] = (SUN_RCONST(135.0)*tau4 + SUN_RCONST(288.0)*tau3 + SUN_RCONST(201.0)*tau2 + SUN_RCONST(52.0)*tau + FOUR)/FOUR;
+            pdblVectd[4] = (SUN_RCONST(405.0)*tau4 + SUN_RCONST(4.0)*189*tau3 + SUN_RCONST(405.0)*tau2 + SUN_RCONST(54.0)*tau)/FOUR;
+            pdblVectd[5] = (SUN_RCONST(405.0)*tau4 + SUN_RCONST(864.0)*tau3 + SUN_RCONST(567.0)*tau2 + SUN_RCONST(108.0)*tau)/FOUR;
             break;
 
             default:
@@ -688,13 +691,13 @@ void ARKODEManager::getInterpVectors(double *pdblNS, int iOrderPlusOne, int iInd
     }
 }
 
-int ARKODEManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, realtype c_j, N_Vector work2, N_Vector work3)
+int ARKODEManager::DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, sunrealtype c_j, N_Vector work2, N_Vector work3)
 {
     ARKodeMem ark_mem = (ARKodeMem) m_prob_mem;
     ARKLsMem arkls_mem;
     void* ark_step_lmem;
 
-    ark_step_lmem = ark_mem->step_getlinmem(m_prob_mem);
+    ark_step_lmem = ark_mem->step_getlinmem(ark_mem);
     arkls_mem = (ARKLsMem) ark_step_lmem;    
 
     return arkls_mem->jtimes(v, Jv, tt, yy, yp, m_prob_mem, work2);
@@ -708,25 +711,26 @@ types::Struct *ARKODEManager::getStats()
     L"nLinSolve", L"nRejSteps", L"nNonLiniters", L"nNonLinCVFails", L"order",
     L"hIni", L"hLast", L"hCur", L"tCur", L"eTime"};
 
-    ARKStepGetStepStats(m_prob_mem, m_incStat, dblStat, dblStat+1, dblStat+2, dblStat+3);
+    ARKodeGetStepStats(m_prob_mem, m_incStat, dblStat, dblStat+1, dblStat+2, dblStat+3);
 
     dblStat[4] = m_dblElapsedTime;
-    ARKStepGetNumStepAttempts(m_prob_mem, m_incStat+7);
+    ARKodeGetNumStepAttempts(m_prob_mem, m_incStat+7);
     m_incStat[7] = m_incStat[7]-m_incStat[0];
 
-    ARKStepGetNumRhsEvals(m_prob_mem,  m_incStat+1, m_incStat+2);
+    ARKodeGetNumRhsEvals(m_prob_mem, 0, m_incStat+1);
+    ARKodeGetNumRhsEvals(m_prob_mem, 1, m_incStat+2);
 
     if (m_wstrNonLinSolver == L"Newton")
     {
-        ARKStepGetNumLinSolvSetups(m_prob_mem, m_incStat+6);
-        ARKStepGetNumJacEvals(m_prob_mem, m_incStat+4);
-        ARKStepGetNumLinRhsEvals(m_prob_mem, m_incStat+3);
+        ARKodeGetNumLinSolvSetups(m_prob_mem, m_incStat+6);
+        ARKodeGetNumJacEvals(m_prob_mem, m_incStat+4);
+        ARKodeGetNumLinRhsEvals(m_prob_mem, m_incStat+3);
     }
-    ARKStepGetNonlinSolvStats(m_prob_mem, m_incStat+8, m_incStat+9);
+    ARKodeGetNonlinSolvStats(m_prob_mem, m_incStat+8, m_incStat+9);
 
     if (m_iNbEvents > 0)
     {
-        ARKStepGetNumGEvals(m_prob_mem, m_incStat+5);
+        ARKodeGetNumGEvals(m_prob_mem, m_incStat+5);
     }
 
     // if extending a previous solution, update incremental stats only

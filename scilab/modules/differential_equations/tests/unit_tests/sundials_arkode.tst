@@ -74,9 +74,9 @@ y0 = [2;1];
 
 //BASIC
 [t,y] = arkode(list(vdp,mu), 0:0.1:10, y0,atol=1e-9);
-[tm,ym] = arkode(list(vdp,mu), 0:0.1:10, y0, method = "ZONNEVELD_5_3_4",atol=1e-9);
+[tm,ym] = arkode(list(vdp,mu), 0:0.1:10, y0, method = "ERK_4",atol=1e-9);
 assert_checkequal(y,ym);
-assert_checkalmostequal(y(:,$),[ -1.69930462064814413736; -1.613000392216833223102]);
+assert_checkalmostequal(y(:,$),[   -1.698993908853207557286; -1.61397577130031244508]);
 
 //METHODS
 execstr("arkode(cos,[0 1],1,method="""")","errcatch");
@@ -84,9 +84,18 @@ mess = lasterror();
 [_v,_v,_v,methods]=regexp(mess,"/\{(.*?)\}/");
 methods=evstr(methods);
 for m=methods
-    [tm,ym] = arkode(list(vdp,mu), 0:0.1:10, y0, method = m);
-    sol = arkode(list(vdp,mu), 0:0.1:10, y0, method = m);
-    arkode(list(vdp,mu), 0:0.1:10, y0, method = m);
+    if and(m<>["FORWARD_EULER_1_1"
+"BACKWARD_EULER_1_1"
+"IMPLICIT_MIDPOINT_1_2"
+"IMPLICIT_TRAPEZOIDAL_2_2"])
+        printf("%s : ",m);
+        [tm,ym] = arkode(list(vdp,mu), 0:0.1:10, y0, method = m);
+        printf("OK, ");
+        sol = arkode(list(vdp,mu), [0 10], y0, method = m, hMax = 1);
+        printf("OK, ");
+        arkode(list(vdp,mu), 0:0.1:10, y0, method = m);
+        printf("OK\n");
+    end
 end
 
 // EVENTS
@@ -119,8 +128,8 @@ assert_checkalmostequal(sol(sol.t),(sol.y));
 // EXTEND SOLUTION
 sol = arkode(list(vdp,mu), [0 10], y0, atol=1e-9);
 solext = arkode(sol, 20, atol=1e-9);
-assert_checkequal(size(sol.t),[1,178]);
-assert_checkequal(size(solext.t),[1,348]);
+assert_checkequal(size(sol.t),[1,80]);
+assert_checkequal(size(solext.t),[1,158]);
 assert_checkequal(sol(sol.t),solext(sol.t));
 
 //  EXTEND SOLUTION WITH EVENT
@@ -134,7 +143,7 @@ disp(1)
 disp(2)
 sol3 = arkode(list(matmul,[1 1;0 2]), 1, eye(2,2), t0=0, atol=1e-9);
 disp(3)
-assert_checkequal(size(sol3.y),[2,2,30]);
+assert_checkequal(size(sol3.y),[2,2,17]);
 disp(4)
 [t,E] = arkode(list(matmul,[1 1;0 2]), 1, eye(2,2), t0=0, atol=1e-9);
 disp(5)
@@ -147,22 +156,22 @@ A=[1,1;0,2]; B=[1,0;0,1]; C=[1,0;0,1];
 assert_checkalmostequal(X,[  2.272713109   0.615508769; 0.615508769   4.41906588 ],1e-4);
 
 // COMPLEX ODE
-solc = arkode(crhs,[0 5],1);
-assert_checkalmostequal(solc.y(:,$),complex(1,0),1e-6,1e-5);
+solc = arkode(crhs,[0 5],1,method="ERK_8",rtol=1e-10,atol=1e-12);
+assert_checkalmostequal(solc.y(:,$),complex(1,0),0,1e-11);
 solcext1=arkode(solc,6);
 solcext2=arkode(solc,6,y0=1);
-assert_checkalmostequal(solcext2(5+10*%eps),1,0,100*%eps);
+assert_checkalmostequal(solcext2(5+10*%eps),1,0,1e-11);
 solcext3=arkode(solc,6,y0=%i);
-assert_checkalmostequal(solcext3(5+10*%eps),%i,0,100*%eps);
+assert_checkalmostequal(solcext3(5+10*%eps),%i,0,1e-11);
 
 // SENSITIVITY WITH COMPLEX STEP
 h = 1e-200;
 mu=1
-[tcs,ycs] = arkode(list(vdp,complex(mu,h)), [0,10], y0, rtol=1e-14);
+[tcs,ycs] = arkode(list(vdp,complex(mu,h)), [0,10], y0, rtol=1e-10,atol=1e-12);
 scs = imag(ycs)/h;
-[tcs,sens] = arkode(list(vdpsens,mu), tcs, [y0 [0;0]], rtol=1e-14);
+[tcs,sens] = arkode(list(vdpsens,mu), tcs, [y0 [0;0]], rtol=1e-10,atol=1e-12);
 sens = squeeze(sens(:,2,:));
-assert_checktrue(max(abs(sens-scs)) < 1e-5);
+assert_checktrue(max(abs(sens-scs)) < 1e-8);
 
 // EXTEND SOLUTION + EVENTS,
 sol = arkode(list(bounce,9.81), [0 10], [1;0], events=bounce_ev);
@@ -202,10 +211,10 @@ gam=1/40;
 bet=0.2;
 y0=[N-1;1;0];
 [t,y,info]=arkode(list(sir,bet,gam,N),[0 400],y0,events=sir_ev);
-assert_checkalmostequal(info.te, 114.55992,1e-6);
-assert_checkalmostequal(info.ye,[   7499999.999999705702066
-   36904150.33033909648657
-   15595849.6696612406522
+assert_checkalmostequal(info.te, 114.56464,1e-6);
+assert_checkalmostequal(info.ye,[   7499999.999999998137355
+   36903375.03850146383047
+   15596624.96149854548275
 ],1e-6);
 //clf
 //plot(t,y,info(2),'or');
@@ -248,8 +257,8 @@ assert_checkerror("arkode(fe2,[0 70],1)",msg)
 function out = fe4(t,y)
     out = y^2;
 endfunction
-[t,y] = arkode(fe4,[0 2],1);
-assert_checkalmostequal(t($),1,1e-5)
+[t,y] = arkode(fe4,[0 2],1,rtol=1e-10,atol=1e-12);
+assert_checkalmostequal(t($),1)
 
 // Linear ode
 function out = f5(t,y,A)

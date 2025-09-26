@@ -17,7 +17,7 @@
 #define _LSODAR_H
 
 #include "sundials/sundials_extension.h"
-#include "sundials/sundials_types.h" // Definition of types 'realtype' and 'booleantype'
+#include "sundials/sundials_types.h" // Definition of types 'sunrealtype' and 'booleantype'
 #include "nvector/nvector_serial.h"  // Type 'N_Vector'
 #include "../src/cvodes/cvodes_impl.h" // Error handling
 
@@ -27,22 +27,22 @@
 #define max(A,B) ((A>B) ? A:B)  // 'max()' function
 #endif
 
-// realtype workspace
+// sunrealtype workspace
 struct rWork_t
 {
-    realtype tcrit;
-    realtype rwork2;
-    realtype rwork3;
-    realtype rwork4;
-    realtype h0;
-    realtype hmax;
-    realtype hmin;
-    realtype rwork[1];
+    sunrealtype tcrit;
+    sunrealtype rwork2;
+    sunrealtype rwork3;
+    sunrealtype rwork4;
+    sunrealtype h0;
+    sunrealtype hmax;
+    sunrealtype hmin;
+    sunrealtype rwork[1];
 };
 
 // Derivative computation and Root functions
-typedef void (*LSRhsFn) (int * neq, realtype * t, realtype * y, realtype * rwork);
-typedef void (*LSRootFn) (int * neq, realtype * t, realtype * y, int * ng, realtype * rwork);
+typedef void (*LSRhsFn) (int * neq, sunrealtype * t, sunrealtype * y, sunrealtype * rwork);
+typedef void (*LSRootFn) (int * neq, sunrealtype * t, sunrealtype * y, int * ng, sunrealtype * rwork);
 typedef void (*LSErrHandlerFn) (int error_code, const char *module, const char *function, char *msg, void *user_data);
 
 // LSodar problem memory structure
@@ -50,12 +50,12 @@ typedef struct LSodarMemRec
 {
     LSRhsFn func;
     int * nEquations;
-    realtype * yVector;
-    realtype tStart;
-    realtype tEnd;
+    sunrealtype * yVector;
+    sunrealtype tStart;
+    sunrealtype tEnd;
     int iTol;
-    realtype relTol;
-    realtype absTol;
+    sunrealtype relTol;
+    sunrealtype absTol;
     int iState;
     int iOpt;
     struct rWork_t * rwork;
@@ -74,25 +74,25 @@ typedef struct LSodarMemRec
 void * LSodarCreate (int * neq, int ng);
 
 // Allocating the problem
-int LSodarInit (void * lsodar_mem, LSRhsFn f, realtype t0, N_Vector y);
+int LSodarInit (void * lsodar_mem, LSRhsFn f, sunrealtype t0, N_Vector y);
 
 // Reinitializing the problem
-int LSodarReInit (void * lsodar_mem, realtype tOld, N_Vector y);
+int LSodarReInit (void * lsodar_mem, sunrealtype tOld, N_Vector y);
 
 // Specifying the tolerances
-int LSodarSStolerances (void * lsodar_mem, realtype reltol, realtype abstol);
+int LSodarSStolerances (void * lsodar_mem, sunrealtype reltol, sunrealtype abstol);
 
 // Initializing the root-finding problem
 int LSodarRootInit (void * lsodar_mem, int ng, LSRootFn g);
 
 // Specifying the maximum step size
-int LSodarSetMaxStep (void * lsodar_mem, realtype hmax);
+int LSodarSetMaxStep (void * lsodar_mem, sunrealtype hmax);
 
 // Specifying the time beyond which the integration is not to proceed
-int LSodarSetStopTime (void * lsodar_mem, realtype tcrit);
+int LSodarSetStopTime (void * lsodar_mem, sunrealtype tcrit);
 
 // Solving the problem
-int LSodar (void * lsodar_mem, realtype tOut, N_Vector yVec, realtype * tOld, int itask);
+int LSodar (void * lsodar_mem, sunrealtype tOut, N_Vector yVec, sunrealtype * tOld, int itask);
 
 // Update rootsfound to the computed jroots
 int LSodarGetRootInfo (void * lsodar_mem, int * rootsfound);

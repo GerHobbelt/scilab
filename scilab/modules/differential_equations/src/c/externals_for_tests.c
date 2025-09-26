@@ -13,7 +13,7 @@
 
 // CVODE entrypoints for unit tests in SCI/sundials/tests/unit_tests/cvode.tst
 
-int SUN_dynrhs(realtype t, N_Vector Y, N_Vector Yd, void *user_data)
+int SUN_dynrhs(sunrealtype t, N_Vector Y, N_Vector Yd, void *user_data)
 {
     double *y = NV_DATA_S(Y);
     double *yd = NV_DATA_S(Yd);
@@ -22,7 +22,7 @@ int SUN_dynrhs(realtype t, N_Vector Y, N_Vector Yd, void *user_data)
     return 0;
 }
 
-int SUN_dynrhspar(realtype t, N_Vector Y, N_Vector Yd, void *user_data)
+int SUN_dynrhspar(sunrealtype t, N_Vector Y, N_Vector Yd, void *user_data)
 {
     double *y = NV_DATA_S(Y);
     double *yd = NV_DATA_S(Yd);
@@ -32,7 +32,7 @@ int SUN_dynrhspar(realtype t, N_Vector Y, N_Vector Yd, void *user_data)
     return 0;
 }
 
-int SUN_dynjac(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, 
+int SUN_dynjac(sunrealtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, 
     void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     double *y = NV_DATA_S(Y);
@@ -42,7 +42,7 @@ int SUN_dynjac(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J,
     return 0;
 }
 
-int SUN_dynjacpar(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, 
+int SUN_dynjacpar(sunrealtype t, N_Vector Y, N_Vector Yd, SUNMatrix J, 
     void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     double *y = NV_DATA_S(Y);
@@ -53,20 +53,20 @@ int SUN_dynjacpar(realtype t, N_Vector Y, N_Vector Yd, SUNMatrix J,
     return 0;
 }
 
-int SUN_dyncb(realtype t, int iFlag, N_Vector N_VectorY, void *user_data)
+int SUN_dyncb(sunrealtype t, int iFlag, N_Vector N_VectorY, void *user_data)
 {
     sciprint("flag=%d\n", iFlag);
     return 0;
 }
 
-int SUN_dynevent(realtype t, N_Vector Y, realtype *gout, void *user_data)
+int SUN_dynevent(sunrealtype t, N_Vector Y, sunrealtype *gout, void *user_data)
 { 
     double *y = NV_DATA_S(Y);
     gout[0] = y[0]-1.7;
     return 0;
 }
 
-int SUN_dyneventpar(realtype t, N_Vector Y, realtype *gout, void *user_data)
+int SUN_dyneventpar(sunrealtype t, N_Vector Y, sunrealtype *gout, void *user_data)
 { 
     double *y = NV_DATA_S(Y);
     double *par = (double *)user_data;
@@ -76,7 +76,7 @@ int SUN_dyneventpar(realtype t, N_Vector Y, realtype *gout, void *user_data)
 
 // IDA entrypoints for unit tests in SCI/sundials/tests/unit_tests/ida.tst
 
-int SUN_chemres(realtype t, N_Vector Y, N_Vector Yd, N_Vector R, void *user_data)
+int SUN_chemres(sunrealtype t, N_Vector Y, N_Vector Yd, N_Vector R, void *user_data)
 {
     double *y = NV_DATA_S(Y);
     double *yd = NV_DATA_S(Yd);
@@ -87,7 +87,7 @@ int SUN_chemres(realtype t, N_Vector Y, N_Vector Yd, N_Vector R, void *user_data
     return 0;
 }
 
-int SUN_chemjac(realtype t, realtype cj, N_Vector Y, N_Vector Yd, N_Vector R, SUNMatrix J,
+int SUN_chemjac(sunrealtype t, sunrealtype cj, N_Vector Y, N_Vector Yd, N_Vector R, SUNMatrix J,
     void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)
 {
     double *y = NV_DATA_S(Y);
@@ -107,14 +107,14 @@ int SUN_chemjac(realtype t, realtype cj, N_Vector Y, N_Vector Yd, N_Vector R, SU
     return 0;
 }
 
-int SUN_chemevent(realtype t, N_Vector Y, N_Vector Yd, realtype *gout, void *user_data)
+int SUN_chemevent(sunrealtype t, N_Vector Y, N_Vector Yd, sunrealtype *gout, void *user_data)
 {
     double *yd = NV_DATA_S(Yd);
     gout[0] = yd[1];
     return 0;
 }
 
-int SUN_chemcb(realtype t, int iFlag, N_Vector Y, N_Vector Yd, void *user_data)
+int SUN_chemcb(sunrealtype t, int iFlag, N_Vector Y, N_Vector Yd, void *user_data)
 {
     double *y = NV_DATA_S(Y);
     double *yd = NV_DATA_S(Yd);

@@ -17,7 +17,6 @@
 #include <idas/idas_impl.h>
 #include <idas/idas_ls_impl.h>
 #include <idas/idas.h>            /* prototypes for IDA fcts. and consts. */
-#include <idas/idas_direct.h>    /* prototypes for various DlsMat operations */
 
 extern "C"
 {
@@ -57,7 +56,6 @@ class DIFFERENTIAL_EQUATIONS_IMPEXP IDAManager final : public OdeManager
         setVTolerances = IDASVtolerances;
         setQuadSVTolerances = IDAQuadSVtolerances;
         setQuadErrCon = IDASetQuadErrCon;
-        setErrHandlerFn = IDASetErrHandlerFn;
         getReturnFlagName = IDAGetReturnFlagName;
         getDky = IDAGetDky;
 
@@ -189,19 +187,19 @@ class DIFFERENTIAL_EQUATIONS_IMPEXP IDAManager final : public OdeManager
     void getInterpVectors(double *pdblNS, int iOrderPlusOne, int iIndex, double dblt0, double dblTUser, double dblStep, double *pdblVect, double *pdblVectd);
 
     // static methods
-    static int colPackJac(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR, SUNMatrix SUNMat_J, void *pManager, 
+    static int colPackJac(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR, SUNMatrix SUNMat_J, void *pManager, 
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
 
     types::Struct *getStats();
 
-    int DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                  N_Vector v, N_Vector Jv, realtype c_j,
+    int DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                  N_Vector v, N_Vector Jv, sunrealtype c_j,
                   N_Vector work1, N_Vector work2) final;
 
     // static methods
-    static int sensRes(int Ns, realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector resval, N_Vector *yS, N_Vector *ySdot, N_Vector *resvalS,
+    static int sensRes(int Ns, sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector resval, N_Vector *yS, N_Vector *ySdot, N_Vector *resvalS,
         void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static int quadratureRhs(realtype t, N_Vector N_VectorY, N_Vector N_VectorYdot, N_Vector N_VectorYQdot, void *pManager);
+    static int quadratureRhs(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYdot, N_Vector N_VectorYQdot, void *pManager);
 
 
     std::vector<std::wstring> getAvailableMethods()

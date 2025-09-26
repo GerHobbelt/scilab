@@ -46,7 +46,7 @@
  * Actual solving function, from 'ODEPACK' in 'differential_equations' module
  */
 
-extern void C2F(lsodar) (LSRhsFn f, int *neq, realtype *y, realtype *t, realtype *tout, int *itol, realtype *reltol, realtype *abstol, int *itask, int *istate, int *iopt, struct rWork_t *rwork, int *lrw, int *iwork, int *liw, int *jacobian, int *jacType, LSRootFn grblk, int *ng, int *jroot);
+extern void C2F(lsodar) (LSRhsFn f, int *neq, sunrealtype *y, sunrealtype *t, sunrealtype *tout, int *itol, sunrealtype *reltol, sunrealtype *abstol, int *itask, int *istate, int *iopt, struct rWork_t *rwork, int *lrw, int *iwork, int *liw, int *jacobian, int *jacType, LSRootFn grblk, int *ng, int *jroot);
 
 /* =============================
  *
@@ -135,7 +135,7 @@ void * LSodarCreate (int * neq, int ng)
  * Otherwise, it returns CV_SUCCESS.
  */
 
-int LSodarInit (void * lsodar_mem, LSRhsFn f, realtype t0, N_Vector y)
+int LSodarInit (void * lsodar_mem, LSRhsFn f, sunrealtype t0, N_Vector y)
 {
     LSodarMem ls_mem = NULL;
 
@@ -167,7 +167,7 @@ int LSodarInit (void * lsodar_mem, LSRhsFn f, realtype t0, N_Vector y)
 
     /* Allocate rwork and iwork workspaces and set them to zero.
        Their size is lrw and liw, respectively */
-    rwork = (struct rWork_t *) calloc(lrw, sizeof(realtype));
+    rwork = (struct rWork_t *) calloc(lrw, sizeof(sunrealtype));
     iwork = calloc(liw, sizeof(int));
 
     return (CV_SUCCESS);
@@ -186,7 +186,7 @@ int LSodarInit (void * lsodar_mem, LSRhsFn f, realtype t0, N_Vector y)
  * The return value is CV_SUCCESS = 0 if no errors occurred, or a negative value otherwise.
  */
 
-int LSodarReInit (void * lsodar_mem, realtype tOld, N_Vector y)
+int LSodarReInit (void * lsodar_mem, sunrealtype tOld, N_Vector y)
 {
     LSodarMem ls_mem = NULL;
 
@@ -224,7 +224,7 @@ int LSodarReInit (void * lsodar_mem, realtype tOld, N_Vector y)
  * It MUST be called before the first call to LSodar.
  */
 
-int LSodarSStolerances (void * lsodar_mem, realtype reltol, realtype abstol)
+int LSodarSStolerances (void * lsodar_mem, sunrealtype reltol, sunrealtype abstol)
 {
     LSodarMem ls_mem = NULL;
 
@@ -310,7 +310,7 @@ int LSodarRootInit (void * lsodar_mem, int ng, LSRootFn g)
  * Sets iOpt to 1 for rwork->hmax to be taken in consideration by lsodar().
  */
 
-int LSodarSetMaxStep (void * lsodar_mem, realtype hMax)
+int LSodarSetMaxStep (void * lsodar_mem, sunrealtype hMax)
 {
     LSodarMem ls_mem = NULL;
 
@@ -340,7 +340,7 @@ int LSodarSetMaxStep (void * lsodar_mem, realtype hMax)
  * Sets iOpt to 1 for rwork->tcrit to be taken in consideration by lsodar().
  */
 
-int LSodarSetStopTime (void * lsodar_mem, realtype tCrit)
+int LSodarSetStopTime (void * lsodar_mem, sunrealtype tCrit)
 {
     LSodarMem ls_mem = NULL;
 
@@ -385,7 +385,7 @@ int LSodarSetStopTime (void * lsodar_mem, realtype tCrit)
  * or a corresponding error flag.
  */
 
-int LSodar (void * lsodar_mem, realtype tOut, N_Vector yOut, realtype * tOld, int itask)
+int LSodar (void * lsodar_mem, sunrealtype tOut, N_Vector yOut, sunrealtype * tOld, int itask)
 {
     LSodarMem ls_mem = NULL;
 

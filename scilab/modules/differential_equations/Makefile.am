@@ -160,72 +160,44 @@ libscidifferential_equations_la_CPPFLAGS= \
 
 #### scicos : SUNDIALS STUFF ####
 libscisundials_la_SOURCES = \
-    src/patched_sundials/src/arkode/arkode_adapt_impl.h \
-    src/patched_sundials/src/arkode/arkode_arkstep_impl.h \
-    src/patched_sundials/src/arkode/arkode_bandpre_impl.h \
-    src/patched_sundials/src/arkode/arkode_bbdpre_impl.h \
-    src/patched_sundials/src/arkode/arkode_erkstep_impl.h \
-    src/patched_sundials/src/arkode/arkode_impl.h \
-    src/patched_sundials/src/arkode/arkode_interp_impl.h \
-    src/patched_sundials/src/arkode/arkode_ls_impl.h \
-    src/patched_sundials/src/arkode/arkode_mristep_impl.h \
-    src/patched_sundials/src/arkode/arkode_mri_tables_impl.h \
-    src/patched_sundials/src/arkode/arkode_relaxation_impl.h \
-    src/patched_sundials/src/arkode/arkode_root_impl.h \
-    src/patched_sundials/src/arkode/arkode_sprkstep_impl.h \
-    src/patched_sundials/src/arkode/arkode_types_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_bandpre_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_bbdpre_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_diag_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_ls_impl.h \
-    src/patched_sundials/src/cvodes/cvodes_proj_impl.h \
-    src/patched_sundials/src/idas/ida_bbdpre_impl.h \
-    src/patched_sundials/src/idas/ida_impl.h \
-    src/patched_sundials/src/idas/ida_ls_impl.h \
-    src/patched_sundials/src/kinsol/kinsol_bbdpre_impl.h \
-    src/patched_sundials/src/kinsol/kinsol_impl.h \
-    src/patched_sundials/src/kinsol/kinsol_ls_impl.h \
-    src/patched_sundials/src/sundials/sundials_context_impl.h \
-    src/patched_sundials/src/sundials/sundials_debug.h \
-    src/patched_sundials/src/sundials/sundials_hashmap.h \
-    src/patched_sundials/src/sundials/sundials_hip.h \
-    src/patched_sundials/src/sundials/sundials_iterative_impl.h \
-    src/patched_sundials/src/sundials/sundials_lapack_defs.h \
-    src/patched_sundials/src/sundials/sundials_logger_impl.h \
-    src/patched_sundials/src/sundials/sundials_sycl.h \
-    src/patched_sundials/src/sundials/sundials_utils.h \
     src/patched_sundials/src/arkode/arkode.c \
-    src/patched_sundials/src/arkode/arkode_adapt.c \
-    src/patched_sundials/src/arkode/arkode_arkstep.c \
-    src/patched_sundials/src/arkode/arkode_arkstep_io.c \
-    src/patched_sundials/src/arkode/arkode_arkstep_nls.c \
-    src/patched_sundials/src/arkode/arkode_bandpre.c \
-    src/patched_sundials/src/arkode/arkode_bbdpre.c \
-    src/patched_sundials/src/arkode/arkode_butcher.c \
-    src/patched_sundials/src/arkode/arkode_butcher_dirk.c \
-    src/patched_sundials/src/arkode/arkode_butcher_erk.c \
-    src/patched_sundials/src/arkode/arkode_erkstep.c \
-    src/patched_sundials/src/arkode/arkode_erkstep_io.c \
-    src/patched_sundials/src/arkode/arkode_interp.c \
-    src/patched_sundials/src/arkode/arkode_io.c \
-    src/patched_sundials/src/arkode/arkode_ls.c \
-    src/patched_sundials/src/arkode/arkode_mristep.c \
-    src/patched_sundials/src/arkode/arkode_mristep_io.c \
-    src/patched_sundials/src/arkode/arkode_mristep_nls.c \
-    src/patched_sundials/src/arkode/arkode_mri_tables.c \
-    src/patched_sundials/src/arkode/arkode_relaxation.c \
-    src/patched_sundials/src/arkode/arkode_root.c \
-    src/patched_sundials/src/arkode/arkode_sprk.c \
+    src/patched_sundials/src/arkode/arkode_user_controller.c \
+    src/patched_sundials/src/arkode/arkode_sunstepper.c \
     src/patched_sundials/src/arkode/arkode_sprkstep.c \
     src/patched_sundials/src/arkode/arkode_sprkstep_io.c \
+    src/patched_sundials/src/arkode/arkode_sprk.c \
+    src/patched_sundials/src/arkode/arkode_splittingstep.c \
+    src/patched_sundials/src/arkode/arkode_splittingstep_coefficients.c \
+    src/patched_sundials/src/arkode/arkode_root.c \
+    src/patched_sundials/src/arkode/arkode_relaxation.c \
+    src/patched_sundials/src/arkode/arkode_mristep.c \
+    src/patched_sundials/src/arkode/arkode_mristep_nls.c \
+    src/patched_sundials/src/arkode/arkode_mristep_io.c \
+    src/patched_sundials/src/arkode/arkode_mristep_controller.c \
+    src/patched_sundials/src/arkode/arkode_mri_tables.c \
+    src/patched_sundials/src/arkode/arkode_lsrkstep.c \
+    src/patched_sundials/src/arkode/arkode_lsrkstep_io.c \
+    src/patched_sundials/src/arkode/arkode_ls.c \
+    src/patched_sundials/src/arkode/arkode_io.c \
+    src/patched_sundials/src/arkode/arkode_interp.c \
+    src/patched_sundials/src/arkode/arkode_forcingstep.c \
+    src/patched_sundials/src/arkode/arkode_erkstep.c \
+    src/patched_sundials/src/arkode/arkode_erkstep_io.c \
+    src/patched_sundials/src/arkode/arkode_butcher.c \
+    src/patched_sundials/src/arkode/arkode_butcher_erk.c \
+    src/patched_sundials/src/arkode/arkode_butcher_dirk.c \
+    src/patched_sundials/src/arkode/arkode_bbdpre.c \
+    src/patched_sundials/src/arkode/arkode_bandpre.c \
+    src/patched_sundials/src/arkode/arkode_arkstep.c \
+    src/patched_sundials/src/arkode/arkode_arkstep_nls.c \
+    src/patched_sundials/src/arkode/arkode_arkstep_io.c \
+    src/patched_sundials/src/arkode/arkode_adapt.c \
     src/patched_sundials/src/cvodes/cvodea.c \
     src/patched_sundials/src/cvodes/cvodea_io.c \
     src/patched_sundials/src/cvodes/cvodes.c \
     src/patched_sundials/src/cvodes/cvodes_bandpre.c \
     src/patched_sundials/src/cvodes/cvodes_bbdpre.c \
     src/patched_sundials/src/cvodes/cvodes_diag.c \
-    src/patched_sundials/src/cvodes/cvodes_direct.c \
     src/patched_sundials/src/cvodes/cvodes_io.c \
     src/patched_sundials/src/cvodes/cvodes_ls.c \
     src/patched_sundials/src/cvodes/cvodes_nls.c \
@@ -233,33 +205,36 @@ libscisundials_la_SOURCES = \
     src/patched_sundials/src/cvodes/cvodes_nls_stg.c \
     src/patched_sundials/src/cvodes/cvodes_nls_stg1.c \
     src/patched_sundials/src/cvodes/cvodes_proj.c \
-    src/patched_sundials/src/cvodes/cvodes_spils.c \
     src/patched_sundials/src/idas/idaa.c \
     src/patched_sundials/src/idas/idaa_io.c \
     src/patched_sundials/src/idas/idas.c \
     src/patched_sundials/src/idas/idas_bbdpre.c \
-    src/patched_sundials/src/idas/idas_direct.c \
     src/patched_sundials/src/idas/idas_ic.c \
     src/patched_sundials/src/idas/idas_io.c \
     src/patched_sundials/src/idas/idas_ls.c \
     src/patched_sundials/src/idas/idas_nls.c \
     src/patched_sundials/src/idas/idas_nls_sim.c \
     src/patched_sundials/src/idas/idas_nls_stg.c \
-    src/patched_sundials/src/idas/idas_spils.c \
     src/patched_sundials/src/kinsol/kinsol.c \
     src/patched_sundials/src/kinsol/kinsol_bbdpre.c \
-    src/patched_sundials/src/kinsol/kinsol_direct.c \
     src/patched_sundials/src/kinsol/kinsol_io.c \
     src/patched_sundials/src/kinsol/kinsol_ls.c \
-    src/patched_sundials/src/kinsol/kinsol_spils.c \
     src/patched_sundials/src/nvector/openmp/nvector_openmp.c \
     src/patched_sundials/src/nvector/serial/nvector_serial.c \
+    src/patched_sundials/src/nvector/manyvector/nvector_manyvector.c \
+    src/patched_sundials/src/sunadaptcontroller/imexgus/sunadaptcontroller_imexgus.c \
+    src/patched_sundials/src/sunadaptcontroller/mrihtol/sunadaptcontroller_mrihtol.c \
+    src/patched_sundials/src/sunadaptcontroller/soderlind/sunadaptcontroller_soderlind.c \
+    src/patched_sundials/src/sundials/sundials_adaptcontroller.c \
+    src/patched_sundials/src/sundials/sundials_adjointcheckpointscheme.c \
     src/patched_sundials/src/sundials/sundials_band.c \
     src/patched_sundials/src/sundials/sundials_context.c \
     src/patched_sundials/src/sundials/sundials_dense.c \
     src/patched_sundials/src/sundials/sundials_direct.c \
+    src/patched_sundials/src/sundials/sundials_errors.c \
     src/patched_sundials/src/sundials/sundials_extension.c \
     src/patched_sundials/src/sundials/sundials_futils.c \
+    src/patched_sundials/src/sundials/sundials_hashmap.c \
     src/patched_sundials/src/sundials/sundials_iterative.c \
     src/patched_sundials/src/sundials/sundials_linearsolver.c \
     src/patched_sundials/src/sundials/sundials_logger.c \
@@ -269,6 +244,8 @@ libscisundials_la_SOURCES = \
     src/patched_sundials/src/sundials/sundials_nonlinearsolver.c \
     src/patched_sundials/src/sundials/sundials_nvector.c \
     src/patched_sundials/src/sundials/sundials_nvector_senswrapper.c \
+    src/patched_sundials/src/sundials/sundials_stepper.c \
+    src/patched_sundials/src/sundials/sundials_adjointstepper.c \
     src/patched_sundials/src/sundials/sundials_version.c \
     src/patched_sundials/src/sunlinsol/band/sunlinsol_band.c \
     src/patched_sundials/src/sunlinsol/dense/sunlinsol_dense.c \
@@ -374,9 +351,15 @@ src/patched_sundials/include/sundials/sundials_matrix.hpp \
 src/patched_sundials/include/sundials/sundials_memory.h \
 src/patched_sundials/include/sundials/sundials_nvector.h \
 src/patched_sundials/include/sundials/sundials_nvector.hpp \
-src/patched_sundials/include/sundials/sundials_profiler.h \
 src/patched_sundials/include/sundials/sundials_types.h \
-src/patched_sundials/include/sundials/sundials_version.h
+src/patched_sundials/include/sundials/sundials_version.h \
+src/patched_sundials/include/sundials/sundials_errors.h
+
+libscidifferential_equations_sundialspriv_la_includedir=$(includedir)/sundials/priv/
+libscidifferential_equations_sundialspriv_la_include_HEADERS = \
+src/patched_sundials/include/sundials/priv/sundials_context_impl.h \
+src/patched_sundials/include/sundials/priv/sundials_errors_impl.h
+
 
 libscidifferential_equations_sunmatrix_la_includedir=$(includedir)/sunmatrix/
 libscidifferential_equations_sunmatrix_la_include_HEADERS = \

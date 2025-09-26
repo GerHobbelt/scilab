@@ -81,7 +81,7 @@ assert_checktrue(t1/t4>10)
 heatcode=[
 "#include <nvector/nvector_serial.h>"
 "#include <sunmatrix/sunmatrix_band.h>"
-"int heatRhs(realtype t, N_Vector V, N_Vector Vd, void *user_data)  "
+"int heatRhs(sunrealtype t, N_Vector V, N_Vector Vd, void *user_data)  "
 "{"
 "    int n = NV_LENGTH_S(V);"
 "    double *v = NV_DATA_S(V);"
@@ -104,7 +104,7 @@ heatcode=[
 "    return 0;"
 "}"
 ""
-"int heatJac(realtype t, N_Vector V, N_Vector Vd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)"
+"int heatJac(sunrealtype t, N_Vector V, N_Vector Vd, SUNMatrix J, void *user_data, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3)"
 "{"
 "    double *par = (double*) user_data;"
 "    double dx = par[0];"

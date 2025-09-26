@@ -323,8 +323,9 @@ void getIntInPlist(const char * _pstCaller, types::optional_list &opt, const wch
 void getStringInPlist(const char * _pstCaller, types::optional_list &opt, const wchar_t * _pwstLabel, std::wstring & stValue,
                         std::wstring stDefaultValue, std::vector<std::wstring> checkValues)
 {
-    char errorMsg[1024];
+    char errorMsg[2048];
     types::InternalType *pI = NULL;
+
     if (opt.find(_pwstLabel) != opt.end())
     {
         pI = opt[_pwstLabel];

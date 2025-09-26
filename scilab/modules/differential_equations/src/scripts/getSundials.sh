@@ -5,7 +5,7 @@
 # This script download and patch Sundials to be used by Scilab
 # Patches are managed with quilt https://linux.die.net/man/1/quilt
 
-SUNDIALS_VERSION=6.6.0
+SUNDIALS_VERSION=7.4.0
 SUNDIALS_DIR=patched_sundials
 rm -rf $SUNDIALS_DIR
 rm -f sundials-$SUNDIALS_VERSION.tar.gz
@@ -21,7 +21,7 @@ patch -p1 < ../02-lapack.patch
 # cmake -DENABLE_OPENMP=ON ..
 #cd ..
 #cp build/include/sundials/*.h include/sundials
-patch -p1 < ../03-export-and-config.patch
+patch -p1 < ../03-export-config-and-klu.patch
 #rm -rf build
 cd ..
 cp -a $SUNDIALS_DIR ..

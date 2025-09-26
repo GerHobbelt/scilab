@@ -32,6 +32,7 @@ Source: bin\{#PATCHSUN}.lib; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: modules\{#DIFFEQU}\license.txt; DestDir: {app}\modules\{#DIFFEQU}; Components: {#COMPN_SCILAB}
 ;
 Source: modules\{#DIFFEQU}\src\patched_sundials\include\sundials\*.*; DestDir: {app}\modules\{#DIFFEQU}\includes\sundials; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+Source: modules\{#DIFFEQU}\src\patched_sundials\include\sundials\priv\*.*; DestDir: {app}\modules\{#DIFFEQU}\includes\sundials\priv; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 Source: modules\{#DIFFEQU}\src\patched_sundials\include\sunmatrix\*.*; DestDir: {app}\modules\{#DIFFEQU}\includes\sunmatrix; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 Source: modules\{#DIFFEQU}\src\patched_sundials\include\nvector\*.*; DestDir: {app}\modules\{#DIFFEQU}\includes\nvector; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
 ;

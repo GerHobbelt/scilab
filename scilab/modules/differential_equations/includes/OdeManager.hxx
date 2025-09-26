@@ -136,23 +136,22 @@ class DIFFERENTIAL_EQUATIONS_IMPEXP OdeManager : public SUNDIALSManager
     }
  
     int (*setUserData)(void *,void *);
-    int (*setInitStep)(void *, realtype);
-    int (*setMinStep)(void *, realtype);
-    int (*setMaxStep)(void *, realtype);
+    int (*setInitStep)(void *, sunrealtype);
+    int (*setMinStep)(void *, sunrealtype);
+    int (*setMaxStep)(void *, sunrealtype);
     int (*setMaxNumSteps)(void *, long int);
-    int (*setStopTime)(void *, realtype);
+    int (*setStopTime)(void *, sunrealtype);
     int (*setMaxOrd)(void *, int);
     int (*getCurrentTime)(void *, double *);
     int (*getCurrentStep)(void *, double *);
     int (*getRootInfo)(void *, int *);
     int (*setConstraints)(void *, N_Vector);
-    int (*setVTolerances)(void *, realtype, N_Vector);
-    int (*setQuadSVTolerances)(void *, realtype, N_Vector);
-    int (*setErrHandlerFn)(void *, SUNDIALSErrHandlerType, void *);
+    int (*setVTolerances)(void *, sunrealtype, N_Vector);
+    int (*setQuadSVTolerances)(void *, sunrealtype, N_Vector);
     int (*setQuadErrCon)(void *, int);
-    int (*getDky)(void *, realtype, int, N_Vector);
-    int (*getSens)(void *, realtype *, N_Vector *);
-    int (*getSensDky)(void *, realtype, int, N_Vector *);
+    int (*getDky)(void *, sunrealtype, int, N_Vector);
+    int (*getSens)(void *, sunrealtype *, N_Vector *);
+    int (*getSensDky)(void *, sunrealtype, int, N_Vector *);
     int (*getLastStep)(void *, double *);
     char *(*getReturnFlagName)(long int);
 
@@ -166,29 +165,29 @@ class DIFFERENTIAL_EQUATIONS_IMPEXP OdeManager : public SUNDIALSManager
     types::Double *parseInitialCondition(types::typed_list &in, bool bIsDerivative);
 
     // New OdeManager specific methods
-    int intermediateCallback(realtype t, int iFlag, N_Vector N_VectorY, N_Vector N_VectorYp);
+    int intermediateCallback(sunrealtype t, int iFlag, N_Vector N_VectorY, N_Vector N_VectorYp);
     void setupEvents(types::optional_list &opt);
     void createSolutionOutput(types::typed_list &out);
     types::Double *createYOut(types::Double *pDblTemplate, int iNbOut, int iSizeTSpan, bool bFlat = false);
     types::Double *getArrayFromVectors(types::Double *pDblTemplate, std::vector<std::vector<double>> &m_vecY, size_t iTSpanSize);
-    void errHandler(int error_code, const char *module, const char *function, char *msg);
+    void solverErrHandler(int error_code, const char *msg);
 
     // static methods
-    static int function_t_Y1_Y2(functionKind what, realtype t, N_Vector N_Vector1, N_Vector N_Vector2, void *pManager);
-    static int function_t_Y1_Y2_Y3(functionKind what, realtype t, N_Vector N_Vector1, N_Vector N_Vector2, N_Vector N_Vector3, void *pManager);
-    static void errHandler(int error_code, const char *module, const char *function, char *msg, void *pManager);
-    static int eventFunction(realtype t, N_Vector N_VectorY, realtype *pdblOut, void *pManager);
-    static int eventFunctionImpl(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, realtype *pdblOut, void *pManager);
-    static int rhsFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager);
-    static int rhsFunctionStiff(realtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager);
-    static int jacFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorFy, SUNMatrix SUNMat_J, void *pManager, 
+    static int function_t_Y1_Y2(functionKind what, sunrealtype t, N_Vector N_Vector1, N_Vector N_Vector2, void *pManager);
+    static int function_t_Y1_Y2_Y3(functionKind what, sunrealtype t, N_Vector N_Vector1, N_Vector N_Vector2, N_Vector N_Vector3, void *pManager);
+    static int eventFunction(sunrealtype t, N_Vector N_VectorY, sunrealtype *pdblOut, void *pManager);
+    static int eventFunctionImpl(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, sunrealtype *pdblOut, void *pManager);
+    static int rhsFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager);
+    static int rhsFunctionStiff(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYDot, void *pManager);
+    static int jacFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorFy, SUNMatrix SUNMat_J, void *pManager, 
         N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static int resFunction(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorRes, void *pManager);
-    static int jacResFunction(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
+    static int resFunction(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorRes, void *pManager);
+    static int jacResFunction(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
         SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static int massFunction(realtype t, SUNMatrix SUNMat_M, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
-    static int colPackJac(realtype t, N_Vector N_VectorY, N_Vector N_VectorYp, SUNMatrix SUNMat_J, void *pManager,
+    static int massFunction(sunrealtype t, SUNMatrix SUNMat_M, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+    static int colPackJac(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYp, SUNMatrix SUNMat_J, void *pManager,
          N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
+    static void errHandler(int line, const char *func, const char *file, const char *msg, SUNErrCode err_code, void *err_user_data, SUNContext sunctx);
 
     // virtual methods
     virtual int getMaxNargin()

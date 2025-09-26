@@ -17,7 +17,7 @@ d = [1 0];
 q = 2;
 p = 1;
 [t1,y1] = arkode(%SUN_vdp1,[1 10],[2;1], DIRKButcherTab=[c A;q b;p d]);
-[t2,y2] = arkode(%SUN_vdp1,[1 10],[2;1], method="DIRK_2");
+[t2,y2] = arkode(%SUN_vdp1,[1 10],[2;1], method="SDIRK_2_1_2");
 assert_checkequal(t1,t2)
 assert_checkequal(y1,y2)
 
@@ -29,20 +29,20 @@ d = [1 0];
 q = 2;
 p = 1;
 [t1,y1] = arkode(%SUN_vdp1,[1 10],[2;1], ERKButcherTab=[c A;q b;p d]);
-[t2,y2] = arkode(%SUN_vdp1,[1 10],[2;1], method="ERK_2");
+[t2,y2] = arkode(%SUN_vdp1,[1 10],[2;1], method="HEUN_EULER_2_1_2");
 assert_checkequal(t1,t2)
 assert_checkequal(y1,y2)
 
 // test predefined custom tableaux
-s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_Tsitouras5(),atol=1e-9);
+s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_Tsitouras5());
 assert_checkequal(s.method,"USER_ERK_7_4_5");
-assert_checkequal(s.stats.nSteps,50);
-s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_DormandPrince6(),atol=1e-9);
+assert_checkequal(s.stats.nSteps,34);
+s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_DormandPrince6());
 assert_checkequal(s.method,"USER_ERK_8_5_6");
-assert_checkequal(s.stats.nSteps,38);
-s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_DormandPrince8(),atol=1e-9);
-assert_checkequal(s.method,"USER_ERK_13_7_8");
 assert_checkequal(s.stats.nSteps,26);
+s=arkode(%SUN_vdp1,1:10,[2;1],ERKButcherTab=%SUN_DormandPrince8());
+assert_checkequal(s.method,"USER_ERK_13_7_8");
+assert_checkequal(s.stats.nSteps,19);
 
 // fixed step examples
 // RK4

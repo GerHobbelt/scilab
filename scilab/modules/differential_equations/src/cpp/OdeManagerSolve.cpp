@@ -103,7 +103,7 @@ void OdeManager::solve()
             if (dblTime == dblPrevTime)
             {
                 sprintf(errorMsg,"singularity likely at t = %g\n", dblTime);
-                errHandler(fromODEReturn[dblTime == m_dblT0 ? ODE_CONV_FAILURE : ODE_WARNING], NULL, NULL, errorMsg);
+                solverErrHandler(fromODEReturn[dblTime == m_dblT0 ? ODE_CONV_FAILURE : ODE_WARNING], errorMsg);
                 break;
             }
             if (m_iRetCount > 0)
@@ -152,7 +152,7 @@ void OdeManager::solve()
                 saveInterpBasisVectors();
             }
             if (bTerminalEvent == true
-                || iFlag == ODE_TSTOP_RETURN
+                || (iFlag == ODE_TSTOP_RETURN && m_bHas[PROJ] == false) 
                 || (m_bHas[INTCB] && intermediateCallback(dblTime, iFlag == ODE_ROOT_RETURN ? 1 : 0, m_N_VectorY, m_N_VectorYp))
                 || (ODE_MODE == ODE_NORMAL && dblNextTime == dblFinalTime))
             {
@@ -162,7 +162,7 @@ void OdeManager::solve()
         else
         {
             // Errors/Warnings not trapped by SUNDIALS ErrorFunc
-            errHandler(fromODEReturn[iFlag], NULL, NULL, NULL);
+            solverErrHandler(fromODEReturn[iFlag], NULL);
             break;
         }            
     }
@@ -228,7 +228,7 @@ void OdeManager::solve()
     getCurrentStep(m_prob_mem, &m_dblCurrentStep);
 }
 
-void OdeManager::errHandler(int error_code, const char *module, const char *function, char *msg)
+void OdeManager::solverErrHandler(int error_code, const char *msg)
 {
     // as this function is called from the bridge, error_code is a native code (cvode, ida or arkode)
     char errorMsg[256];

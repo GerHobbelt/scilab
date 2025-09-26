@@ -24,7 +24,7 @@
 
 extern "C"
 {
-    int ARKStepSetMaxOrd(void *, int);
+    int ARKodeSetMaxOrd(void *, int);
 }
 
 typedef void(*dynlibFunPtr)();
@@ -42,22 +42,21 @@ public :
         {
             ARKODEMethods[it.first]=it.second;
         }
-        setUserData = ARKStepSetUserData;
-        setInitStep = ARKStepSetInitStep;
-        setMinStep = ARKStepSetMinStep;
-        setMaxStep = ARKStepSetMaxStep;
-        setMaxNumSteps = ARKStepSetMaxNumSteps;
-        setStopTime = ARKStepSetStopTime;
-        setMaxOrd = ARKStepSetMaxOrd;
-        getCurrentTime = ARKStepGetCurrentTime;
-        getCurrentStep = ARKStepGetCurrentStep;
-        getLastStep = ARKStepGetLastStep;
-        getRootInfo = ARKStepGetRootInfo;
-        setConstraints = ARKStepSetConstraints;
-        setVTolerances = ARKStepSVtolerances;
-        setErrHandlerFn = ARKStepSetErrHandlerFn;
-        getReturnFlagName = ARKStepGetReturnFlagName;
-        getDky = ARKStepGetDky;
+        setUserData = ARKodeSetUserData;
+        setInitStep = ARKodeSetInitStep;
+        setMinStep = ARKodeSetMinStep;
+        setMaxStep = ARKodeSetMaxStep;
+        setMaxNumSteps = ARKodeSetMaxNumSteps;
+        setStopTime = ARKodeSetStopTime;
+        setMaxOrd = ARKodeSetMaxOrd;
+        getCurrentTime = ARKodeGetCurrentTime;
+        getCurrentStep = ARKodeGetCurrentStep;
+        getLastStep = ARKodeGetLastStep;
+        getRootInfo = ARKodeGetRootInfo;
+        setConstraints = ARKodeSetConstraints;
+        setVTolerances = ARKodeSVtolerances;
+        getReturnFlagName = ARKodeGetReturnFlagName;
+        getDky = ARKodeGetDky;
 
         toODEReturn.emplace(ARK_SUCCESS, ODE_SUCCESS);
         toODEReturn.emplace(ARK_TSTOP_RETURN, ODE_TSTOP_RETURN);
@@ -80,7 +79,7 @@ public :
     {
         if (m_prob_mem != NULL)
         {
-            ARKStepFree(&m_prob_mem);
+            ARKodeFree(&m_prob_mem);
         }
         m_prob_mem = NULL;
     };
@@ -125,8 +124,8 @@ public :
     void getInterpVectors(double *pdblNS, int iOrderPlusOne, int iIndex, double dblt0, double dblTUser, double dblStep, double *pdblVect, double *pdblVectd);
     void getButcherTabInPlist(types::optional_list &opt, const wchar_t * _pwstLabel, ARKodeButcherTable &ButcherTab);
 
-    int DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                      N_Vector v, N_Vector Jv, realtype c_j,
+    int DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                      N_Vector v, N_Vector Jv, sunrealtype c_j,
                       N_Vector work2, N_Vector work3) final;
 
     types::Struct *getStats();
@@ -143,34 +142,50 @@ public :
     std::vector<std::pair<std::wstring, methodInfo>> vectARKODEMethods =
     {
         // explicit methods
-        {L"ERK",{ARKODE_ZONNEVELD_5_3_4,ARKODE_DIRK_NONE,4,3}},
-        {L"ERK_2",{ARKODE_HEUN_EULER_2_1_2,ARKODE_DIRK_NONE,2,1}},
+        {L"ERK",{ARKODE_SOFRONIOU_SPALETTA_5_3_4,ARKODE_DIRK_NONE,4,3}},
+        {L"ERK_2",{ARKODE_RALSTON_3_1_2,ARKODE_DIRK_NONE,2,1}},
         {L"ERK_3",{ARKODE_BOGACKI_SHAMPINE_4_2_3,ARKODE_DIRK_NONE,3,2}},
-        {L"ERK_4",{ARKODE_ZONNEVELD_5_3_4,ARKODE_DIRK_NONE,4,3}},
-        {L"ERK_5",{ARKODE_CASH_KARP_6_4_5,ARKODE_DIRK_NONE,5,4}},
-        {L"ERK_6",{ARKODE_VERNER_8_5_6,ARKODE_DIRK_NONE,6,5}},
-        {L"ERK_8",{ARKODE_FEHLBERG_13_7_8,ARKODE_DIRK_NONE,8,7}},
+        {L"ERK_4",{ARKODE_SOFRONIOU_SPALETTA_5_3_4,ARKODE_DIRK_NONE,4,3}},
+        {L"ERK_5",{ARKODE_TSITOURAS_7_4_5,ARKODE_DIRK_NONE,5,4}},
+        {L"ERK_6",{ARKODE_VERNER_9_5_6,ARKODE_DIRK_NONE,6,5}},
+        {L"ERK_7",{ARKODE_VERNER_10_6_7,ARKODE_DIRK_NONE,7,6}},
+        {L"ERK_8",{ARKODE_VERNER_13_7_8,ARKODE_DIRK_NONE,8,7}},
+        {L"ERK_9",{ARKODE_VERNER_16_8_9,ARKODE_DIRK_NONE,9,8}},
+        {L"FORWARD_EULER_1_1",{ARKODE_FORWARD_EULER_1_1,ARKODE_DIRK_NONE,1,1}},
+        {L"RALSTON_EULER_2_1_2",{ARKODE_RALSTON_EULER_2_1_2,ARKODE_DIRK_NONE,2,1}},
+        {L"RALSTON_3_1_2",{ARKODE_RALSTON_3_1_2,ARKODE_DIRK_NONE,2,1}},
+        {L"EXPLICIT_MIDPOINT_EULER_2_1_2",{ARKODE_EXPLICIT_MIDPOINT_EULER_2_1_2,ARKODE_DIRK_NONE,2,1}},
         {L"HEUN_EULER_2_1_2",{ARKODE_HEUN_EULER_2_1_2,ARKODE_DIRK_NONE,2,1}},
+        {L"SHU_OSHER_3_2_3",{ARKODE_SHU_OSHER_3_2_3,ARKODE_DIRK_NONE,3,2}},
         {L"BOGACKI_SHAMPINE_4_2_3",{ARKODE_BOGACKI_SHAMPINE_4_2_3,ARKODE_DIRK_NONE,3,2}},
         {L"ARK324L2SA_ERK_4_2_3",{ARKODE_ARK324L2SA_ERK_4_2_3,ARKODE_DIRK_NONE,3,2}},
         {L"ZONNEVELD_5_3_4",{ARKODE_ZONNEVELD_5_3_4,ARKODE_DIRK_NONE,4,3}},
+        {L"SOFRONIOU_SPALETTA_5_3_4",{ARKODE_SOFRONIOU_SPALETTA_5_3_4,ARKODE_DIRK_NONE,4,3}},
         {L"ARK436L2SA_ERK_6_3_4",{ARKODE_ARK436L2SA_ERK_6_3_4,ARKODE_DIRK_NONE,4,3}},
         {L"SAYFY_ABURUB_6_3_4",{ARKODE_SAYFY_ABURUB_6_3_4,ARKODE_DIRK_NONE,4,3}},
         {L"CASH_KARP_6_4_5",{ARKODE_CASH_KARP_6_4_5,ARKODE_DIRK_NONE,5,4}},
         {L"FEHLBERG_6_4_5",{ARKODE_FEHLBERG_6_4_5,ARKODE_DIRK_NONE,5,4}},
+        {L"TSITOURAS_7_4_5",{ARKODE_TSITOURAS_7_4_5,ARKODE_DIRK_NONE,5,4}},
         {L"ARK548L2SA_ERK_8_4_5",{ARKODE_ARK548L2SA_ERK_8_4_5,ARKODE_DIRK_NONE,5,4}},
         {L"VERNER_8_5_6",{ARKODE_VERNER_8_5_6,ARKODE_DIRK_NONE,6,5}},
+        {L"VERNER_9_5_6",{ARKODE_VERNER_9_5_6,ARKODE_DIRK_NONE,6,5}},
+        {L"VERNER_10_6_7",{ARKODE_VERNER_10_6_7,ARKODE_DIRK_NONE,7,6}},
         {L"FEHLBERG_13_7_8",{ARKODE_FEHLBERG_13_7_8,ARKODE_DIRK_NONE,8,7}},
-        //{L"KNOTH_WOLKE_3_3",{{ARKODE_KNOTH_WOLKE_3_3,ARKODE_DIRK_NONE,3}}},
+        {L"VERNER_13_7_8",{ARKODE_VERNER_13_7_8,ARKODE_DIRK_NONE,8,7}},
+        {L"VERNER_16_8_9",{ARKODE_VERNER_16_8_9,ARKODE_DIRK_NONE,9,8}},
         {L"ARK437L2SA_ERK_7_3_4",{ARKODE_ARK437L2SA_ERK_7_3_4,ARKODE_DIRK_NONE,4,3}},
         {L"ARK548L2SAb_ERK_8_4_5",{ARKODE_ARK548L2SAb_ERK_8_4_5,ARKODE_DIRK_NONE,5,4}},
 
         // implicit methods
         {L"DIRK",{ARKODE_ERK_NONE,ARKODE_SDIRK_5_3_4,4,3}},
-        {L"DIRK_2",{ARKODE_ERK_NONE,ARKODE_SDIRK_2_1_2,2,1}},
-        {L"DIRK_3",{ARKODE_ERK_NONE,ARKODE_ARK324L2SA_DIRK_4_2_3,3,3}},
-        {L"DIRK_4",{ARKODE_ERK_NONE,ARKODE_SDIRK_5_3_4,4,3}},
-        {L"DIRK_5",{ARKODE_ERK_NONE,ARKODE_ARK548L2SA_DIRK_8_4_5,5,4}},
+        {L"DIRK_2",{ARKODE_ERK_NONE,ARKODE_ARK2_DIRK_3_1_2,2,1}},
+        {L"DIRK_3",{ARKODE_ERK_NONE,ARKODE_ESDIRK325L2SA_5_2_3,3,3}},
+        {L"DIRK_4",{ARKODE_ERK_NONE,ARKODE_ESDIRK436L2SA_6_3_4,4,3}},
+        {L"DIRK_5",{ARKODE_ERK_NONE,ARKODE_ESDIRK547L2SA2_7_4_5,5,4}},
+        {L"BACKWARD_EULER_1_1",{ARKODE_ERK_NONE,ARKODE_BACKWARD_EULER_1_1,1,1}},
+        {L"IMPLICIT_MIDPOINT_1_2",{ARKODE_ERK_NONE,ARKODE_IMPLICIT_MIDPOINT_1_2,2,1}},
+        {L"IMPLICIT_TRAPEZOIDAL_2_2",{ARKODE_ERK_NONE,ARKODE_IMPLICIT_TRAPEZOIDAL_2_2,2,2}},
+        {L"ARK2_DIRK_3_1_2",{ARKODE_ERK_NONE,ARKODE_ARK2_DIRK_3_1_2,2,2}},
         {L"SDIRK_2_1_2",{ARKODE_ERK_NONE,ARKODE_SDIRK_2_1_2,2,1}},
         {L"BILLINGTON_3_3_2",{ARKODE_ERK_NONE,ARKODE_BILLINGTON_3_3_2,2,3}},
         {L"TRBDF2_3_3_2",{ARKODE_ERK_NONE,ARKODE_TRBDF2_3_3_2,2,3}},
@@ -196,7 +211,10 @@ public :
         {L"ESDIRK547L2SA2_7_4_5",{ARKODE_ERK_NONE,ARKODE_ESDIRK547L2SA2_7_4_5,5,4}},
 
         // implicit/explicit (ImEx) methods
-        {L"ARK",{ARKODE_ARK436L2SA_ERK_6_3_4,ARKODE_ARK436L2SA_DIRK_6_3_4,4,3}},
+        {L"ARK",{ARKODE_ARK437L2SA_ERK_7_3_4,ARKODE_ARK437L2SA_DIRK_7_3_4,4,3}},
+        {L"ARK_3",{ARKODE_ARK324L2SA_ERK_4_2_3,ARKODE_ARK324L2SA_DIRK_4_2_3,3,3}},
+        {L"ARK_4",{ARKODE_ARK436L2SA_ERK_6_3_4,ARKODE_ARK436L2SA_DIRK_6_3_4,4,3}},
+        {L"ARK_5",{ARKODE_ARK548L2SA_ERK_8_4_5,ARKODE_ARK548L2SA_DIRK_8_4_5,5,4}},
         {L"ARK324",{ARKODE_ARK324L2SA_ERK_4_2_3,ARKODE_ARK324L2SA_DIRK_4_2_3,3,3}},
         {L"ARK436",{ARKODE_ARK436L2SA_ERK_6_3_4,ARKODE_ARK436L2SA_DIRK_6_3_4,4,3}},
         {L"ARK548",{ARKODE_ARK548L2SA_ERK_8_4_5,ARKODE_ARK548L2SA_DIRK_8_4_5,5,4}},
@@ -239,7 +257,7 @@ public :
 
     int getMaxMethodOrder(std::wstring wstrMethod)
     {
-        return m_odeIsImEx ? 5 : 8;
+        return m_odeIsImEx ? 5 : 9;
     }
 
     bool hasBandPrec()

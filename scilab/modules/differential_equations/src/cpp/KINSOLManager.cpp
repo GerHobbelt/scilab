@@ -225,7 +225,7 @@ bool KINSOLManager::create()
     return m_prob_mem == NULL;
 }
 
-int KINSOLManager::DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, realtype c_j, N_Vector work1, N_Vector work2)
+int KINSOLManager::DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr, N_Vector v, N_Vector Jv, sunrealtype c_j, N_Vector work1, N_Vector work2)
 {
     KINMem kin_mem = (KINMem) m_prob_mem;
     KINLsMem kinls_mem = (KINLsMem) kin_mem->kin_lmem;
@@ -431,22 +431,31 @@ void KINSOLManager::init()
         KINSetMaxSubSetupCalls(m_prob_mem, m_iResMonFreq);        
     }
     
-    // Error handling and intermediate callback
-    
-    if (KINSetErrHandlerFn(m_prob_mem, errHandler, (void *)this) < 0)
+    // Error handling 
+    if (SUNContext_PushErrHandler(m_sunctx, errHandler, (void *)this) < 0)
     {
-        sprintf(errorMsg,"setHandlerFunction error\n");
+        sprintf(errorMsg,"SUNContext_PushErrHandler error\n");
         throw ast::InternalError(errorMsg);
     }
 
+    // Intermediate callback
     if (m_bHas[INTCB] || m_wstrDisplay != L"none")
     {
-        if (KINSetInfoHandlerFn(m_prob_mem, intermediateCallback,  (void *)this) < 0)
+        // create logger   
+        SUNLogger logger = NULL;
+
+        int flag = SUNLogger_Create(SUN_COMM_NULL, 0, &logger);
+    
+        if (flag < 0 || logger == NULL)
         {
-            sprintf(errorMsg,"KINSetInfoHandlerFn error\n");
-            throw ast::InternalError(errorMsg);
-        }
-        KINSetPrintLevel(m_prob_mem, 1);
+            sprintf(errorMsg,"In KINSOLManager::init(), SUNLogger_Create error, logger=%d, flag=%d\n",logger, flag);
+            throw ast::InternalError(errorMsg);        
+        }    
+
+        logger->content = (void *)this;
+        logger->queuemsg = intermediateCallback;
+
+        SUNContext_SetLogger(m_sunctx,logger);
     }
 }
 
@@ -455,30 +464,39 @@ int KINSOLManager::colPackJac(N_Vector N_VectorY, N_Vector N_VectorF, SUNMatrix 
      return SUNDIALSManager::colPackJac(0,0,N_VectorY,N_VectorF,NULL,SUNMat_J,pManager,tmp1,tmp2,NULL);
 }
 
-void KINSOLManager::intermediateCallback(const char *module, const char *function, char *msg, void *pManager)
+SUNErrCode KINSOLManager::intermediateCallback(SUNLogger logger, SUNLogLevel lvl, const char* scope, const char* label, const char* msg_txt, va_list args)
 {
     // Unlike the ODE callback, we stop the solver by triggering a failing code
     // returned by the equation system user function, by means of manager->setUserStop(true)
 
     int iRet = 0;
-    int iNonLinIt = 0;
     char errorMsg[256];
-    KINSOLManager *manager = static_cast<KINSOLManager *>(pManager);
-   functionKind what =INTCB;
-   functionAPI fAPI = manager->getFunctionAPI(what);
-    std::string strMsg(msg);
-    std::string strFunc(function);
+    KINSOLManager *manager = NULL;
+    functionKind what = INTCB;
+    std::string strMsg(msg_txt);
+
+    if (logger != NULL)
+    {
+        manager = static_cast<KINSOLManager *>(logger->content);
+    }
+    else
+    {
+        sprintf(errorMsg,"In KINSOLManager::intermediateCallback, logger is NULL !\n");
+        throw ast::InternalError(errorMsg); 
+    }
+
+
+    functionAPI fAPI = manager->getFunctionAPI(what);
 
     std::map<std::wstring,int> mapStateFlag = {{L"init",-1},{L"iter",0},{L"done",1}};
 
     if (manager->getState() == L"init" && manager->getDisplay() == L"iter")
     {
         sciprint("  Iter    Fcall            norm(F)         norm(step)    bt \n");
-        return;
+        return 0;
     }
 
     N_Vector U = manager->getMem()->kin_uu;
-    sscanf(strMsg.c_str(),"nni = %d",&iNonLinIt);
     // first callback call is done before KINSol first call
     // hence we replace current iterate by Y0
     if (U == NULL)
@@ -486,29 +504,43 @@ void KINSOLManager::intermediateCallback(const char *module, const char *functio
         U = manager->getY();
     }
 
-    if (strMsg.find("nni =") != std::string::npos)
+    if (strMsg == "KINSol")
     {
         if (manager->getDisplay() == L"iter" && manager->getState() == L"iter")
         {
             char msg[256];
             void* mem = manager->getmem();
+            long int iNonLinIt = 0;
             long int iFuncEval = 0;
             long int iFuncEvalFD = 0;
             long int iBt = 0;
             double dblNorm = 0.0;
             double dblStep = 0.0;
 
-            KINGetNumFuncEvals(mem, &iFuncEval);
-            if (manager->getNonLinSol()==L"Newton" || manager->getNonLinSol()==L"lineSearch")
+            KINGetNumNonlinSolvIters(mem, &iNonLinIt);
+            if (manager->getLastIter() < iNonLinIt)
             {
-                KINGetNumLinFuncEvals(mem, &iFuncEvalFD);                
-                KINGetStepLength(mem, &dblStep);
-                KINGetNumBacktrackOps(mem, &iBt);
+                manager->setLastIter(iNonLinIt);
+                KINGetNumFuncEvals(mem, &iFuncEval);
+                if (manager->getNonLinSol()==L"Newton" || manager->getNonLinSol()==L"lineSearch")
+                {
+                    KINGetNumLinFuncEvals(mem, &iFuncEvalFD);                
+                    KINGetStepLength(mem, &dblStep);
+                    KINGetNumBacktrackOps(mem, &iBt);
+                }
+                KINGetFuncNorm(mem, &dblNorm);
+                sprintf(msg,"%6ld   %6ld     %13.8e     %13.8e   %3ld",iNonLinIt,iFuncEval+iFuncEvalFD,dblNorm,dblStep,iBt);
+                sciprint("%s\n",msg);                
             }
-            KINGetFuncNorm(mem, &dblNorm);
-            sprintf(msg,"%6d   %6ld     %13.8e     %13.8e   %3ld",iNonLinIt,iFuncEval+iFuncEvalFD,dblNorm,dblStep,iBt);
-            sciprint("%s\n",msg);
+            else
+            {
+                return 0;
+            }
         }
+    }
+    else
+    {
+        return 0;
     }
 
     // Display callback
@@ -543,6 +575,8 @@ void KINSOLManager::intermediateCallback(const char *module, const char *functio
         sprintf(errorMsg,"iterations have been interrupted by user callback.\n");
         throw ast::InternalError(errorMsg);
     }
+    
+    return 0;
 }
 
 int KINSOLManager::rhsFunction(N_Vector N_VectorY, N_Vector N_VectorF, void *pManager)
@@ -599,7 +633,7 @@ int KINSOLManager::jacFunction(N_Vector N_VectorY, N_Vector N_VectorF, SUNMatrix
     return 0;
 }
 
-void KINSOLManager::errHandler(int error_code, const char *module, const char *function, char *msg, void *pManager)
+void KINSOLManager::errHandler(int line, const char *func, const char *file, const char *msg, SUNErrCode err_code, void *pManager, SUNContext sunctx)
 {
     KINSOLManager *manager = static_cast<KINSOLManager *>(pManager);
     if (manager->getDisplay() != L"none")
@@ -613,7 +647,18 @@ void KINSOLManager::solve()
     char msg[256];
     char emptyStr[1]="";
     m_wstrState = L"init";
-    intermediateCallback(emptyStr,emptyStr,emptyStr,(void *)this);
+    SUNLogger logger;
+    SUNErrCode sunerr;
+        
+    sunerr = SUNContext_GetLogger(m_sunctx,&logger);
+    if (sunerr || logger == NULL)
+    {
+        sprintf(msg,"In KINSOLManager::solve(), SUNContext_GetLogger error, logger=%p, flag=%d\n",(void *)logger, sunerr);
+        throw ast::InternalError(msg);        
+    }
+    
+    intermediateCallback(logger, SUN_LOGLEVEL_INFO, NULL, NULL, "KINSol",NULL);
+    
     m_wstrState = L"iter";
 
     auto chrono_begin = std::chrono::steady_clock::now();
@@ -625,7 +670,9 @@ void KINSOLManager::solve()
     m_dblElapsedTime = diff.count();
 
     m_wstrState = L"done";
-    intermediateCallback(emptyStr,emptyStr,emptyStr,(void *)this);
+
+    intermediateCallback(logger, SUN_LOGLEVEL_INFO, NULL, NULL, "KINSol",NULL);
+    SUNLogger_Destroy(&logger);
 
     if (m_wstrDisplay != L"none" && m_liExitCode >= 0)
     {

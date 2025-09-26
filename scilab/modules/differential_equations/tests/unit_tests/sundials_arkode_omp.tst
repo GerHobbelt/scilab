@@ -21,7 +21,7 @@ if with_openmp
     
     mputl([
     "#include <nvector/nvector_openmp.h>"
-    "int SUN_lorenz(realtype t, N_Vector N_VectorY, N_Vector N_VectorYd, void *data)"
+    "int SUN_lorenz(sunrealtype t, N_Vector N_VectorY, N_Vector N_VectorYd, void *data)"
     "{"
     "double *y = N_VGetArrayPointer(N_VectorY);"
     "double *ydot = N_VGetArrayPointer(N_VectorYd);"
@@ -40,7 +40,7 @@ if with_openmp
     "return 0;"
     "}"
     ],TMPDIR+"/SUN_lorenz_omp.c");
-    SUN_Clink("SUN_lorenz",TMPDIR+"/SUN_lorenz_omp.c",verbose=0,cflags="-O3 -fopenmp",load=%t);
+    SUN_Clink("SUN_lorenz",TMPDIR+"/SUN_lorenz_omp.c",cflags="-O3 -fopenmp",load=%t);
     
     sigma=10;
     rho=28;
@@ -56,7 +56,7 @@ if with_openmp
                method="ERK_5",nbThreads=NUM_THREADS);
     
     // don't pass -fopenmp => ignore pragma directive in source
-    SUN_Clink("SUN_lorenz",TMPDIR+"/SUN_lorenz_omp.c",verbose=0,cflags="-O3",load=%t);
+    SUN_Clink("SUN_lorenz",TMPDIR+"/SUN_lorenz_omp.c",cflags="-O3",load=%t);
     
     [t,y,info2]=arkode(list("SUN_lorenz",[n,sigma,rho,bet]),5,X0,t0=0,...
                method="ERK_5");

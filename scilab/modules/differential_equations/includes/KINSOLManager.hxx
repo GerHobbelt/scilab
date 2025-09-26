@@ -98,8 +98,18 @@ public :
         return m_bUserStop;
     }
 
-    int DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                  N_Vector v, N_Vector Jv, realtype c_j,
+    long int getLastIter()
+    {
+        return m_liLastIter;
+    }
+
+    void setLastIter(long int i)
+    {
+        m_liLastIter = i;
+    }
+
+    int DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                  N_Vector v, N_Vector Jv, sunrealtype c_j,
                   N_Vector work1, N_Vector work2) final;
     void parseMatrices(types::typed_list &in);
     void parseFunctionFromOption(types::optional_list &opt, const wchar_t * _pwstLabel, functionKind what);
@@ -116,8 +126,8 @@ public :
         N_Vector tmp1, N_Vector tmp2);
     static int jacFunction(N_Vector N_VectorY, N_Vector N_VectorF, SUNMatrix SUNMat_J, void *pManager,
         N_Vector tmp1, N_Vector tmp2);
-    static void errHandler(int error_code, const char *module, const char *function, char *msg, void *pManager);
-    static void intermediateCallback(const char *module, const char *function, char *msg, void *pManager);
+    static SUNErrCode intermediateCallback(SUNLogger logger, SUNLogLevel lvl, const char* scope, const char* label, const char* msg_txt, va_list args);
+    static void errHandler(int line, const char *func, const char *file, const char *msg, SUNErrCode err_code, void *err_user_data, SUNContext sunctx);
 
     int getMaxNargin()
     {
@@ -156,6 +166,7 @@ private :
     bool m_bUserStop = false;
 
     long int m_liExitCode;
+    long int m_liLastIter = 0;
 
     int m_iJacUpdateFreq;
     int m_iResMonFreq;

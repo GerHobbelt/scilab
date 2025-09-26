@@ -130,18 +130,19 @@ GRAV = 13.750371636040745654980191559621114395801712;
 state0=[1;0;0;0];
 nout = 5;
 tspan = linspace(0,30,nout+1)
-TOL = 1e-12;
+RTOL = 1e-12;
+ATOL = 1e-14;
 
-[t,statereftheta] = cvode(fpendref,tspan,[0;0],t0=0,method="BDF",rtol=1e-14,atol=1e-14,maxSteps=50000);
+[t,statereftheta] = cvode(fpendref,tspan,[0;0],method="BDF",rtol=RTOL,atol=ATOL,maxSteps=50000);
 th=statereftheta(1,:);
 thd=statereftheta(2,:);
 stateref=[cos(th); sin(th); -thd.*sin(th); thd.*cos(th)];
 
-[t,state] = cvode(fpend,tspan,state0,t0=0,rtol=TOL,atol=TOL,projection=projPend,maxSteps=50000);
+[t,state] = cvode(fpend,tspan,state0,method="BDF",rtol=RTOL,atol=ATOL,projection=projPend,maxSteps=50000);
 assert_checkalmostequal(state(1,:).^2+state(2,:).^2,ones(t));
 assert_checktrue(max(abs(state-stateref)) < 1e-6)
 
-[t,state] = cvode(fpend,tspan,state0,t0=0,rtol=TOL,atol=TOL,projection=projPend,projectError=%t,maxSteps=50000);
+[t,state] = cvode(fpend,tspan,state0,method="BDF",rtol=RTOL,atol=ATOL,projection=projPend,projectError=%t,maxSteps=50000);
 assert_checkalmostequal(state(1,:).^2+state(2,:).^2,ones(t));
 assert_checktrue(max(abs(state-stateref)) < 1e-6)
 

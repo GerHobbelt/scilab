@@ -46,7 +46,7 @@ extern "C"
 #include <sundials/sundials_dense.h>  /* prototypes for various DlsMat operations */
 #include <sundials/sundials_direct.h> /* definitions of DlsMat and DENSE_ELEM */
 #include <sundials/sundials_math.h>
-#include <sundials/sundials_types.h>              /* definition of type realtype */
+#include <sundials/sundials_types.h>              /* definition of type sunrealtype */
 #include <sunlinsol/sunlinsol_band.h>             /* access to band SUNLinearSolver */
 #include <sunlinsol/sunlinsol_dense.h>            /* access to dense SUNLinearSolver */
 #include <sunlinsol/sunlinsol_klu.h>              /* access to band SUNLinearSolver */
@@ -87,7 +87,7 @@ public:
         m_pEntryPointFunction.fill(NULL);
         m_functionAPI.fill(NONE);
         m_bHas.fill(false);
-        SUNContext_Create(NULL, &m_sunctx); /* Create the SUNDIALS context */
+        SUNContext_Create(SUN_COMM_NULL, &m_sunctx); /* Create the SUNDIALS context */
     }
 
     virtual ~SUNDIALSManager()
@@ -339,7 +339,7 @@ public:
     std::wstring setLinearSolver(functionKind what, N_Vector NV_work, SUNMatrix& SUN_A, SUNLinearSolver& SUN_LS);
 
     // static methods
-    static int colPackJac(realtype t, realtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
+    static int colPackJac(sunrealtype t, sunrealtype c, N_Vector N_VectorY, N_Vector N_VectorYp, N_Vector N_VectorR,
                        SUNMatrix SUNMat_J, void *pManager, N_Vector tmp1, N_Vector tmp2, N_Vector tmp3);
                            
     // virtual OdeManager methods (later overriden by CVODE, IDA, ARKODE, ...)
@@ -355,7 +355,6 @@ public:
     {
         return false;
     }
-    // virtual void errHandler(int error_code, const char *module, const char *function, char *msg) {}
 
     virtual std::vector<std::wstring> getAvailablePrecondType()
     {
@@ -380,8 +379,8 @@ public:
         return false;
     }
 
-    virtual int DQJtimes(realtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
-                  N_Vector v, N_Vector Jv, realtype c_j,
+    virtual int DQJtimes(sunrealtype tt, N_Vector yy, N_Vector yp, N_Vector rr,
+                  N_Vector v, N_Vector Jv, sunrealtype c_j,
                   N_Vector work1, N_Vector work2);
 
     // pure virtual methods

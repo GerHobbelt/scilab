@@ -35,3 +35,16 @@ int IDAResetCurrentBDFMethodOrder(void *ida_mem)
 
   return(IDA_SUCCESS);
 }
+
+sunrealtype FLOOR(sunrealtype x)
+{
+#if defined(SUNDIALS_USE_GENERIC_MATH)
+    return(floor((double) x));
+#elif defined(SUNDIALS_DOUBLE_PRECISION)
+    return(floor(x));
+#elif defined(SUNDIALS_SINGLE_PRECISION)
+    return(floor(x));
+#elif defined(SUNDIALS_EXTENDED_PRECISION)
+    return(floor(x));
+#endif
+}

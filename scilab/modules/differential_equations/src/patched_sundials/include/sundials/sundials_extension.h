@@ -8,6 +8,7 @@
 #define __SUNDIALS_EXTENSION_H__
 
 #include "sundials/sundials_config.h" /* SUNDIALS_EXPORT definition */
+#include "sundials/sundials_types.h"
 
 #define BOOL int
 #define TRUE 1
@@ -30,5 +31,8 @@ SUNDIALS_EXPORT BOOL set_sundials_with_extension(BOOL _mode);
 * Reset IDA / BDF internal order
 */
 SUNDIALS_EXPORT int IDAResetCurrentBDFMethodOrder(void *ida_mem);
+
+SUNDIALS_EXPORT sunrealtype FLOOR(sunrealtype x);
+
 
 #endif /* __SUNDIALS_EXTENSION_H__ */
