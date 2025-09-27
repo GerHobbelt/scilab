@@ -55,7 +55,7 @@ types::Function::ReturnValue sci_grep(types::typed_list &in, int _iRetCount, typ
 {
     bool bRegularExpression = false;
 
-    //check input paramters
+    //check input parameters
     if (in.size() < 2 || in.size() > 3)
     {
         Scierror(999, _("%s: Wrong number of input arguments: %d or %d expected.\n"), "grep", 2, 3);

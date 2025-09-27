@@ -473,7 +473,7 @@ public class XConfiguration {
 
     /**
      * Get all the nodes with the given path.
-     * All the get nodes are serialized into an object (generic paramater) which must have
+     * All the get nodes are serialized into an object (generic parameter) which must have
      * a constructor without argument and with methods named set&lt;Attribute Name&gt; with
      * one argument and no returned value.
      * For example a node &lt;foo aaa="1" bbb="true" ccc-ddd="#001122"/&gt; could be retrieved with something like

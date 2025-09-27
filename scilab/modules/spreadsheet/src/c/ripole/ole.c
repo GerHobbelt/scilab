@@ -1936,7 +1936,7 @@ int OLE_decode_file(struct OLE_object *ole, char *fname, char *decode_path)
     int result = 0;
     int i;
 
-    /* Reject any bad paramters. */
+    /* Reject any bad parameters. */
     if (ole == NULL)
     {
         return OLEER_DECODE_NULL_OBJECT;

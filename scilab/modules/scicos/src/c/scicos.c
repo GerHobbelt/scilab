@@ -28,7 +28,7 @@
 * input/output regular ports
 *
 * xx/02/07, Alan
-* added object paramaters/states
+* added object parameters/states
 *
 * 20/07/07,  Masoud
 * CVODE (Sundials) replaced LSODAR

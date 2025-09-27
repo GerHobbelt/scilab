@@ -45,7 +45,7 @@ types::Function::ReturnValue sci_strcat(types::typed_list &in, int _iRetCount, t
     int iMode               = 0;
     wchar_t* pwstToInsert   = NULL;
 
-    //check input paramters
+    //check input parameters
     if (in.size() < 1 || in.size() > 3)
     {
         Scierror(999, _("%s: Wrong number of input arguments: %d or %d expected.\n"), "strcat", 1, 3);

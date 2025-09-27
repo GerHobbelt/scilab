@@ -53,7 +53,7 @@ types::Function::ReturnValue sci_cppmultiplybypi(types::typed_list &in, int _iRe
         pdblOut->set(i, multiplybypi(pdblIn->get(i)));
     }
 
-    //set output paramter
+    //set output parameter
     out.push_back(pdblOut);
 
     //return gateway status

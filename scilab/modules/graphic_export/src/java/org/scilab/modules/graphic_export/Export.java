@@ -139,7 +139,7 @@ public class Export {
      * @param uid the figure uid
      * @param type the export type
      * @param fileName the file name
-     * @param params the export paramaters
+     * @param params the export parameters
      * @return the export status
      */
     public static int export(int uid, int type, String fileName, ExportParams params, boolean headless) {
@@ -178,7 +178,7 @@ public class Export {
      * @param uid the figure uid
      * @param type the export type
      * @param fileName the file name
-     * @param params the export paramaters
+     * @param params the export parameters
      * @return the export status
      */
     public static int exportVectorial(int uid, int type, String fileName, ExportParams params, boolean headless) {
@@ -207,7 +207,7 @@ public class Export {
      * @param uid the figure/frame uid
      * @param type the export type
      * @param file the file where to export
-     * @param params the export paramaters
+     * @param params the export parameters
      */
     public static int exportVectorial(int uid, TYPE type, File file, ExportParams params, boolean headless) throws IOException {
         AxesContainer container = (AxesContainer) GraphicController.getController().getObjectFromId(uid);
@@ -314,7 +314,7 @@ public class Export {
      * @param type the export type
      * @param fileName the file name
      * @param fromScreen if true, then use the screen view
-     * @param params the export paramaters
+     * @param params the export parameters
      * @return the export status
      */
     public static int exportBitmap(int uid, int type, String fileName, boolean fromScreen, ExportParams params) {
@@ -346,7 +346,7 @@ public class Export {
      * @param type the export type
      * @param file the file where to export
      * @param fromScreen if true, then use the screen view
-     * @param params the export paramaters
+     * @param params the export parameters
      */
     public static void exportBitmap(int uid, TYPE type, File file, boolean fromScreen, ExportParams params) throws IOException {
         if (isBitmapFormat(type)) {
@@ -405,7 +405,7 @@ public class Export {
      * @param uid the figure uid
      * @param type the export type
      * @param file the file where to export
-     * @param params the export paramaters
+     * @param params the export parameters
      */
     public static void setVisitor(int uid, int type, final ExportParams params) {
         final Exporter exporter = getExporter(types[type]);

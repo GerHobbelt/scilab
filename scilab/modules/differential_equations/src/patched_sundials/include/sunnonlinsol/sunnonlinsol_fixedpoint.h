@@ -44,7 +44,7 @@ struct _SUNNonlinearSolverContent_FixedPoint {
   int          m;          /* number of acceleration vectors to use          */
   int         *imap;       /* array of length m                              */
   booleantype  damping;    /* flag to apply dampling in acceleration         */
-  realtype     beta;       /* damping paramter                               */
+  realtype     beta;       /* damping parameter                               */
   realtype    *R;          /* array of length m*m                            */
   realtype    *gamma;      /* array of length m                              */
   realtype    *cvals;      /* array of length m+1 for fused vector op        */
