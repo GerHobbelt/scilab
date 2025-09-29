@@ -63,9 +63,7 @@ function [Code,actt,proto]=call_actuator(i)
     "("+mat2scs_c_ptr(outtb(uk))+" *)outtbptr["+string(uk-1)+"], &nrd_"+string(nuk_1)+", &nrd_"+..
     string(nuk_2)+", &nrd_"+string(uk_t)+",bbb);"];
 
-    proto="void "+rdnom+"_actuator("+..
-    "int *, int *, int *, double *, void *, int *, int *,int *,int);"
-    proto=cformatline(proto,70);
+    proto="void "+rdnom+"_actuator(int *, int *, int *, double *, void *, int *, int *,int *,int);"
 endfunction
 
 //CallBlock : generate C syntax
@@ -596,9 +594,8 @@ function [Code,capt,proto]=call_sensor(i)
     rdnom+"_sensor(&flag, &nport, &block_"+rdnom+"["+string(i-1)+"].nevprt, "+..
     "told, ("+mat2scs_c_ptr(outtb(yk))+" *)(outtbptr["+string(yk-1)+"]), &nrd_"+string(nyk_1)+..
     ", &nrd_"+string(nyk_2)+", &nrd_"+string(yk_t)+",aaa);"];
-    proto="void "+rdnom+"_sensor("+..
-    "int *, int *, int *, double *,void *, int *, int *,int *, int);"
-    proto=cformatline(proto,70);
+
+    proto="void "+rdnom+"_sensor(int *, int *, int *, double *,void *, int *, int *,int *, int);"
 endfunction
 
 //Generates Code for dynamically linked Fortran and C Blocks
@@ -1709,12 +1706,14 @@ function  [ok,XX,alreadyran,flgcdgen,szclkINTemp,freof] = do_compile_superblock4
             [Code,actti,protoi]=call_actuator(i)
             wfunclist($+1)=[Code;"if(flag < 0 ) return(5 - flag);"]
             if nbact==1 then Protostalone=[Protostalone;"";protoi],end
+            Protos=[Protos;"";"extern "+protoi];
             actt=[actt;actti]
         elseif or(i==cap) then //block is a sensor
             nbcap=nbcap+1;
             [Code,capti,protoi]=call_sensor(i)
             wfunclist($+1)=[Code;"if(flag < 0 ) return(5 - flag);"]
             if nbcap==1 then Protostalone=[Protostalone;"";protoi] ,end
+            Protos=[Protos;"";"extern "+protoi];
             capt=[capt;capti]
         elseif funs(i)=="bidon"
             wfunclist($+1)=" "
