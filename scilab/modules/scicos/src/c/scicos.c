@@ -1453,7 +1453,7 @@ static void cossim(double *told)
     /* Generic flags for stop mode */
     int ODE_NORMAL   = 1;  /* ODE_NORMAL   = CV_NORMAL   = LS_NORMAL   = 1 */
     int ODE_ONE_STEP = 2;  /* ODE_ONE_STEP = CV_ONE_STEP = LS_ONE_STEP = 2 */
-    if (SUNContext_Create(NULL, &scicos_sunctx) < 0)
+    if (SUNContext_Create(SUN_COMM_NULL, &scicos_sunctx) < 0)
     {
         *ierr = 10000;
         return;        
@@ -2193,7 +2193,7 @@ static void cossimdaskr(double *told)
     int DAE_NORMAL = 0, DAE_ONE_STEP = 0;
     DAE_NORMAL   = (solver == IDA_BDF_Newton) ? 1 : 0;  /* IDA_NORMAL   = 1, DDAS_NORMAL   = 0 */
     DAE_ONE_STEP = (solver == IDA_BDF_Newton) ? 2 : 1;  /* IDA_ONE_STEP = 2, DDAS_ONE_STEP = 1 */
-    if (SUNContext_Create(NULL, &scicos_sunctx) < 0)
+    if (SUNContext_Create(SUN_COMM_NULL, &scicos_sunctx) < 0)
     {
         *ierr = 10000;
         return;        
