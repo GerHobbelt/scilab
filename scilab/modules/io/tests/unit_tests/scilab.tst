@@ -21,7 +21,7 @@ assert_checkerror("[a, b, c] = scilab(code=""1+1"", background=%T)", sprintf(_("
 [status, stdout, stderr] = scilab(code="1+1");
 assert_checkequal(status, 0);
 stdout(find(stdout == "")) = [];
-assert_checkequal(stdout, [" ans = ";"   2."]);
+assert_checkequal(stdout(($-1):$), [" ans = ";"   2."]);
 stderr(find(stderr == "")) = [];
 assert_checkequal(stderr, []);
 
@@ -31,6 +31,7 @@ mputl("1+1", tmp);
 [status, stdout, stderr] = scilab(file=tmp);
 assert_checkequal(status, 0);
 stdout(find(stdout == "")) = [];
+stdout(grep(stdout, "vm3dgl: ")) = []; // Ignore some warnings (when run in VMware environment)
 assert_checkequal(stdout, []);
 stderr(find(stderr == "")) = [];
 assert_checkequal(stderr, []);
