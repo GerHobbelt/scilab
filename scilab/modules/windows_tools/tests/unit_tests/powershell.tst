@@ -27,5 +27,7 @@ if getos() == 'Windows' then
   rmdir(path,"s");
 
   // Date quoted format
-  powershell("get-Date -format ''yyyy-MM-dd HH:mm''")
+  [r, s] = powershell("get-Date -format ''yyyy-MM-dd HH:mm''")
+  assert_checkequal(length(r), 16); // e.g. "2025-09-29 18:06"
+  assert_checktrue(s);
 end

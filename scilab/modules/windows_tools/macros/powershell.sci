@@ -20,16 +20,8 @@ function [resultat, status] = powershell(command)
 
     Chainecmd = "";
     Chainecmdbegin = "powershell.exe -nologo -inputformat text -outputformat text -Noninteractive ";
-    resultat = [gettext("Error(s) : see help powershell");gettext("Please verify your powershell command without Scilab.")];
-    status = %f;
-
-    try
-        winqueryreg("HKEY_LOCAL_MACHINE", "SOFTWARE\Microsoft\PowerShell\1", "Install");
-    catch
-        resultat = [gettext("Powershell 1.0 not found.")];
-        return;
-    end
-
     Chainecmd = Chainecmdbegin + "-command """ + command + """";
+
     [status, resultat] = host(Chainecmd);
+    status = status == 0;
 endfunction
