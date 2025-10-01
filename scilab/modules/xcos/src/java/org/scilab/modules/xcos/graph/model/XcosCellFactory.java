@@ -51,6 +51,7 @@ import org.scilab.modules.xcos.port.input.ExplicitInputPort;
 import org.scilab.modules.xcos.port.input.ImplicitInputPort;
 import org.scilab.modules.xcos.port.output.ExplicitOutputPort;
 import org.scilab.modules.xcos.port.output.ImplicitOutputPort;
+import org.scilab.modules.xcos.preferences.XcosOptions;
 import org.scilab.modules.xcos.utils.BlockPositioning;
 
 import com.mxgraph.model.mxCell;
@@ -464,6 +465,8 @@ public final class XcosCellFactory {
          *   * generic case : layout the ports per kind per block-side
          */
         boolean convertGeometry;
+        double scale = 1.;
+
         if (block instanceof SplitBlock) {
             convertGeometry = false;
         } else if (block instanceof RoundBlock) {
@@ -472,22 +475,44 @@ public final class XcosCellFactory {
                                 properties.get(ObjectProperties.EVENT_INPUTS) + 1 +
                                 properties.get(ObjectProperties.EVENT_OUTPUTS) + 1;
             convertGeometry = (2 * w + 2 * h) < (numberOfPorts * BasicPort.DEFAULT_PORTSIZE);
+            scale = DEFAULT_SIZE_FACTOR;
         } else {
             double minimalHeight = Math.max((properties.get(ObjectProperties.INPUTS) + 1) * BasicPort.DEFAULT_PORTSIZE, (properties.get(ObjectProperties.OUTPUTS) + 1) * BasicPort.DEFAULT_PORTSIZE);
             double minimalWidth = Math.max((properties.get(ObjectProperties.EVENT_INPUTS) + 1) * BasicPort.DEFAULT_PORTSIZE, (properties.get(ObjectProperties.EVENT_OUTPUTS) + 1) * BasicPort.DEFAULT_PORTSIZE);
 
-            convertGeometry = h < minimalHeight | w < minimalWidth;
-            convertGeometry |= h * w < minimalHeight * minimalWidth / 4;
+            boolean designedWithoutGrid = h < minimalHeight | w < minimalWidth;
+            boolean useRelativeGeom = h * w < minimalHeight * minimalWidth;
+            convertGeometry = useRelativeGeom || designedWithoutGrid;
+            
+            if (useRelativeGeom)
+            {
+                scale = DEFAULT_SIZE_FACTOR;
+
+                // Invert the y-axis value and translate it.
+                y = -y - h;
+            }
+            else if (useRelativeGeom)
+            {
+                double deltaX = (minimalWidth - w) / 2;
+                double deltaY = (minimalHeight - h) / 2;
+                x -= deltaX;
+                y -= deltaY;
+
+                scale = Math.max(minimalHeight / h, minimalWidth / w);
+            }
         }
 
-        if (convertGeometry) {
-            w = w * DEFAULT_SIZE_FACTOR;
-            h = h * DEFAULT_SIZE_FACTOR;
-
-            /*
-             * Invert the y-axis value and translate it.
-             */
-            y = -y - h;
+        if (convertGeometry)
+        {
+            w = scale * w;
+            h = scale * h;
+            
+            // snap to grid
+            double gridSize = XcosOptions.getEdition().getGraphGrid();
+            x = (double) (Math.floor(x / gridSize) * (long) gridSize);
+            y = (double) (Math.floor(y / gridSize) * (long) gridSize);
+            w = (double) (Math.ceil(w / gridSize) * (long) gridSize);
+            h = (double) (Math.ceil(h / gridSize) * (long) gridSize);
 
             block.setGeometry(new mxGeometry(x, y, w, h));
         }
