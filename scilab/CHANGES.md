@@ -205,9 +205,9 @@ Packaging & Supported Operating Systems
   - macOS:
     - Intel-based or M1-based Mac running macOS 11+ (compile and run)
   - Linux (amd64):
-    - debian: 11, 12
-    - ubuntu: 20.04, 22.04, 24.04
-    - fedora: 40, 41
+    - debian: 13
+    - ubuntu: 22.04, 24.04, 25.04
+    - fedora: 42
 
 ### Scilab 2025.0.0
 
