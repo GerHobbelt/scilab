@@ -28,13 +28,9 @@ function [page, name] = getPage(key, domain, lang)
     loadInlineHelp(lang)
     global %inline_help;
 
-    if ~isfield(%inline_help(domain), lang) then
+    if %inline_help == [] | ~isfield(%inline_help, domain) | ~isfield(%inline_help(domain), lang) then
         if lang <> "en_US" then
             page = getPage(key, domain, "en_US");
-            if page == [] then
-                //try in toolbox help page
-                disp("tbx");
-            end
             return;
         end
     end
