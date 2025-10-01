@@ -730,6 +730,29 @@ Sparse* Sparse::set(int _iRows, int _iCols, double _dblReal, bool _bFinalize)
     return this;
 }
 
+void Sparse::setValues(types::Double* values)
+{
+    if (isComplex())
+    {
+        std::complex<double>* data = matrixCplx->valuePtr();
+        int nnz = static_cast<int>(nonZeros());
+        double* real = values->get();
+        double* img = values->getImg();
+        for (int i = 0; i < nnz; ++i)
+        {
+            data[i] = std::complex<double>(real[i], img[i]);
+        }
+    }
+    else
+    {
+        double* data = matrixReal->valuePtr();
+        int nnz = static_cast<int>(nonZeros());
+        double* real = values->get();
+        int one = 1;
+        dcopy_(&nnz, real, &one, data, &one);
+    }
+}
+
 void Sparse::finalize()
 {
     if (isComplex())

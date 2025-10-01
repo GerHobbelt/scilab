@@ -95,6 +95,8 @@ struct EXTERN_AST Sparse : GenericType
     {
         return set(_iIndex % m_iRows, _iIndex / m_iRows, v, _bFinalize);
     }
+
+    void setValues(types::Double* values);
     /*
       set non zero values to 1.
     **/

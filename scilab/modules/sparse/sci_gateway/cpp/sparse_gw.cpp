@@ -46,5 +46,6 @@ int SparseModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_spCompGeneric_clear", &sci_percent_spCompGeneric_clear, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_spCompJacobian_e", &sci_percent_spCompGeneric_e, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"%_spCompHessian_e", &sci_percent_spCompGeneric_e, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"spset", &sci_spset, MODULE_NAME));
     return 1;
 }

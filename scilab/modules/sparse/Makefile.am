@@ -58,7 +58,7 @@ COLPACK_CPP_SOURCES = \
     src/cpp/spCompGeneric.cpp \
     src/cpp/spCompJacobian.cpp \
     src/cpp/spCompHessian.cpp
-	
+
 GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sparse_gw.cpp \
     sci_gateway/cpp/sci_adj2sp.cpp \
@@ -68,6 +68,7 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_sparse.cpp \
     sci_gateway/cpp/sci_spcompack.cpp \
     sci_gateway/cpp/sci_spget.cpp \
+    sci_gateway/cpp/sci_spset.cpp \
     sci_gateway/cpp/sci_spzeros.cpp \
     sci_gateway/cpp/sci_spones.cpp \
     sci_gateway/cpp/sci_lufact.cpp \
@@ -76,12 +77,12 @@ GATEWAY_CPP_SOURCES = \
     sci_gateway/cpp/sci_ludel.cpp \
     sci_gateway/cpp/sci_ordmmd.cpp \
     sci_gateway/cpp/sci_spchol.cpp \
-	sci_gateway/cpp/sci_sfinit.cpp \
-	sci_gateway/cpp/sci_symfcti.cpp \
-	sci_gateway/cpp/sci_bfinit.cpp \
-	sci_gateway/cpp/sci_inpnv.cpp \
-	sci_gateway/cpp/sci_blkfc1i.cpp \
-	sci_gateway/cpp/sci_blkslvi.cpp \
+    sci_gateway/cpp/sci_sfinit.cpp \
+    sci_gateway/cpp/sci_symfcti.cpp \
+    sci_gateway/cpp/sci_bfinit.cpp \
+    sci_gateway/cpp/sci_inpnv.cpp \
+    sci_gateway/cpp/sci_blkfc1i.cpp \
+    sci_gateway/cpp/sci_blkslvi.cpp \
     sci_gateway/cpp/sci_percent_spCompGeneric_clear.cpp \
     sci_gateway/cpp/sci_percent_spCompGeneric_e.cpp \
     sci_gateway/cpp/sci_spCompHessian.cpp \

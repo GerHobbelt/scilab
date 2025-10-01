@@ -216,6 +216,7 @@
     <ClCompile Include="sci_spCompJacobian.cpp" />
     <ClCompile Include="sci_spget.cpp" />
     <ClCompile Include="sci_spones.cpp" />
+    <ClCompile Include="sci_spset.cpp" />
     <ClCompile Include="sci_spzeros.cpp" />
     <ClCompile Include="sci_symfcti.cpp" />
     <ClCompile Include="sparse_gw.cpp" />
