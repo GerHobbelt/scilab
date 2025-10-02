@@ -73,7 +73,7 @@ assert_checkequal(list(X, e), list([-1+s+s^3;0], 0));
 P = [3+s ; 7-s+4*s^2-s^3];
 [X, e] = diophant(P, s^2);
 assert_checkequal(e, 0);
-assert_checkequal(clean(X.' * P), s^2);
+assert_checkalmostequal(clean(X.' * P), s^2, %eps); // test modified after MKL update (oneAPI 2025.2) 
 
 // 5 general random successfull cases
 for i = 1:5

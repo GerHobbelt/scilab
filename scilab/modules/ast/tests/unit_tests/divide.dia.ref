@@ -49,11 +49,11 @@ assert_checkalmostequal(C3 / c, C3cref);
 //R / R
 assert_checkalmostequal(R / R, [1,0;0,1]);
 //R / C
-assert_checkalmostequal(R / C, [0.2-0.4*%i,0;0,0.2-0.4*%i]);
+assert_checkalmostequal(R / C, [0.2-0.4*%i,0;0,0.2-0.4*%i], [], %eps); // test modified after MKL update (oneAPI 2025.2) 
 //C / R
 assert_checkalmostequal(C / R, [1+2*%i,0;0,1+2*%i]);
 //C / C
-assert_checkalmostequal(C / C, [1,0;0,1]);
+assert_checkalmostequal(C / C, [1,0;0,1], [], %eps); // test modified after MKL update (oneAPI 2025.2) 
 //SPARSE / double
 //SP / r
 assert_checkalmostequal(SP/ r, sparse([1,2;4,5;3,10],[0.5,1,1.5]));

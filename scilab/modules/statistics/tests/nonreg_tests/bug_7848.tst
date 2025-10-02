@@ -25,7 +25,7 @@ assert_checkequal(r, 1);
 
 fre = ones(10, 10);
 r = correl(1:10, 1:10, fre);
-assert_checkequal(r, 0);
+assert_checkalmostequal(r, 0, 0, %eps); // test modified after MKL update (oneAPI 2025.2) 
 
 r = correl(1:10, -(1:10));
 assert_checkequal(r, -1);
@@ -36,4 +36,4 @@ assert_checkequal(r, -1);
 
 fre = ones(10, 10);
 r = correl(1:10, -(1:10), fre);
-assert_checkequal(r, 0);
+assert_checkalmostequal(r, 0, 0, %eps); // test modified after MKL update (oneAPI 2025.2) 
