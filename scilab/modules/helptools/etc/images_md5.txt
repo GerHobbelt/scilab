@@ -841,6 +841,7 @@ isoview_pt_BR_2.png=7f599cee0ebf55f0e9656eb280e7af3c
 isoview_ru_RU_2.png=e0e43a2428b1a0dff256c077ed45c07e
 karmarkar_1.png=626ad2a9c40850305ba69410b5c17794
 kinsol_solve_1.png=384841aeb6ada0d108e020be2018f566
+kmeans_1.png=b572a3f61faf2e13c2c3f5d32b88cc25
 kpure_1.png=a4531e4182cb8da893aaa2a449b3f667
 kpure_2.png=b55796f4bc301176449663934c11e885
 leastsq_1.png=960379ff4b2b8d2fa16b2cd699fc99c8

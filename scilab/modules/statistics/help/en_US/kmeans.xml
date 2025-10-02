@@ -88,12 +88,51 @@
                 x = [x1; x2; x3; x4; x5; x6];
                 scatter(x(:,1), x(:,2), "fill")
 
-                [index, c] = kmeans(x, 6);
+                nbcluster = 6;
+                [index, c] = kmeans(x, nbcluster); 
                 
-                scf(1);
-                scatter(x(:,1), x(:,2), [], index, "fill")
-                plot(c(:,1), c(:,2), "*r") // centroid of each cluster
+                colors = round(linspace(1, 32, nbcluster));
+                for i = 1:nbcluster
+                    mask = index == i;
+                    cc = colors(i);
+                    p = plot(x(mask, 1), x(mask, 2), ".", "marksize", 10);
+                    p.mark_foreground = cc;
+                    p.mark_background = cc;
+                end
+                plot(c(:,1), c(:,2), "*r", "markersize", 10) // centroid of each cluster
+                gca().box = "off";
+
+                l = legend(["cluster " + string(1:6), "centroids"])
+                l.marks_count =1;
+                l.line_width = 0.02;
             ]]></programlisting>
+            <scilab:image>
+                rand("seed", 0)
+                n = 200;
+                x1 = rand(n, 2, "normal") + 3 * ones(n, 2);
+                x2 = rand(n, 2, "normal") - 3 * ones(n, 2);
+                x3 = rand(n, 2, "normal") + [3 -3].*.ones(n, 1);
+                x4 = rand(n, 2, "normal") + [-3 3].*.ones(n, 1);
+                x5 = rand(n, 2, "normal") + [1 -1].*.ones(n, 1);
+                x6 = rand(n, 2, "normal") + [-1 1].*.ones(n, 1);
+                x = [x1; x2; x3; x4; x5; x6];
+                nbcluster = 6;
+                [index, c] = kmeans(x, nbcluster);  
+                colors = round(linspace(1, 32, nbcluster));
+                for i = 1:nbcluster
+                    mask = index == i;
+                    cc = colors(i);
+                    p = plot(x(mask, 1), x(mask, 2), ".", "marksize", 10);
+                    p.mark_foreground = cc;
+                    p.mark_background = cc;
+                end
+                plot(c(:,1), c(:,2), "*r", "markersize", 10) // centroid of each cluster
+                gca().box = "off";
+
+                l = legend(["cluster " + string(1:6), "centroids"])
+                l.marks_count =1;
+                l.line_width = 0.02;
+            </scilab:image>
         </para>
     </refsection>
     <refsection role="see also">
@@ -102,6 +141,12 @@
             <member>
                 <link linkend="pca">pca</link>
             </member>
+            <member>
+                <link linkend="dbscan">dbscan</link>
+            </member>
+            <member>
+                <link linkend="meanshift">meanshift</link>
+            </member>
         </simplelist>
     </refsection>
     <refsection>
@@ -109,7 +154,7 @@
         <revhistory>
             <revision>
                 <revnumber>2025.0.0</revnumber>
-                <revremark>Introduction in Scilab.</revremark>
+                <revremark>Function added.</revremark>
             </revision>
         </revhistory>
     </refsection>
