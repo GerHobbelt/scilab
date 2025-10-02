@@ -34,6 +34,19 @@ function ierr = cos2cosf(u,scs_m,count)
         count=count+1
         lname="scs_m_"+string(count)
     end
+    if typeof(u) == "string" then
+        if isfile(u) then
+            deletefile(u);
+        end
+        [u, err] = file("open", u)
+        if err <> 0 then
+            ierr = err;
+            return;
+        end
+        close_file = %t;
+    else
+        close_file = %f;
+    end
 
     //////////////////
     txt=[];
@@ -215,6 +228,9 @@ function ierr = cos2cosf(u,scs_m,count)
         end
     end
 
+    if close_file then
+        file("close", u)
+    end
 endfunction
 
 function txt_out=my_strcat(txt)

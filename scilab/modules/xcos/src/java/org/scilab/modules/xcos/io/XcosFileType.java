@@ -36,6 +36,7 @@ import javax.xml.stream.XMLOutputFactory;
 import javax.xml.stream.XMLStreamWriter;
 import javax.xml.transform.TransformerException;
 
+import org.scilab.modules.action_binding.highlevel.ScilabInterpreterManagement;
 import org.scilab.modules.commons.xml.ScilabXMLOutputFactory;
 import org.scilab.modules.xcos.JavaController;
 import org.scilab.modules.xcos.JavaXMIResource;
@@ -206,7 +207,10 @@ public enum XcosFileType {
 
         @Override
         public void save(String file, XcosDiagram from) throws Exception {
-            throw new UnsupportedOperationException();
+            LOG.entering("XcosFileType.COSF", "save");
+            final String cmd = String.format("cos2cosf(\"%s\", scicos_new(\"0x%s\"));", file, Long.toHexString(from.getUID()));
+            ScilabInterpreterManagement.requestScilabExec(cmd);
+            LOG.exiting("XcosFileType.COSF", "save");
         }
     };
 
@@ -479,10 +483,11 @@ public enum XcosFileType {
     public static Set<XcosFileType> getAvailableSaveFormats() {
         // order match the order of their declaration, to switch it move its declaration and change it here
         final Set<XcosFileType> values = EnumSet.noneOf(XcosFileType.class);
+        values.add(XcosFileType.SSP);
         values.add(XcosFileType.ZCOS);
         values.add(XcosFileType.XCOS);
         values.add(XcosFileType.XMI);
-        values.add(XcosFileType.SSP);
+        values.add(XcosFileType.COSF);
         return values;
     }
 }
