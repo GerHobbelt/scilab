@@ -36,7 +36,8 @@
     <refsection>
         <title>Description</title>
         <para>
-            <literal>spset</literal> is used to update all non-zeros entries of sparse matrix.
+            <literal>spset</literal> is used to update all non-zeros entries of sparse matrix. The size of the <literal>values</literal> array must be equal to 
+            <literal>nnz(sp)</literal>.
             <warning>
                 <para>
                     This function modifies the first input variable (<literal>sp</literal>) contents.
