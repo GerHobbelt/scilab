@@ -138,6 +138,9 @@ assert_checkequal(t2.Var7, var_dt);
 t2 = addvars(ts, var_double, var_string, var_boolean, var_dura, var_dt, "NewVariableNames", ["Double", "String", "Bool", "Dura", "Dt"]);
 assert_checkequal(t2.Properties.VariableNames, ["Time", "Var1", "Var2", "Double", "String", "Bool", "Dura", "Dt"]);
 
+t2 = addvars(ts, var_double, var_string, var_boolean, var_dura, var_dt, "NewVariableNames", {"Double", "String", "Bool", "Dura", "Dt"});
+assert_checkequal(t2.Properties.VariableNames, ["Time", "Var1", "Var2", "Double", "String", "Bool", "Dura", "Dt"]);
+
 // Before
 t2 = addvars(ts, var_double, var_string, var_boolean, var_dura, var_dt, "Before", "Var1");
 assert_checkequal(size(t2), [3 7]);

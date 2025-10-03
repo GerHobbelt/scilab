@@ -91,7 +91,7 @@ function out = addvars(varargin)
     end
 
     if newvarnames <> "" then
-        if typeof(newvarnames) <> ["string", "cell"] then
+        if typeof(newvarnames) <> ["string", "ce"] then
             error(msprintf(_("%s: Wrong type for input argument #%d: A string or cell of strings expected.\n"), fname, numvar));
         end
         if size(vars) <> size(newvarnames, "*") then
@@ -99,8 +99,22 @@ function out = addvars(varargin)
         end
     
         varnames2 = [];
+
+        if typeof(newvarnames) == "ce" then
+            tmp = [];
+            for i = 1:size(newvarnames, "*")
+                v = newvarnames{i}
+                if type(v) <> 10 then
+                    error(msprintf(gettext("%s: Wrong type for input argument #%d: A cell containing only strings expected."), fname, numvar));
+                end
+                tmp = [tmp, v];
+            end
+            newvarnames = tmp;
+        end
+
         for i = 1:size(vars)
             if size(vars(i), 2) <> 1 then
+                // vars(i) can be contain a column vector and matrix
                 varnames2 = [varnames2 newvarnames(i) + "_" + string(1:size(vars(i), 2))];
             else
                 varnames2 = [varnames2 newvarnames(i)];
