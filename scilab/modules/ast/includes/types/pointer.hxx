@@ -65,6 +65,11 @@ public:
         return true;
     }
 
+    bool isA(const std::wstring& type)
+    {
+        return type == L"ptr" || type == L"pointer";
+    }
+
     bool isComplex(void)
     {
         return m_cplx;

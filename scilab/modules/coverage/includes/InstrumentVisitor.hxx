@@ -87,7 +87,9 @@ public:
     void visit(ast::SelectExp & e);
     void visit(ast::CaseExp & e);
     void visit(ast::FunctionDec & e);
-    void visit(ast::ArgumentDec & e);
+    void visit(ast::ArgumentDec & e)
+    {
+    }
 
     void visit(ast::CallExp & e)
     {
@@ -194,6 +196,22 @@ public:
     }
 
     void visit(ast::VarDec & e)
+    {
+    }
+
+    void visit(ast::ClassDec & e)
+    {
+    }
+
+    void visit(ast::EnumDec & e)
+    {
+    }
+
+    void visit(ast::PropertiesDec & e)
+    {
+    }
+
+    void visit(ast::MethodsDec & e)
     {
     }
 };

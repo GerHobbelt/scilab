@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Antoine ELIAS
  *
@@ -49,7 +49,12 @@ public :
         return false;
     }
 
-    bool                            getMemory(long long* _piSize, long long* _piSizePlusType) override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"mlist" || type == getTypeStr();
+    }
+
+    bool getMemory(long long* _piSize, long long* _piSizePlusType) override;
 
     virtual bool invoke(typed_list & in, optional_list & opt, int _iRetCount, typed_list & out, const ast::Exp & e) override;
 

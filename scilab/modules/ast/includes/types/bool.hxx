@@ -64,6 +64,11 @@ public:
         return true;
     }
 
+    bool isA(const std::wstring& type)
+    {
+        return type == L"bool" || type == L"boolean";
+    }
+
     bool                    operator==(const InternalType& it) override;
     bool                    operator!=(const InternalType& it) override;
 

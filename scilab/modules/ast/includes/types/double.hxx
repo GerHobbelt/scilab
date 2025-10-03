@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *
@@ -49,7 +49,6 @@ public :
     static Double*              Identity(int _iDims, const int* _piDims, double _dblReal);
     static Double*              Identity(int _iDims, const int* _piDims, double _dblReal, double _dblImg);
 
-
     /*data management*/
     double*                     getReal() const;
     double                      getReal(int _iRows, int _iCols);
@@ -76,6 +75,11 @@ public :
     bool                        isDouble() override
     {
         return true;
+    }
+
+    bool isA(const std::wstring& type)
+    {
+        return type == L"double" || type == L"constant";
     }
 
     bool isComplex() override

@@ -174,6 +174,26 @@ void SLintVisitor::visit(const ast::ArgumentDec & e)
     /* FIXME : Implement SLintVisitor for ArgumentDec */
 }
 
+void SLintVisitor::visit(const ast::ClassDec & e)
+{
+    /* FIXME : Implement SLintVisitor for ClassDec */
+}
+
+void SLintVisitor::visit(const ast::EnumDec & e)
+{
+    /* FIXME : Implement SLintVisitor for EnumDec */
+}
+
+void SLintVisitor::visit(const ast::PropertiesDec & e)
+{
+    /* FIXME : Implement SLintVisitor for PropertiesDec */
+}
+
+void SLintVisitor::visit(const ast::MethodsDec & e)
+{
+    /* FIXME : Implement SLintVisitor for MethodsDec */
+}
+
 void SLintVisitor::visit(const ast::CallExp & e)
 {
     auto range = preCheck(e);

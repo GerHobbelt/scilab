@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *
@@ -73,7 +73,7 @@ void Context::destroyInstance(void)
     }
 }
 
-void Context::scope_begin()
+void Context::scope_begin(types::InternalType* object, const std::wstring& method)
 {
     m_iLevel++;
     if (m_iLevel == SCOPE_CONSOLE)
@@ -85,6 +85,8 @@ void Context::scope_begin()
     {
         varStack.push(new VarList());
     }
+
+    scope_object_begin(object->getAs<types::Object>(), method);
 }
 
 void Context::clearAll()
@@ -98,6 +100,7 @@ void Context::scope_end()
     //clear varList of current scope
     if (varStack.empty() == false)
     {
+        scope_object_end();
         clearCurrentScope(true);
     }
 
@@ -201,11 +204,15 @@ types::InternalType* Context::get(const Variable* _var)
     types::InternalType* pIT = _var->get();
     if (pIT == NULL)
     {
-        //look in libraries
-        pIT = libraries.get(_var->getSymbol(), SCOPE_ALL);
-        if (pIT && pIT->isLibrary() == false)
+        pIT = getClassdef(_var->getSymbol().getName());
+        if (pIT == NULL)
         {
-            put((Variable*)_var, pIT);
+            // look in libraries
+            pIT = libraries.get(_var->getSymbol(), SCOPE_ALL);
+            if (pIT && pIT->isLibrary() == false)
+            {
+                put((Variable*)_var, pIT);
+            }
         }
     }
 
@@ -236,8 +243,16 @@ types::InternalType* Context::get(const Symbol& _key, int _iLevel)
         pIT = variables.get(_key, _iLevel);
         if (pIT == NULL)
         {
-            //find in libraries
-            pIT = libraries.get(_key, _iLevel);
+            auto f = classes.find(_key);
+            if (f != classes.end())
+            {
+                pIT = f->second;
+            }
+            else
+            {
+                // find in libraries
+                pIT = libraries.get(_key, _iLevel);
+            }
         }
     }
     return pIT;
@@ -245,7 +260,17 @@ types::InternalType* Context::get(const Symbol& _key, int _iLevel)
 
 types::InternalType* Context::getCurrentLevel(const Symbol& _key)
 {
-    return variables.get(_key, m_iLevel);
+    types::InternalType* pIT = variables.get(_key, m_iLevel);
+    if (pIT == nullptr)
+    {
+        auto f = classes.find(_key);
+        if (f != classes.end())
+        {
+            pIT = f->second;
+        }
+    }
+
+    return pIT;
 }
 
 types::InternalType* Context::getCurrentLevel(Variable* _var)
@@ -308,7 +333,13 @@ int Context::getMacrosName(std::list<std::wstring>& lst)
 
 int Context::getFunctionsName(std::list<std::wstring>& lst)
 {
-    return variables.getFunctionsName(lst);
+    variables.getFunctionsName(lst);
+    for (auto&& c : classes)
+    {
+        lst.push_back(c.first.getName());
+    }
+
+    return lst.size();
 }
 
 int Context::getVarsInfoForWho(std::list<std::pair<std::wstring, int>>& lst, bool bSorted)
@@ -375,6 +406,31 @@ bool Context::put(const Symbol& _key, types::InternalType* _pIT)
     return put(var, _pIT);
 }
 
+bool Context::addClassdef(types::Classdef* def)
+{
+    Symbol s = Symbol(def->getName());
+    def->IncreaseRef();
+    if (classes.find(s) != classes.end())
+    {
+        classes[s]->DecreaseRef();
+        classes[s]->killMe();
+    }
+
+    classes[s] = def;
+    return true;
+}
+
+types::Classdef* Context::getClassdef(const std::wstring& name)
+{
+    if (classes.find(symbol::Symbol(name)) != classes.end())
+    {
+        types::Classdef* c = classes[symbol::Symbol(name)]->getAs<types::Classdef>();
+        return classes[symbol::Symbol(name)];
+    }
+
+    return nullptr;
+}
+
 bool Context::remove(const Symbol& _key)
 {
     bool ret = variables.remove(_key, m_iLevel);
@@ -384,7 +440,7 @@ bool Context::remove(const Symbol& _key)
         varStack.top()->erase(_key);
     }
 
-    ret = ret | libraries.remove(_key, m_iLevel);
+    ret = ret || libraries.remove(_key, m_iLevel);
     return ret;
 }
 
@@ -721,4 +777,39 @@ int Context::protectedVars(std::list<std::wstring>& vars)
 {
     return variables.getProtectedVarsName(vars);
 }
+
+void Context::scope_object_begin(types::InternalType* object, const std::wstring& method)
+{
+    if (object && object->isObject())
+    {
+        object->getAs<types::Object>()->scope_begin(method);
+    }
+
+    objects.push(object);
+}
+
+types::InternalType* Context::getCurrentObject()
+{
+    if (objects.size() != 0)
+    {
+        return objects.top();
+    }
+
+    return nullptr;
+}
+
+void Context::scope_object_end()
+{
+    if (objects.size() != 0)
+    {
+        types::InternalType* p = objects.top();
+        if (p != nullptr && p->isObject())
+        {
+            p->getAs<types::Object>()->scope_end();
+        }
+    }
+
+    objects.pop();
+}
+
 }

@@ -104,6 +104,22 @@
 #define SCI_ARGUMENTS               L"arguments"
 #define SCI_ARGUMENTS_END           L"end"
 
+// Syntax to have class definition structure
+#define SCI_CLASSDEF               L"classdef"
+#define SCI_CLASSDEF_END           L"end"
+
+// Syntax to have properties definition structure
+#define SCI_PROPERTIES             L"properties"
+#define SCI_PROPERTIES_END         L"end"
+
+// Syntax to have enumeration definition structure
+#define SCI_ENUMERATION            L"enumeration"
+#define SCI_ENUMERATION_END        L"end"
+
+// Syntax to have methods definition structure
+#define SCI_METHODS                L"methods"
+#define SCI_METHODS_END            L"end"
+
 // Syntax to have if control structure
 #define SCI_IF			            L"if"
 #define SCI_THEN		            L"then"

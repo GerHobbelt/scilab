@@ -947,6 +947,19 @@ types::Function::ReturnValue VariableToString(types::InternalType* pIT, const wc
 {    
     if (pIT->hasToString() == false)
     {
+        if (pIT->isObject())
+        {
+            types::Object* obj = pIT->getAs<types::Object>();
+            if (obj->hasMethod(L"disp"))
+            {
+                types::typed_list in;
+                types::optional_list opt;
+                types::typed_list out;
+                types::Function::ReturnValue ret = obj->callMethod(L"disp", in, opt, 0, out);
+                return ret;
+            }
+        }
+
         types::Function::ReturnValue ret = types::Function::Error;
         //call overload %type_p
         types::typed_list in;

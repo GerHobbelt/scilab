@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2015 - Scilab Enterprises - Antoine ELIAS
 *
@@ -147,7 +147,9 @@ types::Function::ReturnValue sci_hdf5_save(types::typed_list &in, int _iRetCount
             types::InternalType* pIT = ctx->getAtLevel(symbol::Symbol(wvar), SCOPE_CONSOLE);
 
             //do not save protected variables nor macrofile
-            if (ctx->isprotected(symbol::Symbol(wvar)) || pIT->isMacroFile() || pIT->isFunction() || pIT->isLibrary())
+            if (ctx->isprotected(symbol::Symbol(wvar)) ||  pIT->isMacroFile() ||
+                pIT->isFunction() ||  pIT->isLibrary() ||
+                pIT->isClassdef() || pIT->isObject())
             {
                 continue;
             }
@@ -185,6 +187,12 @@ types::Function::ReturnValue sci_hdf5_save(types::typed_list &in, int _iRetCount
                 if (pIT == NULL)
                 {
                     Scierror(999, _("%s: Wrong value for input argument #%d: Defined variable expected.\n"), fname.data(), i + 1);
+                    return types::Function::Error;
+                }
+
+                if (pIT->isClassdef() || pIT->isObject())
+                {
+                    Scierror(999, _("%s: Wrong type for variable \"%ls\", Classdef and Object cannot be saved.\n"), fname.data(), wvar, i + 1);
                     return types::Function::Error;
                 }
 

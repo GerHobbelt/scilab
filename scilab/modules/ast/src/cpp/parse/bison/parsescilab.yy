@@ -120,7 +120,8 @@ static void print_rules(const std::string& _parent, const double _value)
         }                                                           \
     }
 
-
+#define EMPTY_LIST_EXP new ast::exps_t
+#define EMPTY_TUPLE_LIST_EXP new std::tuple<ast::exps_t, ast::exps_t, ast::exps_t>
 %}
 
 //%pure-parser
@@ -144,6 +145,7 @@ static void print_rules(const std::string& _parent, const double _value)
 
     ast::exps_t*                t_list_var;
     ast::exps_t*                t_list_exp;
+    std::tuple<ast::exps_t, ast::exps_t, ast::exps_t>* t_tuple_list_exp;
     ast::Exp*                   t_exp;
 
     ast::SeqExp*                t_seq_exp;
@@ -182,6 +184,9 @@ static void print_rules(const std::string& _parent, const double _value)
 
     ast::FunctionDec*           t_function_dec;
     ast::ArgumentDec*           t_argument_dec;
+    ast::EnumDec*               t_enum_dec;
+    ast::PropertiesDec*         t_properties_dec;
+    ast::MethodsDec*               t_methods_dec;
 
     ast::ArrayListExp*          t_arraylist_exp;
     ast::AssignListExp*         t_assignlist_exp;
@@ -256,6 +261,11 @@ static void print_rules(const std::string& _parent, const double _value)
 %token ASSIGN           "="
 
 %token ARGUMENTS        "arguments"
+
+%token CLASSDEF         "classdef"
+%token ENUMERATION      "enumeration"
+%token METHODS          "methods"
+%token PROPERTIES       "properties"
 
 %token IF               "if"
 %token THEN             "then"
@@ -365,6 +375,17 @@ static void print_rules(const std::string& _parent, const double _value)
 %type <t_list_var>          functionDeclarationReturns
 %type <t_list_var>          functionDeclarationArguments
 %type <t_list_var>          idList
+
+// Class Declaration
+%type <t_exp>               classDeclaration
+%type <t_enum_dec>          enumerationDeclaration
+%type <t_list_exp>          enumerationBody
+%type <t_properties_dec>    propertiesDeclaration
+%type <t_list_exp>          propertiesBody
+%type <t_methods_dec>       methodsDeclaration
+%type <t_list_exp>          methodsBody
+%type <t_list_exp>          superClassList
+%type <t_tuple_list_exp>    classBlockList
 
  // Variable Declaration
 %type <t_assign_exp>        variableDeclaration
@@ -549,6 +570,7 @@ SEMI                            { $$ = new LineBreakStr(); $$->bVerbose = false;
 /* Expression or Instruction : quite similar. */
 expression :
 functionDeclaration                         { $$ = $1; print_rules("expression", "functionDeclaration");}
+| classDeclaration                          { $$ = $1; print_rules("expression", "classDeclaration");}
 | functionCall            %prec TOPLEVEL    { $$ = $1; print_rules("expression", "functionCall");}
 | variableDeclaration                       { $$ = $1; print_rules("expression", "variableDeclaration");}
 | argumentsControl                          { $$ = $1; print_rules("expression", "argumentsControl");}
@@ -649,11 +671,11 @@ simpleFunctionCall              { $$ = $1; print_rules("functionCall", "simpleFu
 ** or extract cell values foo{arg1, arg2, arg3}
 */
 simpleFunctionCall :
-
 ID LPAREN functionArgs RPAREN       { $$ = new ast::CallExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *$3); delete $1;print_rules("simpleFunctionCall", "ID LPAREN functionArgs RPAREN");}
 | ID LBRACE functionArgs RBRACE     { $$ = new ast::CellCallExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *$3); delete $1;print_rules("simpleFunctionCall", "ID LBRACE functionArgs RBRACE");}
 | ID LPAREN RPAREN                  { $$ = new ast::CallExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::exps_t); delete $1;print_rules("simpleFunctionCall", "ID LPAREN RPAREN");}
 | ID LBRACE RBRACE                  { $$ = new ast::CellCallExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(*$1)), *new ast::exps_t); delete $1;print_rules("simpleFunctionCall", "ID LBRACE RBRACE");}
+| ENUMERATION LPAREN functionArgs RPAREN { $$ = new ast::CallExp(@$, *new ast::SimpleVar(@1, symbol::Symbol(L"enumeration")), *$3); print_rules("simpleFunctionCall", "ENUMERATION LPAREN functionArgs RPAREN");}
 ;
 
 /*
@@ -701,12 +723,156 @@ variable                                    {$$ = new ast::exps_t;$$->push_back(
 ;
 
 /*
+** -*- CLASS DECLARATION -*-
+*/
+/* How to declare a class */
+classDeclaration :
+CLASSDEF ID declarationBreak classBlockList END { $$ = new ast::ClassDec(@$, symbol::Symbol(*$2), *EMPTY_LIST_EXP, std::get<0>(*$4), std::get<1>(*$4), std::get<2>(*$4)); delete($4); }
+| CLASSDEF ID LT superClassList declarationBreak classBlockList END { $$ = new ast::ClassDec(@$, symbol::Symbol(*$2), *$4, std::get<0>(*$6), std::get<1>(*$6), std::get<2>(*$6)); delete($6); }
+| CLASSDEF ID declarationBreak /* epsilon */ END { $$ = new ast::ClassDec(@$, symbol::Symbol(*$2), *EMPTY_LIST_EXP, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP); }
+| CLASSDEF ID LT superClassList declarationBreak /* epsilon */ END { $$ = new ast::ClassDec(@$, symbol::Symbol(*$2), *$4, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP); }
+;
+
+/*
+** -*- SUPERCLASS LIST -*-
+*/
+/* How to declare class superclass */
+superClassList :
+ID { $$ = new ast::exps_t; $$->push_back(new ast::SimpleVar(@1, symbol::Symbol(*$1))); }
+| superClassList AND ID { $$ = $1; $$->push_back(new ast::SimpleVar(@3, symbol::Symbol(*$3)));}
+;
+
+/*
+** -*- CLASS Block List -*-
+*/
+classBlockList :
+classBlockList enumerationDeclaration declarationBreak {
+                        $$ = $1;
+                        std::get<0>(*$$).push_back($2);
+                    }
+| classBlockList propertiesDeclaration declarationBreak {
+                        $$ = $1;
+                        std::get<1>(*$$).push_back($2);
+                    }
+| classBlockList methodsDeclaration declarationBreak {
+                        $$ = $1;
+                        std::get<2>(*$$).push_back($2);
+                    }
+| enumerationDeclaration declarationBreak {
+                        $$ = EMPTY_TUPLE_LIST_EXP;
+                        std::get<0>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<1>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<2>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<0>(*$$).push_back($1);
+                    }
+| propertiesDeclaration declarationBreak {
+                        $$ = EMPTY_TUPLE_LIST_EXP;
+                        std::get<0>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<1>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<2>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<1>(*$$).push_back($1);
+                    }
+| methodsDeclaration declarationBreak { 
+                        $$ = EMPTY_TUPLE_LIST_EXP;
+                        std::get<0>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<1>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<2>(*$$) = *EMPTY_LIST_EXP;
+                        std::get<2>(*$$).push_back($1);
+                    }
+;
+
+/*
+** -*- ENUMERATION DECLARATION -*-
+*/
+/* How to declare an enumeration */
+enumerationDeclaration :
+ENUMERATION declarationBreak enumerationBody END { $$ = new ast::EnumDec(@$, *EMPTY_LIST_EXP, *$3); }
+| ENUMERATION declarationBreak END { $$ = new ast::EnumDec(@$, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP); }
+| ENUMERATION LPAREN functionArgs RPAREN declarationBreak enumerationBody END { $$ = new ast::EnumDec(@$, *$3, *$6); }
+| ENUMERATION LPAREN functionArgs RPAREN declarationBreak END { $$ = new ast::EnumDec(@$, *$3, *EMPTY_LIST_EXP); }
+;
+
+/*
+** -*- ENUMERATION BODY -*-
+*/
+/* How to declare a enumeration content */
+enumerationBody :
+enumerationBody ID declarationBreak { $$ = $1; $$->push_back(new ast::SimpleVar(@2, symbol::Symbol(*$2))); }
+| enumerationBody simpleFunctionCall declarationBreak { $$ = $1; $$->push_back($2); }
+| enumerationBody COMMENT declarationBreak { $$ = $1; $$->push_back(new ast::CommentExp(@2, $2)); }
+| ID declarationBreak { $$ = new ast::exps_t; $$->push_back(new ast::SimpleVar(@1, symbol::Symbol(*$1))); }
+| simpleFunctionCall declarationBreak { $$ = new ast::exps_t; $$->push_back($1); }
+| COMMENT declarationBreak { $$ = new ast::exps_t; $$->push_back(new ast::CommentExp(@1, $1)); }
+;
+
+/*
+** -*- PROPERTIES DECLARATION -*-
+*/
+/* How to declare properties */
+propertiesDeclaration :
+PROPERTIES declarationBreak propertiesBody END { $$ = new ast::PropertiesDec(@$, *EMPTY_LIST_EXP, *$3); }
+| PROPERTIES declarationBreak END { $$ = new ast::PropertiesDec(@$, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP); }
+| PROPERTIES LPAREN functionArgs RPAREN declarationBreak propertiesBody END { $$ = new ast::PropertiesDec(@$, *$3, *$6); }
+| PROPERTIES LPAREN functionArgs RPAREN declarationBreak END { $$ = new ast::PropertiesDec(@$, *$3, *EMPTY_LIST_EXP); }
+;
+
+/*
+** -*- PROPERTIES BODY -*-
+*/
+/* How to declare properties content */
+propertiesBody :
+propertiesBody argumentDeclaration declarationBreak { $$ = $1; $$->push_back($2); }
+| propertiesBody COMMENT declarationBreak { $$ = $1; $$->push_back(new ast::CommentExp(@2, $2)); }
+| argumentDeclaration declarationBreak { $$ = new ast::exps_t; $$->push_back($1); }
+| COMMENT declarationBreak { $$ = new ast::exps_t; $$->push_back(new ast::CommentExp(@1, $1)); }
+;
+
+/*
+** -*- METHODS DECLARATION -*-
+*/
+/* How to declare methods */
+methodsDeclaration :
+METHODS declarationBreak methodsBody END { $$ = new ast::MethodsDec(@$, *EMPTY_LIST_EXP, *$3); }
+| METHODS declarationBreak END { $$ = new ast::MethodsDec(@$, *EMPTY_LIST_EXP, *EMPTY_LIST_EXP); }
+| METHODS LPAREN functionArgs RPAREN declarationBreak methodsBody END { $$ = new ast::MethodsDec(@$, *$3, *$6);}
+| METHODS LPAREN functionArgs RPAREN declarationBreak END { $$ = new ast::MethodsDec(@$, *$3, *EMPTY_LIST_EXP);}
+;
+
+/*
+** -*- METHODS BODY -*-
+*/
+/* How to declare methods content */
+methodsBody :
+methodsBody functionDeclaration declarationBreak { $$ = $1; $$->push_back($2); }
+| methodsBody ID ASSIGN ID declarationBreak {
+                  $$ = $1;
+                  $$->push_back(new ast::AssignExp(@$,
+                                *new ast::SimpleVar(@2, symbol::Symbol(*$2)),
+                                *new ast::SimpleVar(@4, symbol::Symbol(*$4))));
+                  delete $2;
+                  delete $4;
+                }
+
+| methodsBody COMMENT declarationBreak { $$ = $1; $1->push_back(new ast::CommentExp(@2, $2)); }
+| functionDeclaration declarationBreak { $$ = new ast::exps_t; $$->push_back($1); }
+| ID ASSIGN ID declarationBreak {
+                  $$ = new ast::exps_t;
+                  $$->push_back(new ast::AssignExp(@$,
+                                *new ast::SimpleVar(@1, symbol::Symbol(*$1)),
+                                *new ast::SimpleVar(@3, symbol::Symbol(*$3))));
+                  delete $1;
+                  delete $3;
+                }
+| COMMENT declarationBreak { $$ = new ast::exps_t; $$->push_back(new ast::CommentExp(@1, $1)); }
+;
+
+/*
 ** -*- FUNCTION DECLARATION -*-
 */
 /* How to declare a function */
 functionDeclaration :
-FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction {
-                  print_rules("functionDeclaration", "FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction");
+FUNCTION ID ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction {
+                  print_rules("functionDeclaration", "FUNCTION ID ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction");
                   ast::exps_t* tmp = new ast::exps_t;
                   tmp->push_back(new ast::SimpleVar(@2, symbol::Symbol(*$2)));
                   $$ = new ast::FunctionDec(@$,
@@ -717,8 +883,8 @@ FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak func
                   delete $2;
                   delete $4;
                 }
-| FUNCTION LBRACK functionDeclarationReturns RBRACK ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction {
-                  print_rules("functionDeclaration", "FUNCTION LBRACK functionDeclarationReturns RBRACK ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction");
+| FUNCTION LBRACK functionDeclarationReturns RBRACK ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction {
+                  print_rules("functionDeclaration", "FUNCTION LBRACK functionDeclarationReturns RBRACK ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction");
                   $$ = new ast::FunctionDec(@$,
                                 symbol::Symbol(*$6),
                                 *new ast::ArrayListVar(@7, *$7),
@@ -726,8 +892,8 @@ FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak func
                                 *$9);
                   delete $6;
                 }
-| FUNCTION LBRACK RBRACK ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction {
-                  print_rules("functionDeclaration", "FUNCTION LBRACK RBRACK ASSIGN ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction");
+| FUNCTION LBRACK RBRACK ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction {
+                  print_rules("functionDeclaration", "FUNCTION LBRACK RBRACK ASSIGN ID functionDeclarationArguments declarationBreak functionBody endfunction");
                   ast::exps_t* tmp = new ast::exps_t;
                   $$ = new ast::FunctionDec(@$,
                                 symbol::Symbol(*$5),
@@ -736,8 +902,8 @@ FUNCTION ID ASSIGN ID functionDeclarationArguments functionDeclarationBreak func
                                 *$8);
                   delete $5;
                 }
-| FUNCTION ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction {
-                  print_rules("functionDeclaration", "FUNCTION ID functionDeclarationArguments functionDeclarationBreak functionBody endfunction");
+| FUNCTION ID functionDeclarationArguments declarationBreak functionBody endfunction {
+                  print_rules("functionDeclaration", "FUNCTION ID functionDeclarationArguments declarationBreak functionBody endfunction");
                   ast::exps_t* tmp = new ast::exps_t;
                   $$ = new ast::FunctionDec(@$,
                                 symbol::Symbol(*$2),
@@ -833,15 +999,15 @@ idList COMMA ID {
 ;
 
 /*
-** -*- FUNCTION DECLARATION BREAK -*-
+** -*- DECLARATION BREAK -*-
 */
-/* Fake Rule : How can we be sure this is the 'function' prototype ending */
-functionDeclarationBreak :
-lineEnd         { /* !! Do Nothing !! */ print_rules("functionDeclarationBreak", "lineEnd");}
-| SEMI          { /* !! Do Nothing !! */ print_rules("functionDeclarationBreak", "SEMI");}
-| SEMI EOL      { /* !! Do Nothing !! */ print_rules("functionDeclarationBreak", "SEMI EOL");}
-| COMMA         { /* !! Do Nothing !! */ print_rules("functionDeclarationBreak", "COMMA");}
-| COMMA EOL     { /* !! Do Nothing !! */ print_rules("functionDeclarationBreak", "COMMA EOL");}
+/* Fake Rule : How can we be sure this is the 'function'/'class'/'enumeration' prototype ending */
+declarationBreak :
+lineEnd         { /* !! Do Nothing !! */ print_rules("declarationBreak", "lineEnd");}
+| SEMI          { /* !! Do Nothing !! */ print_rules("declarationBreak", "SEMI");}
+| SEMI EOL      { /* !! Do Nothing !! */ print_rules("declarationBreak", "SEMI EOL");}
+| COMMA         { /* !! Do Nothing !! */ print_rules("declarationBreak", "COMMA");}
+| COMMA EOL     { /* !! Do Nothing !! */ print_rules("declarationBreak", "COMMA EOL");}
 ;
 
 /*
@@ -1082,6 +1248,7 @@ NOT variable                %prec NOT       { $$ = new ast::NotExp(@$, *$2); pri
 | LPAREN variableFields RPAREN              { $$ = new ast::ArrayListExp(@$, *$2); print_rules("variable", "LPAREN variableFields RPAREN");}
 | comparison                                { $$ = $1; print_rules("variable", "comparison");}
 | variable LPAREN functionArgs RPAREN       { $$ = new ast::CallExp(@$, *$1, *$3); print_rules("variable", "variable LPAREN functionArgs RPAREN");}
+| variable LPAREN RPAREN                    { $$ = new ast::CallExp(@$, *$1, *new ast::exps_t); print_rules("variable", "variable LPAREN RPAREN");}
 | functionCall LPAREN functionArgs RPAREN   { $$ = new ast::CallExp(@$, *$1, *$3); print_rules("variable", "functionCall LPAREN functionArgs RPAREN");}
 | functionCall LPAREN RPAREN                { $$ = new ast::CallExp(@$, *$1, *new ast::exps_t); print_rules("variable", "functionCall LPAREN RPAREN");}
 ;
@@ -1293,7 +1460,7 @@ ARGUMENTS EOL argumentsDeclarations END           { $$ = $3; print_rules("argume
 ** -*- ARGUMENTS DECLARATIONS -*-
 */
 argumentsDeclarations :
-argumentsDeclarations argumentDeclaration lineEnd       {
+argumentsDeclarations argumentDeclaration declarationBreak       {
         $1->getExps().push_back($2);
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
@@ -1303,7 +1470,7 @@ argumentsDeclarations argumentDeclaration lineEnd       {
         $$ = $1;
         print_rules("argumentsDeclarations", "argumentsDeclarations EOL argumentDeclaration EOL");
     }
-| argumentDeclaration lineEnd                           {
+| argumentDeclaration declarationBreak                           {
         ast::exps_t* tmp = new ast::exps_t;
         tmp->push_back($1);
         $$ = new ast::ArgumentsExp(@$, *tmp);

@@ -74,6 +74,10 @@ public:
     virtual void visit(const ast::VarDec & e);
     virtual void visit(const ast::FunctionDec & e);
     virtual void visit(const ast::ArgumentDec & e);
+    virtual void visit(const ast::ClassDec & e);
+    virtual void visit(const ast::EnumDec & e);
+    virtual void visit(const ast::PropertiesDec & e);
+    virtual void visit(const ast::MethodsDec & e);
     virtual void visit(const ast::ListExp & e);
 };
 

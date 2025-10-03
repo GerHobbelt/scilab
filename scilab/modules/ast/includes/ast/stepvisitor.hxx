@@ -216,6 +216,26 @@ class EXTERN_AST StepVisitor : public RunVisitorT<StepVisitor>
         visitprivate(e);
     }
 
+    void visit (const ClassDec &e)
+    {
+        visitprivate(e);
+    }
+
+    void visit (const EnumDec &e)
+    {
+        visitprivate(e);
+    }
+
+    void visit (const PropertiesDec &e)
+    {
+        visitprivate(e);
+    }
+
+    void visit (const MethodsDec &e)
+    {
+        visitprivate(e);
+    }
+
     void visit(const ListExp &e)
     {
         visitprivate(e);

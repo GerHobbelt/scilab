@@ -109,6 +109,10 @@ private:
     void visit(const ast::AssignListExp & e);
     void visit(const ast::VarDec & e);
     void visit(const ast::ArgumentDec & e);
+    void visit(const ast::ClassDec & e);
+    void visit(const ast::EnumDec & e);
+    void visit(const ast::PropertiesDec & e);
+    void visit(const ast::MethodsDec & e);
 };
 
 } // namespace slint

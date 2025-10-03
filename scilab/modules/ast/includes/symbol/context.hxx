@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2007-2008 - INRIA - Bruno JOFRET
 *
@@ -24,6 +24,8 @@
 #include "function.hxx"
 #include "variables.hxx"
 #include "libraries.hxx"
+#include "classdef.hxx"
+#include "object.hxx"
 
 extern "C"
 {
@@ -40,6 +42,8 @@ class EXTERN_AST Context
 public:
     typedef std::map<Symbol, Variable*> VarList;
     typedef std::stack<VarList*> VarStack;
+    typedef std::stack<types::InternalType*> ObjectStack;
+    typedef std::map<Symbol, types::Classdef*> Classes;
 
     static Context* getInstance(void);
 
@@ -48,7 +52,7 @@ public:
     /** Open a context scope i.e
     ** open the heap table one
     ** and the env table too. */
-    void scope_begin();
+    void scope_begin(types::InternalType* object = nullptr, const std::wstring& method = L"");
 
     /** Close a context scope i.e
     ** close the heap table one
@@ -95,6 +99,10 @@ public:
     int getScopedVars(std::list<Variable*>& lst, int iLevel);
     int getGlobalVars(std::list<Variable*>& lst);
     int getLocalVars(std::list<Variable*>& lst, int iLevel = -1);
+    types::InternalType* getCurrentObject();
+    void scope_object_begin(types::InternalType* object, const std::wstring& method);
+    void scope_object_end();
+    
     /* global functions */
 
     /*return global variable visibility status*/
@@ -130,6 +138,8 @@ public:
     bool put(Variable* _var, types::InternalType* _pIT);
     /*add symbol and value in the previous scope*/
     bool putInPreviousScope(Variable* _var, types::InternalType* _pIT);
+    bool addClassdef(types::Classdef* def);
+    types::Classdef* getClassdef(const std::wstring& name);
 
     /* remove symbol/value association */
     //clear("a")
@@ -160,6 +170,8 @@ private:
     VarStack varStack;
     Variables variables;
     Libraries libraries;
+    ObjectStack objects;
+    Classes classes;
     VarList* console;
     int m_iLevel;
 

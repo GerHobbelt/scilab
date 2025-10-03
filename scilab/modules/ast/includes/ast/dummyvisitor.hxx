@@ -293,6 +293,40 @@ protected:
             arg->accept(*this);
         }
     }
+
+    virtual void visit (const ClassDec  &e)
+    {
+        exps_t args = e.getEnumeration();
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+        args = e.getMethods();
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+        args = e.getProperties();
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+    }
+
+    virtual void visit (const EnumDec  &e)
+    {
+        /* FIXME */
+    }
+
+    virtual void visit (const PropertiesDec  &e)
+    {
+        /* FIXME */
+    }
+
+    virtual void visit (const MethodsDec  &e)
+    {
+        /* FIXME */
+    }
     /** \} */
 
     /** \name Visit Type dedicated Expressions related node.

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2012-2013 - OCAMLPRO INRIA - Fabrice LE FESSANT
  *  Copyright (C) 2014 - Scilab Enterprises - Antoine ELIAS
@@ -559,6 +559,74 @@ private :
                 exps_t* args_list = get_vars();
                 ArrayListVar* args = new ArrayListVar(args_loc, *args_list);
                 exp = new FunctionDec(loc, *args, *body->getAs<SeqExp>());
+                break;
+            }
+            case 42:
+            {
+                symbol::Symbol* name = get_Symbol();
+
+                exps_t superclasses;
+                int count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    superclasses.push_back(get_exp());
+                }
+
+                exps_t enumeration;
+                count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    enumeration.push_back(get_exp());
+                }
+                exps_t properties;
+                count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    properties.push_back(get_exp());
+                }
+
+                exps_t methods;
+                count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    methods.push_back(get_exp());
+                }
+
+                exp = new ClassDec(loc, *name, superclasses, enumeration, properties, methods);
+                delete name;
+                break;
+            }
+            case 43: //EnumDec
+            case 44: //PropertiesDec
+            case 45: //MethodsDec
+            {
+                exps_t attrs;
+                int count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    attrs.push_back(get_exp());
+                }
+
+                exps_t items;
+                count = get_int32();
+                for (int i = 0; i < count; ++i)
+                {
+                    items.push_back(get_exp());
+                }
+
+                switch (code)
+                {
+                    case 43:
+                        exp = new EnumDec(loc, attrs, items);
+                        break;
+                    case 44:
+                        exp = new PropertiesDec(loc, attrs, items);
+                        break;
+                    case 45:
+                        exp = new MethodsDec(loc, attrs, items);
+                        break;
+                }
+
                 break;
             }
             default:

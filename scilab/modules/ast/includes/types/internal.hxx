@@ -1,8 +1,8 @@
-/*
-*  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-*  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
-*  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
-*
+﻿/*
+ *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+ *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
+ *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
+ *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
@@ -11,36 +11,35 @@
  * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
-*
-*/
-
+ *
+ */
 
 #ifndef __INTERNAL_HXX__
 #define __INTERNAL_HXX__
 
-#include <vector>
-#include <unordered_map>
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 #include <string>
+#include <unordered_map>
+#include <vector>
 
 extern "C"
 {
-#include "dynlib_ast.h"
 #include "configvariable_interface.h"
+#include "dynlib_ast.h"
 }
 
-#include "scilabexception.hxx"
 #include "localization.hxx"
+#include "scilabexception.hxx"
 #ifndef NDEBUG
 #include "inspector.hxx"
 #endif
 
 #define bsiz 4096
 
-//#define _SCILAB_DEBUGREF_
+// #define _SCILAB_DEBUGREF_
 #ifdef _SCILAB_DEBUGREF_
-//#define _SCILAB_DEBUGREF_WITHOUT_START_END
+// #define _SCILAB_DEBUGREF_WITHOUT_START_END
 #define DecreaseRef() _decreaseref(__FILE__, __LINE__)
 #define IncreaseRef() _increaseref(__FILE__, __LINE__)
 #define killMe() _killme(__FILE__, __LINE__)
@@ -57,15 +56,15 @@ namespace types
 ** List of types
 */
 class InternalType;
-typedef std::vector<InternalType *> typed_list;
-typedef std::unordered_map<std::wstring, InternalType *> optional_list;
+typedef std::vector<InternalType*> typed_list;
+typedef std::unordered_map<std::wstring, InternalType*> optional_list;
 
 class EXTERN_AST InternalType
 {
-public :
+  public:
     enum ScilabType
     {
-        ScilabNull = 0, //no type, no data, nothing !
+        ScilabNull = 0, // no type, no data, nothing !
         /* Internal Type */
         ScilabInternal,
         /* Generic Types */
@@ -101,7 +100,7 @@ public :
         /* User */
         ScilabUserType,
         /*For list operation*/
-        ScilabListOperation, //parent type
+        ScilabListOperation, // parent type
         ScilabListInsertOperation,
         ScilabListDeleteOperation,
         ScilabListUndefinedOperation,
@@ -112,12 +111,15 @@ public :
         ScilabSparseBool,
         ScilabHandle,
         ScilabVoid,
-        ScilabLibrary
+        ScilabLibrary,
+        ScilabClassdef,
+        ScilabObject,
+        ScilabObjectMethod
     };
 
     enum ScilabId
     {
-        IdNull, //no type, no data, nothing !
+        IdNull, // no type, no data, nothing !
         /* Internal Type */
         IdInternal,
         /* Generic Types */
@@ -171,7 +173,7 @@ public :
         /* User */
         IdUserType,
         /*For list operation*/
-        IdListOperation, //parent type
+        IdListOperation, // parent type
         IdListInsertOperation,
         IdListDeleteOperation,
         IdListUndefinedOperation,
@@ -185,10 +187,13 @@ public :
         IdScalarHandle,
         IdVoid,
         IdLibrary,
-        IdLast //msut always be the last value
+        IdClassdef,
+        IdObject,
+        IdObjectMethod,
+        IdLast // must always be the last value
     };
 
-protected :
+  protected:
     InternalType() : m_iRef(0), m_bAllowDelete(true), m_bPrintFromStart(true), m_iSavePrintState(0), m_iRows1PrintState(0), m_iCols1PrintState(0), m_iRows2PrintState(0), m_iCols2PrintState(0), bKillMe(false)
     {
 #ifdef _SCILAB_DEBUGREF_
@@ -201,9 +206,8 @@ protected :
 #endif
     }
 
-public :
-
-    virtual                         ~InternalType()
+  public:
+    virtual ~InternalType()
     {
 #ifdef _SCILAB_DEBUGREF_
 #if defined(_SCILAB_DEBUGREF_WITHOUT_START_END)
@@ -215,18 +219,18 @@ public :
 #endif
     }
 
-    virtual void                    whoAmI(void);
-    virtual bool                    isAssignable(void);
-    virtual ScilabType              getType(void) = 0 ; //{ return ScilabInternal; }
-    virtual ScilabId                getId(void) = 0 ; //{ return ScilabInternal; }
-    virtual bool                    hasToString();
-    virtual bool                    toString(std::wostringstream& ostr) = 0;
-    virtual std::wstring            toStringInLine();
-    virtual InternalType*           clone(void) = 0;
-    virtual ast::Exp*               getExp(const Location& /*loc*/);
+    virtual void whoAmI(void);
+    virtual bool isAssignable(void);
+    virtual ScilabType getType(void) = 0; //{ return ScilabInternal; }
+    virtual ScilabId getId(void) = 0;     //{ return ScilabInternal; }
+    virtual bool hasToString();
+    virtual bool toString(std::wostringstream& ostr) = 0;
+    virtual std::wstring toStringInLine();
+    virtual InternalType* clone(void) = 0;
+    virtual ast::Exp* getExp(const Location& /*loc*/);
 
-    template <typename T, typename F, typename ... A>
-    T* checkRef(T* _pIT, F f, A ... a)
+    template<typename T, typename F, typename... A>
+    T* checkRef(T* _pIT, F f, A... a)
     {
         if (getRef() > 1)
         {
@@ -255,10 +259,8 @@ public :
         return _pIT;
     }
 
-
-
 #ifdef _SCILAB_DEBUGREF_
-    inline void _killme(const char * f, int l)
+    inline void _killme(const char* f, int l)
     {
 #if defined(_SCILAB_DEBUGREF_WITHOUT_START_END)
         if (getStartProcessing() == 0 && getEndProcessing() == 0)
@@ -274,7 +276,7 @@ public :
         }
     }
 
-    inline void _increaseref(const char * f, int l)
+    inline void _increaseref(const char* f, int l)
     {
         m_iRef++;
 #if defined(_SCILAB_DEBUGREF_WITHOUT_START_END)
@@ -285,7 +287,7 @@ public :
         }
     }
 
-    inline void _decreaseref(const char * f, int l)
+    inline void _decreaseref(const char* f, int l)
     {
         if (m_iRef > 0)
         {
@@ -309,12 +311,12 @@ public :
         }
     }
 
-    inline void IncreaseRef()
+    virtual inline void IncreaseRef()
     {
         m_iRef++;
     }
 
-    inline void DecreaseRef()
+    virtual inline void DecreaseRef()
     {
         if (m_iRef > 0)
         {
@@ -339,11 +341,11 @@ public :
     }
 
     virtual bool isTrue();
-    virtual bool neg(InternalType *& /*out*/);
-    virtual bool transpose(InternalType *& /*out*/);
-    virtual bool adjoint(InternalType *& out);
+    virtual bool neg(InternalType*& /*out*/);
+    virtual bool transpose(InternalType*& /*out*/);
+    virtual bool adjoint(InternalType*& out);
     virtual bool isFieldExtractionOverloadable() const;
-    virtual bool invoke(typed_list & /*in*/, optional_list & /*opt*/, int /*_iRetCount*/, typed_list & /*out*/, const ast::Exp & /*e*/);
+    virtual bool invoke(typed_list& /*in*/, optional_list& /*opt*/, int /*_iRetCount*/, typed_list& /*out*/, const ast::Exp& /*e*/);
     virtual bool isInvokable() const;
     virtual bool hasInvokeOption() const;
     virtual int getInvokeNbIn();
@@ -357,19 +359,19 @@ public :
     }
 
     /* return type as string ( double, int, cell, list, ... )*/
-    virtual std::wstring            getTypeStr() const = 0;
+    virtual std::wstring getTypeStr() const = 0;
     /* return type as short string ( s, i, ce, l, ... )*/
-    virtual std::wstring            getShortTypeStr() const = 0;
-    virtual bool                    operator==(const InternalType& it);
-    virtual bool                    operator!=(const InternalType& it);
+    virtual std::wstring getShortTypeStr() const = 0;
+    virtual bool operator==(const InternalType& it);
+    virtual bool operator!=(const InternalType& it);
 
     /**
     ** GenericType
     ** \{
     */
 
-    template <class T>
-    inline T*                              getAs(void)
+    template<class T>
+    inline T* getAs(void)
     {
         return static_cast<T*>(this);
     }
@@ -418,27 +420,30 @@ public :
     virtual bool isLibrary(void);
     virtual bool isUserType(void);
     virtual bool isVoid(void);
+    virtual bool isClassdef(void);
+    virtual bool isObject(void);
+    virtual bool isObjectMethod(void);
 
+    virtual bool isA(const std::wstring& type);
     void clearPrintState();
 
-protected :
-    int          m_iRef;
-    //use to know if we can delete this variables or if it's link to a scilab variable.
-    bool         m_bAllowDelete;
+  protected:
+    int m_iRef;
+    // use to know if we can delete this variables or if it's link to a scilab variable.
+    bool m_bAllowDelete;
 
     /*variables to manage print taking care of lines*/
     bool m_bPrintFromStart;
-    int  m_iSavePrintState;
-    int  m_iRows1PrintState;
-    int  m_iCols1PrintState;
-    int  m_iRows2PrintState;
-    int  m_iCols2PrintState;
+    int m_iSavePrintState;
+    int m_iRows1PrintState;
+    int m_iCols1PrintState;
+    int m_iRows2PrintState;
+    int m_iCols2PrintState;
 
     bool bKillMe;
-
 };
 
-}
+} // namespace types
 
 #ifdef _SCILAB_DEBUGREF_
 #undef _SCILAB_DEBUGREF_

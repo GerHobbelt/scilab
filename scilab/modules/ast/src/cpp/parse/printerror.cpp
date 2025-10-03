@@ -69,7 +69,10 @@ void ParserSingleInstance::PrintError(const std::wstring& msg)
 
     /** Display Parser message  */
     std::wstring wstrError(_W("Error: "));
-    ostr << wstrError << msg << std::endl;
+    ostr << wstrError << 
+        yylloc.first_line << L"." << yylloc.first_column << L"->" << 
+        yylloc.last_line << L"." << yylloc.last_column <<  L" " <<
+        msg << std::endl;
 
     ParserSingleInstance::appendErrorMessage(ostr.str());
 }

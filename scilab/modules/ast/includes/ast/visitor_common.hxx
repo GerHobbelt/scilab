@@ -21,6 +21,7 @@
 
 #include "internal.hxx"
 #include "struct.hxx"
+#include "macro.hxx"
 #include "list.hxx"
 #include "exp.hxx"
 #include "symbol.hxx"
@@ -70,5 +71,7 @@ std::string printExp(std::ifstream& _File, ast::Exp* _pExp, const std::string& _
 
 EXTERN_AST std::wstring printTypeDimsInfo(types::InternalType* pIT);
 std::wstring printVarEqualTypeDimsInfo(types::InternalType *pIT, std::wstring wcsVarName);
+
+types::Macro* parseFunctionDec(const ast::FunctionDec& e);
 
 #endif //!AST_VISITOR_COMMON_HXX

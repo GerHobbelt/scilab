@@ -62,7 +62,13 @@ public :
     {
         return true;
     }
-    bool                isEmpty();
+
+    bool isA(const std::wstring& type)
+    {
+        return type == L"ce" || type == L"cell";
+    }
+
+    bool isEmpty();
 
 
     /**

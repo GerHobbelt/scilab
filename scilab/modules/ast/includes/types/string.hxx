@@ -85,6 +85,11 @@ public :
         return true;
     }
 
+    bool isA(const std::wstring& type)
+    {
+        return type == L"string";
+    }
+
     bool isTrue() override
     {
         return false;

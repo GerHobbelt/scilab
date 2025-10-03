@@ -44,7 +44,12 @@ public :
         return true;
     }
 
-    void                    whoAmI();
+    bool isA(const std::wstring& type)
+    {
+        return type == L"listdelete";
+    }
+
+    void whoAmI();
 
     bool                    toString(std::wostringstream& ostr);
 

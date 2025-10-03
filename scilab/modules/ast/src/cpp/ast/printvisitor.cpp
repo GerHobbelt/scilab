@@ -648,16 +648,9 @@ void PrintVisitor::visit (const ArgumentsExp  &e)
     ++indent;
     for (exps_t::const_iterator it = e.getExps().begin (), itEnd = e.getExps().end(); it != itEnd; /**/)
     {
-        if ((*it)->isCommentExp())
-        {
-            this->apply_indent();
-        }
+        this->apply_indent();
         (*it)->accept(*this);
-        if ((*it)->isCommentExp())
-        {
-            // Force EOL
-            *ostr << std::endl;
-        }
+        *ostr << std::endl;
         ++it;
     }
     --indent;
@@ -1150,7 +1143,6 @@ void PrintVisitor::visit (const FunctionDec &e)
 
 void PrintVisitor::visit (const ArgumentDec  &e)
 {
-    this->apply_indent();
     e.getArgumentName()->accept(*this);
     if (e.getArgumentDims()->getExps().size() != 0)
     {
@@ -1174,9 +1166,178 @@ void PrintVisitor::visit (const ArgumentDec  &e)
         *ostr << L" " << SCI_ASSIGN << L" ";
         e.getArgumentDefaultValue()->accept(*this);
     }
-    *ostr << std::endl;
 }
 
+void PrintVisitor::visit (const ClassDec  &e)
+{
+    this->apply_indent();
+    *ostr << SCI_CLASSDEF;
+    *ostr << L" " << e.getSymbol().getName();
+    
+    ast::exps_t expsAttribute;
+    ast::exps_t exps = e.getSuperClasses();
+    if (exps.size() > 0)
+    {
+        *ostr << L" " << SCI_LT << L" ";
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); )
+        {
+            (*it)->accept(*this);
+            ++it;
+            if(it != exps.end())
+            {
+                *ostr << L" " << SCI_AND << L" ";
+            }
+        }
+    }
+    *ostr << std::endl;
+
+    exps = e.getEnumeration();
+    if (exps.size() > 0)
+    {
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            (*it)->accept(*this);
+        }
+        --indent;
+    }
+
+    exps = e.getProperties();
+    if (exps.size() > 0)
+    {
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            (*it)->accept(*this);
+        }
+        --indent;
+    }
+
+    exps = e.getMethods();
+    if (exps.size() > 0)
+    {
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            (*it)->accept(*this);
+        }
+        --indent;
+    }
+
+    this->apply_indent();
+    *ostr << SCI_CLASSDEF_END << std::endl; 
+}
+
+void PrintVisitor::visit (const EnumDec  &e)
+{
+    ast::exps_t exps = e.getEnumeration();
+    ast::exps_t expsAttribute = e.getAttributes();
+    if (exps.size() > 0 || expsAttribute.size() > 0)
+    {
+        this->apply_indent();
+        *ostr << SCI_ENUMERATION;
+        if (expsAttribute.size() > 0)
+        {
+            *ostr << L" " << SCI_LPAREN;
+            for (exps_t::const_iterator it = expsAttribute.begin(); it != expsAttribute.end(); )
+            {
+                (*it)->accept(*this);
+                ++it;
+                if(it != expsAttribute.end())
+                {
+                    *ostr << SCI_COMMA << L" ";
+                }
+            }
+            *ostr << SCI_RPAREN;
+        }
+        *ostr << std::endl;
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            this->apply_indent();
+            (*it)->accept(*this);
+            *ostr << std::endl;
+
+        }
+        --indent;
+        this->apply_indent();
+        *ostr << SCI_ENUMERATION_END << std::endl;
+    }
+}
+
+void PrintVisitor::visit (const PropertiesDec  &e)
+{
+    ast::exps_t exps = e.getProperties();
+    ast::exps_t expsAttribute = e.getAttributes();
+    if (exps.size() > 0 || expsAttribute.size() > 0)
+    {
+        this->apply_indent();
+        *ostr << SCI_PROPERTIES;
+        if (expsAttribute.size() > 0)
+        {
+            *ostr << L" " << SCI_LPAREN;
+            for (exps_t::const_iterator it = expsAttribute.begin(); it != expsAttribute.end(); )
+            {
+                (*it)->accept(*this);
+                ++it;
+                if(it != expsAttribute.end())
+                {
+                    *ostr << SCI_COMMA << L" ";
+                }
+            }
+            *ostr << SCI_RPAREN;
+        }
+        *ostr << std::endl;
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            this->apply_indent();
+            (*it)->accept(*this);
+            *ostr << std::endl;
+
+        }
+        --indent;
+        this->apply_indent();
+        *ostr << SCI_PROPERTIES_END << std::endl;
+    }
+}
+
+void PrintVisitor::visit (const MethodsDec  &e)
+{
+    ast::exps_t exps = e.getMethods();
+    ast::exps_t expsAttribute = e.getAttributes();
+    if (exps.size() > 0 || expsAttribute.size() > 0)
+    {
+        this->apply_indent();
+        *ostr << SCI_METHODS;
+        if (expsAttribute.size() > 0)
+        {
+            *ostr << L" " << SCI_LPAREN;
+            for (exps_t::const_iterator it = expsAttribute.begin(); it != expsAttribute.end(); )
+            {
+                (*it)->accept(*this);
+                ++it;
+                if(it != expsAttribute.end())
+                {
+                    *ostr << SCI_COMMA << L" ";
+                }
+            }
+            *ostr << SCI_RPAREN;
+        }
+        *ostr << std::endl;
+        ++indent;
+        for (exps_t::const_iterator it = exps.begin(); it != exps.end(); ++it)
+        {
+            this->apply_indent();
+            (*it)->accept(*this);
+            *ostr << std::endl;
+
+        }
+        --indent;
+        this->apply_indent();
+        *ostr << SCI_METHODS_END << std::endl;
+    }
+}    
 /** \} */
 
 /** \name Visit Type dedicated Expressions related node.

@@ -77,6 +77,11 @@ public :
         return true;
     }
 
+    bool isA(const std::wstring& type)
+    {
+        return type == L"ip" || type == L"implicitlist";
+    }
+
     virtual bool isAssignable(void) override
     {
         return true;

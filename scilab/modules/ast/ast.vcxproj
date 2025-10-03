@@ -307,6 +307,7 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClInclude Include="includes\exps\caseexp.hxx" />
     <ClInclude Include="includes\exps\cellcallexp.hxx" />
     <ClInclude Include="includes\exps\cellexp.hxx" />
+    <ClInclude Include="includes\exps\classdec.hxx" />
     <ClInclude Include="includes\exps\colonvar.hxx" />
     <ClInclude Include="includes\exps\commentexp.hxx" />
     <ClInclude Include="includes\exps\constexp.hxx" />
@@ -316,6 +317,7 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClInclude Include="includes\exps\decls.hxx" />
     <ClInclude Include="includes\exps\dollarvar.hxx" />
     <ClInclude Include="includes\exps\doubleexp.hxx" />
+    <ClInclude Include="includes\exps\enumdec.hxx" />
     <ClInclude Include="includes\exps\exp.hxx" />
     <ClInclude Include="includes\exps\fieldexp.hxx" />
     <ClInclude Include="includes\exps\forexp.hxx" />
@@ -327,9 +329,11 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClInclude Include="includes\exps\mathexp.hxx" />
     <ClInclude Include="includes\exps\matrixexp.hxx" />
     <ClInclude Include="includes\exps\matrixlineexp.hxx" />
+    <ClInclude Include="includes\exps\methodsdec.hxx" />
     <ClInclude Include="includes\exps\nilexp.hxx" />
     <ClInclude Include="includes\exps\notexp.hxx" />
     <ClInclude Include="includes\exps\opexp.hxx" />
+    <ClInclude Include="includes\exps\propertiesdec.hxx" />
     <ClInclude Include="includes\exps\returnexp.hxx" />
     <ClInclude Include="includes\exps\selectexp.hxx" />
     <ClInclude Include="includes\exps\seqexp.hxx" />
@@ -400,10 +404,12 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClInclude Include="includes\system_env\threadmanagement.hxx" />
     <ClInclude Include="includes\types\addfunction.h" />
     <ClInclude Include="includes\types\alltypes.hxx" />
+    <ClInclude Include="includes\types\arguments.hxx" />
     <ClInclude Include="includes\types\arrayof.hxx" />
     <ClInclude Include="includes\types\bool.hxx" />
     <ClInclude Include="includes\types\callable.hxx" />
     <ClInclude Include="includes\types\cell.hxx" />
+    <ClInclude Include="includes\types\classdef.hxx" />
     <ClInclude Include="includes\types\colon.hxx" />
     <ClInclude Include="includes\types\container.hxx" />
     <ClInclude Include="includes\types\cpp_gateway_prototype.hxx" />
@@ -427,6 +433,8 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClInclude Include="includes\types\macrofile.hxx" />
     <ClInclude Include="includes\types\matrixiterator.hxx" />
     <ClInclude Include="includes\types\mlist.hxx" />
+    <ClInclude Include="includes\types\object.hxx" />
+    <ClInclude Include="includes\types\objectmethod.hxx" />
     <ClInclude Include="includes\types\overload.hxx" />
     <ClInclude Include="includes\types\pointer.hxx" />
     <ClInclude Include="includes\types\polynom.hxx" />
@@ -503,10 +511,12 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClCompile Include="src\cpp\system_env\setenvvar.cpp" />
     <ClCompile Include="src\cpp\system_env\threadmanagement.cpp" />
     <ClCompile Include="src\cpp\types\addfunction.cpp" />
+    <ClCompile Include="src\cpp\types\arguments.cpp" />
     <ClCompile Include="src\cpp\types\arrayof.cpp" />
     <ClCompile Include="src\cpp\types\bool.cpp" />
     <ClCompile Include="src\cpp\types\callable.cpp" />
     <ClCompile Include="src\cpp\types\cell.cpp" />
+    <ClCompile Include="src\cpp\types\classdef.cpp" />
     <ClCompile Include="src\cpp\types\double.cpp" />
     <ClCompile Include="src\cpp\types\file.cpp" />
     <ClCompile Include="src\cpp\types\function.cpp" />
@@ -523,6 +533,8 @@ lib /DEF:"$(ProjectDir)functions_manager_import.def" /SUBSYSTEM:WINDOWS /MACHINE
     <ClCompile Include="src\cpp\types\macro.cpp" />
     <ClCompile Include="src\cpp\types\macrofile.cpp" />
     <ClCompile Include="src\cpp\types\mlist.cpp" />
+    <ClCompile Include="src\cpp\types\object.cpp" />
+    <ClCompile Include="src\cpp\types\objectmethod.cpp" />
     <ClCompile Include="src\cpp\types\overload.cpp" />
     <ClCompile Include="src\cpp\types\polynom.cpp" />
     <ClCompile Include="src\cpp\types\singlepoly.cpp" />

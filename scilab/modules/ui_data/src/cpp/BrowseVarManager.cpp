@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2010 - DIGITEO - Allan CORNET
  * Copyright (C) 2010 - DIGITEO - Bruno JOFRET
@@ -20,8 +20,8 @@
 #include <iterator>
 #include <set>
 #include <cmath>
-#include "alltypes.hxx"
 #include "types_tools.hxx"
+#include "list.hxx"
 
 #include "BrowseVar.hxx"
 #ifdef _MSC_VER

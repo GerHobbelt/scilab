@@ -182,6 +182,7 @@
     <ClCompile Include="sci_cell.cpp" />
     <ClCompile Include="sci_checkNamedArguments.cpp" />
     <ClCompile Include="sci_clearfun.cpp" />
+    <ClCompile Include="sci_enumeration.cpp" />
     <ClCompile Include="sci_errclear.cpp" />
     <ClCompile Include="sci_fieldnames.cpp" />
     <ClCompile Include="sci_format.cpp" />
@@ -219,16 +220,19 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="sci_isa.cpp" />
     <ClCompile Include="sci_isfield.cpp" />
     <ClCompile Include="sci_list.cpp" />
     <ClCompile Include="sci_macr2tree.cpp" />
     <ClCompile Include="sci_makecell.cpp" />
+    <ClCompile Include="sci_methods.cpp" />
     <ClCompile Include="sci_mlist.cpp" />
     <ClCompile Include="sci_mode.cpp" />
     <ClCompile Include="sci_newfun.cpp" />
     <ClCompile Include="sci_null.cpp" />
     <ClCompile Include="sci_oldEmptyBehaviour.cpp" />
     <ClCompile Include="sci_predef.cpp" />
+    <ClCompile Include="sci_properties.cpp" />
     <ClCompile Include="sci_recursionlimit.cpp" />
     <ClCompile Include="sci_sciargs.cpp" />
     <ClCompile Include="..\c\sci_getdebuginfo.c" />
@@ -253,6 +257,7 @@
     <ClCompile Include="sci_pause.cpp" />
     <ClCompile Include="sci_quit.cpp" />
     <ClCompile Include="sci_debug.cpp" />
+    <ClCompile Include="sci_show_vtable.cpp" />
     <ClCompile Include="sci_skipArguments.cpp" />
     <ClCompile Include="sci_type.cpp" />
     <ClCompile Include="sci_struct.cpp" />

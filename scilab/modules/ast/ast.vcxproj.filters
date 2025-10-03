@@ -646,6 +646,30 @@
     <ClInclude Include="includes\ast\argumentvisitor.hxx">
       <Filter>Header Files\ast</Filter>
     </ClInclude>
+    <ClInclude Include="includes\types\classdef.hxx">
+      <Filter>Header Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\types\object.hxx">
+      <Filter>Header Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\types\arguments.hxx">
+      <Filter>Header Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\exps\enumdec.hxx">
+      <Filter>Header Files\exps</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\exps\methodsdec.hxx">
+      <Filter>Header Files\exps</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\exps\propertiesdec.hxx">
+      <Filter>Header Files\exps</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\types\objectmethod.hxx">
+      <Filter>Header Files\types</Filter>
+    </ClInclude>
+    <ClInclude Include="includes\exps\classdec.hxx">
+      <Filter>Header Files\exps</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\cpp\ast\expHistory.cpp">
@@ -935,6 +959,18 @@
     </ClCompile>
     <ClCompile Include="src\c\types\dtoa.c">
       <Filter>Source Files\ast</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\types\classdef.cpp">
+      <Filter>Source Files\types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\types\object.cpp">
+      <Filter>Source Files\types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\types\arguments.cpp">
+      <Filter>Source Files\types</Filter>
+    </ClCompile>
+    <ClCompile Include="src\cpp\types\objectmethod.cpp">
+      <Filter>Source Files\types</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

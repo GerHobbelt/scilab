@@ -140,7 +140,44 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                     {
                         try
                         {
-                            poRow = callOverloadMatrixExp(L"c", poRow, pIT, e.getLocation());
+                            if ((poRow->isObject() && poRow->getAs<types::Object>()->hasMethod(L"horzcat")) ||
+                                (pIT->isObject() && pIT->getAs<types::Object>()->hasMethod(L"horzcat")))
+                            {
+                                types::Object* obj = nullptr;
+                                if (poRow->isObject())
+                                {
+                                    obj = poRow->getAs<types::Object>();
+                                }
+                                else
+                                {
+                                    obj = pIT->getAs<types::Object>();
+                                }
+
+                                types::typed_list in;
+                                types::optional_list opt;
+                                types::typed_list out;
+
+                                in.push_back(poRow);
+                                in.push_back(pIT);
+
+                                poRow->IncreaseRef();
+                                pIT->IncreaseRef();
+
+                                if (obj->callMethod(L"horzcat", in, opt, 1, out) == types::Function::OK && out.size() == 1)
+                                {
+                                    poRow = out[0];
+                                }
+                                else
+                                {
+                                    poRow = callOverloadMatrixExp(L"c", poRow, pIT, e.getLocation());
+                                }
+
+                                cleanIn(in, out);
+                            }
+                            else
+                            {
+                                poRow = callOverloadMatrixExp(L"c", poRow, pIT, e.getLocation());
+                            }
                         }
                         catch (const InternalError& error)
                         {
@@ -415,7 +452,34 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
             {
                 try
                 {
-                    poResult = callOverloadMatrixExp(L"f", pGTResult, pGT, e.getLocation());
+                    if (poRow->isObject() && poRow->getAs<types::Object>()->hasMethod(L"vertcat"))
+                    {
+                        types::Object* obj = poRow->getAs<types::Object>();
+                        types::typed_list in;
+                        types::optional_list opt;
+                        types::typed_list out;
+
+                        in.push_back(pGTResult);
+                        in.push_back(pGT);
+
+                        pGTResult->IncreaseRef();
+                        pGT->IncreaseRef();
+
+                        if (obj->callMethod(L"vertcat", in, opt, 1, out) == types::Function::OK && out.size() == 1)
+                        {
+                            poResult = out[0];
+                        }
+                        else
+                        {
+                            poResult = callOverloadMatrixExp(L"f", pGTResult, pGT, e.getLocation());
+                        }
+
+                        cleanIn(in, out);
+                    }
+                    else
+                    {
+                        poResult = callOverloadMatrixExp(L"f", pGTResult, pGT, e.getLocation());
+                    }
                 }
                 catch (const InternalError& error)
                 {

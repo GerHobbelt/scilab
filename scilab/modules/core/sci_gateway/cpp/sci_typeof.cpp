@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
  *
@@ -82,5 +82,4 @@ types::Function::ReturnValue sci_typeof(types::typed_list &in, int _iRetCount, t
     }
 
     return types::Function::Error;
-
 }

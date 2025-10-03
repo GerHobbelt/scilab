@@ -93,6 +93,7 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_clearfun.cpp \
 	sci_gateway/cpp/sci_clearglobal.cpp \
 	sci_gateway/cpp/sci_debug.cpp \
+	sci_gateway/cpp/sci_enumeration.cpp \
 	sci_gateway/cpp/sci_errclear.cpp \
 	sci_gateway/cpp/sci_error.cpp \
 	sci_gateway/cpp/sci_exists.cpp \
@@ -113,12 +114,14 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_ieee.cpp \
 	sci_gateway/cpp/sci_insert.cpp \
 	sci_gateway/cpp/sci_intppty.cpp \
+    sci_gateway/cpp/sci_isa.cpp \
 	sci_gateway/cpp/sci_isfield.cpp \
 	sci_gateway/cpp/sci_isglobal.cpp \
 	sci_gateway/cpp/sci_lasterror.cpp \
 	sci_gateway/cpp/sci_list.cpp \
 	sci_gateway/cpp/sci_macr2tree.cpp \
 	sci_gateway/cpp/sci_makecell.cpp \
+    sci_gateway/cpp/sci_methods.cpp \
 	sci_gateway/cpp/sci_mlist.cpp \
 	sci_gateway/cpp/sci_mode.cpp \
 	sci_gateway/cpp/sci_newfun.cpp \
@@ -126,9 +129,11 @@ GATEWAY_CPP_SOURCES = \
 	sci_gateway/cpp/sci_oldEmptyBehaviour.cpp \
 	sci_gateway/cpp/sci_pause.cpp \
 	sci_gateway/cpp/sci_predef.cpp \
+    sci_gateway/cpp/sci_properties.cpp \
 	sci_gateway/cpp/sci_quit.cpp \
 	sci_gateway/cpp/sci_recursionlimit.cpp \
 	sci_gateway/cpp/sci_sciargs.cpp \
+    sci_gateway/cpp/sci_show_vtable.cpp \
 	sci_gateway/cpp/sci_skipArguments.cpp \
 	sci_gateway/cpp/sci_struct.cpp \
 	sci_gateway/cpp/sci_tlist.cpp \

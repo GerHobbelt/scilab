@@ -46,6 +46,11 @@ public :
         return true;
     }
 
+    virtual bool isA(const std::wstring& type)
+    {
+        return type == L"usertype" || type == getTypeStr();
+    }
+
     inline bool             isGenericType() override
     {
         return false;

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Antoine ELIAS
  *
@@ -48,7 +48,12 @@ public :
         return true;
     }
 
-    virtual TList*                  clone() override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"tlist" || type == getTypeStr();
+    }
+
+    virtual TList* clone() override;
 
     bool                            exists(const std::wstring& _sKey);
     InternalType*                   getField(const std::wstring& _sKey);

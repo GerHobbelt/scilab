@@ -25,5 +25,9 @@
 #include "vardec.hxx"
 #include "functiondec.hxx"
 #include "argumentdec.hxx"
+#include "classdec.hxx"
+#include "enumdec.hxx"
+#include "propertiesdec.hxx"
+#include "methodsdec.hxx"
 
 #endif // ! AST_ALLDEC_HXX

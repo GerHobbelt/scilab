@@ -166,6 +166,10 @@ public:
     virtual void visit (typename select_const<K, VarDec>::t & e) = 0;
     virtual void visit (typename select_const<K, FunctionDec>::t & e) = 0;
     virtual void visit (typename select_const<K, ArgumentDec>::t & e) = 0;
+    virtual void visit (typename select_const<K, ClassDec>::t & e) = 0;
+    virtual void visit (typename select_const<K, EnumDec>::t & e) = 0;
+    virtual void visit (typename select_const<K, PropertiesDec>::t & e) = 0;
+    virtual void visit (typename select_const<K, MethodsDec>::t & e) = 0;
     /** \} */
 
     /** \name Visit Type dedicated Expressions related node.

@@ -35,7 +35,7 @@
                 <term>l</term>
                 <listitem>
                     <para>
-                        <literal>list</literal>, <literal>tlist</literal> or <literal>mlist</literal> variable.
+                        <literal>list</literal>, <literal>tlist</literal>, <literal>mlist</literal> or <literal>object</literal> variable.
                     </para>
                 </listitem>
             </varlistentry>
@@ -44,6 +44,7 @@
                 <listitem>
                     <para>
                         field index, see <link linkend="extraction">extraction</link> for more details.
+                        or name of the field to extract when l is an object.
                     </para>
                 </listitem>
             </varlistentry>
@@ -76,6 +77,16 @@ s(2).t = "Basile"
 getfield(2,s)==size(s)
 getfield(1,s)(3:5)==fieldnames(s)'
 [r,b,t] = getfield([3 4 5],s)
+
+classdef foo
+    properties
+        a = 1
+        b = 2
+    end
+end
+
+getfield("a",foo()) // returns 1
+getfield("b",foo()) // returns 2
  ]]></programlisting>
     </refsection>
     <refsection role="see also">
@@ -85,5 +96,20 @@ getfield(1,s)(3:5)==fieldnames(s)'
                 <link linkend="extraction">extraction</link>
             </member>
         </simplelist>
+    </refsection>
+    <refsection role="history">
+        <title>History</title>
+        <revhistory>
+            <revision>
+                <revnumber>2026.0</revnumber>
+                <revdescription>
+                    <itemizedlist>
+                        <listitem>
+                            Add management of object.
+                        </listitem>
+                    </itemizedlist>
+                </revdescription>
+            </revision>
+        </revhistory>
     </refsection>
 </refentry>

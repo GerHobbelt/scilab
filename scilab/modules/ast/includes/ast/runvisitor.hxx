@@ -393,6 +393,10 @@ public :
     void visitprivate(const NotExp &e);
     void visitprivate(const TransposeExp &e);
     void visitprivate(const ArgumentDec &e);
+    void visitprivate(const ClassDec &e);
+    void visitprivate(const EnumDec &e);
+    void visitprivate(const PropertiesDec &e);
+    void visitprivate(const MethodsDec &e);
     void visitprivate(const FunctionDec &e);
     void visitprivate(const ListExp &e);
     void visitprivate(const AssignExp &e);

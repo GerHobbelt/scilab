@@ -105,7 +105,58 @@ public :
         return true;
     }
 
-    bool neg(InternalType *& out) override
+    bool isA(const std::wstring& type)
+    {
+        if (type == L"int" || type == L"integer")
+        {
+            return true;
+        }
+
+        if (isInt8() && type == L"int8")
+        {
+            return true;
+        }
+        if (isInt16() && type == L"int16")
+        {
+            return true;
+        }
+        if (isInt32() && type == L"int32")
+        {
+            return true;
+        }
+        if (isInt64() && type == L"int64")
+        {
+            return true;
+        }
+        if (isUInt8() && type == L"uint8")
+        {
+            return true;
+        }
+        if (isUInt16() && type == L"uint16")
+        {
+            return true;
+        }
+        if (isUInt32() && type == L"uint32")
+        {
+            return true;
+        }
+        if (isUInt64() && type == L"uint64")
+        {
+            return true;
+        }
+        if ((isInt8() || isInt16() || isInt32() || isInt64()) && type == L"signed")
+        {
+            return true;
+        }
+        if ((isUInt8() || isUInt16() || isUInt32() || isUInt64()) && type == L"unsigned")
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    bool neg(InternalType*& out) override
     {
         out = new Int<T>(this->getDims(), this->getDimsArray());
         type_traits::bin_neg<T, T>(this->m_iSize, this->m_pRealData, static_cast<Int<T> *>(out)->get());

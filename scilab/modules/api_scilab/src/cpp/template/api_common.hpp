@@ -1,4 +1,4 @@
-/*
+﻿/*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 * Copyright (C) 2015 - Scilab Enterprises - Antoine ELIAS
 *
@@ -56,19 +56,14 @@ int API_PROTO(getType)(scilabEnv env, scilabVar var)
     {
         case types::InternalType::ScilabDouble:
             return sci_matrix;
-            break;
         case types::InternalType::ScilabPolynom:
             return sci_poly;
-            break;
         case types::InternalType::ScilabBool:
             return sci_boolean;
-            break;
         case types::InternalType::ScilabSparse:
             return sci_sparse;
-            break;
         case types::InternalType::ScilabSparseBool:
             return sci_boolean_sparse;
-            break;
         case types::InternalType::ScilabInt8:
         case types::InternalType::ScilabUInt8:
         case types::InternalType::ScilabInt16:
@@ -78,43 +73,31 @@ int API_PROTO(getType)(scilabEnv env, scilabVar var)
         case types::InternalType::ScilabInt64:
         case types::InternalType::ScilabUInt64:
             return sci_ints;
-            break;
         case types::InternalType::ScilabHandle:
             return sci_handles;
-            break;
         case types::InternalType::ScilabString:
             return sci_strings;
-            break;
         case types::InternalType::ScilabMacroFile:
         case types::InternalType::ScilabMacro:
+        case types::InternalType::ScilabObjectMethod:
             return sci_c_function;
-            break;
         case types::InternalType::ScilabList:
             return sci_list;
-            break;
         case types::InternalType::ScilabCell:
             return sci_cell;
-            break;
         case types::InternalType::ScilabTList:
             return sci_tlist;
-            break;
         case types::InternalType::ScilabMList:
             return sci_mlist;
-            break;
         case types::InternalType::ScilabStruct:
-            // Scilab < 6 compatibility... Struct have type 17;
             return sci_struct;
-            break;
         case types::InternalType::ScilabUserType:
             return sci_pointer;
-            break;
         case types::InternalType::ScilabColon:
         case types::InternalType::ScilabImplicitList:
             return sci_implicit_poly;
-            break;
         case types::InternalType::ScilabFunction:
             return sci_intrinsic_function;
-            break;
         case types::InternalType::ScilabLibrary:
             return sci_lib;
             break;

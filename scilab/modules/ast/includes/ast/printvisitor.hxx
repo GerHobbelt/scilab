@@ -85,7 +85,11 @@ public :
     virtual void visit (const VarDec  &e);
     virtual void visit (const FunctionDec  &e);
     virtual void visit (const ArgumentDec  &e);
-    virtual void visit(const ListExp &e);
+    virtual void visit (const ClassDec  &e);
+    virtual void visit (const EnumDec  &e);
+    virtual void visit (const PropertiesDec  &e);
+    virtual void visit (const MethodsDec  &e);
+    virtual void visit (const ListExp &e);
 
     /*-------------.
     | Attributes.  |

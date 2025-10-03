@@ -17,8 +17,8 @@
 // <-- Short Description -->
 // Parser did not display anything when failing on UTF-8 char
 
-errmsg = ["mclose(1";"^";"Error: syntax error, unexpected end of line, expecting , or )"];
+errmsg = ["mclose(1";"^";"Error: 1.1->2.1 syntax error, unexpected end of line, expecting , or )"];
 assert_checkerror("execstr(""mclose(1"")", errmsg);
 
-errmsg = ["mclose(1°";"       ^~~^";"Error: Can''t convert ''1°'' to a valid number nor identifier"];
+errmsg = ["mclose(1°";"       ^~~^";"Error: 1.8->1.11 Can''t convert ''1°'' to a valid number nor identifier"];
 assert_checkerror("execstr(""mclose(1°"")", errmsg);

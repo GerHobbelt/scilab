@@ -260,6 +260,10 @@ public:
         VARDEC,
         FUNCTIONDEC,
         ARGUMENTDEC,
+        CLASSDEC,
+        ENUMDEC,
+        PROPERTIESDEC,
+        METHODSDEC,
         LISTEXP
     };
 
@@ -341,6 +345,14 @@ public:
                 return L"FunctionDec";
             case ARGUMENTDEC:
                 return L"ArgumentDec";
+            case CLASSDEC:
+                return L"ClassDec";
+            case ENUMDEC:
+                return L"EnumDec";
+            case PROPERTIESDEC:
+                return L"PropertiesDec";
+            case METHODSDEC:
+                return L"MethodsDec";
             case LISTEXP:
                 return L"ListExp";
             default:

@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2007 - INRIA - Allan CORNET
  *
@@ -18,7 +18,7 @@
 #include "BOOL.h"
 #include "os_string.h"
 
-static const int nbrCommands = 30;
+static const int nbrCommands = 31;
 static char *CommandWords[] =
 {
     "if", "else",
@@ -35,7 +35,8 @@ static char *CommandWords[] =
     "function", "endfunction",
     "clc", "continue",
     "try", "catch",
-    "exit", "arguments"
+    "exit", "arguments",
+    "classdef"
 };
 
 static const int nbrMustBe = 35;

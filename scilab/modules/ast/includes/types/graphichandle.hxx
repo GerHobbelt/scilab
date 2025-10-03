@@ -39,7 +39,12 @@ public :
         return true;
     }
 
-    bool                    isContainer() override
+    bool isA(const std::wstring& type)
+    {
+        return type == L"handle";
+    }
+
+    bool isContainer() override
     {
         return true;
     }

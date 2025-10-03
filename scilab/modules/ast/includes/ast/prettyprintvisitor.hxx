@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2008-2008 - DIGITEO - Bruno JOFRET
  *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
@@ -24,7 +24,6 @@
 #include "allexp.hxx"
 #include "allvar.hxx"
 #include "alldec.hxx"
-#include "alltypes.hxx"
 
 enum TermColor
 {
@@ -97,6 +96,10 @@ public :
     virtual void visit (const VarDec &e);
     virtual void visit (const FunctionDec &e);
     virtual void visit (const ArgumentDec &e);
+    virtual void visit (const ClassDec &e);
+    virtual void visit (const EnumDec &e);
+    virtual void visit (const PropertiesDec &e);
+    virtual void visit (const MethodsDec &e);
 
 public:
     virtual void visit(const ListExp &e);

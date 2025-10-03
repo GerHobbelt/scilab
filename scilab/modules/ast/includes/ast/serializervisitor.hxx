@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab (https://www.scilab.org/) - This file is part of Scilab
  *  Copyright (C) 2012-2013 - OCAMLPRO INRIA - Fabrice LE FESSANT
  *  Copyright (C) 2014 - Scilab Enterprises - Antoine ELIAS
@@ -24,6 +24,7 @@
 extern "C"
 {
 #include "getversion.h"
+#include "sciprint.h"
 }
 
 #define FAGMENT_SIZE 65536
@@ -192,7 +193,6 @@ private :
         buflen += final_size;
     }
 
-    /** @} */
 
     void add_exps(const exps_t& exps)
     {
@@ -654,8 +654,95 @@ private :
         add_exp(e.getStep());
         add_exp(e.getEnd());
     }
+    // 41 is reserved for lambda function, see FunctionDec
+    void visit(const ClassDec& e)
+    {
+        add_ast(42, e);
+        add_Symbol(e.getSymbol());
 
-    //41 is reserved for lambda function, see FunctionDec
+        exps_t args = e.getSuperClasses();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getEnumeration();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getProperties();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getMethods();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+    }
+
+    void visit(const EnumDec& e)
+    {
+        add_ast(43, e);
+        exps_t args = e.getAttributes();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getEnumeration();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+    }
+
+    void visit(const PropertiesDec& e)
+    {
+        add_ast(44, e);
+        exps_t args = e.getAttributes();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getProperties();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+    }
+
+    void visit(const MethodsDec& e)
+    {
+        add_ast(45, e);
+        exps_t args = e.getAttributes();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+
+        args = e.getMethods();
+        add_uint32(args.size());
+        for (auto&& arg : args)
+        {
+            arg->accept(*this);
+        }
+    }
+
   public:
     SerializeVisitor(Exp* _ast) : ast(_ast), buf(NULL), buflen(0), bufsize(0), saveNodeNumber(true), saveLocation(true) {}
     ~SerializeVisitor()

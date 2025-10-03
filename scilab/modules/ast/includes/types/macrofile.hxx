@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2009-2010 - DIGITEO - Bruno JOFRET
  *  Copyright (C) 2009-2009 - DIGITEO - Antoine ELIAS
@@ -47,7 +47,12 @@ public :
         return true;
     }
 
-    void                    whoAmI() override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"function";
+    }
+
+    void whoAmI() override;
 
     bool                    toString(std::wostringstream& ostr) override;
 

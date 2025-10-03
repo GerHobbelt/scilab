@@ -128,9 +128,4 @@ void InstrumentVisitor::visit(ast::FunctionDec & e)
     inners.push_back(pMacro);
 }
 
-void InstrumentVisitor::visit(ast::ArgumentDec & e)
-{
-    /* FIXME : Implement InstrumentVisitor for ArgumentDec */
-}
-
 }

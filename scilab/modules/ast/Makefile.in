@@ -234,10 +234,12 @@ am__libsciast_la_SOURCES_DIST = src/c/operations/doublecomplex.c \
 	src/cpp/system_env/numericconstants_interface.cpp \
 	src/cpp/system_env/coverage_instance.cpp \
 	src/cpp/types/addfunction.cpp src/cpp/types/internal.cpp \
-	src/cpp/types/arrayof.cpp src/cpp/types/bool.cpp \
-	src/cpp/types/callable.cpp src/cpp/types/cell.cpp \
-	src/cpp/types/double.cpp src/cpp/types/file.cpp \
-	src/cpp/types/function.cpp src/cpp/types/graphichandle.cpp \
+	src/cpp/types/arrayof.cpp src/cpp/types/arguments.cpp \
+	src/cpp/types/bool.cpp src/cpp/types/callable.cpp \
+	src/cpp/types/cell.cpp src/cpp/types/double.cpp \
+	src/cpp/types/file.cpp src/cpp/types/function.cpp \
+	src/cpp/types/classdef.cpp src/cpp/types/object.cpp \
+	src/cpp/types/objectmethod.cpp src/cpp/types/graphichandle.cpp \
 	src/cpp/types/implicitlist.cpp src/cpp/types/int.cpp \
 	src/cpp/types/library.cpp src/cpp/types/list.cpp \
 	src/cpp/types/listdelete.cpp src/cpp/types/listinsert.cpp \
@@ -321,12 +323,16 @@ am_libsciast_la_OBJECTS =  \
 	src/cpp/types/libsciast_la-addfunction.lo \
 	src/cpp/types/libsciast_la-internal.lo \
 	src/cpp/types/libsciast_la-arrayof.lo \
+	src/cpp/types/libsciast_la-arguments.lo \
 	src/cpp/types/libsciast_la-bool.lo \
 	src/cpp/types/libsciast_la-callable.lo \
 	src/cpp/types/libsciast_la-cell.lo \
 	src/cpp/types/libsciast_la-double.lo \
 	src/cpp/types/libsciast_la-file.lo \
 	src/cpp/types/libsciast_la-function.lo \
+	src/cpp/types/libsciast_la-classdef.lo \
+	src/cpp/types/libsciast_la-object.lo \
+	src/cpp/types/libsciast_la-objectmethod.lo \
 	src/cpp/types/libsciast_la-graphichandle.lo \
 	src/cpp/types/libsciast_la-implicitlist.lo \
 	src/cpp/types/libsciast_la-int.lo \
@@ -438,10 +444,12 @@ am__depfiles_remade =  \
 	src/cpp/system_env/$(DEPDIR)/libsciast_la-setenvvar.Plo \
 	src/cpp/system_env/$(DEPDIR)/libsciast_la-threadmanagement.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-addfunction.Plo \
+	src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-arrayof.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-bool.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-callable.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-cell.Plo \
+	src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-double.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-file.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-function.Plo \
@@ -458,6 +466,8 @@ am__depfiles_remade =  \
 	src/cpp/types/$(DEPDIR)/libsciast_la-macro.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-macrofile.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-mlist.Plo \
+	src/cpp/types/$(DEPDIR)/libsciast_la-object.Plo \
+	src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-overload.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-polynom.Plo \
 	src/cpp/types/$(DEPDIR)/libsciast_la-singlepoly.Plo \
@@ -919,10 +929,12 @@ libsciast_la_SOURCES = src/c/operations/doublecomplex.c \
 	src/cpp/system_env/numericconstants_interface.cpp \
 	src/cpp/system_env/coverage_instance.cpp \
 	src/cpp/types/addfunction.cpp src/cpp/types/internal.cpp \
-	src/cpp/types/arrayof.cpp src/cpp/types/bool.cpp \
-	src/cpp/types/callable.cpp src/cpp/types/cell.cpp \
-	src/cpp/types/double.cpp src/cpp/types/file.cpp \
-	src/cpp/types/function.cpp src/cpp/types/graphichandle.cpp \
+	src/cpp/types/arrayof.cpp src/cpp/types/arguments.cpp \
+	src/cpp/types/bool.cpp src/cpp/types/callable.cpp \
+	src/cpp/types/cell.cpp src/cpp/types/double.cpp \
+	src/cpp/types/file.cpp src/cpp/types/function.cpp \
+	src/cpp/types/classdef.cpp src/cpp/types/object.cpp \
+	src/cpp/types/objectmethod.cpp src/cpp/types/graphichandle.cpp \
 	src/cpp/types/implicitlist.cpp src/cpp/types/int.cpp \
 	src/cpp/types/library.cpp src/cpp/types/list.cpp \
 	src/cpp/types/listdelete.cpp src/cpp/types/listinsert.cpp \
@@ -1097,12 +1109,14 @@ includes/system_env/sci_home.h \
 includes/system_env/sci_path.h \
 includes/system_env/sci_tmpdir.h \
 includes/system_env/setenvvar.h \
+includes/types/arguments.hxx \
 includes/types/addfunction.h \
 includes/types/alltypes.hxx \
 includes/types/arrayof.hxx \
 includes/types/bool.hxx \
 includes/types/callable.hxx \
 includes/types/cell.hxx \
+includes/types/classdef.hxx \
 includes/types/c_gateway_prototype.h \
 includes/types/colon.hxx \
 includes/types/container.hxx \
@@ -1127,6 +1141,7 @@ includes/types/macrofile.hxx \
 includes/types/macro.hxx \
 includes/types/matrixiterator.hxx \
 includes/types/mlist.hxx \
+includes/types/object.hxx \
 includes/types/overload.hxx \
 includes/types/pointer.hxx \
 includes/types/polynom.hxx \
@@ -1535,6 +1550,9 @@ src/cpp/types/libsciast_la-internal.lo: src/cpp/types/$(am__dirstamp) \
 	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
 src/cpp/types/libsciast_la-arrayof.lo: src/cpp/types/$(am__dirstamp) \
 	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
+src/cpp/types/libsciast_la-arguments.lo:  \
+	src/cpp/types/$(am__dirstamp) \
+	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
 src/cpp/types/libsciast_la-bool.lo: src/cpp/types/$(am__dirstamp) \
 	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
 src/cpp/types/libsciast_la-callable.lo: src/cpp/types/$(am__dirstamp) \
@@ -1546,6 +1564,13 @@ src/cpp/types/libsciast_la-double.lo: src/cpp/types/$(am__dirstamp) \
 src/cpp/types/libsciast_la-file.lo: src/cpp/types/$(am__dirstamp) \
 	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
 src/cpp/types/libsciast_la-function.lo: src/cpp/types/$(am__dirstamp) \
+	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
+src/cpp/types/libsciast_la-classdef.lo: src/cpp/types/$(am__dirstamp) \
+	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
+src/cpp/types/libsciast_la-object.lo: src/cpp/types/$(am__dirstamp) \
+	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
+src/cpp/types/libsciast_la-objectmethod.lo:  \
+	src/cpp/types/$(am__dirstamp) \
 	src/cpp/types/$(DEPDIR)/$(am__dirstamp)
 src/cpp/types/libsciast_la-graphichandle.lo:  \
 	src/cpp/types/$(am__dirstamp) \
@@ -1703,10 +1728,12 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/system_env/$(DEPDIR)/libsciast_la-setenvvar.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/system_env/$(DEPDIR)/libsciast_la-threadmanagement.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-addfunction.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-arrayof.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-bool.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-callable.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-cell.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-double.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-file.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-function.Plo@am__quote@ # am--include-marker
@@ -1723,6 +1750,8 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-macro.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-macrofile.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-mlist.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-object.Plo@am__quote@ # am--include-marker
+@AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-overload.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-polynom.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/cpp/types/$(DEPDIR)/libsciast_la-singlepoly.Plo@am__quote@ # am--include-marker
@@ -2254,6 +2283,13 @@ src/cpp/types/libsciast_la-arrayof.lo: src/cpp/types/arrayof.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-arrayof.lo `test -f 'src/cpp/types/arrayof.cpp' || echo '$(srcdir)/'`src/cpp/types/arrayof.cpp
 
+src/cpp/types/libsciast_la-arguments.lo: src/cpp/types/arguments.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-arguments.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Tpo -c -o src/cpp/types/libsciast_la-arguments.lo `test -f 'src/cpp/types/arguments.cpp' || echo '$(srcdir)/'`src/cpp/types/arguments.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Tpo src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/types/arguments.cpp' object='src/cpp/types/libsciast_la-arguments.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-arguments.lo `test -f 'src/cpp/types/arguments.cpp' || echo '$(srcdir)/'`src/cpp/types/arguments.cpp
+
 src/cpp/types/libsciast_la-bool.lo: src/cpp/types/bool.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-bool.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-bool.Tpo -c -o src/cpp/types/libsciast_la-bool.lo `test -f 'src/cpp/types/bool.cpp' || echo '$(srcdir)/'`src/cpp/types/bool.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/types/$(DEPDIR)/libsciast_la-bool.Tpo src/cpp/types/$(DEPDIR)/libsciast_la-bool.Plo
@@ -2295,6 +2331,27 @@ src/cpp/types/libsciast_la-function.lo: src/cpp/types/function.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/types/function.cpp' object='src/cpp/types/libsciast_la-function.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-function.lo `test -f 'src/cpp/types/function.cpp' || echo '$(srcdir)/'`src/cpp/types/function.cpp
+
+src/cpp/types/libsciast_la-classdef.lo: src/cpp/types/classdef.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-classdef.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Tpo -c -o src/cpp/types/libsciast_la-classdef.lo `test -f 'src/cpp/types/classdef.cpp' || echo '$(srcdir)/'`src/cpp/types/classdef.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Tpo src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/types/classdef.cpp' object='src/cpp/types/libsciast_la-classdef.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-classdef.lo `test -f 'src/cpp/types/classdef.cpp' || echo '$(srcdir)/'`src/cpp/types/classdef.cpp
+
+src/cpp/types/libsciast_la-object.lo: src/cpp/types/object.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-object.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-object.Tpo -c -o src/cpp/types/libsciast_la-object.lo `test -f 'src/cpp/types/object.cpp' || echo '$(srcdir)/'`src/cpp/types/object.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/types/$(DEPDIR)/libsciast_la-object.Tpo src/cpp/types/$(DEPDIR)/libsciast_la-object.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/types/object.cpp' object='src/cpp/types/libsciast_la-object.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-object.lo `test -f 'src/cpp/types/object.cpp' || echo '$(srcdir)/'`src/cpp/types/object.cpp
+
+src/cpp/types/libsciast_la-objectmethod.lo: src/cpp/types/objectmethod.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-objectmethod.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Tpo -c -o src/cpp/types/libsciast_la-objectmethod.lo `test -f 'src/cpp/types/objectmethod.cpp' || echo '$(srcdir)/'`src/cpp/types/objectmethod.cpp
+@am__fastdepCXX_TRUE@	$(AM_V_at)$(am__mv) src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Tpo src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Plo
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	$(AM_V_CXX)source='src/cpp/types/objectmethod.cpp' object='src/cpp/types/libsciast_la-objectmethod.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(AM_V_CXX@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o src/cpp/types/libsciast_la-objectmethod.lo `test -f 'src/cpp/types/objectmethod.cpp' || echo '$(srcdir)/'`src/cpp/types/objectmethod.cpp
 
 src/cpp/types/libsciast_la-graphichandle.lo: src/cpp/types/graphichandle.cpp
 @am__fastdepCXX_TRUE@	$(AM_V_CXX)$(LIBTOOL) $(AM_V_lt) --tag=CXX $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libsciast_la_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT src/cpp/types/libsciast_la-graphichandle.lo -MD -MP -MF src/cpp/types/$(DEPDIR)/libsciast_la-graphichandle.Tpo -c -o src/cpp/types/libsciast_la-graphichandle.lo `test -f 'src/cpp/types/graphichandle.cpp' || echo '$(srcdir)/'`src/cpp/types/graphichandle.cpp
@@ -2767,10 +2824,12 @@ distclean: distclean-am
 	-rm -f src/cpp/system_env/$(DEPDIR)/libsciast_la-setenvvar.Plo
 	-rm -f src/cpp/system_env/$(DEPDIR)/libsciast_la-threadmanagement.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-addfunction.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-arrayof.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-bool.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-callable.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-cell.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-double.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-file.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-function.Plo
@@ -2787,6 +2846,8 @@ distclean: distclean-am
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-macro.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-macrofile.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-mlist.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-object.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-overload.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-polynom.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-singlepoly.Plo
@@ -2912,10 +2973,12 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/system_env/$(DEPDIR)/libsciast_la-setenvvar.Plo
 	-rm -f src/cpp/system_env/$(DEPDIR)/libsciast_la-threadmanagement.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-addfunction.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-arguments.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-arrayof.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-bool.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-callable.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-cell.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-classdef.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-double.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-file.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-function.Plo
@@ -2932,6 +2995,8 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-macro.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-macrofile.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-mlist.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-object.Plo
+	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-objectmethod.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-overload.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-polynom.Plo
 	-rm -f src/cpp/types/$(DEPDIR)/libsciast_la-singlepoly.Plo

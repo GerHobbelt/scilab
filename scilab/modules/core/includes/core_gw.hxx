@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *  Copyright (C) 2011-2011 - DIGITEO - Bruno JOFRET
@@ -92,6 +92,11 @@ CPP_GATEWAY_PROTOTYPE(sci_oldEmptyBehaviour);
 CPP_GATEWAY_PROTOTYPE(sci_checkNamedArguments);
 CPP_GATEWAY_PROTOTYPE(sci_skipArguments);
 CPP_GATEWAY_PROTOTYPE(sci_getdeprecated);
+CPP_GATEWAY_PROTOTYPE(sci_isa);
+CPP_GATEWAY_PROTOTYPE(sci_properties);
+CPP_GATEWAY_PROTOTYPE(sci_methods);
+CPP_GATEWAY_PROTOTYPE(sci_enumeration);
+CPP_GATEWAY_PROTOTYPE(sci_show_vtable);
 
 #ifndef NDEBUG
 CPP_GATEWAY_PROTOTYPE(sci_inspectorGetItemCount);

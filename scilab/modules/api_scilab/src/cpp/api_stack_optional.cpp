@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2012 - Scilab Enterprises - Antoine ELIAS
  *
@@ -16,7 +16,8 @@
 
 #include "function.hxx"
 #include "gatewaystruct.hxx"
-#include "alltypes.hxx"
+#include "implicitlist.hxx"
+#include "double.hxx"
 
 extern "C"
 {

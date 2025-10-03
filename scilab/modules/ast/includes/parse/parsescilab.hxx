@@ -103,43 +103,47 @@ extern int yydebug;
     OROR = 304,                    /* "||"  */
     ASSIGN = 305,                  /* "="  */
     ARGUMENTS = 306,               /* "arguments"  */
-    IF = 307,                      /* "if"  */
-    THEN = 308,                    /* "then"  */
-    ELSE = 309,                    /* "else"  */
-    ELSEIF = 310,                  /* "elseif"  */
-    END = 311,                     /* "end"  */
-    SELECT = 312,                  /* "select"  */
-    SWITCH = 313,                  /* "switch"  */
-    CASE = 314,                    /* "case"  */
-    OTHERWISE = 315,               /* "otherwise"  */
-    FUNCTION = 316,                /* "function"  */
-    ENDFUNCTION = 317,             /* "endfunction"  */
-    FOR = 318,                     /* "for"  */
-    WHILE = 319,                   /* "while"  */
-    DO = 320,                      /* "do"  */
-    BREAK = 321,                   /* "break"  */
-    CONTINUE = 322,                /* "continue"  */
-    TRY = 323,                     /* "try"  */
-    CATCH = 324,                   /* "catch"  */
-    RETURN = 325,                  /* "return"  */
-    FLEX_ERROR = 326,              /* FLEX_ERROR  */
-    STR = 327,                     /* "string"  */
-    ID = 328,                      /* "identifier"  */
-    VARINT = 329,                  /* "integer"  */
-    VARFLOAT = 330,                /* "float"  */
-    COMPLEXNUM = 331,              /* "complex number"  */
-    NUM = 332,                     /* "number"  */
-    PATH = 333,                    /* "path"  */
-    COMMENT = 334,                 /* "line comment"  */
-    BLOCKCOMMENT = 335,            /* "block comment"  */
-    TOPLEVEL = 336,                /* TOPLEVEL  */
-    HIGHLEVEL = 337,               /* HIGHLEVEL  */
-    UPLEVEL = 338,                 /* UPLEVEL  */
-    LISTABLE = 339,                /* LISTABLE  */
-    CONTROLBREAK = 340,            /* CONTROLBREAK  */
-    UMINUS = 341,                  /* UMINUS  */
-    UPLUS = 342,                   /* UPLUS  */
-    FUNCTIONCALL = 343             /* FUNCTIONCALL  */
+    CLASSDEF = 307,                /* "classdef"  */
+    ENUMERATION = 308,             /* "enumeration"  */
+    METHODS = 309,                 /* "methods"  */
+    PROPERTIES = 310,              /* "properties"  */
+    IF = 311,                      /* "if"  */
+    THEN = 312,                    /* "then"  */
+    ELSE = 313,                    /* "else"  */
+    ELSEIF = 314,                  /* "elseif"  */
+    END = 315,                     /* "end"  */
+    SELECT = 316,                  /* "select"  */
+    SWITCH = 317,                  /* "switch"  */
+    CASE = 318,                    /* "case"  */
+    OTHERWISE = 319,               /* "otherwise"  */
+    FUNCTION = 320,                /* "function"  */
+    ENDFUNCTION = 321,             /* "endfunction"  */
+    FOR = 322,                     /* "for"  */
+    WHILE = 323,                   /* "while"  */
+    DO = 324,                      /* "do"  */
+    BREAK = 325,                   /* "break"  */
+    CONTINUE = 326,                /* "continue"  */
+    TRY = 327,                     /* "try"  */
+    CATCH = 328,                   /* "catch"  */
+    RETURN = 329,                  /* "return"  */
+    FLEX_ERROR = 330,              /* FLEX_ERROR  */
+    STR = 331,                     /* "string"  */
+    ID = 332,                      /* "identifier"  */
+    VARINT = 333,                  /* "integer"  */
+    VARFLOAT = 334,                /* "float"  */
+    COMPLEXNUM = 335,              /* "complex number"  */
+    NUM = 336,                     /* "number"  */
+    PATH = 337,                    /* "path"  */
+    COMMENT = 338,                 /* "line comment"  */
+    BLOCKCOMMENT = 339,            /* "block comment"  */
+    TOPLEVEL = 340,                /* TOPLEVEL  */
+    HIGHLEVEL = 341,               /* HIGHLEVEL  */
+    UPLEVEL = 342,                 /* UPLEVEL  */
+    LISTABLE = 343,                /* LISTABLE  */
+    CONTROLBREAK = 344,            /* CONTROLBREAK  */
+    UMINUS = 345,                  /* UMINUS  */
+    UPLUS = 346,                   /* UPLUS  */
+    FUNCTIONCALL = 347             /* FUNCTIONCALL  */
   };
   typedef enum yytokentype yytoken_kind_t;
 #endif
@@ -197,43 +201,47 @@ extern int yydebug;
 #define OROR 304
 #define ASSIGN 305
 #define ARGUMENTS 306
-#define IF 307
-#define THEN 308
-#define ELSE 309
-#define ELSEIF 310
-#define END 311
-#define SELECT 312
-#define SWITCH 313
-#define CASE 314
-#define OTHERWISE 315
-#define FUNCTION 316
-#define ENDFUNCTION 317
-#define FOR 318
-#define WHILE 319
-#define DO 320
-#define BREAK 321
-#define CONTINUE 322
-#define TRY 323
-#define CATCH 324
-#define RETURN 325
-#define FLEX_ERROR 326
-#define STR 327
-#define ID 328
-#define VARINT 329
-#define VARFLOAT 330
-#define COMPLEXNUM 331
-#define NUM 332
-#define PATH 333
-#define COMMENT 334
-#define BLOCKCOMMENT 335
-#define TOPLEVEL 336
-#define HIGHLEVEL 337
-#define UPLEVEL 338
-#define LISTABLE 339
-#define CONTROLBREAK 340
-#define UMINUS 341
-#define UPLUS 342
-#define FUNCTIONCALL 343
+#define CLASSDEF 307
+#define ENUMERATION 308
+#define METHODS 309
+#define PROPERTIES 310
+#define IF 311
+#define THEN 312
+#define ELSE 313
+#define ELSEIF 314
+#define END 315
+#define SELECT 316
+#define SWITCH 317
+#define CASE 318
+#define OTHERWISE 319
+#define FUNCTION 320
+#define ENDFUNCTION 321
+#define FOR 322
+#define WHILE 323
+#define DO 324
+#define BREAK 325
+#define CONTINUE 326
+#define TRY 327
+#define CATCH 328
+#define RETURN 329
+#define FLEX_ERROR 330
+#define STR 331
+#define ID 332
+#define VARINT 333
+#define VARFLOAT 334
+#define COMPLEXNUM 335
+#define NUM 336
+#define PATH 337
+#define COMMENT 338
+#define BLOCKCOMMENT 339
+#define TOPLEVEL 340
+#define HIGHLEVEL 341
+#define UPLEVEL 342
+#define LISTABLE 343
+#define CONTROLBREAK 344
+#define UMINUS 345
+#define UPLUS 346
+#define FUNCTIONCALL 347
 
 /* Value type.  */
 #if ! defined YYSTYPE && ! defined YYSTYPE_IS_DECLARED
@@ -250,6 +258,7 @@ union YYSTYPE
 
     ast::exps_t*                t_list_var;
     ast::exps_t*                t_list_exp;
+    std::tuple<ast::exps_t, ast::exps_t, ast::exps_t>* t_tuple_list_exp;
     ast::Exp*                   t_exp;
 
     ast::SeqExp*                t_seq_exp;
@@ -288,6 +297,9 @@ union YYSTYPE
 
     ast::FunctionDec*           t_function_dec;
     ast::ArgumentDec*           t_argument_dec;
+    ast::EnumDec*               t_enum_dec;
+    ast::PropertiesDec*         t_properties_dec;
+    ast::MethodsDec*               t_methods_dec;
 
     ast::ArrayListExp*          t_arraylist_exp;
     ast::AssignListExp*         t_assignlist_exp;

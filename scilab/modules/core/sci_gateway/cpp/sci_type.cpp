@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
  *
@@ -71,6 +71,7 @@ types::Function::ReturnValue sci_type(types::typed_list &in, int _iRetCount, typ
             break;
         case types::InternalType::ScilabMacroFile :
         case types::InternalType::ScilabMacro :
+        case types::InternalType::ScilabObjectMethod:
             type = sci_c_function;
             break;
         case types::InternalType::ScilabList :
@@ -101,6 +102,12 @@ types::Function::ReturnValue sci_type(types::typed_list &in, int _iRetCount, typ
             break;
         case types::InternalType::ScilabLibrary:
             type = sci_lib;
+            break;
+        case types::InternalType::ScilabClassdef:
+            type = sci_classdef;
+            break;
+        case types::InternalType::ScilabObject:
+            type = sci_object;
             break;
         default:
             type = 0;

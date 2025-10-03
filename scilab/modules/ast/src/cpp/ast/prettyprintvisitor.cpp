@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2008-2008 - DIGITEO - Bruno JOFRET
  *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
@@ -15,6 +15,8 @@
  */
 
 #include "prettyprintvisitor.hxx"
+#include "configvariable.hxx"
+#include "implicitlist.hxx"
 
 #ifdef _MSC_VER
 
@@ -662,6 +664,62 @@ void PrettyPrintVisitor::visit(const ArgumentDec & e)
     e.getArgumentType()->accept(*this);
     e.getArgumentValidators()->accept(*this);
     e.getArgumentDefaultValue()->accept(*this);
+    END_NODE();
+}
+
+void PrettyPrintVisitor::visit(const ClassDec & e)
+{
+    START_NODE(e);
+    print(e);
+    for (exps_t::const_iterator it = e.getSuperClasses().begin(), itEnd = e.getSuperClasses().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    for (exps_t::const_iterator it = e.getEnumeration().begin(), itEnd = e.getEnumeration().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    for (exps_t::const_iterator it = e.getProperties().begin(), itEnd = e.getProperties().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    for (exps_t::const_iterator it = e.getMethods().begin(), itEnd = e.getMethods().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    END_NODE();
+}
+
+void PrettyPrintVisitor::visit(const EnumDec & e)
+{
+    START_NODE(e);
+    print(e);
+    for (exps_t::const_iterator it = e.getEnumeration().begin(), itEnd = e.getEnumeration().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    END_NODE();
+}
+
+void PrettyPrintVisitor::visit(const PropertiesDec & e)
+{
+    START_NODE(e);
+    print(e);
+    for (exps_t::const_iterator it = e.getProperties().begin(), itEnd = e.getProperties().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
+    END_NODE();
+}
+
+void PrettyPrintVisitor::visit(const MethodsDec & e)
+{
+    START_NODE(e);
+    print(e);
+    for (exps_t::const_iterator it = e.getMethods().begin(), itEnd = e.getMethods().end(); it != itEnd; ++it)
+    {
+        (*it)->accept(*this);
+    }
     END_NODE();
 }
 

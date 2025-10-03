@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2014 - Scilab Enterprises - Antoine ELIAS
  *
@@ -13,11 +13,12 @@
  *
  */
 
-//file included in runvisitor.cpp
-namespace ast {
+// file included in runvisitor.cpp
+namespace ast
+{
 
 template<class T>
-void RunVisitorT<T>::visitprivate(const CallExp &e)
+void RunVisitorT<T>::visitprivate(const CallExp& e)
 {
     CoverageInstance::invokeAndStartChrono((void*)&e);
     types::typed_list outTmp;
@@ -28,7 +29,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
     int iRetCount = getExpectedSize();
     int iSaveExpectedSize = iRetCount;
 
-    //get function arguments
+    // get function arguments
     exps_t args = e.getArgs();
     getInputs(e, args, inTmp, vectOptName, vectNbResult);
 
@@ -40,8 +41,72 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
     {
         e.getName().accept(*this);
     }
-    catch (ScilabException &)
+    catch (ScilabException&)
     {
+        if (inTmp.size() > 0 && inTmp[0]->isObject())
+        {
+            if (e.getName().isSimpleVar())
+            {
+                std::wstring method = e.getName().getAs<SimpleVar>()->getSymbol().getName();
+                types::Object* obj = inTmp[0]->getAs<types::Object>();
+                if (obj->hasMethod(method))
+                {
+                    inTmp.erase(inTmp.begin());
+                    types::optional_list opt;
+                    types::Function::ReturnValue ret = obj->callMethod(method, inTmp, opt, iRetCount, outTmp);
+                    if (ret != types::Function::Error)
+                    {
+                        if (iSaveExpectedSize != -1 && iSaveExpectedSize > outTmp.size())
+                        {
+                            char szError[bsiz];
+                            char* strFName = wide_string_to_UTF8(method.data());
+                            os_sprintf(szError, _("%s: Wrong number of output argument(s): %d expected.\n"), strFName, (int)outTmp.size());
+                            FREE(strFName);
+
+                            wchar_t* wError = to_wide_string(szError);
+                            std::wstring err(wError);
+                            FREE(wError);
+                            throw InternalError(err, 999, e.getLocation());
+                        }
+
+                        setExpectedSize(iSaveExpectedSize);
+                        setResult(outTmp);
+                        cleanIn(inTmp, outTmp);
+                        cleanOpt(opt, outTmp);
+
+                        // In case a.b(), getResult contain pIT ("b").
+                        // If out == pIT, do not delete it.
+                        if (getResult() != obj)
+                        {
+                            // protect element of out in case where
+                            // out contain elements of pIT
+                            for (int i = 0; i < outTmp.size(); i++)
+                            {
+                                outTmp[i]->IncreaseRef();
+                            }
+
+                            obj->DecreaseRef(); // was Inc by getInputs as input parameter
+                            obj->killMe();
+
+                            // unprotect
+                            for (int i = 0; i < outTmp.size(); i++)
+                            {
+                                outTmp[i]->DecreaseRef();
+                            }
+                        }
+
+                        return;
+                    }
+                    else
+                    {
+                        std::wostringstream os;
+                        os << _W("Invalid index.\n");
+                        throw ast::InternalError(os.str(), 999, e.getFirstLocation());
+                    }
+                }
+            }
+        }
+
         cleanIn(inTmp, outTmp);
         CoverageInstance::stopChrono((void*)&e);
         throw;
@@ -51,7 +116,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
     types::InternalType* pIT = getResult();
 
     // pIT can be NULL if one of call return nothing. foo()(1) with foo return nothing.
-    if(pIT == NULL)
+    if (pIT == NULL)
     {
         clearResult();
         cleanIn(inTmp, outTmp);
@@ -93,7 +158,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
 
     if (pIT->isCallable())
     {
-        CoverageInstance::invoke(static_cast<types::Callable *>(pIT));
+        CoverageInstance::invoke(static_cast<types::Callable*>(pIT));
     }
 
     // manage input according the function/variable
@@ -104,14 +169,14 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
     {
         iLoop++;
 
-        //special case for empty extraction of list ( list()(:) )
+        // special case for empty extraction of list ( list()(:) )
         if (vectNbResult[iLoop] == 0)
         {
             continue;
         }
 
-        //extract implicit list for call()
-        if (pIT->isCallable() || pIT->isUserType())
+        // extract implicit list for call()
+        if (pIT->isCallable() || pIT->isUserType() || pIT->isObject() || pIT->isClassdef())
         {
             if (inTmp[iterIn]->isImplicitList())
             {
@@ -134,8 +199,8 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
             {
                 opt[vectOptName[iterOptName]] = inTmp[iterIn];
 
-                //in case of macro/macrofile, we have to shift input param
-                //so add NULL item in in list to keep initial order
+                // in case of macro/macrofile, we have to shift input param
+                // so add NULL item in in list to keep initial order
                 if (pIT->isMacro() || pIT->isMacroFile())
                 {
                     in.push_back(new types::ListInsert(new types::String(vectOptName[iterOptName].data())));
@@ -175,7 +240,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
         setExpectedSize(iSaveExpectedSize);
 
         // override iRetCount only in relevant cases
-        if (pIT->isCallable() && e.getParent()->isSeqExp())
+        if (pIT->isCallable() && e.getParent()->isSeqExp() || pIT->isClassdef())
         {
             iRetCount = std::max(0, iRetCount);
         }
@@ -221,18 +286,58 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
                 }
             }
 
-            bool ret = false;
-            if (pIT->isInvokable() == false)
+            //cos(a) with a is an object
+            bool skipNormalProcess = false;
+            types::Function::ReturnValue ret = types::Function::OK;
+            if (in.size() > 0 && in[0]->isObject())
             {
-                // call overload
-                ret = Overload::call(L"%" + pIT->getShortTypeStr() + L"_e", in, iRetCount, out, true, true, e.getLocation());
-            }
-            else
-            {
-                ret = pIT->invoke(in, opt, iRetCount, out, e);               
+                if (e.getName().isSimpleVar())
+                {
+                    std::wstring method = e.getName().getAs<SimpleVar>()->getSymbol().getName();
+                    types::Object* obj = in[0]->getAs<types::Object>();
+                    types::typed_list in2(in.begin() + 1, in.end());
+                    types::optional_list opt;
+                    ret = obj->callMethod(method, in2, opt, iRetCount, out);
+
+                    if (ret == types::Function::OK)
+                    {
+                        skipNormalProcess = true;
+                    }
+                }
             }
 
-            if (ret)
+            if (skipNormalProcess == false)
+            {
+                if (pIT->isObject() && pIT->getAs<types::Object>()->hasMethod(L"extract"))
+                {
+                    types::optional_list opt;
+
+                    if (pIT->getAs<types::Object>()->callMethod(L"extract", in, opt, 1, out) != types::Function::OK)
+                    {
+                        throw InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+                    }
+
+                    setExpectedSize(iSaveExpectedSize);
+                    setResult(out);
+                    cleanIn(in, out);
+                    cleanOpt(opt, out);
+                    CoverageInstance::stopChrono((void*)&e);
+                    return;
+                }
+
+                if (pIT->isInvokable() == false)
+                {
+                    // call overload
+                    ret = Overload::call(L"%" + pIT->getShortTypeStr() + L"_e", in, iRetCount, out, true, true, e.getLocation());
+                }
+                else
+                {
+                    bool ret2 = pIT->invoke(in, opt, iRetCount, out, e);               
+                    ret = ret2 ? types::Function::OK : types::Function::Error;
+                }
+            }
+
+            if (ret == types::Function::OK)
             {
                 if (iSaveExpectedSize != -1 && iSaveExpectedSize > out.size())
                 {
@@ -240,12 +345,12 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
                     if (pIT->isCallable())
                     {
                         char* strFName = wide_string_to_UTF8(pIT->getAs<types::Callable>()->getName().c_str());
-                        os_sprintf(szError, _("%s: Wrong number of output argument(s): %d expected.\n"), strFName, (int) out.size());
+                        os_sprintf(szError, _("%s: Wrong number of output argument(s): %d expected.\n"), strFName, (int)out.size());
                         FREE(strFName);
                     }
                     else
                     {
-                        os_sprintf(szError, _("%s: Wrong number of output argument(s): %d expected.\n"), "extract", (int) out.size());
+                        os_sprintf(szError, _("%s: Wrong number of output argument(s): %d expected.\n"), "extract", (int)out.size());
                     }
 
                     wchar_t* wError = to_wide_string(szError);
@@ -300,7 +405,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
             pListArg->killMe();
         }
     }
-    catch (const InternalAbort & ia)
+    catch (const InternalAbort& ia)
     {
         setExpectedSize(iSaveExpectedSize);
         if (pIT != getResult())
@@ -318,7 +423,7 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
     catch (InternalError& ie)
     {
         // set location if the function which thrown this execption was not able to do it
-        if(ie.GetErrorLocation().first_line == -1)
+        if (ie.GetErrorLocation().first_line == -1)
         {
             ie.SetErrorLocation(e.getLocation());
         }
@@ -341,17 +446,17 @@ void RunVisitorT<T>::visitprivate(const CallExp &e)
 }
 
 template<class T>
-void RunVisitorT<T>::visitprivate(const CellCallExp &e)
+void RunVisitorT<T>::visitprivate(const CellCallExp& e)
 {
     CoverageInstance::invokeAndStartChrono((void*)&e);
 
-    //get head
+    // get head
     T execMeCell;
     try
     {
         e.getName().accept(execMeCell);
     }
-    catch (ScilabException &)
+    catch (ScilabException&)
     {
         CoverageInstance::stopChrono((void*)&e);
         throw;
@@ -359,8 +464,8 @@ void RunVisitorT<T>::visitprivate(const CellCallExp &e)
 
     if (execMeCell.getResult() != NULL)
     {
-        //a{xxx} with a variable, extraction
-        types::InternalType *pIT = NULL;
+        // a{xxx} with a variable, extraction
+        types::InternalType* pIT = NULL;
 
         pIT = execMeCell.getResult();
 
@@ -373,9 +478,9 @@ void RunVisitorT<T>::visitprivate(const CellCallExp &e)
                 throw ast::InternalError(_W("[error] Cell contents reference from a non-cell array object.\n"), 999, e.getFirstLocation());
             }
 
-            //Create list of indexes
+            // Create list of indexes
             ast::exps_t exps = e.getArgs();
-            types::typed_list *pArgs = GetArgumentList(exps);
+            types::typed_list* pArgs = GetArgumentList(exps);
 
             if (pArgs->size() == 0)
             {
@@ -394,7 +499,7 @@ void RunVisitorT<T>::visitprivate(const CellCallExp &e)
                 delete pArgs;
                 std::wostringstream os;
                 os << _W("inconsistent row/column dimensions\n");
-                //os << ((*e.args_get().begin())->getLocation()).getLocationString() << std::endl;
+                // os << ((*e.args_get().begin())->getLocation()).getLocationString() << std::endl;
                 CoverageInstance::stopChrono((void*)&e);
                 throw ast::InternalError(os.str(), 999, e.getFirstLocation());
             }
@@ -413,8 +518,7 @@ void RunVisitorT<T>::visitprivate(const CellCallExp &e)
                 setResult(pList);
             }
 
-
-            //clean pArgs return by GetArgumentList
+            // clean pArgs return by GetArgumentList
             for (int iArg = 0; iArg < (int)pArgs->size(); iArg++)
             {
                 (*pArgs)[iArg]->killMe();
@@ -424,10 +528,10 @@ void RunVisitorT<T>::visitprivate(const CellCallExp &e)
     }
     else
     {
-        //result == NULL ,variable doesn't exist :(
-        // Should never be in this case
-        // In worst case variable pointing to function does not exist
-        // visitprivate(SimpleVar) will throw the right exception.
+        // result == NULL ,variable doesn't exist :(
+        //  Should never be in this case
+        //  In worst case variable pointing to function does not exist
+        //  visitprivate(SimpleVar) will throw the right exception.
     }
     CoverageInstance::stopChrono((void*)&e);
 }
@@ -442,7 +546,7 @@ void RunVisitor::getInputs(const CallExp& e, exps_t& args, types::typed_list& in
             if (arg->isAssignExp())
             {
                 AssignExp* pAssign = static_cast<AssignExp*>(arg);
-                //optional parameter
+                // optional parameter
                 Exp* pL = &pAssign->getLeftExp();
                 if (!pL->isSimpleVar())
                 {
@@ -460,7 +564,7 @@ void RunVisitor::getInputs(const CallExp& e, exps_t& args, types::typed_list& in
                 {
                     pR->accept(*this);
                 }
-                catch (ScilabException &)
+                catch (ScilabException&)
                 {
                     CoverageInstance::stopChrono((void*)&e);
                     throw;
@@ -484,7 +588,7 @@ void RunVisitor::getInputs(const CallExp& e, exps_t& args, types::typed_list& in
             {
                 arg->accept(*this);
             }
-            catch (ScilabException &)
+            catch (ScilabException&)
             {
                 CoverageInstance::stopChrono((void*)&e);
                 throw;
@@ -493,7 +597,7 @@ void RunVisitor::getInputs(const CallExp& e, exps_t& args, types::typed_list& in
 
             if (getResult() == NULL)
             {
-                //special case for empty extraction of list ( list()(:) )
+                // special case for empty extraction of list ( list()(:) )
                 vectNbResult.push_back(0);
                 continue;
             }
@@ -507,7 +611,7 @@ void RunVisitor::getInputs(const CallExp& e, exps_t& args, types::typed_list& in
             {
                 for (int i = 0; i < getResultSize(); i++)
                 {
-                    types::InternalType * pITArg = getResult(i);
+                    types::InternalType* pITArg = getResult(i);
                     pITArg->IncreaseRef();
                     inTmp.push_back(pITArg);
                 }

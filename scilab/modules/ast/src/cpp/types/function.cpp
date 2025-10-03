@@ -249,8 +249,8 @@ OptFunction::OptFunction(const std::wstring& _wstName, GW_FUNC_OPT _pFunc, LOAD_
 
 OptFunction::OptFunction(OptFunction* _pWrapFunction)
 {
-    m_wstModule  = _pWrapFunction->getModule();
-    m_wstName    = _pWrapFunction->getName();
+    m_wstModule = _pWrapFunction->getModule();
+    m_wstName = _pWrapFunction->getName();
     char* s = wide_string_to_UTF8(m_wstName.data());
     m_stName = s;
     FREE(s);
@@ -263,7 +263,7 @@ OptFunction* OptFunction::clone()
     return new OptFunction(this);
 }
 
-Function::ReturnValue OptFunction::call(typed_list &in, optional_list &opt, int _iRetCount, typed_list &out)
+Function::ReturnValue OptFunction::call(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
 {
     int ret = 1;
     if (m_pLoadDeps != NULL)

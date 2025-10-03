@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
 *  Copyright (C) 2014 - Scilab Enterprises - Anais AUBERT
@@ -444,6 +444,7 @@ types::Function::ReturnValue sci_string(types::typed_list &in, int _iRetCount, t
         case types::InternalType::ScilabStruct:
         case types::InternalType::ScilabList:
         case types::InternalType::ScilabCell:
+        case types::InternalType::ScilabObject:
             return Overload::generateNameAndCall(L"string", in, _iRetCount, out);
         default:
         {

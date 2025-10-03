@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Antoine ELIAS
  *
@@ -910,8 +910,9 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
             // a will be create in insertionCall
         }
         else if (pITMain->getRef() > 1 &&
-                pITMain->isHandle() == false &&
-                pITMain->isCallable() == false)
+                 pITMain->isHandle() == false &&
+                 pITMain->isObject() == false &&
+                 pITMain->isCallable() == false)
         {
             bPutInCtx = true;
             pITMain = pITMain->clone();
@@ -1471,7 +1472,7 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
                     throw ast::InternalError(os.str(), 999, _pExp->getLocation());
                 }
             }
-            else if (pITCurrent->isUserType()) // not a Scilab defined datatype, access field after field
+            else if (pITCurrent->isUserType() || pITCurrent->isClassdef()) // not a Scilab defined datatype, access field after field
             {
                 // call userType extract method
                 if (pEH->getArgs())
@@ -1526,8 +1527,21 @@ types::InternalType* evaluateFields(const ast::Exp* _pExp, std::list<ExpHistory*
                     }
                     else
                     {
-                        types::InternalType* pExtract = pITCurrent->getAs<types::UserType>()->extract(args);
-                        if (pExtract == NULL)
+                        types::InternalType* pExtract = nullptr;
+                        if (pITCurrent->isObject())
+                        {
+                            pITCurrent->getAs<types::Object>()->extract(pwcsFieldname, pExtract);
+                        }
+                        else if (pITCurrent->isClassdef())
+                        {
+                            pITCurrent->getAs<types::Classdef>()->extract(pwcsFieldname, pExtract);
+                        }
+                        else
+                        {
+                            pExtract = pITCurrent->getAs<types::UserType>()->extract(args);
+                        }
+
+                        if (pExtract == nullptr)
                         {
                             // call overload
                             pExtract = callOverload(*pEH->getExp(), L"e", args, pITCurrent, NULL);
@@ -2326,7 +2340,7 @@ types::InternalType* insertionCall(const ast::Exp& e, types::typed_list* _pArgs,
                     pRet = _pVar->getAs<types::GraphicHandle>()->insert(_pArgs, _pInsert);
                 }
             }
-            else if (_pVar->isUserType())
+            else if (_pVar->isUserType() || _pVar->isClassdef())
             {
                 for (int i = 0; i < _pArgs->size(); i++)
                 {
@@ -2342,7 +2356,15 @@ types::InternalType* insertionCall(const ast::Exp& e, types::typed_list* _pArgs,
                     }
                 }
 
-                pRet = _pVar->getAs<types::UserType>()->insert(_pArgs, _pInsert);
+                if (_pVar->isUserType())
+                {
+                    pRet = _pVar->getAs<types::UserType>()->insert(_pArgs, _pInsert);
+                }
+                else
+                {
+                    pRet = _pVar->getAs<types::Classdef>()->insert(_pArgs, _pInsert);
+                }
+
                 if (pRet == NULL)
                 {
                     pRet = callOverload(e, L"i", _pArgs, _pInsert, _pVar);
@@ -2377,7 +2399,7 @@ types::InternalType* insertionCall(const ast::Exp& e, types::typed_list* _pArgs,
         {
             pIL->killMe();
         }
-        
+
         // set location if the function which thrown this execption was not able to do it
         if(ie.GetErrorLocation().first_line == -1)
         {
@@ -2603,28 +2625,51 @@ std::wstring printTypeDimsInfo(types::InternalType *pIT)
 {
     // print outline (dims + type)
     std::wostringstream ostr;
+    types::Function::ReturnValue ret;
     types::Double* pDblOne = new types::Double(1);
     types::typed_list in;
     types::typed_list out;
 
-    pIT->IncreaseRef();
-    pDblOne->IncreaseRef();
-    in.push_back(pIT);
-    in.push_back(pDblOne);
-    types::Function::ReturnValue ret = Overload::generateNameAndCall(L"outline", in, 1, out, false, false);
-    if(ret == types::Callable::OK_NoResult)
+    bool normalProcess = true;
+    if (pIT->isObject() && pIT->getAs<types::Object>()->hasMethod(L"outline"))
     {
-        // fallthrough: call generic %tlist_outline
-        if (pIT->isMList() || pIT->isTList())
+        types::optional_list opt;
+        pDblOne->IncreaseRef();
+        in.push_back(pDblOne);
+        ret = pIT->getAs<types::Object>()->callMethod(L"outline", in, opt, 1, out);
+        if (ret == types::Function::OK && out.size() == 1)
         {
-            std::wstring wstrFuncName = L"%tlist_outline";
-            ret = Overload::call(wstrFuncName, in, 1, out, false, false);
+            normalProcess = false;
+        }
+        else
+        {
+            pDblOne->DecreaseRef();
         }
     }
 
-    pIT->DecreaseRef();
-    pDblOne->DecreaseRef();
-    pDblOne->killMe();
+    if (normalProcess)
+    {
+        pIT->IncreaseRef();
+        pDblOne->IncreaseRef();
+        in.push_back(pIT);
+        in.push_back(pDblOne);
+
+        ret = Overload::generateNameAndCall(L"outline", in, 1, out, false, false);
+        if (ret == types::Callable::OK_NoResult)
+        {
+            // fallthrough: call generic %tlist_outline
+            if (pIT->isMList() || pIT->isTList())
+            {
+                std::wstring wstrFuncName = L"%tlist_outline";
+                ret = Overload::call(wstrFuncName, in, 1, out, false, false);
+            }
+        }
+
+        pIT->DecreaseRef();
+        pDblOne->DecreaseRef();
+        pDblOne->killMe();
+    }
+
     if (ret != types::Function::OK_NoResult)
     {
         if (out.size() != 0 && out[0]->isString())
@@ -2663,4 +2708,46 @@ std::wstring printVarEqualTypeDimsInfo(types::InternalType *pIT, std::wstring wc
     return ostr.str();
 }
 
+types::Macro* parseFunctionDec(const ast::FunctionDec& e)
+{
+    // get input parameters list
+    std::vector<symbol::Variable*>* pVarList = new std::vector<symbol::Variable*>();
+    const ast::exps_t& vars = e.getArgs().getVars();
+    for (const auto var : vars)
+    {
+        pVarList->push_back(var->getAs<ast::SimpleVar>()->getStack());
+    }
+
+    types::Macro* pMacro = nullptr;
+    if (e.isLambda())
+    {
+        // in case of lambda, recreate the Macro because the input argument at the lambda creation may change.
+        pMacro = new types::Macro(*pVarList, const_cast<ast::SeqExp&>(static_cast<const ast::SeqExp&>(e.getBody())), L"script");
+    }
+    else
+    {
+        // no need to recreate the same Macro of the same exp (ie: define a macro in a for exp)
+        pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
+        if (pMacro == nullptr)
+        {
+            //get output parameters list
+            std::vector<symbol::Variable*>* pRetList = new std::vector<symbol::Variable*>();
+            const ast::exps_t& rets = e.getReturns().getVars();
+            for (const auto ret : rets)
+            {
+                pRetList->push_back(ret->getAs<ast::SimpleVar>()->getStack());
+            }
+
+            pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<ast::SeqExp&>(static_cast<const ast::SeqExp&>(e.getBody())), L"script");
+            const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
+        }
+        else
+        {
+            delete pVarList;
+        }
+    }
+
+    pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
+    return pMacro;
+}
 /*--------------------------------------------------------------------------*/

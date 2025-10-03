@@ -325,7 +325,7 @@ void ExpHistory::setReinsertion(bool bForce)
     // special case for handle, we have not to reinsert
     // the handle in this parent after insertion of something
     // in handle by overload.
-    if (bForce || (m_pITCurrent != NULL && m_pITCurrent->isHandle() == false))
+    if (bForce || (m_pITCurrent != NULL && m_pITCurrent->isHandle() == false && m_pITCurrent->isObject() == false))
     {
         m_bReinsertMe = true;
     }

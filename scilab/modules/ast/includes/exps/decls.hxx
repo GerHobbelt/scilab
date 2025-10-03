@@ -82,6 +82,10 @@ class CellExp;
 class VarDec;
 class FunctionDec;
 class ArgumentDec;
+class ClassDec;
+class EnumDec;
+class PropertiesDec;
+class MethodsDec;
 
 // Type dedicated Exp
 class ListExp;

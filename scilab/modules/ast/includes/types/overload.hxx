@@ -41,7 +41,7 @@ public:
             types::typed_list &out, bool _isOperator = false, bool errorOnUndefined = true, const Location& _Location = Location());
 
     static std::wstring getNameFromOper(const int);
-
+    static std::pair<std::wstring, int> getMethodFromOper(const int _oper);
 };
 
 #endif /* !__OVERLOAD_HXX__ */

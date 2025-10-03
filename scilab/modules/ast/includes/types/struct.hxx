@@ -61,7 +61,13 @@ public :
     {
         return true;
     }
-    bool                        isEmpty();
+
+    bool isA(const std::wstring& type)
+    {
+        return type == L"st" || type == L"struct";
+    }
+
+    bool isEmpty();
 
     bool transpose(InternalType *& out) override;
 

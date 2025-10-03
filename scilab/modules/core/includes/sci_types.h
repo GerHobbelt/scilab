@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) INRIA
  * Copyright (C) ENPC
@@ -39,6 +39,8 @@ typedef enum
     sci_mlist = 17,
     sci_struct = 18,
     sci_cell = 19,
+    sci_classdef = 20,
+    sci_object = 21,
     sci_pointer = 128, /* pointer */
     sci_implicit_poly = 129,
     sci_intrinsic_function = 130

@@ -42,7 +42,12 @@ public :
         return true;
     }
 
-    void                    whoAmI();
+    bool isA(const std::wstring& type)
+    {
+        return type == L"void" || type == L"null";
+    }
+
+    void whoAmI();
 
     bool                    toString(std::wostringstream& ostr);
 

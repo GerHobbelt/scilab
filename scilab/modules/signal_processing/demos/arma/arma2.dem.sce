@@ -7,7 +7,7 @@
 
 function demo_arma2()
 
-    editor SCI/modules/signal_processing/demos/arma/arma2.dem.sce;
+    editor("SCI/modules/signal_processing/demos/arma/arma2.dem.sce");
     l = lines();
     lines(0);
 

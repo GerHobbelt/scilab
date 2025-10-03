@@ -9,8 +9,8 @@
 // along with this program.
 
 function t = %l_string_inc(x, level)
-    // Internal function called by %st_p, %l_p, and %l_string_inc itself
-    // Can be called with s = struct | Tlist | list
+    // Internal function called by %st_p, %l_p, %object_p and %l_string_inc itself
+    // Can be called with s = struct | Tlist | list | Object
 
     maxlevel = evstr(xmlGetValues("//general/body/environment","container_disp_max_depth"));
     if ~exists("level","local") then
@@ -19,10 +19,12 @@ function t = %l_string_inc(x, level)
 
     fmt = "%s";
 
-    if type(x) == 15 || (isstruct(x) == %f && (fieldnames(x) == [] && length(x)>0))
+    if isa(x, "object")
+        fields = properties(x)';
+    elseif type(x) == 15 || (isstruct(x) == %f && (fieldnames(x) == [] && length(x)>0))
         fields = 1:length(x);
     else
-        fields = fieldnames(x)(:)';        
+        fields = fieldnames(x)(:)';
     end
     if type(fields) == 1
         fmt = "(%d)";
@@ -57,7 +59,7 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
         catch
         end
     end
-    if ~exists("value","local")    
+    if ~exists("value","local")
         head = "void";
     elseif type(value) == 15
         head = %l_outline(value, verb);
@@ -73,7 +75,7 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
         head = %tlist_outline(value, verb);
         if level > 0 & fieldnames(value) <> []
             str = blanks(4) + %l_string_inc(value, level-1);
-        end        
+        end
     elseif or(type(value) == [1,2,4,5,6,8,10]) || iscell(value)
         // almost-native arrayOf types
         L = lines()(1)/2;
@@ -96,7 +98,7 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
             if err <> 0
                 head = typeof(value);
             end
-        end        
+        end
     end
     head = char + head;
 endfunction

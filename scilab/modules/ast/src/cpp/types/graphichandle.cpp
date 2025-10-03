@@ -66,7 +66,6 @@ void GraphicHandle::whoAmI()
     std::cout << "types::GraphicHandle";
 }
 
-
 GraphicHandle::~GraphicHandle()
 {
     if (isDeletable() == true)

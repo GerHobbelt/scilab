@@ -79,6 +79,12 @@ struct EXTERN_AST Sparse : GenericType
     {
         return true;
     }
+
+    bool isA(const std::wstring& type)
+    {
+        return type == L"sparse";
+    }
+
     void finalize();
     
     bool getMemory(long long *_piSize, long long* _piSizePlusType);
@@ -518,6 +524,12 @@ struct EXTERN_AST SparseBool : GenericType
     {
         return true;
     }
+
+    bool isA(const std::wstring& type)
+    {
+        return type == L"bsparse" || type == L"booleansparse";
+    }
+
     void finalize();
 
     bool getMemory(long long *_piSize, long long* _piSizePlusType);

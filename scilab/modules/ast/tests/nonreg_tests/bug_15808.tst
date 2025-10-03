@@ -18,12 +18,12 @@
 // [5i] is parsed as [5,i]
 
 clear e
-assert_checkerror("5e",["5e";"^~^";"Error: Can''t convert ''5e'' to a valid number nor identifier"])
-assert_checkerror("[5e]",["[5e]";" ^~^";"Error: Can''t convert ''5e'' to a valid number nor identifier"])
-assert_checkerror(".5e",[".5e";"^~~^";"Error: Can''t convert ''.5e'' to a valid number nor identifier"])
-assert_checkerror("[.5e]",["[.5e]";" ^~~^";"Error: Can''t convert ''.5e'' to a valid number nor identifier"])
-assert_checkerror("5en",["5en";"^~~^";"Error: Can''t convert ''5en'' to a valid number nor identifier"])
-assert_checkerror("[5en]",["[5en]";" ^~~^";"Error: Can''t convert ''5en'' to a valid number nor identifier"])
+assert_checkerror("5e",["5e";"^~^";"Error: 1.1->1.3 Can''t convert ''5e'' to a valid number nor identifier"])
+assert_checkerror("[5e]",["[5e]";" ^~^";"Error: 1.2->1.4 Can''t convert ''5e'' to a valid number nor identifier"])
+assert_checkerror(".5e",[".5e";"^~~^";"Error: 1.1->1.4 Can''t convert ''.5e'' to a valid number nor identifier"])
+assert_checkerror("[.5e]",["[.5e]";" ^~~^";"Error: 1.2->1.5 Can''t convert ''.5e'' to a valid number nor identifier"])
+assert_checkerror("5en",["5en";"^~~^";"Error: 1.1->1.4 Can''t convert ''5en'' to a valid number nor identifier"])
+assert_checkerror("[5en]",["[5en]";" ^~~^";"Error: 1.2->1.5 Can''t convert ''5en'' to a valid number nor identifier"])
 assert_checkerror("[5 e]","Undefined variable: e")
 assert_checkerror("[5,e]","Undefined variable: e")
 e = 1

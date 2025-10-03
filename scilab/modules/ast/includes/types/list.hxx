@@ -69,7 +69,12 @@ public :
         return true;
     }
 
-    List*                           insert(typed_list* _pArgs, InternalType* _pSource) override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"list";
+    }
+
+    List* insert(typed_list* _pArgs, InternalType* _pSource) override;
     InternalType*                   extract(typed_list* _pArgs) override;
 
     virtual bool invoke(typed_list & in, optional_list & /*opt*/, int /*_iRetCount*/, typed_list & out, const ast::Exp & /*e*/) override

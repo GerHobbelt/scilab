@@ -77,7 +77,12 @@ public :
         return true;
     }
 
-    void                    whoAmI(void) override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"polynom" || type == L"poly" || type == L"polynomial";
+    }
+
+    void whoAmI(void) override;
     std::wstring&           getVariableName();
     void                    setVariableName(const std::wstring&);
     bool                    getSizes(int *_piSizes);

@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
  *
@@ -35,7 +35,14 @@ std::wstring Overload::buildOverloadName(const std::wstring& _stFunctionName, ty
 
     if (_truncated)
     {
-        stType0 = stType0.substr(0, 8);
+        if (in[0]->isObject())
+        {
+            stType0 = L"object";
+        }
+        else
+        {
+            stType0 = stType0.substr(0, 8);
+        }
     }
 
     switch (in.size())
@@ -63,10 +70,10 @@ types::Function::ReturnValue Overload::generateNameAndCall(const std::wstring& _
 
     // if overload doesn't existe try with short name
     std::wstring stFunc2 = buildOverloadName(_stFunctionName, in, _iRetCount, _isOperator, true);
-    if (symbol::Context::getInstance()->get(symbol::Symbol(stFunc)))
+    if (symbol::Context::getInstance()->get(symbol::Symbol(stFunc2)))
     {
-        types::Function::ReturnValue ret = call(stFunc, in, _iRetCount, out, _isOperator, errorOnUndefined, _Location);
-        if (ret == types::Function::OK && ConfigVariable::getWarningMode())
+        types::Function::ReturnValue ret = call(stFunc2, in, _iRetCount, out, _isOperator, errorOnUndefined, _Location);
+        if (ret == types::Function::OK && ConfigVariable::getWarningMode() && in[0]->isObject() == false)
         {
             char* pstFunc2 = wide_string_to_UTF8(stFunc2.c_str());
             char* pstFunc = wide_string_to_UTF8(stFunc.c_str());
@@ -83,6 +90,34 @@ types::Function::ReturnValue Overload::generateNameAndCall(const std::wstring& _
 
 types::Function::ReturnValue Overload::call(const std::wstring& _stOverloadingFunctionName, types::typed_list& in, int _iRetCount, types::typed_list& out, bool _isOperator, bool errorOnUndefined, const Location& _location)
 {
+    if (in.size() > 0 && in[0]->isObject())
+    {
+        try
+        {
+            types::Object* obj = in[0]->getAs<types::Object>();
+            types::typed_list in2(in.begin() + 1, in.end());
+            types::optional_list opt;
+            if (obj->callMethod(_stOverloadingFunctionName, in2, opt, _iRetCount, out) == types::Function::OK)
+            {
+                return types::Function::OK;
+            }
+        }
+        catch (const ast::InternalError& ie)
+        {
+            ConfigVariable::fillWhereError(ie.GetErrorLocation());
+            // remove function name in where
+            ConfigVariable::where_end();
+            ConfigVariable::decreaseRecursion();
+            throw ie;
+        }
+        catch (const ast::InternalAbort& ia)
+        {
+            ConfigVariable::where_end();
+            ConfigVariable::decreaseRecursion();
+            throw ia;
+        }
+    }
+
     types::InternalType *pIT = symbol::Context::getInstance()->get(symbol::Symbol(_stOverloadingFunctionName));
     types::Callable* pCall = NULL;
     try
@@ -229,5 +264,75 @@ std::wstring Overload::getNameFromOper(const int _oper)
             return std::wstring(L"g");
         default :
             return std::wstring(L"???");
+    }
+}
+
+std::pair<std::wstring, int> Overload::getMethodFromOper(const int _oper)
+{
+    switch (_oper)
+    {
+        /* standard operators */
+        case ast::OpExp::plus:
+            return {std::wstring(L"plus"), 2};
+        case ast::OpExp::unaryPlus:
+            return {std::wstring(L"uplus"), 1};
+        case ast::OpExp::unaryMinus:
+            return {std::wstring(L"uminus"), 1};
+        case ast::OpExp::minus:
+            return {std::wstring(L"minus"), 2};
+        case ast::OpExp::times:
+            return {std::wstring(L"mtimes"), 2};
+        case ast::OpExp::rdivide:
+            return {std::wstring(L"mrdivide"), 2};
+        case ast::OpExp::ldivide:
+            return {std::wstring(L"mldivide"), 2};
+        case ast::OpExp::power:
+            return {std::wstring(L"mpower"), 2};
+        /* dot operators */
+        case ast::OpExp::dottimes:
+            return {std::wstring(L"times"), 2};
+        case ast::OpExp::dotrdivide:
+            return {std::wstring(L"rdivide"), 2};
+        case ast::OpExp::dotldivide:
+            return {std::wstring(L"ldivide"), 2};
+        case ast::OpExp::dotpower:
+            return {std::wstring(L"power"), 2};
+        /* Kron operators */
+        case ast::OpExp::krontimes:
+            return {std::wstring(L"kron"), 2};
+        case ast::OpExp::kronrdivide:
+            return {std::wstring(L"rkron"), 2};
+        case ast::OpExp::kronldivide:
+            return {std::wstring(L"lkron"), 2};
+        /* Control Operators ??? */
+        case ast::OpExp::controltimes:
+            return {std::wstring(L"controltimes"), 2};
+        case ast::OpExp::controlrdivide:
+            return {std::wstring(L"controlrdivide"), 2};
+        case ast::OpExp::controlldivide:
+            return {std::wstring(L"controlldivide"), 2};
+        /* comparison */
+        case ast::OpExp::eq:
+            return {std::wstring(L"eq"), 2};
+        case ast::OpExp::ne:
+            return {std::wstring(L"ne"), 2};
+        case ast::OpExp::lt:
+            return {std::wstring(L"lt"), 2};
+        case ast::OpExp::le:
+            return {std::wstring(L"le"), 2};
+        case ast::OpExp::gt:
+            return {std::wstring(L"gt"), 2};
+        case ast::OpExp::ge:
+            return {std::wstring(L"ge"), 2};
+        case ast::OpExp::logicalAnd:
+            return {std::wstring(L"and"), 2};
+        case ast::OpExp::logicalOr:
+            return {std::wstring(L"or"), 2};
+        case ast::OpExp::logicalShortCutAnd:
+            return {std::wstring(L"shortand"), 2};
+        case ast::OpExp::logicalShortCutOr:
+            return {std::wstring(L"shortor"), 2};
+        default:
+            return {std::wstring(L"???"), 2};
     }
 }

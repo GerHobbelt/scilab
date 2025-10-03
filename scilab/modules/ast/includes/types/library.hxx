@@ -34,6 +34,11 @@ public :
         return true;
     }
 
+    bool isA(const std::wstring& type)
+    {
+        return type == L"lib" || type == L"library";
+    }
+
     /* return type as string ( double, int, cell, list, ... )*/
     virtual std::wstring getTypeStr() const
     {

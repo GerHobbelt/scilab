@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
  *  Copyright (C) 2010-2010 - DIGITEO - Bruno JOFRET
@@ -22,6 +22,7 @@
 #pragma warning(disable: 4251)
 #endif
 
+#include <functional>
 #include <string>
 #include "types.hxx"
 #include "callable.hxx"
@@ -36,6 +37,8 @@ extern "C"
 
 namespace types
 {
+template<typename T> class ObjectFunction;
+
 class EXTERN_AST Function : public Callable
 {
 public :
@@ -64,6 +67,12 @@ public :
     //FIXME : Should not return NULL
     virtual Function*       clone() override;
     virtual bool operator==(const InternalType& it) override;
+
+    template <typename T>
+    static Function* createFunction(const std::wstring& _wstName, T* obj, ReturnValue(T::* _pFunc)(typed_list&, int, typed_list&), const std::wstring& _wstModule)
+    {
+        return new ObjectFunction<T>(_wstName, obj, _pFunc, _wstModule);
+    }
 
     static Function*        createFunction(const std::wstring& _wstName, GW_FUNC _pFunc, const std::wstring& _wstModule);
     static Function*        createFunction(const std::wstring& _wstName, GW_FUNC_OPT _pFunc, const std::wstring& _wstModule);
@@ -94,7 +103,12 @@ public :
         return true;
     }
 
-    void                    whoAmI() override;
+    bool isA(const std::wstring& type)
+    {
+        return type == L"function" || type == L"builtin" || type == L"fptr";
+    }
+
+    void whoAmI() override;
 
     bool                    toString(std::wostringstream& ostr) override;
 
@@ -147,6 +161,63 @@ private:
     GW_FUNC_OPT             m_pFunc;
 };
 
+template <typename T>
+class ObjectFunction : public Function
+{
+private:
+    ObjectFunction(ObjectFunction* _pWrapFunction)
+    {
+        m_wstModule = _pWrapFunction->getModule();
+        m_wstName = _pWrapFunction->getName();
+        char* s = wide_string_to_UTF8(m_wstName.data());
+        m_stName = s;
+        FREE(s);
+        m_pFunc = _pWrapFunction->getFunc();
+    }
+
+public:
+    ObjectFunction(const std::wstring& _wstName, T* obj, ReturnValue (T::*_pFunc)(typed_list&, int, typed_list&), const std::wstring& _wstModule)
+    {
+        m_wstName = _wstName;
+        char* s = wide_string_to_UTF8(m_wstName.data());
+        m_stName = s;
+        FREE(s);
+        m_pFunc = _pFunc;
+        m_wstModule = _wstModule;
+        m_obj = obj;
+    }
+
+
+    Callable::ReturnValue call(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out) override
+    {
+        int ret = 1;
+        if (m_pLoadDeps != NULL)
+        {
+            ret = m_pLoadDeps(m_wstName);
+        }
+
+        if (ret == 0)
+        {
+            return Error;
+        }
+
+        return (m_obj->*m_pFunc)(in, _iRetCount, out);
+    }
+
+    ObjectFunction* clone() override
+    {
+        return new ObjectFunction(this);
+    }
+
+    ReturnValue (T::*getFunc())(typed_list&, int, typed_list&)
+    {
+        return m_pFunc;
+    }
+    
+private:
+    ReturnValue (T::*m_pFunc)(typed_list&, int, typed_list&);
+    T* m_obj;
+};
 
 class WrapFunction : public Function
 {

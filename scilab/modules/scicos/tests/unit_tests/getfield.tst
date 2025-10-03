@@ -109,3 +109,20 @@ assert_checkequal(to, l.to);
 
 refMsg = msprintf(_("%s: Wrong value for input argument #%d: At most %d expected.\n"), "getfield", 1, 8);
 assert_checkerror("getfield(9, l)", refMsg);
+
+
+//object
+classdef testGetfield
+    properties
+        a = 12;
+        b;
+    end
+end
+
+o = testGetfield();
+assert_checkequal(getfield("a", o), 12);
+assert_checkequal(getfield("b", o), []);
+o.a = %f;
+o.b = "test";
+assert_checkequal(getfield("a", o), %f);
+assert_checkequal(getfield("b", o), "test");

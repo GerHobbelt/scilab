@@ -814,6 +814,26 @@ void CodePrinterVisitor::visit(const ast::ArgumentDec & e)
     /* FIXME : Implement CodePrinterVisitor for ArgumentDec */
 }
 
+void CodePrinterVisitor::visit(const ast::ClassDec & e)
+{
+    /* FIXME : Implement CodePrinterVisitor for ClassDec */
+}
+
+void CodePrinterVisitor::visit(const ast::EnumDec & e)
+{
+    /* FIXME : Implement CodePrinterVisitor for EnumDec */
+}
+
+void CodePrinterVisitor::visit(const ast::PropertiesDec & e)
+{
+    /* FIXME : Implement CodePrinterVisitor for PropertiesDec */
+}
+
+void CodePrinterVisitor::visit(const ast::MethodsDec & e)
+{
+    /* FIXME : Implement CodePrinterVisitor for MethodsDec */
+}
+
 void CodePrinterVisitor::visit(const ast::ListExp & e)
 {
     printer.handleExpStart(&e);

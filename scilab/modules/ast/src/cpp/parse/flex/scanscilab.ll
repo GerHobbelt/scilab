@@ -36,6 +36,7 @@ extern "C"
 
 static std::stack<int> paren_levels;
 static std::stack<int> lambda_levels;
+static int classdef_inner_level = 0;
 
 static int comment_level = 0;
 static int last_token = 0;
@@ -83,6 +84,8 @@ std::string token_to_string(int);
 %x SHELLMODE
 %x BEGINID
 
+%x CLASSDEC
+
 spaces            [ \t\v\f]+
 integer           [0-9]+
 number            [0-9]+[\.][0-9]*
@@ -111,7 +114,12 @@ utf3              ({utf31}|{utf32}|{utf33}|{utf34})
 utf4              ({utf41}|{utf42}|{utf43})
 
 utf               ({utf2}|{utf3}|{utf4})
-id                ((([a-zA-Z_%!?]|{utf})([a-zA-Z_0-9!#?$]|{utf})*)|([$#]([a-zA-Z_0-9!#?$]|{utf})+))
+alpha_id          ([a-zA-Z_!#?]|{utf})([a-zA-Z_0-9!#?$]|{utf})*
+dollar_id         ([$]([a-zA-Z_0-9!#?$]|{utf})+)
+percent_id        ([%]([a-zA-Z_0-9!#?$]|{utf})*)
+id                ({alpha_id}|{dollar_id}|{percent_id})
+
+beginid           ^{spaces}*/{id}{spaces}([^ \t\v\f(=<>~@,;]|([~@]{spaces}*[^=]?))
 
 newline           ("\r"|"\n"|"\r\n")
 blankline         {spaces}+{newline}
@@ -190,61 +198,150 @@ sharp             "#"
 // BOM found ==> ignored
 }
 
-<INITIAL,BEGINID>{booltrue}     {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>{booltrue}     {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(BOOLTRUE);
 }
-<INITIAL,BEGINID>{boolfalse}    {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>{boolfalse}    {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(BOOLFALSE);
 }
 
-<INITIAL,BEGINID>"arguments"    {
+<INITIAL,BEGINID,CLASSDEC>"classdef"    {
+  if (last_token != DOT)
+  {
+    ParserSingleInstance::pushControlStatus(Parser::WithinClassdef);
+  }
+  if (YY_START == BEGINID) yy_pop_state();
+  classdef_inner_level = 0;
+  yy_push_state(CLASSDEC);
+  return scan_throw(CLASSDEF);
+}
+
+<CLASSDEC>"enumeration"    {
+  if (ParserSingleInstance::getControlStatus() != Parser::WithinClassdef)
+  {
+    // Should be within a function
+    wchar_t *pwText = to_wide_string(yytext);
+    if (yytext != NULL && pwText == NULL)
+    {
+      std::string str = "Can\'t convert \'";
+      str += yytext;
+      str += "\' to UTF-8";
+      BEGIN(INITIAL);
+      yyerror(str);
+      return scan_throw(FLEX_ERROR);
+    }
+    yylval.str = new std::wstring(pwText);
+    FREE(pwText);
+    return scan_throw(ID);
+  }
+  if (last_token != DOT)
+  {
+    ParserSingleInstance::pushControlStatus(Parser::WithinEnumeration);
+  }
+  if (YY_START == BEGINID) yy_pop_state();
+  classdef_inner_level++;
+  return scan_throw(ENUMERATION);
+}
+
+<CLASSDEC>"properties"    {
+    if (ParserSingleInstance::getControlStatus() != Parser::WithinClassdef)
+  {
+    // Should be within a function
+    wchar_t *pwText = to_wide_string(yytext);
+    if (yytext != NULL && pwText == NULL)
+    {
+      std::string str = "Can\'t convert \'";
+      str += yytext;
+      str += "\' to UTF-8";
+      BEGIN(INITIAL);
+      yyerror(str);
+      return scan_throw(FLEX_ERROR);
+    }
+    yylval.str = new std::wstring(pwText);
+    FREE(pwText);
+    return scan_throw(ID);
+  }
+  if (last_token != DOT)
+  {
+    ParserSingleInstance::pushControlStatus(Parser::WithinProperties);
+  }
+  if (YY_START == BEGINID) yy_pop_state();
+  classdef_inner_level++;
+  return scan_throw(PROPERTIES);
+}
+
+<CLASSDEC>"methods"    {
+    if (ParserSingleInstance::getControlStatus() != Parser::WithinClassdef)
+  {
+    // Should be within a function
+    wchar_t *pwText = to_wide_string(yytext);
+    if (yytext != NULL && pwText == NULL)
+    {
+      std::string str = "Can\'t convert \'";
+      str += yytext;
+      str += "\' to UTF-8";
+      BEGIN(INITIAL);
+      yyerror(str);
+      return scan_throw(FLEX_ERROR);
+    }
+    yylval.str = new std::wstring(pwText);
+    FREE(pwText);
+    return scan_throw(ID);
+  }
+  if (last_token != DOT)
+  {
+    ParserSingleInstance::pushControlStatus(Parser::WithinMethods);
+  }
+  if (YY_START == BEGINID) yy_pop_state();
+  classdef_inner_level++;
+  return scan_throw(METHODS);
+}
+
+<INITIAL,BEGINID,CLASSDEC>"arguments"    {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinArguments);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(ARGUMENTS);
 }
 
-<INITIAL,BEGINID>"if"            {
+<INITIAL,BEGINID,CLASSDEC>"if"            {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinIf);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(IF);
 }
 
-<INITIAL,BEGINID>"then"          {
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"then"          {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(THEN);
 }
 
-<INITIAL,BEGINID>"else"          {
+<INITIAL,BEGINID,CLASSDEC>"else"          {
   if (last_token != DOT)
   {
     // Pop to step out IF
     ParserSingleInstance::popControlStatus();
     ParserSingleInstance::pushControlStatus(Parser::WithinElse);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(ELSE);
 }
 
-<INITIAL,BEGINID>"elseif" {
+<INITIAL,BEGINID,CLASSDEC>"elseif" {
   if (last_token != DOT)
   {
     ParserSingleInstance::popControlStatus();
     ParserSingleInstance::pushControlStatus(Parser::WithinElseIf);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(ELSEIF);
 }
 
@@ -253,133 +350,140 @@ sharp             "#"
   {
     ParserSingleInstance::popControlStatus();
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(END);
 }
 
-<INITIAL,BEGINID>"select"    {
+<CLASSDEC>"end" {
+  classdef_inner_level--;
+  if (classdef_inner_level < 0) yy_pop_state();
+  ParserSingleInstance::popControlStatus();
+  return scan_throw(END);
+}
+
+<INITIAL,BEGINID,CLASSDEC>"select"    {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinSelect);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(SELECT);
 }
 
-<INITIAL,BEGINID>"switch"    {
+<INITIAL,BEGINID,CLASSDEC>"switch"    {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinSwitch);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(SWITCH);
 }
 
-<INITIAL,BEGINID>"otherwise" {
+<INITIAL,BEGINID,CLASSDEC>"otherwise" {
   if (last_token != DOT)
   {
     ParserSingleInstance::popControlStatus();
     ParserSingleInstance::pushControlStatus(Parser::WithinOtherwise);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(OTHERWISE);
 }
 
-<INITIAL,BEGINID>"case"        {
+<INITIAL,BEGINID,CLASSDEC>"case"        {
   if (last_token != DOT)
   {
     ParserSingleInstance::popControlStatus();
     ParserSingleInstance::pushControlStatus(Parser::WithinCase);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(CASE);
 }
 
-<INITIAL,BEGINID>"function" {
+<INITIAL,BEGINID,CLASSDEC>"function" {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinFunction);
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(FUNCTION);
 }
 
-<INITIAL,BEGINID>"endfunction" {
+<INITIAL,BEGINID,CLASSDEC>"endfunction" {
   if (last_token != DOT)
   {
     ParserSingleInstance::popControlStatus();
   }
-  DEBUG("BEGIN(INITIAL)");
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level--;
   return scan_throw(ENDFUNCTION);
 }
 
-<INITIAL,BEGINID>"for" {
+<INITIAL,BEGINID,CLASSDEC>"for" {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinFor);
   }
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(FOR);
 }
 
-<INITIAL,BEGINID>"while"    {
+<INITIAL,BEGINID,CLASSDEC>"while"    {
   if (last_token != DOT)
   {
     ParserSingleInstance::pushControlStatus(Parser::WithinWhile);
   }
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(WHILE);
 }
 
-<INITIAL,BEGINID>"do"        {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"do"        {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(DO);
 }
 
-<INITIAL,BEGINID>"break"        {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"break"        {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(BREAK);
 }
 
-<INITIAL,BEGINID>"continue"        {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"continue"        {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(CONTINUE);
 }
 
-<INITIAL,BEGINID>"try" {
+<INITIAL,BEGINID,CLASSDEC>"try" {
   ParserSingleInstance::pushControlStatus(Parser::WithinTry);
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
+  if (YY_START == CLASSDEC) classdef_inner_level++;
   return scan_throw(TRY);
 }
 
-<INITIAL,BEGINID>"catch" {
+<INITIAL,BEGINID,CLASSDEC>"catch" {
   // Pop to step out TRY
   ParserSingleInstance::popControlStatus();
   ParserSingleInstance::pushControlStatus(Parser::WithinCatch);
-  BEGIN(INITIAL);
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(CATCH);
 }
 
-<INITIAL,BEGINID>"return"    {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"return"    {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(RETURN);
 }
 
-<INITIAL,BEGINID>"resume"    {
-  BEGIN(INITIAL);
+<INITIAL,BEGINID,CLASSDEC>"resume"    {
+  if (YY_START == BEGINID) yy_pop_state();
   return scan_throw(RETURN);
 }
 
-^{spaces}*/({id}){spaces}([^ \t\v\f(=<>~@,;]|([~@]{spaces}*[^=]?)) {
-  DEBUG("BEGIN(BEGINID)");
-  BEGIN(BEGINID);
+<INITIAL>{beginid} {
+  DEBUG("yy_push_state(BEGINID)");
+  yy_push_state(BEGINID);
 }
 
 <BEGINID>{id}                        {
@@ -398,13 +502,13 @@ sharp             "#"
   types::InternalType * pIT = symbol::Context::getInstance()->get(symbol::Symbol(*yylval.str));
   if (pIT && pIT->isCallable() && ParserSingleInstance::getControlStatus() != Parser::WithinArguments)
   {
-    DEBUG("BEGIN(SHELLMODE)");
-    BEGIN(SHELLMODE);
+    DEBUG("yy_push_state(SHELLMODE)");
+    yy_push_state(SHELLMODE);
   }
   else
   {
-    DEBUG("BEGIN(INITIAL)");
-    BEGIN(INITIAL);
+    DEBUG("yy_pop_state()");
+    yy_pop_state();
   }
   #ifdef TOKENDEV
   std::cout << "--> [DEBUG] ID : " << yytext << std::endl;
@@ -412,26 +516,29 @@ sharp             "#"
   return scan_throw(ID);
 }
 
-<INITIAL,MATRIX>{boolnot}        return scan_throw(NOT);
-<INITIAL,MATRIX>{dollar}         return scan_throw(DOLLAR);
-<INITIAL,MATRIX>{arrow} {
+<INITIAL,MATRIX,CLASSDEC>{boolnot}        return scan_throw(NOT);
+<INITIAL,MATRIX,CLASSDEC>{dollar}         return scan_throw(DOLLAR);
+<INITIAL,MATRIX,CLASSDEC>{arrow} {
   ParserSingleInstance::pushControlStatus(Parser::WithinLambda);
   lambda_levels.push(0);
   return scan_throw(ARROW);
 }
-<INITIAL,MATRIX>{sharp}         return scan_throw(SHARP);
-<INITIAL,MATRIX>{booltrue}       return scan_throw(BOOLTRUE);
-<INITIAL,MATRIX>{boolfalse}      return scan_throw(BOOLFALSE);
-<INITIAL,MATRIX>{booland}        return scan_throw(AND);
-<INITIAL,MATRIX>{boolandand}     return scan_throw(ANDAND);
-<INITIAL,MATRIX>{boolor}         return scan_throw(OR);
-<INITIAL,MATRIX>{booloror}       return scan_throw(OROR);
+<INITIAL,MATRIX,CLASSDEC>{sharp}          return scan_throw(SHARP);
+<INITIAL,MATRIX,CLASSDEC>{booltrue}       return scan_throw(BOOLTRUE);
+<INITIAL,MATRIX,CLASSDEC>{boolfalse}      return scan_throw(BOOLFALSE);
+<INITIAL,MATRIX,CLASSDEC>{booland}        return scan_throw(AND);
+<INITIAL,MATRIX,CLASSDEC>{boolandand}     return scan_throw(ANDAND);
+<INITIAL,MATRIX,CLASSDEC>{boolor}         return scan_throw(OR);
+<INITIAL,MATRIX,CLASSDEC>{booloror}       return scan_throw(OROR);
+
 <INITIAL>{lparen} {
   if (lambda_levels.size()) {
     ++lambda_levels.top();
   }
   return scan_throw(LPAREN);
 }
+<CLASSDEC>{lparen}    return scan_throw(LPAREN);
+
 <INITIAL>{rparen} {
   if (lambda_levels.size()) {
     --lambda_levels.top();
@@ -442,70 +549,63 @@ sharp             "#"
   }
   return scan_throw(RPAREN);
 }
+<CLASSDEC>{rparen}    return scan_throw(RPAREN);
 
-<INITIAL,MATRIX>{semicolon}      {
-  scan_step();
-  return scan_throw(SEMI);
-}
+<INITIAL,MATRIX,CLASSDEC>{semicolon}      return scan_throw(SEMI);
+<INITIAL,MATRIX,CLASSDEC>{comma}          return scan_throw(COMMA);
+<INITIAL,MATRIX,CLASSDEC>{colon}          return scan_throw(COLON);
 
-<INITIAL,MATRIX>{comma}          {
-  scan_step();
-  return scan_throw(COMMA);
-}
-
-<INITIAL,MATRIX>{colon}          return scan_throw(COLON);
-
-<INITIAL,MATRIX>{lbrace}         {
+<INITIAL,MATRIX,CLASSDEC>{lbrace}         {
   yy_push_state(MATRIX);
   paren_levels.push(0);
   ParserSingleInstance::pushControlStatus(Parser::WithinCell);
   return scan_throw(LBRACE);
 }
 
-<INITIAL>{rbrace}                return scan_throw(RBRACE);
+<INITIAL,CLASSDEC>{rbrace}                return scan_throw(RBRACE);
 
-<INITIAL,MATRIX>{dotquote}       return scan_throw(DOTQUOTE);
-<INITIAL,MATRIX>{dottimes}       return scan_throw(DOTTIMES);
-<INITIAL,MATRIX>{dotrdivide}     return scan_throw(DOTRDIVIDE);
-<INITIAL,MATRIX>{dotldivide}     return scan_throw(DOTLDIVIDE);
-<INITIAL,MATRIX>{dotpower}       return scan_throw(DOTPOWER);
-<INITIAL>{minus}                 return scan_throw(MINUS);
-<INITIAL>{plus}                  return scan_throw(PLUS);
-<INITIAL,MATRIX>{times}          return scan_throw(TIMES);
-<INITIAL,MATRIX>{rdivide}        return scan_throw(RDIVIDE);
-<INITIAL,MATRIX>{ldivide}        return scan_throw(LDIVIDE);
-<INITIAL,MATRIX>{power}          return scan_throw(POWER);
-<INITIAL,MATRIX>{krontimes}      return scan_throw(KRONTIMES);
-<INITIAL,MATRIX>{kronrdivide}    return scan_throw(KRONRDIVIDE);
-<INITIAL,MATRIX>{kronldivide}    return scan_throw(KRONLDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{dotquote}       return scan_throw(DOTQUOTE);
+<INITIAL,MATRIX,CLASSDEC>{dottimes}       return scan_throw(DOTTIMES);
+<INITIAL,MATRIX,CLASSDEC>{dotrdivide}     return scan_throw(DOTRDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{dotldivide}     return scan_throw(DOTLDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{dotpower}       return scan_throw(DOTPOWER);
+<INITIAL,CLASSDEC>{minus}                 return scan_throw(MINUS);
+<INITIAL,CLASSDEC>{plus}                  return scan_throw(PLUS);
+<INITIAL,MATRIX,CLASSDEC>{times}          return scan_throw(TIMES);
+<INITIAL,MATRIX,CLASSDEC>{rdivide}        return scan_throw(RDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{ldivide}        return scan_throw(LDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{power}          return scan_throw(POWER);
+<INITIAL,MATRIX,CLASSDEC>{krontimes}      return scan_throw(KRONTIMES);
+<INITIAL,MATRIX,CLASSDEC>{kronrdivide}    return scan_throw(KRONRDIVIDE);
+<INITIAL,MATRIX,CLASSDEC>{kronldivide}    return scan_throw(KRONLDIVIDE);
 
-<INITIAL,MATRIX>{controltimes}   {
+<INITIAL,MATRIX,CLASSDEC>{controltimes}   {
   unput(yytext[yyleng - 1]);
   yylloc.last_column--;
   return scan_throw(CONTROLTIMES);
 }
 
-<INITIAL,MATRIX>{controlrdivide} {
+<INITIAL,MATRIX,CLASSDEC>{controlrdivide} {
   unput(yytext[yyleng - 1]);
   yylloc.last_column--;
   return scan_throw(CONTROLRDIVIDE);
 }
 
-<INITIAL,MATRIX>{controlldivide} {
+<INITIAL,MATRIX,CLASSDEC>{controlldivide} {
   unput(yytext[yyleng - 1]);
   yylloc.last_column--;
   return scan_throw(CONTROLLDIVIDE);
 }
 
-<INITIAL,MATRIX>{equal}          return scan_throw(EQ);
-<INITIAL,MATRIX>{notequal}       return scan_throw(NE);
-<INITIAL,MATRIX>{lowerthan}      return scan_throw(LT);
-<INITIAL,MATRIX>{greaterthan}    return scan_throw(GT);
-<INITIAL,MATRIX>{lowerequal}     return scan_throw(LE);
-<INITIAL,MATRIX>{greaterequal}   return scan_throw(GE);
-<INITIAL,MATRIX>{assign}         return scan_throw(ASSIGN);
+<INITIAL,MATRIX,CLASSDEC>{equal}          return scan_throw(EQ);
+<INITIAL,MATRIX,CLASSDEC>{notequal}       return scan_throw(NE);
+<INITIAL,MATRIX,CLASSDEC>{lowerthan}      return scan_throw(LT);
+<INITIAL,MATRIX,CLASSDEC>{greaterthan}    return scan_throw(GT);
+<INITIAL,MATRIX,CLASSDEC>{lowerequal}     return scan_throw(LE);
+<INITIAL,MATRIX,CLASSDEC>{greaterequal}   return scan_throw(GE);
+<INITIAL,MATRIX,CLASSDEC>{assign}         return scan_throw(ASSIGN);
 
-<INITIAL,MATRIX>{lbrack}         {
+<INITIAL,MATRIX,CLASSDEC>{lbrack}         {
   DEBUG("yy_push_state(MATRIX)");
   yy_push_state(MATRIX);
   paren_levels.push(0);
@@ -513,15 +613,15 @@ sharp             "#"
   return scan_throw(LBRACK);
 }
 
-<INITIAL>{rbrack}                return scan_throw(RBRACK);
-<INITIAL,MATRIX>{dot}            return scan_throw(DOT);
+<INITIAL,CLASSDEC>{rbrack}                return scan_throw(RBRACK);
+<INITIAL,MATRIX,CLASSDEC>{dot}            return scan_throw(DOT);
 
-<INITIAL>{next}                  {
+<INITIAL,CLASSDEC>{next}                  {
   ParserSingleInstance::pushControlStatus(Parser::WithinDots);
   yy_push_state(LINEBREAK);
 }
 
-<INITIAL,MATRIX>{integer}        {
+<INITIAL,MATRIX,CLASSDEC>{integer}        {
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] INTEGER : " << yytext << std::endl;
@@ -530,7 +630,7 @@ sharp             "#"
   return scan_throw(VARINT);
 }
 
-<INITIAL,MATRIX>{floating_D}     {
+<INITIAL,MATRIX,CLASSDEC>{floating_D}     {
   scan_exponent_convert(yytext);
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
@@ -540,7 +640,7 @@ sharp             "#"
   return scan_throw(VARFLOAT);
 }
 
-<INITIAL,MATRIX>{floating_E}     {
+<INITIAL,MATRIX,CLASSDEC>{floating_E}     {
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] FLOATING : " << yytext << std::endl;
@@ -549,7 +649,7 @@ sharp             "#"
   return scan_throw(VARFLOAT);
 }
 
-<INITIAL,MATRIX>{complexNumber}		{
+<INITIAL,MATRIX,CLASSDEC>{complexNumber}		{
   scan_complex_convert(yytext);
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
@@ -559,7 +659,7 @@ sharp             "#"
   return scan_throw(COMPLEXNUM);
 }
 
-<INITIAL,MATRIX>[0-9]+[\.]/[\*^\\\/]		{
+<INITIAL,MATRIX,CLASSDEC>[0-9]+[\.]/[\*^\\\/]		{
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] NUMBER WITH DOT AS LAST CHARACTER : " << yytext << std::endl;
@@ -570,7 +670,7 @@ sharp             "#"
   return scan_throw(NUM);
 }
 
-<INITIAL,MATRIX>{number}         {
+<INITIAL,MATRIX,CLASSDEC>{number}         {
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] NUMBER : " << yytext << std::endl;
@@ -579,7 +679,7 @@ sharp             "#"
   return scan_throw(NUM);
 }
 
-<INITIAL,MATRIX>{little}         {
+<INITIAL,MATRIX,CLASSDEC>{little}         {
   yylval.number = atof(yytext);
 #ifdef TOKENDEV
   std::cout << "--> [DEBUG] LITTLE : " << yytext << std::endl;
@@ -588,7 +688,7 @@ sharp             "#"
   return scan_throw(NUM);
 }
 
-<INITIAL,MATRIX>{id}             {
+<INITIAL,MATRIX,CLASSDEC>{id}             {
   wchar_t *pwText = to_wide_string(yytext);
   if (yytext != NULL && pwText == NULL)
   {
@@ -608,7 +708,7 @@ sharp             "#"
   return scan_throw(ID);
 }
 
-<INITIAL,MATRIX>{incorrect_number}   {
+<INITIAL,MATRIX,CLASSDEC>{incorrect_number}   {
   std::string str = "Can\'t convert \'";
   str += yytext;
   str += "\' to a valid number nor identifier";
@@ -616,19 +716,19 @@ sharp             "#"
   return scan_throw(FLEX_ERROR);
 }
 
-<INITIAL,MATRIX,SHELLMODE,BEGINID>{startblockcomment}    {
+<INITIAL,MATRIX,SHELLMODE,CLASSDEC>{startblockcomment}    {
   yylval.comment = new std::wstring();
   comment_level = 1;
   ParserSingleInstance::pushControlStatus(Parser::WithinBlockComment);
   yy_push_state(REGIONCOMMENT);
 }
 
-<INITIAL,MATRIX,SHELLMODE,BEGINID>{startcomment}        {
+<INITIAL,MATRIX,SHELLMODE,CLASSDEC>{startcomment}        {
   pstBuffer.clear();
   yy_push_state(LINECOMMENT);
 }
 
-<INITIAL,MATRIX,SHELLMODE>{dquote}         {
+<INITIAL,MATRIX,SHELLMODE,CLASSDEC>{dquote}         {
   pstBuffer.clear();
   str_opener_column = yylloc.first_column;
   #ifdef TOKENDEV
@@ -637,7 +737,7 @@ sharp             "#"
   yy_push_state(DOUBLESTRING);
 }
 
-<INITIAL,MATRIX,SHELLMODE>{spaces}{quote}  {
+<INITIAL,MATRIX,SHELLMODE,CLASSDEC>{spaces}{quote}  {
   /*
   ** Can not be Matrix Transposition
   ** Pushing SIMPLESTRING
@@ -650,7 +750,7 @@ sharp             "#"
   yy_push_state(SIMPLESTRING);
 }
 
-<INITIAL,MATRIX,SHELLMODE>{quote}          {
+<INITIAL,MATRIX,SHELLMODE,CLASSDEC>{quote}          {
   /*
   ** Matrix Transposition special behaviour
   ** ID' []' toto()' are transposition call
@@ -681,9 +781,9 @@ sharp             "#"
   }
 }
 
-<INITIAL,MATRIX>{spaces}         scan_step();
+<INITIAL,MATRIX,CLASSDEC>{spaces}         scan_step();
 
-<INITIAL>{newline}               {
+<INITIAL,CLASSDEC>{newline}               {
   yylloc.last_line += 1;
   yylloc.last_column = 1;
   scan_step();
@@ -692,7 +792,7 @@ sharp             "#"
   }
 }
 
-<INITIAL,MATRIX>{blankline}      {
+<INITIAL,MATRIX,CLASSDEC>{blankline}      {
   yylloc.last_line += 1;
   yylloc.last_column = 1;
   scan_step();
@@ -703,7 +803,7 @@ sharp             "#"
   scan_throw(EOL);
 }
 
-<INITIAL,MATRIX>{emptyline}      {
+<INITIAL,MATRIX,CLASSDEC>{emptyline}      {
   yylloc.last_line += 2;
   yylloc.last_column = 1;
   scan_step();
@@ -714,14 +814,7 @@ sharp             "#"
   scan_throw(EOL);
 }
 
-.                                {
-    std::string str = "Unexpected token \'";
-    str += yytext;
-    str += "\'";
-    BEGIN(INITIAL);
-    yyerror(str);
-    return scan_throw(FLEX_ERROR);
-}
+
 
 
 <MATRIX>
@@ -1378,6 +1471,17 @@ sharp             "#"
       BEGIN(INITIAL);
     }
 
+    <*>.                                {
+    // Fallback rule
+    // anything that has not be caught until here
+    std::string str = "Unexpected token \'";
+    str += yytext;
+    str += "\'";
+    BEGIN(INITIAL);
+    yyerror(str);
+    return scan_throw(FLEX_ERROR);
+}
+
 }
 
 %%
@@ -1385,7 +1489,13 @@ sharp             "#"
 int scan_throw(int token) {
   last_token = token;
 #ifdef DEV
-  std::cout << "--> [DEBUG] TOKEN : " << token << " - " << token_to_string(token) << std::endl;
+  std::cout << "--> [DEBUG] " << token_to_string(YY_START) << " TOKEN : " << token_to_string(token);
+  std::cout << " @(" << yylloc.first_line << "." << yylloc.first_column << " -> " << yylloc.last_line << "." << yylloc.last_column << ")";
+  if (token == ID || token == STR)
+  {
+    std::cout << " [" << yytext << "]";
+  }
+  std::cout << std::endl;
 #endif
   return token;
 }
@@ -1440,6 +1550,14 @@ std::string token_to_string(int token)
   std::string str;
   switch(token)
   {
+    case INITIAL :               str = "INITIAL"; break;
+    case MATRIX :                str = "MATRIX"; break;
+    case BEGINID :               str = "BEGINID"; break;
+    case SHELLMODE :             str = "SHELLMODE"; break;
+    case CLASSDEC :              str = "CLASSDEC"; break;
+    case ENUMERATION :           str = "ENUMERATION"; break;
+    case PROPERTIES :            str = "PROPERTIES"; break;
+    case METHODS :               str = "METHODS"; break;
     case AND :                   str = "AND"; break;
     case ASSIGN :                str = "ASSIGN"; break;
     case BOOLFALSE :             str = "BOOLFALSE"; break;
@@ -1447,6 +1565,7 @@ std::string token_to_string(int token)
     case BREAK :                 str = "BREAK"; break;
     case CASE :                  str = "CASE"; break;
     case CATCH :                 str = "CATCH"; break;
+    case CLASSDEF :              str = "CLASSDEF"; break;
     case COLON :                 str = "COLON"; break;
     case COMMA :                 str = "COMMA"; break;
     case COMMENT :               str = "COMMENT"; break;

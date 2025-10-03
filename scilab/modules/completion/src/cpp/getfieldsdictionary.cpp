@@ -18,6 +18,7 @@
 #include "tlist.hxx"
 #include "overload.hxx"
 #include "user.hxx"
+#include "object.hxx"
 
 extern "C"
 {
@@ -160,7 +161,24 @@ char **getfieldsdictionary(char *lineBeforeCaret, char *pattern, int *size)
                 return NULL;
             }
 
-            pFields = pIT->getAs<types::UserType>()->getFields();
+            pFields = pUT->getFields();
+            if (pFields == NULL)
+            {
+                return NULL;
+            }
+
+            iSize = pFields->getSize();
+            break;
+        }
+        case types::InternalType::ScilabObject:
+        {
+            types::Object* obj = pIT->getAs<types::Object>();
+            if (obj->hasGetFields() == false)
+            {
+                return NULL;
+            }
+
+            pFields = obj->getFields();
             if (pFields == NULL)
             {
                 return NULL;

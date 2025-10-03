@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
 *
@@ -84,6 +84,11 @@ int CoreModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"oldEmptyBehaviour", &sci_oldEmptyBehaviour, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"checkNamedArguments", &sci_checkNamedArguments, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"skipArguments", &sci_skipArguments, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"isa", &sci_isa, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"properties", &sci_properties, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"methods", &sci_methods, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"enumeration", &sci_enumeration, MODULE_NAME));
+    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"show_vtable", &sci_show_vtable, MODULE_NAME));
 
 #ifndef NDEBUG
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"inspectorGetItemCount", &sci_inspectorGetItemCount, MODULE_NAME));

@@ -1,0 +1,446 @@
+﻿/*
+ *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+ *  Copyright (C) 2025 - Dassault Systèmes S.E. - Antoine ELIAS
+ *
+ * For more information, see the COPYING file which you should have received
+ * along with this program.
+ */
+
+#include "object.hxx"
+#include "macro.hxx"
+#include "macrofile.hxx"
+#include "objectmethod.hxx"
+#include "configvariable.hxx"
+#include "overload.hxx"
+
+extern "C"
+{
+#include "sciprint.h"
+}
+
+namespace types
+{
+
+Object::Object(Classdef* classdef) : def(classdef), parent(nullptr), bHasToString(true)
+{
+    loadClassdef(classdef);
+    if (hasMethod(L"disp"))
+    {
+        bHasToString = false;
+    }
+}
+
+//copy cstor called by clone
+Object::Object(const Object& obj)
+{
+    def = obj.getClassdef();
+    loadClassdef(def);
+    for (auto&& prop : obj.getProperties())
+    {
+        InternalType* old = properties[prop.first];
+        old->DecreaseRef();
+        old->killMe();
+
+        InternalType* val = prop.second->clone();
+        properties[prop.first] = val;
+        val->IncreaseRef();
+    }
+}
+
+Object::~Object()
+{
+    //sciprint("delete %ls\n", def->getName().data());
+    typed_list in;
+    optional_list opt;
+    typed_list out;
+    IncreaseRef();
+    callMethod(L"delete", in, opt, 0, out);
+    DecreaseRef();
+    for (auto&& prop : properties)
+    {
+        prop.second->DecreaseRef();
+        prop.second->killMe();
+    }
+}
+
+void Object::loadClassdef(Classdef* def, int level)
+{
+    for (auto&& prop : def->getProperties())
+    {
+        if (std::get<0>(prop.second).isStatic == false)
+        {
+            // remove previous instance from superclass
+            if (properties.find(prop.first) != properties.end())
+            {
+                properties[prop.first]->DecreaseRef();
+                properties[prop.first]->killMe();
+            }
+
+            properties[prop.first] = def->instantiateProperty(prop.first, std::get<0>(prop.second));
+            properties[prop.first]->IncreaseRef();
+        }
+    }
+}
+
+bool Object::toString(std::wostringstream& ostr)
+{
+    typed_list in, out;
+    optional_list opt;
+    //call overload macro %object_string
+    in.push_back(this);
+    IncreaseRef();
+    auto res = Overload::call(L"%object_string", in, 0, out);
+    DecreaseRef();
+
+    if (res == Function::OK)
+    {
+        if (out.size() == 1)
+        {
+            if (out[0]->isString())
+            {
+                String* pS = out[0]->getAs<String>();
+
+                ostr << L"With properties:" << std::endl;
+                for (int i = 0; i < pS->getSize(); ++i)
+                {
+                    ostr << L"  " << pS->get(i) << std::endl;
+                }
+            }
+            else if (out[0]->isDouble())
+            {
+                ostr << L"With no properties" << std::endl;
+            }
+
+            out[0]->killMe();
+        }
+
+        return true;
+    }
+
+    return false;
+}
+
+bool Object::invoke(typed_list& in, optional_list& /*opt*/, int /*_iRetCount*/, typed_list& out, const ast::Exp& /*e*/)
+{
+    return true;
+}
+
+bool Object::extract(const std::wstring& name, InternalType*& out)
+{
+    Classdef* ref = def;
+    AccessModifier access;
+
+    if (scope.size() > 0)
+    {
+        auto methods = def->getMethods();
+        if (methods.find(scope.top()) != methods.end())
+        {
+            ref = std::get<1>(methods[scope.top()]);
+        }
+    }
+
+    if (ref->getAccessProperty(name, access))
+    {
+        if (access == AccessModifier::PUBLIC || (scope.size() > 0 && access != AccessModifier::NONE))
+        {
+            out = getProperty(name);
+            //static
+            /* 
+            if (out == nullptr)
+            {
+                out = def->getStatic(name);
+            }
+            */
+            return true;
+        }
+        else
+        {
+            wchar_t szError[128];
+            os_swprintf(szError, 128, _W("Wrong extraction: property '%ls' is not accessible.\n").c_str(), name.data());
+            throw ast::InternalError(szError);
+        }
+    }
+
+    if (ref->getAccessMethod(name, access))
+    {
+        if (access == AccessModifier::PUBLIC || (scope.size() > 0 && access != AccessModifier::NONE))
+        {
+            out = new ObjectMethod(this, name, def->getMethod(name));
+            return true;
+        }
+        else
+        {
+            wchar_t szError[128];
+            os_swprintf(szError, 128, _W("Wrong extraction: method '%ls' is not accessible.\n").c_str(), name.data());
+            throw ast::InternalError(szError);
+        }
+    }
+
+    return false;
+}
+
+Object* Object::insert(typed_list* _pArgs, InternalType* _pSource)
+{
+    // update of property
+    if (_pArgs->size() == 1 && (*_pArgs)[0]->isString())
+    {
+        std::wstring field((*_pArgs)[0]->getAs<String>()->get(0));
+        setProperty(field, _pSource);
+        return this;
+    }
+
+    //insertion
+    //obj(1,2) = 42
+
+    std::wstring fname = L"insert";
+    std::wstring type = _pSource->getShortTypeStr();
+
+    std::wstring s = fname + L"_" + type;
+    if (hasMethod(s))
+    {
+        fname = s;
+    }
+
+    if (hasMethod(fname))
+    {
+        typed_list in;
+        optional_list opt;
+        typed_list out;
+
+        for (auto&& p : *_pArgs)
+        {
+            in.push_back(p);
+            p->IncreaseRef();
+        }
+
+        in.push_back(_pSource);
+        _pSource->IncreaseRef();
+
+        Function::ReturnValue ret = callMethod(fname, in, opt, 0, out);
+        for (auto&& p : *_pArgs)
+        {
+            p->DecreaseRef();
+        }
+
+        _pSource->DecreaseRef();
+
+        return this;
+    }
+
+    wchar_t szError[bsiz];
+    os_swprintf(szError, bsiz, _W("Wrong insertion: method '%ls' does not exist.\n").c_str(), L"insert");
+    throw ast::InternalError(szError);
+}
+
+bool Object::setProperty(const std::wstring& prop, InternalType* value)
+{
+    AccessModifier access;
+    if (def->getAccessProperty(prop, access))
+    {
+
+        if (access == AccessModifier::PUBLIC ||
+            (symbol::Context::getInstance()->getCurrentObject() == this && access != AccessModifier::NONE))
+        {
+            if (properties.find(prop) != properties.end())
+            {
+                InternalType* old = properties[prop];
+                old->DecreaseRef();
+                old->killMe();
+
+                properties[prop] = value;
+                value->IncreaseRef();
+                return this;
+            }
+            else
+            {
+                // static
+                /*
+                if (def->setStatic(field, _pSource))
+                {
+                    return this;
+                }
+                */
+            }
+
+            wchar_t szError[128];
+            os_swprintf(szError, 128, _W("Wrong insertion: property '%ls' does not exist.\n").c_str(), prop.data());
+            throw ast::InternalError(szError);
+        }
+        else
+        {
+            wchar_t szError[128];
+            os_swprintf(szError, 128, _W("Wrong insertion: property '%ls' is not accessible.\n").c_str(), prop.data());
+            throw ast::InternalError(szError);
+        }
+    }
+    else
+    {
+        wchar_t szError[128];
+        os_swprintf(szError, 128, _W("Wrong insertion: property '%ls' does not exist.\n").c_str(), prop.data());
+        throw ast::InternalError(szError);
+    }
+}
+
+Function::ReturnValue Object::callConstructor(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+{
+    OBJ_ATTR attr = def->getConstructor();
+    if (attr.callable == nullptr)
+    {
+        return Function::OK_NoResult;
+    }
+
+    if (attr.access != AccessModifier::PUBLIC)
+    {
+        InternalType* obj = symbol::Context::getInstance()->getCurrentObject();
+        if (obj == nullptr)
+        {
+            if (attr.access != AccessModifier::PUBLIC)
+            {
+                wchar_t szError[128];
+                os_swprintf(szError, 128, _W("Constructor of \'%ls\' is not accessible.\n").c_str(), def->getName().data());
+                throw ast::InternalError(szError);
+            }
+        }
+        else
+        {
+        }
+    }
+
+    Function::ReturnValue ret = callMethod(def->getName(), attr.callable, in, opt, _iRetCount, out);
+    return ret == Function::Error ? ret : Function::OK;
+}
+
+Function::ReturnValue Object::callSuperclassContructor(Classdef* super, typed_list & in, optional_list& opt, int _iRetCount, typed_list& out)
+{
+    OBJ_ATTR attr = super->getConstructor();
+    if (attr.callable == nullptr)
+    {
+        return Function::OK_NoResult;
+    }
+
+    if (scope.size() == 0 || scope.top() == L"" || scope.top() == def->getName())
+    {
+        if (attr.access == AccessModifier::PRIVATE || attr.access == AccessModifier::NONE)
+        {
+            wchar_t szError[128];
+            os_swprintf(szError, 128, _W("Constructor of \'%ls\' is not accessible.\n").c_str(), super->getName().data());
+            throw ast::InternalError(szError);
+        }
+    }
+
+    Function::ReturnValue ret = callMethod(super->getName(), attr.callable, in, opt, _iRetCount, out);
+    if (ret == Function::Error)
+    {
+        return Function::Error;
+    }
+
+    return Function::OK;
+}
+
+Function::ReturnValue Object::callMethod(const std::wstring& method, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+{
+    Callable* call = def->getMethod(method);
+    if (call == nullptr)
+    {
+        // function not found
+        return Function::OK_NoResult;
+    }
+
+    return callMethod(method, call, in, opt, _iRetCount, out);
+}
+ 
+Function::ReturnValue Object::callMethod(const std::wstring& method, Callable* call, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+{
+    if (call == nullptr)
+    {
+        // function not found
+        return Function::OK_NoResult;
+    }
+
+    if (call->isMacro())
+    {
+        call->getAs<Macro>()->setParent(this);
+    }
+    else if (call->isMacroFile())
+    {
+        call->getAs<MacroFile>()->getMacro()->setParent(this);
+    }
+
+    try
+    {
+        if (ConfigVariable::increaseRecursion())
+        {
+            // add line and function name in where
+            ConfigVariable::where_begin(call->getFirstLine(), call, Location());
+
+            scope.push(def->getMethodClassdef(method));
+            Function::ReturnValue res = call->call(in, opt, _iRetCount, out);
+            scope.pop();
+
+            // remove function name in where
+            ConfigVariable::where_end();
+            ConfigVariable::decreaseRecursion();
+
+            return res;
+        }
+        else
+        {
+            throw ast::RecursionException();
+        }
+    }
+    catch (ast::InternalError& e)
+    {
+        scope.pop();
+        throw e;
+    }
+}
+
+bool Object::hasMethod(const std::wstring& method)
+{
+    return def->getMethod(method) != nullptr;
+}
+
+bool Object::hasProperty(const std::wstring& property)
+{
+    return getProperty(property) != nullptr;
+}
+
+InternalType* Object::getProperty(const std::wstring& name)
+{
+    if (properties.find(name) != properties.end())
+    {
+        return properties[name];
+    }
+
+    return nullptr;
+}
+
+String* Object::getFields()
+{
+    std::vector<std::wstring> fields;
+
+    for (auto&& p : def->getProperties())
+    {
+        if (hidden.find(p.first) == hidden.end())
+        {
+            fields.push_back(p.first);
+        }
+    }
+
+    for (auto&& m : def->getMethods())
+    {
+        if (hidden.find(m.first) == hidden.end())
+        {
+            fields.push_back(m.first);
+        }
+    }
+
+    String* pFields = new String(fields.size(), 1);
+    for (int i = 0; i < fields.size(); ++i)
+    {
+        pFields->set(i, fields[i].data());
+    }
+
+    return pFields;
+}
+} // namespace types

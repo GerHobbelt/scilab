@@ -1,16 +1,9 @@
-/*
- * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
- * Copyright (C) 2013 - Scilab Enterprises - Antoine Elias
+﻿/*
+ *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+ *  Copyright (C) 2025 - Dassault Systèmes S.E. - Antoine ELIAS
  *
- * Copyright (C) 2012 - 2016 - Scilab Enterprises
- *
- * This file is hereby licensed under the terms of the GNU GPL v2.0,
- * pursuant to article 5.3.4 of the CeCILL v.2.1.
- * This file was originally licensed under the terms of the CeCILL v2.1,
- * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
- *
  */
 
 /*--------------------------------------------------------------------------*/
@@ -25,6 +18,7 @@
 #include "tlist.hxx"
 #include "struct.hxx"
 #include "user.hxx"
+#include "object.hxx"
 
 extern "C"
 {
@@ -35,7 +29,8 @@ extern "C"
 }
 
 static types::Function::ReturnValue sci_getfieldStruct(types::typed_list &in, int _iRetCount, types::typed_list &out);
-static types::Function::ReturnValue sci_getfieldUserType(types::typed_list &in, int _iRetCount, types::typed_list &out);
+static types::Function::ReturnValue sci_getfieldUserType(types::typed_list& in, int _iRetCount, types::typed_list& out);
+static types::Function::ReturnValue sci_getfieldObject(types::typed_list& in, int _iRetCount, types::typed_list& out);
 
 /*-----------------------------------------------------------------------------------*/
 types::Function::ReturnValue sci_getfield(types::typed_list &in, int _iRetCount, types::typed_list &out)
@@ -54,7 +49,13 @@ types::Function::ReturnValue sci_getfield(types::typed_list &in, int _iRetCount,
         return sci_getfieldStruct(in, _iRetCount, out);
     }
 
-    //special case for UserType
+    // special case for Object
+    if (in[1]->isObject())
+    {
+        return sci_getfieldObject(in, _iRetCount, out);
+    }
+
+    // special case for UserType
     if (in[1]->isUserType())
     {
         return sci_getfieldUserType(in, _iRetCount, out);
@@ -260,6 +261,48 @@ static types::Function::ReturnValue sci_getfieldStruct(types::typed_list &in, in
     return types::Function::OK;
 }
 /*-----------------------------------------------------------------------------------*/
+static types::Function::ReturnValue sci_getfieldObject(types::typed_list& in, int _iRetCount, types::typed_list& out)
+{
+    int iRetCount = std::max(_iRetCount, 1);
+
+    types::Object* obj = in[1]->getAs<types::Object>();
+    if (in[0]->isString() == false)
+    {
+        Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), "getfield", 1);
+        return types::Function::Error;
+    }
+
+    types::String* pFields = in[0]->getAs<types::String>();
+
+    std::vector<std::wstring> wstFields;
+    for (int i = 0; i < pFields->getSize(); i++)
+    {
+        std::wstring wstField(pFields->get(i));
+        if (obj->hasProperty(wstField))
+        {
+            wstFields.push_back(wstField);
+        }
+        else
+        {
+            Scierror(78, _("%s: Property \"%ls\" does not exist\n"), "getfield", wstField.data());
+            return types::Function::Error;
+        }
+    }
+
+    for (auto&& f : wstFields)
+    {
+        out.push_back(obj->getProperty(f));
+    }
+
+    if (out.size() != iRetCount)
+    {
+        Scierror(78, _("%s: Wrong number of output argument(s): %d expected.\n"), "getfield", (int)out.size());
+        out.clear();
+        return types::Function::Error;
+    }
+
+    return types::Function::OK;
+}
 
 static types::Function::ReturnValue sci_getfieldUserType(types::typed_list &in, int /*_iRetCount*/, types::typed_list &out)
 {

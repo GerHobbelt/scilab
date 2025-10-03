@@ -1,7 +1,7 @@
-/*
-*  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-*  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
-*
+﻿/*
+ *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+ *  Copyright (C) 2015 - Scilab Enterprises - Calixte DENIZET
+ *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
@@ -10,11 +10,11 @@
  * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
-*
-*/
+ *
+ */
 
-#include "exp.hxx" // for invoke
 #include "callexp.hxx"
+#include "exp.hxx" // for invoke
 
 #include "internal.hxx"
 
@@ -41,7 +41,7 @@ std::wstring InternalType::toStringInLine()
     return getTypeStr();
 }
 
-ast::Exp * InternalType::getExp(const Location& /*loc*/)
+ast::Exp* InternalType::getExp(const Location& /*loc*/)
 {
     return nullptr;
 }
@@ -51,17 +51,17 @@ bool InternalType::isTrue()
     return false;
 }
 
-bool InternalType::neg(InternalType *& /*out*/)
+bool InternalType::neg(InternalType*& /*out*/)
 {
     return false;
 }
 
-bool InternalType::transpose(InternalType *& /*out*/)
+bool InternalType::transpose(InternalType*& /*out*/)
 {
     return false;
 }
 
-bool InternalType::adjoint(InternalType *& out)
+bool InternalType::adjoint(InternalType*& out)
 {
     return transpose(out);
 }
@@ -71,7 +71,7 @@ bool InternalType::isFieldExtractionOverloadable() const
     return false;
 }
 
-bool InternalType::invoke(typed_list & /*in*/, optional_list & /*opt*/, int /*_iRetCount*/, typed_list & /*out*/, const ast::Exp & /*e*/)
+bool InternalType::invoke(typed_list& /*in*/, optional_list& /*opt*/, int /*_iRetCount*/, typed_list& /*out*/, const ast::Exp& /*e*/)
 {
     return false;
 }
@@ -98,7 +98,7 @@ int InternalType::getInvokeNbOut()
 
 bool InternalType::operator==(const InternalType& it)
 {
-    return (getType() == (const_cast<InternalType *>(&it))->getType());
+    return (getType() == (const_cast<InternalType*>(&it))->getType());
 }
 
 bool InternalType::operator!=(const InternalType& it)
@@ -325,6 +325,26 @@ bool InternalType::isVoid(void)
     return false;
 }
 
+bool InternalType::isClassdef(void)
+{
+    return false;
+}
+
+bool InternalType::isObject(void)
+{
+    return false;
+}
+
+bool InternalType::isObjectMethod(void)
+{
+    return false;
+}
+
+bool InternalType::isA(const std::wstring& type)
+{
+    return getTypeStr() == type;
+}
+
 void InternalType::clearPrintState()
 {
     m_bPrintFromStart = true;
@@ -335,4 +355,4 @@ void InternalType::clearPrintState()
     m_iCols2PrintState = 0;
 }
 
-}
+} // namespace types

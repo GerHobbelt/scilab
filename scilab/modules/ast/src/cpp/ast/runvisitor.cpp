@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2014 - Scilab Enterprises - Antoine ELIAS
  *
@@ -20,6 +20,7 @@
 #endif
 
 #include <string>
+#include <cwctype>
 
 #include "execvisitor.hxx"
 #include "stepvisitor.hxx"
@@ -40,6 +41,8 @@
 
 #include "macrofile.hxx"
 #include "macro.hxx"
+#include "object.hxx"
+#include "classdef.hxx"
 #include "cell.hxx"
 #include "listinsert.hxx"
 #include "filemanager_interface.h"
@@ -411,6 +414,10 @@ void RunVisitorT<T>::visitprivate(const FieldExp &e)
         if (pValue->isGenericType() || pValue->isUserType())
         {
             ok = pValue->getAs<types::GenericType>()->extract(wstField, pReturn);
+        }
+        else if (pValue->isClassdef())
+        {
+            ok = pValue->getAs<types::Classdef>()->extract(wstField, pReturn);
         }
     }
     catch (std::wstring & err)
@@ -1185,6 +1192,27 @@ void RunVisitorT<T>::visitprivate(const NotExp &e)
 
     types::InternalType * pValue = getResult();
     types::InternalType * pReturn = NULL;
+
+    if (pValue->isObject() && pValue->getAs<types::Object>()->hasMethod(L"not"))
+    {
+        types::typed_list in, out;
+        types::optional_list opt;
+
+        pValue->IncreaseRef();
+        in.push_back(pValue);
+        if (pValue->getAs<types::Object>()->callMethod(L"not", in, opt, 1, out) != types::Function::OK)
+        {
+            cleanInOut(in, out);
+            CoverageInstance::stopChrono((void*)&e);
+            throw InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+        }
+
+        setResult(out);
+        cleanIn(in, out);
+        CoverageInstance::stopChrono((void*)&e);
+        return;
+    }
+
     if (pValue->neg(pReturn))
     {
         if (pValue != pReturn)
@@ -1245,6 +1273,47 @@ void RunVisitorT<T>::visitprivate(const TransposeExp &e)
     types::InternalType * pReturn = NULL;
     const bool bConjug = e.getConjugate() == TransposeExp::_Conjugate_;
 
+
+    if (bConjug && pValue->isObject() && pValue->getAs<types::Object>()->hasMethod(L"ctranspose"))
+    {
+        types::typed_list in, out;
+        types::optional_list opt;
+
+        pValue->IncreaseRef();
+        in.push_back(pValue);
+        if (pValue->getAs<types::Object>()->callMethod(L"ctranspose", in, opt, 1, out) != types::Function::OK)
+        {
+            cleanInOut(in, out);
+            CoverageInstance::stopChrono((void*)&e);
+            throw InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+        }
+
+        setResult(out);
+        cleanIn(in, out);
+        CoverageInstance::stopChrono((void*)&e);
+        return;
+    }
+
+    if (bConjug == false && pValue->isObject() && pValue->getAs<types::Object>()->hasMethod(L"transpose"))
+    {
+        types::typed_list in, out;
+        types::optional_list opt;
+
+        pValue->IncreaseRef();
+        in.push_back(pValue);
+        if (pValue->getAs<types::Object>()->callMethod(L"transpose", in, opt, 1, out) != types::Function::OK)
+        {
+            cleanInOut(in, out);
+            CoverageInstance::stopChrono((void*)&e);
+            throw InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+        }
+
+        setResult(out);
+        cleanIn(in, out);
+        CoverageInstance::stopChrono((void*)&e);
+        return;
+    }
+
     if ((bConjug && pValue->adjoint(pReturn)) || (!bConjug && pValue->transpose(pReturn)))
     {
         if (pValue != pReturn)
@@ -1302,45 +1371,7 @@ void RunVisitorT<T>::visitprivate(const FunctionDec & e)
 
     // funcprot(0) : do nothing
     // funcprot(1) && warning(on) : warning
-    //get input parameters list
-    std::vector<symbol::Variable*>* pVarList = new std::vector<symbol::Variable*>();
-    const exps_t & vars = e.getArgs().getVars();
-    for (const auto var : vars)
-    {
-        pVarList->push_back(var->getAs<SimpleVar>()->getStack());
-    }
-
-    types::Macro* pMacro = nullptr;
-    if (e.isLambda())
-    {
-        // in case of lambda, recreate the Macro because the input argument at the lambda creation may change.
-        pMacro = new types::Macro(*pVarList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
-    }
-    else
-    {
-        // no need to recreate the same Macro of the same exp (ie: define a macro in a for exp)
-        pMacro = const_cast<ast::FunctionDec&>(e).getMacro();
-        if (pMacro == nullptr)
-        {
-            //get output parameters list
-            std::vector<symbol::Variable*>* pRetList = new std::vector<symbol::Variable*>();
-            const exps_t& rets = e.getReturns().getVars();
-            for (const auto ret : rets)
-            {
-                pRetList->push_back(ret->getAs<SimpleVar>()->getStack());
-            }
-
-            pMacro = new types::Macro(e.getSymbol().getName(), *pVarList, *pRetList, const_cast<SeqExp&>(static_cast<const SeqExp&>(e.getBody())), L"script");
-            const_cast<ast::FunctionDec&>(e).setMacro(pMacro);
-        }
-        else
-        {
-            delete pVarList;
-        }
-    }
-
-    pMacro->setLines(e.getLocation().first_line, e.getLocation().last_line);
-
+    types::Macro* pMacro = parseFunctionDec(e);
     if (ctx->isprotected(symbol::Symbol(pMacro->getName())))
     {
         pMacro->killMe();
@@ -1386,6 +1417,260 @@ template <class T>
 void RunVisitorT<T>::visitprivate(const ArgumentDec & e)
 {
     /* FIXME: Implement Run Visitor for ArgumentDec */
+}
+
+template <class T>
+void RunVisitorT<T>::visitprivate(const ClassDec & e)
+{
+    CoverageInstance::invokeAndStartChrono((void*)&e);
+
+    std::map<std::wstring, types::OBJ_ATTR> props;
+    for (auto&& p : e.getProperties())
+    {
+        PropertiesDec* prop = p->getAs<PropertiesDec>();
+
+        bool staticFlag = false;
+        types::AccessModifier accessFlag = types::AccessModifier::PUBLIC;
+
+        for (auto&& a : prop->getAttributes())
+        {
+            if (a->isCommentExp()) continue;
+
+            if (a->isSimpleVar())
+            {
+                std::wstring attr(a->getAs<SimpleVar>()->getSymbol().getName());
+                std::transform(attr.begin(), attr.end(), attr.begin(), std::towlower);
+                /*
+                if (attr == L"static")
+                {
+                    staticFlag = true;
+                    continue;
+                }
+                */
+                if (attr == L"private")
+                {
+                    accessFlag = types::AccessModifier::PRIVATE;
+                    continue;
+                }
+
+                if (attr == L"protected")
+                {
+                    accessFlag = types::AccessModifier::PROTECTED;
+                    continue;
+                }
+
+                if (attr == L"public")
+                {
+                    accessFlag = types::AccessModifier::PUBLIC;
+                    continue;
+                }
+
+                wchar_t szError[bsiz];
+                os_swprintf(szError, bsiz, _W("%ls: Unknown attribute \'%ls\' for properties.\n").c_str(), L"'classdef'", attr.data());
+                throw InternalError(szError, 999, a->getLocation());
+            }
+
+            if (a->isAssignExp())
+            {
+                // later
+            }
+        }
+
+        for (auto&& p : prop->getProperties())
+        {
+            if (p->isCommentExp()) continue;
+
+            ArgumentDec* dec = p->getAs<ArgumentDec>();
+            if (dec)
+            {
+                std::wstring name = dec->getArgumentName()->getAs<ast::SimpleVar>()->getSymbol().getName();
+                types::OBJ_ATTR attr;
+                attr.isStatic = staticFlag;
+                attr.access = accessFlag;
+
+                // default value
+                if (dec->getArgumentDefaultValue()->isNilExp() == false)
+                {
+                    attr.arg.default_value = dec->getArgumentDefaultValue();
+                }
+
+                props[name] = attr;
+            }
+        }
+    }
+
+    std::map<std::wstring, types::OBJ_ATTR> methods;
+    for (auto&& m : e.getMethods())
+    {
+        MethodsDec* method = m->getAs<MethodsDec>();
+
+        bool staticFlag = false;
+        types::AccessModifier accessFlag = types::AccessModifier::PUBLIC;
+
+        for (auto&& a : method->getAttributes())
+        {
+            if (a->isCommentExp()) continue;
+
+            if (a->isSimpleVar())
+            {
+                std::wstring attr(a->getAs<SimpleVar>()->getSymbol().getName());
+                std::transform(attr.begin(), attr.end(), attr.begin(), std::towlower);
+                /*
+                if (attr == L"static")
+                {
+                    staticFlag = true;
+                }
+                */
+
+                if (attr == L"private")
+                {
+                    accessFlag = types::AccessModifier::PRIVATE;
+                    continue;
+                }
+
+                if (attr == L"protected")
+                {
+                    accessFlag = types::AccessModifier::PROTECTED;
+                    continue;
+                }
+
+                if (attr == L"public")
+                {
+                    accessFlag = types::AccessModifier::PUBLIC;
+                    continue;
+                }
+
+                wchar_t szError[bsiz];
+                os_swprintf(szError, bsiz, _W("%ls: Unknown attribute \'%ls\' for methods.\n").c_str(), L"'classdef'", attr.data());
+                throw InternalError(szError, 999, a->getLocation());
+            }
+
+            if (a->isAssignExp())
+            {
+                // later
+            }
+        }
+
+        for (auto&& me : method->getMethods())
+        {
+            if (me->isCommentExp()) continue;
+
+            if (me->isFunctionDec())
+            {
+                types::Macro* method = parseFunctionDec(*me->getAs<ast::FunctionDec>());
+                if (method)
+                {
+                    types::OBJ_ATTR attr;
+                    attr.isStatic = staticFlag;
+                    attr.access = accessFlag;
+                    attr.callable = method;
+                    methods[method->getName()] = attr;
+                    continue;
+                }
+            }
+
+            if (me->isAssignExp())
+            {
+                AssignExp* ass = me->getAs<ast::AssignExp>();
+                if (ass->getLeftExp().isSimpleVar() && ass->getRightExp().isSimpleVar())
+                {
+                    std::wstring name = ass->getLeftExp().getAs<ast::SimpleVar>()->getSymbol().getName();
+                    symbol::Symbol fname = ass->getRightExp().getAs<ast::SimpleVar>()->getSymbol();
+                    types::InternalType* f = symbol::Context::getInstance()->get(fname);
+                    if (f != nullptr && f->isCallable())
+                    {
+                        types::OBJ_ATTR attr;
+                        attr.isStatic = staticFlag;
+                        attr.access = accessFlag;
+                        attr.callable = f->getAs<types::Callable>();
+                        f->IncreaseRef();
+                        methods[name] = attr;
+                        continue;
+                    }
+                    else
+                    {
+                        wchar_t szError[bsiz];
+                        os_swprintf(szError, bsiz, _W("%ls: Right part of assignation must be a function.\n").c_str(), L"'classdef'");
+                        throw InternalError(szError, 999, me->getLocation());
+                    }
+                }
+            }
+
+            wchar_t szError[bsiz];
+            os_swprintf(szError, bsiz, _W("%ls: Unknown method declaration.\n").c_str(), L"'classdef'");
+            throw InternalError(szError, 999, me->getLocation());
+
+        }
+    }
+
+    std::map<std::wstring, std::vector<types::InternalType*>> enumerations;
+    for (auto&& e : e.getEnumeration())
+    {
+        if (e->isCommentExp()) continue;
+
+        EnumDec* enums = e->getAs<EnumDec>();
+        for (auto&& e : enums->getEnumeration())
+        {
+            if (e->isSimpleVar())
+            {
+                enumerations[e->getAs<SimpleVar>()->getSymbol().getName()] = {};
+            }
+            else if (e->isCallExp())
+            {
+                ast::CallExp* c = e->getAs<CallExp>();
+                std::vector<types::InternalType*> args;
+                for (auto&& a : c->getArgs())
+                {
+                    a->accept(*this);
+                    if (getResult() == nullptr)
+                    {
+                        // mama mia
+                    }
+
+                    types::InternalType* pIT = getResult();
+                    pIT->IncreaseRef();
+                    args.push_back(pIT);
+                    setResult(nullptr);
+                }
+
+                if (c->getName().isSimpleVar())
+                {
+                    enumerations[c->getName().getAs<SimpleVar>()->getSymbol().getName()] = args;
+                }
+            }
+        }
+    }
+
+    std::vector<std::wstring> superclass;
+    for (auto&& e : e.getSuperClasses())
+    {
+        if (e->isSimpleVar())
+        {
+            superclass.push_back(e->getAs<SimpleVar>()->getSymbol().getName());
+        }
+    }
+
+    symbol::Context::getInstance()->addClassdef(new types::Classdef(e.getSymbol().getName(), props, methods, enumerations, superclass));
+
+    CoverageInstance::stopChrono((void*)&e);
+}
+
+template <class T>
+void RunVisitorT<T>::visitprivate(const EnumDec & e)
+{
+    /* FIXME: Implement Run Visitor for EnumDec */
+}
+
+template <class T>
+void RunVisitorT<T>::visitprivate(const PropertiesDec & e)
+{
+    /* FIXME: Implement Run Visitor for PropertiesDec */
+}
+
+template <class T>
+void RunVisitorT<T>::visitprivate(const MethodsDec & e)
+{
+    /* FIXME: Implement Run Visitor for MethodsDec */
 }
 
 template <class T>

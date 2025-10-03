@@ -1,7 +1,7 @@
-/*
-*  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-*  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
-*
+﻿/*
+ *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
+ *  Copyright (C) 2008-2008 - DIGITEO - Antoine ELIAS
+ *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
@@ -10,17 +10,18 @@
  * and continues to be available under such terms.
  * For more information, see the COPYING file which you should have received
  * along with this program.
-*
-*/
+ *
+ */
 
-//file included in runvisitor.cpp
-namespace ast {
+// file included in runvisitor.cpp
+namespace ast
+{
 
 template<class T>
-void RunVisitorT<T>::visitprivate(const OpExp &e)
+void RunVisitorT<T>::visitprivate(const OpExp& e)
 {
     CoverageInstance::invokeAndStartChrono((void*)&e);
-    types::InternalType * pITL = NULL, *pITR = NULL, *pResult = NULL;
+    types::InternalType *pITL = NULL, *pITR = NULL, *pResult = NULL;
     try
     {
         /*getting what to assign*/
@@ -30,7 +31,7 @@ void RunVisitorT<T>::visitprivate(const OpExp &e)
             clearResult();
             std::wostringstream os;
             os << _W("Incompatible output argument.\n");
-            //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+            // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
             throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
         }
 
@@ -52,7 +53,7 @@ void RunVisitorT<T>::visitprivate(const OpExp &e)
             clearResult();
             std::wostringstream os;
             os << _W("Incompatible output argument.\n");
-            //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+            // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
             throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
         }
 
@@ -87,118 +88,158 @@ void RunVisitorT<T>::visitprivate(const OpExp &e)
             }
         }
 
-        switch (e.getOper())
+        // overload operation directly in classdef (plus, minus, ...)
+        if (pITL->isObject() || pITR->isObject())
         {
-            case OpExp::unaryPlus:
+            types::Object* obj = pITL->isObject() ? pITL->getAs<types::Object>() : pITR->getAs<types::Object>();
+
+            std::pair<std::wstring, int> method = Overload::getMethodFromOper(e.getOper()); 
+            std::wstring method_type = method.first + L"_" + (pITL->isObject() ? pITR->getShortTypeStr() : pITL->getShortTypeStr());
+            if (obj->hasMethod(method_type) == false)
             {
-                pResult = GenericUnaryPlus(pITR);
-                break;
+                method_type = method.first;
             }
-            case OpExp::plus:
+
+            if (obj->hasMethod(method_type))
             {
-                pResult = GenericPlus(pITL, pITR);
-                break;
+                types::typed_list in;
+                types::optional_list opt;
+                types::typed_list out;
+
+                if (method.second == 2)
+                {
+                    in.push_back(pITL);
+                    pITL->IncreaseRef();
+                }
+
+                in.push_back(pITR);
+                pITR->IncreaseRef();
+
+                types::Function::ReturnValue ret = obj->callMethod(method_type, in, opt, 1, out);
+                if (ret == types::Function::OK && out.size() == 1)
+                {
+                    pResult = out[0];
+                }
+
+                cleanIn(in, out);
             }
-            case OpExp::unaryMinus:
-            {
-                pResult = GenericUnaryMinus(pITR);
-                break;
-            }
-            case OpExp::minus:
-            {
-                pResult = GenericMinus(pITL, pITR);
-                break;
-            }
-            case OpExp::times:
-            {
-                pResult = GenericTimes(pITL, pITR);
-                break;
-            }
-            case OpExp::ldivide:
-            {
-                pResult = GenericLDivide(pITL, pITR);
-                break;
-            }
-            case OpExp::dotldivide:
-            {
-                pResult = GenericDotLDivide(pITL, pITR);
-                break;
-            }
-            case OpExp::rdivide:
-            {
-                pResult = GenericRDivide(pITL, pITR);
-                break;
-            }
-            case OpExp::dotrdivide:
-            {
-                pResult = GenericDotRDivide(pITL, pITR);
-                break;
-            }
-            case OpExp::dottimes:
-            {
-                pResult = GenericDotTimes(pITL, pITR);
-                break;
-            }
-            case OpExp::dotpower:
-            {
-                pResult = GenericDotPower(pITL, pITR);
-                break;
-            }
-            case OpExp::eq:
-            {
-                pResult = GenericComparisonEqual(pITL, pITR);
-                break;
-            }
-            case OpExp::ne:
-            {
-                pResult = GenericComparisonNonEqual(pITL, pITR);
-                break;
-            }
-            case OpExp::lt:
-            {
-                pResult = GenericLess(pITL, pITR);
-                break;
-            }
-            case OpExp::le:
-            {
-                pResult = GenericLessEqual(pITL, pITR);
-                break;
-            }
-            case OpExp::gt:
-            {
-                pResult = GenericGreater(pITL, pITR);
-                break;
-            }
-            case OpExp::ge:
-            {
-                pResult = GenericGreaterEqual(pITL, pITR);
-                break;
-            }
-            case OpExp::power:
-            {
-                pResult = GenericPower(pITL, pITR);
-                break;
-            }
-            case OpExp::krontimes:
-            {
-                pResult = GenericKrontimes(pITL, pITR);
-                break;
-            }
-            case OpExp::kronrdivide:
-            {
-                pResult = GenericKronrdivide(pITL, pITR);
-                break;
-            }
-            case OpExp::kronldivide:
-            {
-                pResult = GenericKronldivide(pITL, pITR);
-                break;
-            }
-            default:
-                break;
         }
 
-        //overloading
+        if (pResult == NULL)
+        {
+            switch (e.getOper())
+            {
+                case OpExp::unaryPlus:
+                {
+                    pResult = GenericUnaryPlus(pITR);
+                    break;
+                }
+                case OpExp::plus:
+                {
+                    pResult = GenericPlus(pITL, pITR);
+                    break;
+                }
+                case OpExp::unaryMinus:
+                {
+                    pResult = GenericUnaryMinus(pITR);
+                    break;
+                }
+                case OpExp::minus:
+                {
+                    pResult = GenericMinus(pITL, pITR);
+                    break;
+                }
+                case OpExp::times:
+                {
+                    pResult = GenericTimes(pITL, pITR);
+                    break;
+                }
+                case OpExp::ldivide:
+                {
+                    pResult = GenericLDivide(pITL, pITR);
+                    break;
+                }
+                case OpExp::dotldivide:
+                {
+                    pResult = GenericDotLDivide(pITL, pITR);
+                    break;
+                }
+                case OpExp::rdivide:
+                {
+                    pResult = GenericRDivide(pITL, pITR);
+                    break;
+                }
+                case OpExp::dotrdivide:
+                {
+                    pResult = GenericDotRDivide(pITL, pITR);
+                    break;
+                }
+                case OpExp::dottimes:
+                {
+                    pResult = GenericDotTimes(pITL, pITR);
+                    break;
+                }
+                case OpExp::dotpower:
+                {
+                    pResult = GenericDotPower(pITL, pITR);
+                    break;
+                }
+                case OpExp::eq:
+                {
+                    pResult = GenericComparisonEqual(pITL, pITR);
+                    break;
+                }
+                case OpExp::ne:
+                {
+                    pResult = GenericComparisonNonEqual(pITL, pITR);
+                    break;
+                }
+                case OpExp::lt:
+                {
+                    pResult = GenericLess(pITL, pITR);
+                    break;
+                }
+                case OpExp::le:
+                {
+                    pResult = GenericLessEqual(pITL, pITR);
+                    break;
+                }
+                case OpExp::gt:
+                {
+                    pResult = GenericGreater(pITL, pITR);
+                    break;
+                }
+                case OpExp::ge:
+                {
+                    pResult = GenericGreaterEqual(pITL, pITR);
+                    break;
+                }
+                case OpExp::power:
+                {
+                    pResult = GenericPower(pITL, pITR);
+                    break;
+                }
+                case OpExp::krontimes:
+                {
+                    pResult = GenericKrontimes(pITL, pITR);
+                    break;
+                }
+                case OpExp::kronrdivide:
+                {
+                    pResult = GenericKronrdivide(pITL, pITR);
+                    break;
+                }
+                case OpExp::kronldivide:
+                {
+                    pResult = GenericKronldivide(pITL, pITR);
+                    break;
+                }
+                default:
+                    break;
+            }
+        }
+
+        // overloading
         if (pResult == NULL)
         {
             // We did not have any algorithm matching, so we try to call OverLoad
@@ -207,7 +248,7 @@ void RunVisitorT<T>::visitprivate(const OpExp &e)
 
         setResult(pResult);
 
-        //clear left and/or right operands
+        // clear left and/or right operands
         if (pResult != pITL)
         {
             pITL->killMe();
@@ -247,12 +288,12 @@ void RunVisitorT<T>::visitprivate(const OpExp &e)
 }
 
 template<class T>
-void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
+void RunVisitorT<T>::visitprivate(const LogicalOpExp& e)
 {
     CoverageInstance::invokeAndStartChrono((void*)&e);
-    types::InternalType *pITR = NULL; //assign only in non shortcut operations.
-    types::InternalType *pITL = NULL;
-    types::InternalType *pResult = NULL;
+    types::InternalType* pITR = NULL; // assign only in non shortcut operations.
+    types::InternalType* pITL = NULL;
+    types::InternalType* pResult = NULL;
 
     try
     {
@@ -264,7 +305,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
         {
             std::wostringstream os;
             os << _W("Incompatible output argument.\n");
-            //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+            // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
             throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
         }
 
@@ -290,7 +331,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                     break;
                 }
 
-                //Continue to logicalAnd
+                // Continue to logicalAnd
             }
             case LogicalOpExp::logicalAnd:
             {
@@ -301,7 +342,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                 {
                     std::wostringstream os;
                     os << _W("Incompatible output argument.\n");
-                    //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+                    // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
                     throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
                 }
 
@@ -319,7 +360,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                 if (pResult && e.getOper() == LogicalOpExp::logicalShortCutAnd)
                 {
                     types::InternalType* pResult2 = GenericShortcutAnd(pResult);
-                    if(pResult != pITL && pResult != pITR)
+                    if (pResult != pITL && pResult != pITR)
                     {
                         pResult->killMe();
                     }
@@ -343,7 +384,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                     break;
                 }
 
-                //Continue to logicalAnd
+                // Continue to logicalAnd
             }
             case LogicalOpExp::logicalOr:
             {
@@ -354,7 +395,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                 {
                     std::wostringstream os;
                     os << _W("Incompatible output argument.\n");
-                    //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+                    // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
                     throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
                 }
 
@@ -370,7 +411,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                 if (pResult && e.getOper() == LogicalOpExp::logicalShortCutOr)
                 {
                     types::InternalType* pResult2 = GenericShortcutOr(pResult);
-                    if(pResult != pITL && pResult != pITR)
+                    if (pResult != pITL && pResult != pITR)
                     {
                         pResult->killMe();
                     }
@@ -390,7 +431,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
             default:
                 break;
         }
-        //overloading
+        // overloading
         if (pResult == NULL)
         {
             // We did not have any algorithm matching, so we try to call OverLoad
@@ -405,7 +446,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
                 clearResult();
                 std::wostringstream os;
                 os << _W("Incompatible output argument.\n");
-                //os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
+                // os << ((Location)e.right_get().getLocation()).getLocationString() << std::endl;
                 throw ast::InternalError(os.str(), 999, e.getRight().getLocation());
             }
 
@@ -425,7 +466,7 @@ void RunVisitorT<T>::visitprivate(const LogicalOpExp &e)
         // protect pResult in case where pITL or pITR equal pResult
         pResult->IncreaseRef();
 
-        //clear left and/or right operands
+        // clear left and/or right operands
         pITL->killMe();
         if (pITR)
         {
@@ -474,7 +515,7 @@ types::InternalType* RunVisitorT<T>::callOverloadOpExp(OpExp::Oper _oper, types:
         try
         {
             types::Callable::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(_oper), in, 1, out, true, true, _location);
-            if(ret == types::Function::Error)
+            if (ret == types::Function::Error)
             {
                 throw ast::InternalError(ConfigVariable::getLastErrorMessage());
             }
@@ -497,7 +538,7 @@ types::InternalType* RunVisitorT<T>::callOverloadOpExp(OpExp::Oper _oper, types:
     try
     {
         types::Callable::ReturnValue ret = Overload::generateNameAndCall(Overload::getNameFromOper(_oper), in, 1, out, true, true, _location);
-        if(ret == types::Function::Error)
+        if (ret == types::Function::Error)
         {
             throw ast::InternalError(ConfigVariable::getLastErrorMessage());
         }

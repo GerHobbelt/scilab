@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2009-2010 - DIGITEO - Bruno JOFRET
  *
@@ -16,106 +16,93 @@
 #ifndef __MACRO_HXX__
 #define __MACRO_HXX__
 
-#include <functional>
-#include <vector>
-#include <string>
-#include "context.hxx"
-#include "types.hxx"
 #include "callable.hxx"
+#include "context.hxx"
 #include "double.hxx"
+#include "object.hxx"
 #include "seqexp.hxx"
-
-struct ARG_VALIDATOR
-{
-    std::function<int(std::vector<types::InternalType*>&)> validator;
-    std::vector<std::tuple<int, types::InternalType*>> inputs;
-    std::tuple<std::string, int> error;
-    std::vector<std::tuple<int, std::string>> errorArgs;
-};
-
-struct ARG_CONVERTOR
-{
-    std::function<types::InternalType*(types::InternalType*)> convertor;
-};
-
-struct ARG
-{
-    std::vector<ARG_CONVERTOR> convertors;
-    std::function<types::InternalType*(types::InternalType* x)> dimsConvertor;
-    std::function<std::wstring()> dimsStr;
-    std::vector<ARG_VALIDATOR> validators;
-    ast::Exp* default_value = nullptr;
-    Location loc;
-};
+#include "types.hxx"
+#include "arguments.hxx"
+#include <functional>
+#include <string>
+#include <vector>
 
 namespace types
 {
 class EXTERN_AST Macro : public Callable
 {
-public :
+  public:
     Macro() : Callable(),
-            m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
-            m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
-            m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
-            m_Varargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargout"))) /*,
-            m_firstCall(true)*/
+              m_Nargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargin"))),
+              m_Nargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"nargout"))),
+              m_Varargin(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargin"))),
+              m_Varargout(symbol::Context::getInstance()->getOrCreate(symbol::Symbol(L"varargout"))) /*,
+              m_firstCall(true)*/
     {
     }
-
+    //standard
     Macro(const std::wstring& _stName, std::vector<symbol::Variable*>& _inputArgs, std::vector<symbol::Variable*>& _outputArgs, ast::SeqExp& _body, const std::wstring& _stModule);
+    //lambda
     Macro(std::vector<symbol::Variable*>& _inputArgs, ast::SeqExp& _body, const std::wstring& _stModule, std::unordered_map<std::wstring, types::InternalType*> captured = {});
+    //static for classdef
+    Macro(const std::wstring& _stName, Classdef* def, std::vector<symbol::Variable*>& _inputArgs, std::vector<symbol::Variable*>& _outputArgs, ast::SeqExp& _body, const std::wstring& _stModule);
+
     virtual ~Macro();
 
-    // FIXME : Should not return NULL;
-    Macro*                      clone() override;
+    Macro* clone() override;
 
-    inline ScilabType           getType(void) override
+    inline ScilabType getType(void) override
     {
         return ScilabMacro;
     }
-    inline ScilabId             getId(void) override
+    inline ScilabId getId(void) override
     {
         return IdMacro;
     }
-    bool                        isMacro() override
+    bool isMacro() override
     {
         return true;
     }
 
-    bool                        isLambda()
+    bool isA(const std::wstring& type)
+    {
+        return type == L"function";
+    }
+
+    bool isLambda()
     {
         return m_isLambda;
     }
 
-    void                        whoAmI() override;
+    void whoAmI() override;
 
-    bool                        toString(std::wostringstream& ostr) override;
+    bool toString(std::wostringstream& ostr) override;
 
-    Callable::ReturnValue       call(typed_list &in, optional_list &opt, int _iRetCount, typed_list &out) override;
+    Callable::ReturnValue call(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out) override;
 
-    inline void cleanCall(symbol::Context * pContext, int oldPromptMode);
+    inline void cleanCall(symbol::Context* pContext, int oldPromptMode);
 
-    ast::SeqExp*                getBody();
+    ast::SeqExp* getBody();
 
-    bool                        getMemory(long long* _piSize, long long* _piSizePlusType) override;
+    bool getMemory(long long* _piSize, long long* _piSizePlusType) override;
 
     /* return type as string ( double, int, cell, list, ... )*/
-    virtual std::wstring        getTypeStr() const override
+    virtual std::wstring getTypeStr() const override
     {
         return L"function";
     }
     /* return type as short string ( s, i, ce, l, ... )*/
-    virtual std::wstring        getShortTypeStr() const override
+    virtual std::wstring getShortTypeStr() const override
     {
         return L"function";
     }
 
-    const std::wstring&         getFileName() const
+    const std::wstring& getFileName() const
     {
         return m_stPath;
     }
 
-    void                        setFileName(const std::wstring& _fileName)
+    void setFileName(const std::wstring& _fileName)
     {
         m_stPath = _fileName;
     }
@@ -130,12 +117,12 @@ public :
 
     void add_submacro(const symbol::Symbol& s, Macro* macro);
 
-    inline const std::map<symbol::Variable*, Macro*> & getSubMacros() const
+    inline const std::map<symbol::Variable*, Macro*>& getSubMacros() const
     {
         return m_submacro;
     }
 
-    inline const std::map<symbol::Variable*, Macro*> & getSubMacros()
+    inline const std::map<symbol::Variable*, Macro*>& getSubMacros()
     {
         return m_submacro;
     }
@@ -148,23 +135,39 @@ public :
         return m_captured;
     }
 
+    void setParent(Object* p)
+    {
+        parent = p;
+        if (p)
+        {
+            //mustAsParent = true;
+        }
+    }
+
+    InternalType* getParent()
+    {
+        return parent;
+    }
+
   private:
-    std::vector<symbol::Variable*>*     m_inputArgs;
-    std::vector<symbol::Variable*>*     m_outputArgs;
-    ast::SeqExp*                        m_body;
-    symbol::Variable*                   m_Nargin;
-    symbol::Variable*                   m_Nargout;
-    symbol::Variable*                   m_Varargin;
-    symbol::Variable*                   m_Varargout;
-    Double*                             m_pDblArgIn;
-    Double*                             m_pDblArgOut;
+    std::vector<symbol::Variable*>* m_inputArgs;
+    std::vector<symbol::Variable*>* m_outputArgs;
+    ast::SeqExp* m_body;
+    symbol::Variable* m_Nargin;
+    symbol::Variable* m_Nargout;
+    symbol::Variable* m_Varargin;
+    symbol::Variable* m_Varargout;
+    Double* m_pDblArgIn;
+    Double* m_pDblArgOut;
     std::map<symbol::Variable*, Macro*> m_submacro;
-    std::wstring                        m_stPath;
-    std::map<std::wstring, ARG>         m_arguments;
+    std::wstring m_stPath;
+    std::map<std::wstring, ARG> m_arguments;
 
     /*lambda*/
-    bool                                m_isLambda;
+    bool m_isLambda;
     std::unordered_map<std::wstring, types::InternalType*> m_captured;
+    InternalType* parent;
+    //bool mustAsParent;
 
     void cleanup();
 };
