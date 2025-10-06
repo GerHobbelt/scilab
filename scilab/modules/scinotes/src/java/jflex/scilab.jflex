@@ -223,7 +223,7 @@ structureKwds = "then" | "do" | "catch" | "case" | "otherwise"
 
 elseif = "elseif" | "else"
 
-openCloseStructureKwds = "if" | "for" | "while" | "try" | "select" | "switch" | "arguments"
+openCloseStructureKwds = "if" | "for" | "while" | "try" | "select" | "switch" | "arguments" | "classdef" | "enumeration" | "properties" | "methods"
 
 end = "end"
 
