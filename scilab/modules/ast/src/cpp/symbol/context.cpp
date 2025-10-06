@@ -440,8 +440,8 @@ bool Context::remove(const Symbol& _key)
         varStack.top()->erase(_key);
     }
 
-    ret = ret || libraries.remove(_key, m_iLevel);
-    return ret;
+    bool ret2 = libraries.remove(_key, m_iLevel);
+    return ret || ret2;
 }
 
 bool Context::removeAll()
