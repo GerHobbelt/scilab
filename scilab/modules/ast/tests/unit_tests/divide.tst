@@ -77,3 +77,20 @@ assert_checkalmostequal(SPC/ r, sparse([1,2;4,5;3,10],[0.5+2*%i,1+4*%i,1.5+6*%i]
 //SPC /c
 assert_checkalmostequal(SPC/ c, sparse([1,2;4,5;3,10],[1.8+0.4*%i,3.6+0.8*%i,5.4+1.2*%i]));
 
+
+R = [1 2 3; 8 9 5; 1 4 6];
+C = [1+2i,2+4i 3+6i; 3+6i 4+8i 5+10i; 5+10i 6+12i 7+14i];
+
+//R / R
+assert_checkalmostequal(R / R, [1 0 0;0 1 0; 0 0 1], [], 1e-15);
+//C / C
+assert_checkalmostequal(C / C, [1 0 0; 0.5 0 0.5; 0 0 1], [], 1e-14); 
+
+R = [1,2,3;3,4,5;5,6,7];
+expected = [0.2-0.4i, 0, 0; 0.1-0.2i, 0, 0.1-0.2i; 0, 0, 0.2-0.4i];
+//R / C
+assert_checkalmostequal(R / C, expected, [], 1e-14);
+//C / R
+expected = [1+2i, 0, 0; 0.5+1i, 0, 0.5+1i; 0, 0, 1+2i];
+assert_checkalmostequal(C / R, expected, [], 1e-14);
+
