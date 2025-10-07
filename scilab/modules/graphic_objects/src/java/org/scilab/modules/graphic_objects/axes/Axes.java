@@ -2557,6 +2557,11 @@ public class Axes extends GraphicObject {
         double step = base * powerOfTen;
         bounds[i] = step * Math.floor(bounds[i] / step);
         bounds[i + 1] = step * Math.ceil(bounds[i + 1] / step);
+        if (Math.abs((bounds[i]-bounds[i + 1])/Math.max(bounds[i],bounds[i+1])) < 2*Math.ulp(1.0)) {
+            double inc = getIncrement(bounds[i]);
+            bounds[i + 1] = bounds[i]+inc;
+            bounds[i] = bounds[i]-inc;
+        }
     }
 
     /**
