@@ -1,7 +1,7 @@
 // =============================================================================
 // Scilab ( http://www.scilab.org/ ) - This file is part of Scilab
 //
-// Copyright (C) 2021 - Stéphane Mottelet
+// Copyright (C) 2021 - UTC - Stéphane Mottelet
 //
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================

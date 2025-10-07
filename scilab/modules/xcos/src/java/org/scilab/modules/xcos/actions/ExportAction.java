@@ -4,7 +4,7 @@
  * Copyright (C) 2010 - DIGITEO - Clement DAVID
  * Copyright (C) 2011-2015 - Scilab Enterprises - Clement DAVID
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
- * Copyright (C) 2022 - Stéphane MOTTELET
+ * Copyright (C) 2022 - UTC - Stéphane MOTTELET
  *
  * This file is hereby licensed under the terms of the GNU GPL v2.0,
  * pursuant to article 5.3.4 of the CeCILL v.2.1.

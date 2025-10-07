@@ -3,11 +3,8 @@
 //
 // Copyright (C) 2022 - UTC - Stéphane Mottelet
 //
-// This file must be used under the terms of GPL License
-// This source file is licensed as described in the file COPYING, which
-// you should have received as part of this distribution.  The terms
-// are also available at
-// https://www.gnu.org/licenses/gpl-3.0.txt
+// This file is hereby licensed under the terms of the GNU GPL v2.0,
+// For more information, see the COPYING file which you should have received
 
 // <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
