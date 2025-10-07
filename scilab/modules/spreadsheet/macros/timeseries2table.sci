@@ -11,6 +11,10 @@
 
 function t = timeseries2table(varargin)
     data = varargin(1);
+    if ~istimeseries(data) then
+        error(msprintf(_("%s: Wrong type for input argument #%d: A timeseries expected.\n"), "timeseries2table", 1));
+    end
+    
     l = list();
     for i = 1:size(data, 2)+1
         l($+1) = data.vars(i).data;

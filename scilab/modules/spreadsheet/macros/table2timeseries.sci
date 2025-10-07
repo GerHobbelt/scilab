@@ -11,12 +11,18 @@
 
 function ts = table2timeseries(varargin)
     data = varargin(1)
+    fname = "table2timeseries";
+
+    if ~istable(data) then
+        error(msprintf(_("%s: Wrong type for input argument #%d: A table expected.\n"), fname, 1));
+    end
+    
     names = data.Properties.VariableNames;
     hasrowtimes = %f;
     timeindex = [];
     rhs = nargin;
     opts = list();
-    fname = "table2timeseries";
+    
 
     if rhs > 1 then
         for i = nargin-1:-2:2

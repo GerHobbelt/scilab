@@ -253,6 +253,8 @@ end
 assert_checkequal(table2struct(T), expected);
 
 // timeseries2table
+refMsg = msprintf(_("%s: Wrong type for input argument #%d: A timeseries expected.\n"), "timeseries2table", 1);
+assert_checkerror("timeseries2table(T)", refMsg);
 Time = datetime(2023, 6, 1:3)';
 A = [1; 2; 3];
 B = [10; 20; 30];
@@ -268,6 +270,9 @@ T = timeseries2table(ts, "RowNames", ["l1", "l2", "l3"]);
 assert_checkequal(T.Row, ["l1", "l2", "l3"]');
 T(:, [2:3]) = [];
 assert_checkequal(T, table(Time, C, "VariableNames", ["Time", "C"], "RowNames", ["l1", "l2", "l3"]));
+
+refMsg = msprintf(_("%s: Wrong type for input argument #%d: A table expected.\n"), "table2timeseries", 1);
+assert_checkerror("table2timeseries(ts)", refMsg);
 
 // complex data
 T = table(1+%i, 2, %t, "toto");
