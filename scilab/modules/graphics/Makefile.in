@@ -196,7 +196,6 @@ am__objects_1 = src/c/libscigraphics_algo_la-GetCommandArg.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_visible_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_old_style_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_figures_id_property.lo \
-	src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_pixel_drawing_mode_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_line_mode_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-get_axes_size_property.lo \
@@ -362,7 +361,6 @@ am__objects_1 = src/c/libscigraphics_algo_la-GetCommandArg.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_current_axes_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_current_entity_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_figure_id_property.lo \
-	src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_mark_size_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_mark_offset_property.lo \
 	src/c/getHandleProperty/libscigraphics_algo_la-set_mark_stride_property.lo \
@@ -822,7 +820,6 @@ am__depfiles_remade =  \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_position_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_resizefcn_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_size_property.Plo \
-	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figures_id_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_fill_mode_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_filled_property.Plo \
@@ -992,7 +989,6 @@ am__depfiles_remade =  \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_position_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_resizefcn_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_size_property.Plo \
-	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_fill_mode_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_filled_property.Plo \
 	src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_font_angle_property.Plo \
@@ -1530,7 +1526,6 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_visible_property.c \
     src/c/getHandleProperty/get_old_style_property.c \
     src/c/getHandleProperty/get_figures_id_property.c \
-    src/c/getHandleProperty/get_figure_style_property.c \
     src/c/getHandleProperty/get_pixel_drawing_mode_property.c \
     src/c/getHandleProperty/get_line_mode_property.c \
     src/c/getHandleProperty/get_axes_size_property.c \
@@ -1696,7 +1691,6 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_current_axes_property.c \
     src/c/getHandleProperty/set_current_entity_property.c \
     src/c/getHandleProperty/set_figure_id_property.c \
-    src/c/getHandleProperty/set_figure_style_property.c \
     src/c/getHandleProperty/set_mark_size_property.c \
     src/c/getHandleProperty/set_mark_offset_property.c \
     src/c/getHandleProperty/set_mark_stride_property.c \
@@ -2277,9 +2271,6 @@ src/c/getHandleProperty/libscigraphics_algo_la-get_old_style_property.lo:  \
 src/c/getHandleProperty/libscigraphics_algo_la-get_figures_id_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
-src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo:  \
-	src/c/getHandleProperty/$(am__dirstamp) \
-	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-get_pixel_drawing_mode_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
@@ -2772,9 +2763,6 @@ src/c/getHandleProperty/libscigraphics_algo_la-set_current_entity_property.lo:  
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-set_figure_id_property.lo:  \
-	src/c/getHandleProperty/$(am__dirstamp) \
-	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
-src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo:  \
 	src/c/getHandleProperty/$(am__dirstamp) \
 	src/c/getHandleProperty/$(DEPDIR)/$(am__dirstamp)
 src/c/getHandleProperty/libscigraphics_algo_la-set_mark_size_property.lo:  \
@@ -3758,7 +3746,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_position_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_resizefcn_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_size_property.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figures_id_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_fill_mode_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_filled_property.Plo@am__quote@ # am--include-marker
@@ -3928,7 +3915,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_position_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_resizefcn_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_size_property.Plo@am__quote@ # am--include-marker
-@AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_fill_mode_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_filled_property.Plo@am__quote@ # am--include-marker
 @AMDEP_TRUE@@am__include@ @am__quote@src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_font_angle_property.Plo@am__quote@ # am--include-marker
@@ -4119,13 +4105,6 @@ src/c/getHandleProperty/libscigraphics_algo_la-get_figures_id_property.lo: src/c
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/get_figures_id_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-get_figures_id_property.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_figures_id_property.lo `test -f 'src/c/getHandleProperty/get_figures_id_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_figures_id_property.c
-
-src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo: src/c/getHandleProperty/get_figure_style_property.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo `test -f 'src/c/getHandleProperty/get_figure_style_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_figure_style_property.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Tpo src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/get_figure_style_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_figure_style_property.lo `test -f 'src/c/getHandleProperty/get_figure_style_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_figure_style_property.c
 
 src/c/getHandleProperty/libscigraphics_algo_la-get_pixel_drawing_mode_property.lo: src/c/getHandleProperty/get_pixel_drawing_mode_property.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-get_pixel_drawing_mode_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_pixel_drawing_mode_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-get_pixel_drawing_mode_property.lo `test -f 'src/c/getHandleProperty/get_pixel_drawing_mode_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/get_pixel_drawing_mode_property.c
@@ -5281,13 +5260,6 @@ src/c/getHandleProperty/libscigraphics_algo_la-set_figure_id_property.lo: src/c/
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/set_figure_id_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-set_figure_id_property.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_figure_id_property.lo `test -f 'src/c/getHandleProperty/set_figure_id_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_figure_id_property.c
-
-src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo: src/c/getHandleProperty/set_figure_style_property.c
-@am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo `test -f 'src/c/getHandleProperty/set_figure_style_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_figure_style_property.c
-@am__fastdepCC_TRUE@	$(AM_V_at)$(am__mv) src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Tpo src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Plo
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	$(AM_V_CC)source='src/c/getHandleProperty/set_figure_style_property.c' object='src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo' libtool=yes @AMDEPBACKSLASH@
-@AMDEP_TRUE@@am__fastdepCC_FALSE@	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) @AMDEPBACKSLASH@
-@am__fastdepCC_FALSE@	$(AM_V_CC@am__nodep@)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_figure_style_property.lo `test -f 'src/c/getHandleProperty/set_figure_style_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_figure_style_property.c
 
 src/c/getHandleProperty/libscigraphics_algo_la-set_mark_size_property.lo: src/c/getHandleProperty/set_mark_size_property.c
 @am__fastdepCC_TRUE@	$(AM_V_CC)$(LIBTOOL) $(AM_V_lt) --tag=CC $(AM_LIBTOOLFLAGS) $(LIBTOOLFLAGS) --mode=compile $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libscigraphics_algo_la_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT src/c/getHandleProperty/libscigraphics_algo_la-set_mark_size_property.lo -MD -MP -MF src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_mark_size_property.Tpo -c -o src/c/getHandleProperty/libscigraphics_algo_la-set_mark_size_property.lo `test -f 'src/c/getHandleProperty/set_mark_size_property.c' || echo '$(srcdir)/'`src/c/getHandleProperty/set_mark_size_property.c
@@ -7609,7 +7581,6 @@ distclean: distclean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_position_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_resizefcn_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_size_property.Plo
-	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figures_id_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_fill_mode_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_filled_property.Plo
@@ -7779,7 +7750,6 @@ distclean: distclean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_position_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_resizefcn_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_size_property.Plo
-	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_fill_mode_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_filled_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_font_angle_property.Plo
@@ -8100,7 +8070,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_position_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_resizefcn_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_size_property.Plo
-	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figure_style_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_figures_id_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_fill_mode_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-get_filled_property.Plo
@@ -8270,7 +8239,6 @@ maintainer-clean: maintainer-clean-am
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_position_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_resizefcn_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_size_property.Plo
-	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_figure_style_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_fill_mode_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_filled_property.Plo
 	-rm -f src/c/getHandleProperty/$(DEPDIR)/libscigraphics_algo_la-set_font_angle_property.Plo

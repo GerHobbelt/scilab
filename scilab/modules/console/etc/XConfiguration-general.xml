@@ -261,10 +261,10 @@
             </actions>
         </body>
     </shortcuts>
-    <documentation title="_(Help and demos)">
+    <documentation title="_(Doc and demos)">
       <body>
         <demos demoGUIisDockable="unchecked"/>
-        <help redirectMatlab2Scilab="unchecked"/>
+        <doc redirectMatlab2Scilab="unchecked"/>
       </body>
     </documentation>
 </general>

@@ -228,14 +228,9 @@
                 </revremark>
             </revision>
             <revision>
-                <revnumber>2025.0.0</revnumber>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <itemizedlist>
-                        <listitem>
-                            The syntax, where the input arguments are skipped like nicholschart(modules,, colors), 
-                            is now obsolete and will be removed in 2026.0.0.
-                        </listitem>
-                    </itemizedlist>
+                    The syntax where the input arguments are skipped like <literal>nicholschart(modules,, colors)</literal> is no more supported.
                 </revremark>
             </revision>
         </revhistory>

@@ -595,9 +595,9 @@ $ echo "disp(%pi)"|scilab-cli
 $ echo "disp(%pi)"|scilab -nwni
 
 # Открыть только окно справки Scilab:
-$ scilab-adv-cli -e "help()"
+$ scilab-adv-cli -e "doc()"
 или
-$ scilab -nw -e "help()"
+$ scilab -nw -e "doc()"
 
 
 # Scilab может быть использован написания сценариев:

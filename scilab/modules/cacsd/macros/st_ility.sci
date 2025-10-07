@@ -14,24 +14,8 @@ function [n,nc,u,sl,v]=st_ility(sl,tol)
     //stabilizability test
 
     arguments
-        sl {mustBeA(sl, ["double", "lss"])}
+        sl {mustBeA(sl, "lss")}
         tol {mustBeA(tol, "double"), mustBeScalarOrEmpty} = []
-    end
-
-    rhs = nargin;
-
-    if type(sl)==1 then
-        //[n,nc,u,A,B]=st_ility(A,B,tol)
-        msg = "%s: %s(Sl [, tol]) is obsolete when Sl is a matrix of doubles.\n"
-        msg = msprintf(msg, "st_ility", "st_ility");
-        msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-        warning(msg) 
-        if rhs == 2 then
-            sl = syslin("c",sl,tol,[]);
-            rhs = 1;
-        else
-            error(msprintf(_("%s: Wrong number of input arguments: %d expected.\n"), "st_ility", 2));
-        end
     end
 
     [a,b,c,d,x0,dom]=sl(2:7);
@@ -46,7 +30,7 @@ function [n,nc,u,sl,v]=st_ility(sl,tol)
         b=zeros(na,1);
     end
     // controllable part
-    if rhs == 1 then
+    if nargin == 1 then
         [n,u,ind,V,a,b]=contr(a,b);
     else
         [n,u,ind,V,a,b]=contr(a,b,tol);

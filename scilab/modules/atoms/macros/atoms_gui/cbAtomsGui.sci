@@ -121,7 +121,7 @@ function cbAtomsGui()
         delete(findobj("Tag", "atomsFigure"));
     // ?:Help
     elseif UItag == "helpMenu" then
-        help("atoms")
+        doc("atoms")
     end
 endfunction
 

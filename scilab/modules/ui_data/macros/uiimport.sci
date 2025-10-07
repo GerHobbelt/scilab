@@ -28,7 +28,7 @@ function uiimport(action)
             uiimport_function();
             return
         case "help"
-            help("uiimport")
+            doc("uiimport")
             return
         case "preview"
             uiimport_preview();

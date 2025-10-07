@@ -70,7 +70,7 @@ apropos "quadratic.*solver"
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
             <member>
                 <link linkend="man">man</link>

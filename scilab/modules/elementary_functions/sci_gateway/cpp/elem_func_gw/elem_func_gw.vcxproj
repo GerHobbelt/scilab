@@ -205,7 +205,6 @@ lib /DEF:"$(ProjectDir)elementary_functions_Import.def" /SUBSYSTEM:WINDOWS /MACH
     <ClCompile Include="..\..\..\src\cpp\getmode.cpp" />
     <ClCompile Include="..\..\c\sci_isequalbitwise.c" />
     <ClCompile Include="..\..\c\sci_number_properties.c" />
-    <ClCompile Include="..\..\c\sci_testmatrix.c" />
     <ClCompile Include="..\elem_func_gw.cpp" />
     <ClCompile Include="..\sci_abs.cpp" />
     <ClCompile Include="..\sci_acos.cpp" />

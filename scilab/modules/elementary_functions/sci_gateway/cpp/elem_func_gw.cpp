@@ -87,7 +87,6 @@ int ElemFuncModule::Load()
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"sqrt", &sci_sqrt, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"sum", &sci_sum, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"tan", &sci_tan, MODULE_NAME));
-    symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"testmatrix", &sci_testmatrix, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"tril", &sci_tril, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"triu", &sci_triu, MODULE_NAME));
     symbol::Context::getInstance()->addFunction(types::Function::createFunction(L"zeros", &sci_zeros, MODULE_NAME));

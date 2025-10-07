@@ -122,7 +122,7 @@ end
 
 // See the result in the help browser
 // =============================================================================
-help();
+doc();
 
 // Del french and english help chapters
 // =============================================================================
@@ -138,7 +138,7 @@ end
         <title>See also</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
             <member>
                 <link linkend="add_help_chapter">add_help_chapter</link>

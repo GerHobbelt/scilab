@@ -63,7 +63,6 @@ static setHashTableCouple propertySetTable[] =
     {"visible", set_visible_property},
     {"pixel_drawing_mode", set_pixel_drawing_mode_property},
     {"old_style", set_old_style_property},
-    {"figure_style", set_figure_style_property},
     {"auto_resize", set_auto_resize_property},
     {"figure_position", set_figure_position_property},
     {"axes_size", set_axes_size_property},

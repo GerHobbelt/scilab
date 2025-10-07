@@ -25,7 +25,6 @@
         <synopsis>
             S = lft(P, R)
             [S, s] = lft(P, p, R)
-            [S, s] = lft(P, p, R, r)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -59,17 +58,6 @@
                         function representation) or a simple gain,
                         implicitly partitioned into four blocks (two
                         input ports and two output ports).
-                    </para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term>r</term>
-                <listitem>
-                    <para>
-                        1x2 row vector, dimension of the
-                        <literal>R_22</literal> block . This argument should  not
-                        be used. It is retained for compatibility with
-                        previous versions.
                     </para>
                 </listitem>
             </varlistentry>
@@ -208,9 +196,9 @@ lft(W,[1,1],K)
         <title>History</title>
         <revhistory>
             <revision>
-                <revnumber>2025.0.0</revnumber>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <literal>lft(P, p, R, r)</literal> is obsolete and will be removed in 2026.0.0.
+                    <literal>lft(P, p, R, r)</literal> removed.
                 </revremark>
             </revision>
         </revhistory>

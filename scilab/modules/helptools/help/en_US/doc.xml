@@ -186,9 +186,6 @@ doc "linear sparse"
             <member>
                 <link linkend="head_comments">head_comments</link>
             </member>
-            <member>
-                <link linkend="help">Scilab inline documentation</link>
-            </member>
         </simplelist>
     </refsection>
     <refsection role="history">

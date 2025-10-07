@@ -88,7 +88,7 @@ end
         <title>Ver Também</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
         </simplelist>
     </refsection>

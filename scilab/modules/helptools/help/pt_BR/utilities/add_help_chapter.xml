@@ -63,7 +63,7 @@
         <title>Ver Também</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
             <member>
                 <link linkend="add_demo">add_demo</link>

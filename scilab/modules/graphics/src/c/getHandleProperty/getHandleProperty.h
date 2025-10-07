@@ -29,7 +29,6 @@ GRAPHICS_IMPEXP void* get_figures_id_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_visible_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_pixel_drawing_mode_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_old_style_property(void* _pvCtx, int iObjUID);
-GRAPHICS_IMPEXP void* get_figure_style_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_auto_resize_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_figure_position_property(void* _pvCtx, int iObjUID);
 GRAPHICS_IMPEXP void* get_axes_size_property(void* _pvCtx, int iObjUID);

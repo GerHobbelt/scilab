@@ -330,7 +330,6 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="src\c\getHandleProperty\get_figure_position_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_figure_resizefcn_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_figure_size_property.c" />
-    <ClCompile Include="src\c\getHandleProperty\get_figure_style_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_figures_id_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_fill_mode_property.c" />
     <ClCompile Include="src\c\getHandleProperty\get_filled_property.c" />
@@ -590,7 +589,6 @@ lib /DEF:"$(ProjectDir)elementary_functions_f_Import.def" /SUBSYSTEM:WINDOWS /MA
     <ClCompile Include="src\c\getHandleProperty\set_figure_name_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_figure_position_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_figure_size_property.c" />
-    <ClCompile Include="src\c\getHandleProperty\set_figure_style_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_fill_mode_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_filled_property.c" />
     <ClCompile Include="src\c\getHandleProperty\set_font_angle_property.c" />

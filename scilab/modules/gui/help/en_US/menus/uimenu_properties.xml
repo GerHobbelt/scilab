@@ -70,7 +70,7 @@
                             <th>0</th><td>:</td>
                             <td>
                                 (default) non prioritary (or interruptible) Scilab instructions.
-                                Example: .callback = "help(""uimenu"")"
+                                Example: .callback = "doc(""uimenu"")"
                             </td>
                         </tr>
                         <tr>

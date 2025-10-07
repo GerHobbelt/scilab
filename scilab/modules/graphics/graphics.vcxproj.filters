@@ -221,9 +221,6 @@
     <ClCompile Include="src\c\getHandleProperty\get_figure_size_property.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\c\getHandleProperty\get_figure_style_property.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\c\getHandleProperty\get_figures_id_property.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -822,9 +819,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\c\getHandleProperty\set_figure_size_property.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="src\c\getHandleProperty\set_figure_style_property.c">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="src\c\getHandleProperty\set_fill_mode_property.c">

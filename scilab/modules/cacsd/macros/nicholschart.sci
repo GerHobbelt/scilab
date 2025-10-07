@@ -54,14 +54,6 @@ function handles = nicholschart(modules, args, colors)
         end
         modules=matrix(modules,1,-1)
     else
-        try
-            if type(modules) == 0 then
-                msg = "%s: %s(, [args, colors]) is obsolete. Please use %s(modules, [args, colors]) with modules = [].\n"
-                msg = msprintf(msg, fname, fname, fname);
-                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-                warning(msg);
-            end
-        end
         modules=defaultModules
     end
 
@@ -72,27 +64,11 @@ function handles = nicholschart(modules, args, colors)
         end
         args=matrix(args,1,-1)
     else
-        try
-            if type(args) == 0 then
-                msg = "%s: %s(modules, , colors) is obsolete. Please use %s(modules, args, colors) with args = [].\n"
-                msg = msprintf(msg, fname, fname, fname);
-                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-                warning(msg);
-            end
-        end
         args=defaultArgs
     end
 
     // colors
     if exists("colors","local")==0 | colors == [] then
-        try
-            if type(colors) == 0 then
-                msg = "%s: %s(modules, args, ) is obsolete. Please use %s(modules, args, colors) with colors = [].\n"
-                msg = msprintf(msg, fname, fname, fname);
-                msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-                warning(msg);
-            end
-        end
         colors = "grey85";
     end
 

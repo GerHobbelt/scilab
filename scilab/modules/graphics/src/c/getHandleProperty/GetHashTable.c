@@ -54,7 +54,6 @@ static getHashTableCouple propertyGetTable[] =
     {"visible", get_visible_property},
     {"pixel_drawing_mode", get_pixel_drawing_mode_property},
     {"old_style", get_old_style_property},
-    {"figure_style", get_figure_style_property},
     {"auto_resize", get_auto_resize_property},
     {"figure_position", get_figure_position_property},
     {"axes_size", get_axes_size_property},

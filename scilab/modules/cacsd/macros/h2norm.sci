@@ -19,23 +19,8 @@ function [nh]=h2norm(g,tol)
     //                 /-00
 
     arguments
-        g {mustBeA(g, ["double", "r", "lss"])}
+        g {mustBeA(g, ["r", "lss"])}
         tol (1,1) {mustBeA(tol, "double"), mustBeReal, mustBePositive}= 1000*%eps
-    end
-
-    if type(g)==1 then
-        msg = "%s: %s(Sl [, tol]) is obsolete when Sl is a matrix of doubles.\n"
-        msg = msprintf(msg, "h2norm", "h2norm");
-        msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-        warning(msg) 
-        
-        if norm(g)==0 then 
-            nh=0;
-            return
-        else
-            msg = gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n")
-            error(msprintf(msg, "h2norm", 1))
-        end
     end
 
     if g.dt<>"c" & g.dt<>[] then

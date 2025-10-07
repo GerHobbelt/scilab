@@ -173,7 +173,7 @@ help_from_sci('test_fun','.','.')
         <title>Ver Também</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
             <member>
                 <link linkend="help_skeleton">help_skeleton</link>

@@ -103,7 +103,7 @@ refHelptxt = [
 "<listitem><para>An itemized list is shown here</para></listitem>"
 "</itemizedlist>"
 "The help text for help_from_sci was generated from the head comments section of help_from_sci.sci"
-"Compare the output from head_comments(""help_from_sci"") and help(""help_from_sci"")"
+"Compare the output from head_comments(""help_from_sci"") and doc(""help_from_sci"")"
 "to see more examples on how to write the head comments section."
 "   </para>"
 "   <para>"

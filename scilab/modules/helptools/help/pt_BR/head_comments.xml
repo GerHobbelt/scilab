@@ -69,7 +69,7 @@ function [y] = logspace(d1,d2,n)
         <title>Ver Também</title>
         <simplelist type="inline">
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
             <member>
                 <link linkend="help_from_sci">help_from_sci</link>

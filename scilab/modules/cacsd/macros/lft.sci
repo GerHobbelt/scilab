@@ -10,7 +10,7 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function [p1,r1]=lft(p,r,p#,r#)
+function [p1,r1]=lft(p,r,p#)
     //[p1,r1]=lft(p,r,p#,r#)
     //linear fractional transform between two standard plants
     //p and p# in state space form or in transfer form.
@@ -44,7 +44,7 @@ function [p1,r1]=lft(p,r,p#,r#)
 
         r=size(p#');
         r#=size(p#)-[r(2),r(1)];
-    elseif rhs>=3 then //lft(p,r,p#) or lft(p,r,p#,r#)
+    elseif rhs==3 then //lft(p,r,p#)
         if and(typeof(p#)<>["constant","rational","state-space"]) then
             error(msprintf(gettext("%s: Wrong type for input argument #%d: Linear state space or a transfer function expected.\n"),"lft",3))
         end
@@ -69,32 +69,7 @@ function [p1,r1]=lft(p,r,p#,r#)
             error(msprintf(_("%s: incompatible input arguments %d and %d\n"),"lft",2,3))
         end
 
-        if rhs==4 then //Obsolete
-            msg = "%s: %s(P, p, R, r) is obsolete. Please use %s(P, p, R) instead.\n"
-            msg = msprintf(msg, "lft", "lft", "lft");
-            msg = [msg, msprintf(_("This feature will be permanently removed in Scilab %s"), "2026.0.0")]
-            warning(msg);
-
-            if type(r#)<>1 then
-                error(msprintf(_("%s: Wrong type for argument %d: Real vector expected.\n"),"lft",4))
-            end
-
-            r#=matrix(r#,1,-1)
-            if size(r#,"*")<>2 then
-                error(msprintf(_("%s: Wrong size for input argument #%d: A %d elements array expected.\n"),"lft",4,2))
-            end
-
-            if or(r#>size(p#)) then
-                error(msprintf(_("%s: incompatible input arguments %d and %d\n"),"lft",3,4))
-            end
-
-            if r(2)<>size(p#,1)-r#(1)|r(1)<>size(p#,2)-r#(2) then
-                expected=size(p#)-r([2 1])
-                error(msprintf(_("%s: Wrong value for input argument #%d: Must be %s.\n"),"lft",4,sci2exp(expected)))
-            end
-        else
-            r#=size(p#)-[r(2),r(1)];
-        end
+        r#=size(p#)-[r(2),r(1)];
     end
 
     if type(p#)==1 then

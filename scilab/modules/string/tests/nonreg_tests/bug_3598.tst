@@ -29,7 +29,7 @@ if ierr == 0 then pause,end
 ierr = execstr("r = dir(1);","errcatch");
 if ierr == 0 then pause,end
 //==============================================================
-ierr = execstr("r = help(1);","errcatch");
+ierr = execstr("r = doc(1);","errcatch");
 if ierr == 0 then pause,end
 //==============================================================
 

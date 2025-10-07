@@ -92,9 +92,9 @@ r=syssize(G)
         <title>History</title>
         <revhistory>
             <revision>
-                <revnumber>2025.0.0</revnumber>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <literal>syssize(Sl)</literal> is obsolete when <literal>Sl</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                    <literal>syssize(Sl)</literal> with <literal>Sl</literal> a matrix of doubles is no more supported.
                 </revremark>
             </revision>
         </revhistory>

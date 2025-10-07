@@ -191,7 +191,7 @@ function cb_m2sci_gui
         // --- About M2SCI ---
         //
     elseif get(gcbo, "tag")=="about_m2sci_menu" then
-        help(gettext("About_M2SCI_tools"))
+        doc(gettext("About_M2SCI_tools"))
     end
 
 endfunction

@@ -554,9 +554,9 @@ $ echo "disp(%pi)" | scilab-cli
 or
 $ echo "disp(%pi)" | scilab -nwni
 # Only open the Scilab help window:
-$ scilab-adv-cli -e "help()"
+$ scilab-adv-cli -e "doc()"
 or
-$ scilab -nw -e "help()"
+$ scilab -nw -e "doc()"
 # Scilab can be used for scripting aspects:
 echo "if 1&lt;>2 then exit(99) end"|scilab-cli
 echo $? ]]></screen>

@@ -50,11 +50,11 @@
     <refsection>
         <title>Description</title>
         <para>
-            produces the H2 norm of a linear continuous time system <literal>Sl</literal>.
+            <function>h2norm</function> produces the H2 norm of a linear continuous time system <literal>Sl</literal>.
         </para>
         <para>
             (For <literal>Sl</literal> in state-space form <literal>h2norm</literal> uses the observability
-            gramian and for <literal>Sl</literal> in transfer form <literal>h2norm</literal> uses a residue method)
+            gramian and for <literal>Sl</literal> in transfer form <literal>h2norm</literal> uses a residue method.)
         </para>
     </refsection>
     <refsection>
@@ -74,9 +74,11 @@
                     <literal>Sl</literal> is now checked for non-discrete (continuous or undefined)
                     time linear dynamical system.
                 </revremark>
-                <revnumber>2025.0.0</revnumber>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <literal>h2norm(Sl [,tol])</literal> is obsolete when <literal>Sl</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                    <literal>h2norm(Sl [,tol])</literal> with <literal>Sl</literal> a matrix of doubles is no more supported.
                 </revremark>
             </revision>
         </revhistory>

@@ -39,7 +39,6 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/get_visible_property.c \
     src/c/getHandleProperty/get_old_style_property.c \
     src/c/getHandleProperty/get_figures_id_property.c \
-    src/c/getHandleProperty/get_figure_style_property.c \
     src/c/getHandleProperty/get_pixel_drawing_mode_property.c \
     src/c/getHandleProperty/get_line_mode_property.c \
     src/c/getHandleProperty/get_axes_size_property.c \
@@ -205,7 +204,6 @@ GRAPHICS_C_SOURCES = \
     src/c/getHandleProperty/set_current_axes_property.c \
     src/c/getHandleProperty/set_current_entity_property.c \
     src/c/getHandleProperty/set_figure_id_property.c \
-    src/c/getHandleProperty/set_figure_style_property.c \
     src/c/getHandleProperty/set_mark_size_property.c \
     src/c/getHandleProperty/set_mark_offset_property.c \
     src/c/getHandleProperty/set_mark_stride_property.c \

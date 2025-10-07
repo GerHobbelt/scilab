@@ -91,7 +91,7 @@ int sci_set(char *fname, void *pvApiCtx)
 
     if (iRhs == 2)
     {
-#define NB_PROPERTIES_SUPPORTED 7
+#define NB_PROPERTIES_SUPPORTED 6
         /* No object specified */
         /* ONLY supported properties are */
         /* 'current_entity' */
@@ -107,7 +107,6 @@ int sci_set(char *fname, void *pvApiCtx)
             "hdl",
             "current_figure",
             "current_axes",
-            "figure_style",
             "default_values",
             "auto_clear"
         };

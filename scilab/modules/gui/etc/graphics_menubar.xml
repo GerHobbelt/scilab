@@ -156,7 +156,7 @@
 
     <menu label="&amp;?">
         <submenu label="&amp;Scilab Help" accelerator="F1" icon="help-browser">
-            <callback instruction="help('Graphics');" type="0"/>
+            <callback instruction="doc('Graphics');" type="0"/>
         </submenu>
         <separator/>
         <submenu label="&amp;About Scilab..." accelerator="shift F1">

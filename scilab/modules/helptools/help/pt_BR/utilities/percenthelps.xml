@@ -107,7 +107,7 @@ end
                 <link linkend="apropos">apropos</link>
             </member>
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
         </simplelist>
     </refsection>

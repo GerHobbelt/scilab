@@ -37,7 +37,7 @@ function [helptxt,demotxt]=macrosExample(funname,helpdir,demodir)
     //    <listitem><literal>Parameters</literal> - separate parameter name and
     //    description by a ":". Keep the description of each parameter on the same line.</listitem>
     //    <listitem><literal>Description</literal> - formatting of the text can be done
-    //    using XML commands. Compare the output of head_comments('help_from_sci') with help('help_from_sci')
+    //    using XML commands. Compare the output of head_comments('help_from_sci') with doc('help_from_sci')
     //    to get some hints.
     //    Adding an empty comment line in the Description section is interpreted as the
     //    start of a new paragraph.</listitem>

@@ -278,7 +278,6 @@ ELEMENTARIES_FUNCTIONS_FORTRAN_SOURCES = \
 
 GATEWAY_C_SOURCES = \
     sci_gateway/c/sci_number_properties.c \
-    sci_gateway/c/sci_testmatrix.c \
     sci_gateway/c/sci_isequalbitwise.c
 
 GATEWAY_CXX_SOURCES =  \

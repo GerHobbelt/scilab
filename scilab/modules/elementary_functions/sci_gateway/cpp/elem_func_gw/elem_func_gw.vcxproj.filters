@@ -48,9 +48,6 @@
     <ClCompile Include="..\..\c\sci_number_properties.c">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\c\sci_testmatrix.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\sci_abs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>

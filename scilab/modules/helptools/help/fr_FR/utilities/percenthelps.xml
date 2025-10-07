@@ -62,7 +62,7 @@ end
                 <link linkend="add_help_chapter">add_help_chapter</link>
             </member>
             <member>
-                <link linkend="help">help</link>
+                <link linkend="doc">doc</link>
             </member>
         </simplelist>
     </refsection>

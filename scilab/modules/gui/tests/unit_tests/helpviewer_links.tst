@@ -49,4 +49,4 @@ mkdir(tmpdir);
 tmpfile = tmpdir + "/fooexec.sce";
 mputl("about;", tmpfile);
 add_help_chapter('mytbx', TMPDIR + "/testlinks/jar")
-help('mytbx_foo')
+doc('mytbx_foo')

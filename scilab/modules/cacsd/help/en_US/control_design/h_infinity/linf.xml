@@ -56,7 +56,7 @@
     <refsection>
         <title>Description</title>
         <para>
-            returns the L_infinity norm of <literal>g</literal>:
+            <function>linf</function> returns the L_infinity norm of <literal>g</literal>:
             <literal>n = sup_<subscript>w</subscript>(sigmax(g(j.w)))</literal>
         </para>
         <para>
@@ -78,9 +78,9 @@
         <title>History</title>
         <revhistory>
             <revision>
-                <revnumber>2025.0.0</revnumber>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <literal>linf(g [,eps, tol])</literal> is obsolete when <literal>g</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                    <literal>linf(g [,eps, tol])</literal> with <literal>g</literal> a matrix of doubles is no more supported.
                 </revremark>
             </revision>
         </revhistory>

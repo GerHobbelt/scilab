@@ -53,7 +53,7 @@ function [helptxt,demotxt]=help_from_sci(funname,helpdir,demodir)
     //    <listitem><para><literal>Parameters</literal> - separate parameter name and
     //    description by a ":". Keep the description of each parameter on the same line.</para></listitem>
     //    <listitem><para><literal>Description</literal> - formatting of the text can be done
-    //    using XML commands. Compare the output of head_comments("help_from_sci") with help("help_from_sci")
+    //    using XML commands. Compare the output of head_comments("help_from_sci") with doc("help_from_sci")
     //    to get some hints.
     //    Adding an empty comment line in the Description section is interpreted as the
     //    start of a new paragraph.</para></listitem>
@@ -118,7 +118,7 @@ function [helptxt,demotxt]=help_from_sci(funname,helpdir,demodir)
         "// <listitem><para>An itemized list is shown here</para></listitem>"
         "// </itemizedlist>"
         "// The help text for help_from_sci was generated from the head comments section of help_from_sci.sci"
-        "// Compare the output from head_comments(""help_from_sci"") and help(""help_from_sci"")"
+        "// Compare the output from head_comments(""help_from_sci"") and doc(""help_from_sci"")"
         "// to see more examples on how to write the head comments section."
         "//"
         "// This is an example of the programlisting tag:"

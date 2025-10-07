@@ -75,9 +75,9 @@ n=sup [sigmax(g(jw)]
         <title>History</title>
         <revhistory>
             <revision>
-                <revnumber>2025.0.0</revnumber>
+                <revnumber>2026.0.0</revnumber>
                 <revremark>
-                    <literal>linf(g [,eps, tol])</literal> is obsolete when <literal>g</literal> is a matrix of doubles and will be removed in 2026.0.0.
+                    <literal>linf(g [,eps, tol])</literal> has been removed for <literal>g</literal> as matrix of doubles.
                 </revremark>
             </revision>
         </revhistory>

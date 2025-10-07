@@ -357,8 +357,8 @@
             </Grid>
         </Title>
     </xsl:template>
-    <xsl:template match="help">
-        <Title text="help()">
+    <xsl:template match="doc">
+        <Title text="doc()">
             <Grid>
                 <Checkbox
                       gridx="1"

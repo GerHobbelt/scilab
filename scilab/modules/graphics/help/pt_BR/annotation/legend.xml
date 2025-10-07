@@ -230,9 +230,6 @@
                 <link linkend="xstring">xstring</link>
             </member>
             <member>
-                <link linkend="captions">captions</link>
-            </member>
-            <member>
                 <link linkend="polyline_properties">polyline_properties</link>
             </member>
         </simplelist>
