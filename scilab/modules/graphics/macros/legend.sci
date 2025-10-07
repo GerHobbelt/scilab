@@ -128,8 +128,7 @@ function varargout=legend(varargin)
     end
     // the number of labels might be lower than the number of polylines
     nbLeg = min(size(H, "*"), size(leg, "*"));
-    first_handle=size(H, "*")-nbLeg+1;
-    H = H(first_handle:size(H, "*"));
+    H = H(1:nbLeg);
     leg = leg(1:nbLeg);
 
 
