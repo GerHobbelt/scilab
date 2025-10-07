@@ -275,7 +275,7 @@
                 <para>
                     &lt;-- LONG TIME EXECUTION --&gt;
                     This test will be skipped because it needs long-time duration. To enable
-                    the test, call test_run with the following option: "enable_lt"
+                    the test, call test_run with the following option: <literal>"enable-lt"</literal>
                 </para>
             </listitem>
             <listitem>
@@ -287,7 +287,7 @@
             <listitem>
                 <para>
                     &lt;-- TEST WITH GRAPHIC --&gt;
-                    This test will be executed with scilab -nw. (default mode)
+                    This test will be executed with the <literal>-nw</literal> option (default mode).
                 </para>
             </listitem>
             <listitem>
@@ -299,7 +299,7 @@
             <listitem>
                 <para>
                     &lt;-- NO TRY CATCH --&gt;
-                    The test will not use a try / catch block
+                    The test will not use a try / catch block.
                 </para>
             </listitem>
             <listitem>
@@ -311,37 +311,37 @@
             <listitem>
                 <para>
                     &lt;-- NO CHECK REF --&gt;
-                    The .dia and the .dia.ref files are not compared.
+                    The <literal>.dia</literal> and the <literal>.dia.ref</literal> files are not compared.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- ENGLISH IMPOSED --&gt;
-                    This test will be executed with the -l en_US option.
+                    This test will be executed with the <literal>-l en_US</literal> option.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- FRENCH IMPOSED --&gt;
-                    This test will be executed with the -l fr_FR option.
+                    This test will be executed with the <literal>-l fr_FR</literal> option.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- CLI SHELL MODE --&gt;
-                    This test will be executed with scilab -nwni.
-                </para>
-            </listitem>
-            <listitem>
-                <para>
-                    &lt;-- CLI SHELL MODE --&gt;
-                    This test will be executed with scilab -nwni.
+                    This test will be executed with the <literal>-nwni</literal> option.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- SHARED SCIHOME --&gt;
                     If the <link linkend="SCIHOME">SCIHOME</link> directory should be shared with the parent Scilab.
+                </para>
+            </listitem>
+            <listitem>
+                <para>
+                    &lt;-- WINDOWS ONLY --&gt;
+                    If the operating system isn't Windows, the test is skipped.
                 </para>
             </listitem>
             <listitem>

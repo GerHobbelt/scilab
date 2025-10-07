@@ -267,12 +267,13 @@
             <listitem>
                 <para>
                     &lt;-- TEST WITH GRAPHIC --&gt;
-                    Ce test est taggé comme nécessitant les fonctionnalités graphiques de Scilab. Ils sont automatiquement exécutés avec l'option de lancement "-nw" (mode par défaut).
+                    Ce test est taggé comme nécessitant les fonctionnalités graphiques de Scilab. Ils sont automatiquement exécutés avec l'option de lancement <literal>-nw</literal> (mode par défaut).
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- NO TRY CATCH --&gt;
+                    Le test n'utilisera pas de bloc try / catch.
                 </para>
             </listitem>
             <listitem>
@@ -290,13 +291,13 @@
             <listitem>
                 <para>
                     &lt;-- ENGLISH IMPOSED --&gt;
-                    Le test est lancé avec l'option <literal>-l en_US</literal>
+                    Le test est lancé avec l'option <literal>-l en_US</literal>.
                 </para>
             </listitem>
             <listitem>
                 <para>
                     &lt;-- FRENCH IMPOSED --&gt;
-                    Le test est lancé avec l'option <literal>-l fr_FR</literal>
+                    Le test est lancé avec l'option <literal>-l fr_FR</literal>.
                 </para>
             </listitem>
             <listitem>

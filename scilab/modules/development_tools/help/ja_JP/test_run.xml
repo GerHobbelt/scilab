@@ -280,6 +280,7 @@
             <listitem>
                 <para>
                     &lt;-- NO TRY CATCH --&gt;
+                    The test will not use a try / catch block.
                 </para>
             </listitem>
             <listitem>
