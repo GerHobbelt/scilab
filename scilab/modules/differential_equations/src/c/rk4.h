@@ -30,7 +30,7 @@
 * @param rwork
 * @return 0
 */
-DIFFERENTIAL_EQUATIONS_IMPEXP int C2F(rk4)(double *y, double *dydx, int *n, double *x, double *h, double *yout, void (*derivs)(), double *rwork);
+DIFFERENTIAL_EQUATIONS_IMPEXP int C2F(rk4)(double *y, double *dydx, int *n, double *x, double *h, double *yout, void (*derivs)(int *n, double *x, double *y, double *dydx), double *rwork);
 /*--------------------------------------------------------------------------*/
 #endif /* __RK4_H__ */
 /*--------------------------------------------------------------------------*/

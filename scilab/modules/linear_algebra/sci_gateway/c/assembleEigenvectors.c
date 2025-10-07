@@ -1,6 +1,6 @@
 /*
 * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
-* Copyright (C) 2008 - INRIA - Michaël Baudin
+* Copyright (C) 2008 - INRIA - Michaï¿½l Baudin
 *
  * Copyright (C) 2012 - 2016 - Scilab Enterprises
  *
@@ -16,7 +16,7 @@
 #include "elementary_functions.h"
 #include "elem_common.h"
 
-extern int C2F(dlaset)();
+extern int C2F(dlaset)(char *uplo, int *m, int *n, double *alpha, double *beta, double *a, int *lda);
 
 //
 // assembleEigenvectorsSourceToTarget --

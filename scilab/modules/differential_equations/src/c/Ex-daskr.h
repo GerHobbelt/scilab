@@ -17,6 +17,8 @@
 #ifndef __EX_DASKR_H__
 #define __EX_DASKR_H__
 
+#include "machine.h"
+
 extern void   C2F(dgefa) (double *A, int *lead_dim_A, int *n, int *ipivots, int *info);
 extern void   C2F(dgesl) (double *A, int *lead_dim_A, int *n, int *ipivots, double *B, int *job);
 

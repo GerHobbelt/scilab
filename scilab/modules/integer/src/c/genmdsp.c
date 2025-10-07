@@ -85,7 +85,8 @@ int C2F(genmdsp)(int *typ, int *x, int *nx, int *mm, int *nn, int *ll, int *luni
     static int k, l, m, n, s, lbloc, nbloc, k1, l1, k2, ib;
     static char dl;
     static int fl, io, lp;
-    extern  int C2F(blktit)(), C2F(basout)();
+    extern  int C2F(blktit)(int *lunit, int *k1, int *k2, int *io);
+    extern  int C2F(basout)(int *io, int *lunit, char *str, long str_len);
 
     switch (*typ)
     {

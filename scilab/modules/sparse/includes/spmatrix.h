@@ -283,7 +283,7 @@ extern  char    *spGetInitInfo( spREAL* );
 extern  int      spGetOnes( char*, int, int, int, struct spTemplate* );
 extern  int      spGetQuad( char*, int, int, int, int, struct spTemplate* );
 extern  int      spGetSize( char*, int );
-extern  int      spInitialize( char*, int (*)() );
+extern  int      spInitialize( char*, int (*)(double*, char*, int, int) );
 extern  void     spInstallInitInfo( spREAL*, char* );
 extern  spREAL   spLargestElement( char* );
 extern  void     spMNA_Preorder( char* );

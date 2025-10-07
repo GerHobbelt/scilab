@@ -21,25 +21,33 @@
 #include "numericconstants_interface.h"
 /*--------------------------------------------------------------------------*/
 /* BLAS 1 */
-extern double F2C(dnrm2)( );
-extern double F2C(ddot)( );
-extern void F2C(dcopy)( );
-extern void F2C(daxpy)( );
-extern void F2C(dscal)( );
+extern double F2C(dnrm2)(int *n, double *x, int *incx);
+extern double F2C(ddot)(int *n, double *x, int *incx, double *y, int *incy); 
+extern void F2C(dcopy)(int *n, double *x, int *incx, double *y, int *incy);
+extern void F2C(daxpy)(int *n, double *alpha, double *x, int *incx, double *y, int *incy);
+extern void F2C(dscal)(int *n, double *alpha, double *x, int *incx);
 
 /* BLAS 2 */
-extern void F2C(dgemv)( );
-extern void F2C(dspmv)( );
+extern void F2C(dgemv)(char *trans, int *m, int *n, double *alpha, double *a, int *lda, 
+                       double *x, int *incx, double *beta, double *y, int *incy);
+extern void F2C(dspmv)(char *uplo, int *n, double *alpha, double *ap, double *x, int *incx, 
+                       double *beta, double *y, int *incy);
 
-/* BLAS 3 */
-extern void F2C(dgemm)( );
+/* BLAS 3 */ 
+extern void F2C(dgemm)(char *transa, char *transb, int *m, int *n, int *k,
+                       double *alpha, double *a, int *lda, double *b, int *ldb,
+                       double *beta, double *c, int *ldc);
 
 /* LAPACK */
-extern void F2C(dgels)( );
-extern void F2C(dspgst)( );
-extern void F2C(dspev)( );
-extern void F2C(dspgv)( );
-extern void F2C(dtrcon)( );
+extern void F2C(dgels)(char *trans, int *m, int *n, int *nrhs, double *a, int *lda,
+                       double *b, int *ldb, double *work, int *lwork, int *info);
+extern void F2C(dspgst)(int *itype, char *uplo, int *n, double *ap, double *bp, int *info);
+extern void F2C(dspev)(char *jobz, char *uplo, int *n, double *ap, double *w,
+                       double *z, int *ldz, double *work, int *info);
+extern void F2C(dspgv)(int *itype, char *jobz, char *uplo, int *n, double *ap,
+                       double *bp, double *w, double *z, int *ldz, double *work, int *info);
+extern void F2C(dtrcon)(char *norm, char *uplo, char *diag, int *n, double *a,
+                        int *lda, double *rcond, double *work, int *iwork, int *info);
 /*--------------------------------------------------------------------------*/
 /*
  * if itype = 1, computes C = B*A*B', otherwise, computes C = B'*A*B

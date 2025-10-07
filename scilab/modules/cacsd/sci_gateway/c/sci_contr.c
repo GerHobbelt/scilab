@@ -22,8 +22,8 @@
 #include "localization.h"
 #include "elem_common.h"
 /*--------------------------------------------------------------------------*/
-extern int C2F(ab01od)();
-extern int C2F(icopy)(int *, int *, int *, int *, int *);
+extern int C2F(ab01od)(char* STAGES, char* JOBU, char* JOBV, int* N, int* M, double* A, int* LDA, double* B, int* LDB, double* U, int* LDU, double* V, int* LDV, int* NCONT, int* INDCON, int* KSTAIR, double* TOL, int* IWORK, double* DWORK, int* LDWORK, int* INFO);
+extern int C2F(icopy)(int* n, int* dx, int* incx, int* dy, int* incy);
 /*--------------------------------------------------------------------------*/
 int sci_contr(char* fname, void* pvApiCtx)
 {

@@ -18,7 +18,12 @@
 #include "localization.h"
 #include "numericconstants_interface.h"
 
-extern int C2F(sb10fd)();
+extern int C2F(sb10fd)(int* N, int* M, int* R, int* NCON, int* NMEAS, double* GAMMA,
+                       double* A, int* LDA, double* B, int* LDB, double* C, int* LDC,
+                       double* D, int* LDD, double* AK, int* LDAK, double* BK, int* LDBK,
+                       double* CK, int* LDCK, double* DK, int* LDDK, double* RCOND,
+                       double* TOL, int* IWORK, double* DWORK, int* LDWORK, int* BWORK,
+                       int* INFO);
 
 // [Ak,Bk,Ck,Dk,RCOND]=hinf(A,B,C,D,ncon,nmeas,gamma)
 int sci_hinf(char *fname, void* pvApiCtx)

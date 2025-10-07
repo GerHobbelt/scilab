@@ -46,11 +46,32 @@
 #define BLAS_FLOPS_CUTOFF  1000.0
 #define SOLVE_DENSE_CUTOFF 5
 
-extern int C2F(genmmd)();
-extern int C2F(dpotrf)();
-extern int C2F(dtrsm)();
-extern int C2F(dsyrk)();
-extern int C2F(dgemm)();
+extern int C2F(genmmd)(int* n, int* xadj, int* adjncy, 
+                      int* invp, int* perm,
+                      int* delta, int* dhead, int* qsize, 
+                      int* llist, int* marker,
+                      int* maxint, int* nofsub);
+
+extern int C2F(dpotrf)(char* uplo, int* n, 
+                      double* a, int* lda, 
+                      int* info);
+
+extern int C2F(dtrsm)(char* side, char* uplo,
+                     char* transa, char* diag,
+                     int* m, int* n,
+                     double* alpha, double* a, int* lda,
+                     double* b, int* ldb);
+
+extern int C2F(dsyrk)(char* uplo, char* trans,
+                     int* n, int* k,
+                     double* alpha, double* a, int* lda,
+                     double* beta, double* c, int* ldc);
+
+extern int C2F(dgemm)(char* transa, char* transb,
+                     int* m, int* n, int* k,
+                     double* alpha, double* a, int* lda,
+                     double* b, int* ldb,
+                     double* beta, double* c, int* ldc);
 /*************************************************************/
 /* structures                                                */
 /*************************************************************/

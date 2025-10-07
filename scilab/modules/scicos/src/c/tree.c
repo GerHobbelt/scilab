@@ -24,7 +24,7 @@
 #include "sci_malloc.h"  /* malloc */
 #include "tree.h"
 
-extern int C2F(isort)();
+extern int C2F(isort)(int *vec, int *nb, int *ord);
 
 void Inver(int* vect, int nb)
 {

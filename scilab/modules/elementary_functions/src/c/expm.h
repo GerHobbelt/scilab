@@ -56,8 +56,6 @@ void vExchangeVal(  double *_pdblScale, double *_pdblVal,
                     int _iStart2, int _iEnd2,
                     int _iSize, int _iCoord1, int _iCoord2);
 
-ELEMENTARY_FUNCTIONS_IMPEXP int dexpms(int _iLeadDim, int _iSize, double* _pdblVal, double* _pdblReturn);
-
 int dbalancs(   int _iRows, int _iSize, double *_pdblVal,
                 int *_piLow, int *_piHigh, double *_pdblScale);
 
@@ -101,21 +99,20 @@ ELEMENTARY_FUNCTIONS_IMPEXP int zexpms2(double *_pdblReal, double *_pdblImg,
                                         int _iLeadDim);
 
 /*--------------------------------------------------------------------------*/
-extern int C2F(split)();
+//extern int C2F(split)();
 extern int C2F(exch)();
-extern int C2F(shrslv)();
-extern int C2F(balbak)();
+extern int C2F(shrslv)(double* a, double* b, double* c, int* m, int* n, int* na, int* nb, int* nc, double* eps, double* cond, double* rmax, int* fail);
+extern int C2F(balbak)(int* nm, int* n, int* low, int* igh, double* scale, int* m, double* z);
 //extern double C2F(ddot)();
 extern int C2F(pade)();
 //extern int C2F(dcopy)();
 //extern int C2F(dscal)();
 
 extern int C2F(dgeco)();
-extern int C2F(dgesl)();
-extern int C2F(coef)();
-extern int C2F(cerr)();
-extern int C2F(dclmat)();
-extern int C2F(dexpm1)();
+extern int C2F(dgesl)(double *A, int *lead_dim_A, int *n, int *ipivots, double *B, int *job);
+extern int C2F(coef)(int*);
+extern int C2F(cerr)(double* a, double* w, int* ia, int* n, int* ndng, int* m, int* maxc);
+extern int C2F(dclmat)(int* ia, int* n, double* a, double* b, int* ib, double* w, int* c, int* ndng);
+extern int C2F(dexpm1)(int* ia, int* n, double* a, double* ea, int* iea, double* w, int* iw, int* ierr);
 extern int C2F(wexpm1)();
-extern int C2F(drot)();
-
+extern int C2F(drot)(int* N, double* DX, int* INCX, double* DY, int* INCY, double* C, double*S);

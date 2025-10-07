@@ -22,11 +22,11 @@
 #include "numericconstants_interface.h"
 /*--------------------------------------------------------------------------*/
 /* fortran subroutines */
-extern int C2F(dset)();
-extern int C2F(dscal)();
-extern int C2F(wscal)();
-extern int C2F(zbesh)();
-extern int C2F(dcopy)();
+extern int C2F(dset)(int *n, double *val, double *x, int *incx);
+extern int C2F(dscal)(int *n, double *alpha, double *x, int *incx);
+extern int C2F(wscal)(int *n, double *a, double *b, double *x, double *y, int *incx);
+extern int C2F(zbesh)(double *zr, double *zi, double *fnu, int *kode, int *m, int *n, double *cyr, double *cyi, int *nz, int *ierr);
+extern int C2F(dcopy)(int *n, double *dx, int *incx, double *dy, int *incy);
 /*--------------------------------------------------------------------------*/
 static int zbeshg(double *x1r, double *x1i, double *alpha,
                   int *kode, int *k, int *n, double *yr,

@@ -298,7 +298,7 @@ extern int C2F(dset)(int *n, double *dx, double *dy, int *incy);
 extern int C2F(dcopy)(int *, double *, int *, double *, int *);
 extern int C2F(dgefa)(double *A, int *lead_dim_A, int *n, int *ipivots, int *info);
 extern int C2F(dgesl)(double *A, int *lead_dim_A, int *n, int *ipivots, double *B, int *job);
-extern int C2F(msgs)();
+extern int C2F(msgs)(int *iarg1, int *iarg2);
 extern void C2F(clearscicosimport)();
 /*--------------------------------------------------------------------------*/
 void putevs(double *t, int *evtnb, int *ierr1);

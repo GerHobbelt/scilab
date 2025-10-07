@@ -19,10 +19,25 @@
 #include "Scierror.h"
 #include "localization.h"
 
-extern int C2F(riccsl)();
-extern int C2F(riccms)();
-extern int C2F(ricdsl)();
-extern int C2F(ricdmf)();
+extern int C2F(riccsl)(char* DICO, int* N, double* A, int* LDA, char* UPLO, 
+    double* C, int* LDC, double* D, int* LDD, double* X, int* LDX, 
+    double* WR, double* WI, double* RCOND, double* FERR, double* DWORK, 
+    int* LDWORK, int* IWORK, int* BWORK, int* INFO);
+
+extern int C2F(riccms)(char* DICO, int* N, double* A, int* LDA, char* UPLO,
+    double* C, int* LDC, double* D, int* LDD, double* X, int* LDX,
+    double* WR, double* WI, double* RCOND, double* FERR, double* DWORK,
+    int* LDWORK, int* IWORK, int* INFO);
+
+extern int C2F(ricdsl)(char* DICO, int* N, double* A, int* LDA, char* UPLO,
+    double* C, int* LDC, double* D, int* LDD, double* X, int* LDX,
+    double* WR, double* WI, double* RCOND, double* FERR, double* DWORK,
+    int* LDWORK, int* IWORK, int* BWORK, int* INFO);
+
+extern int C2F(ricdmf)(char* DICO, int* N, double* A, int* LDA, char* UPLO,
+    double* C, int* LDC, double* D, int* LDD, double* X, int* LDX,
+    double* WR, double* WI, double* RCOND, double* FERR, double* DWORK,
+    int* LDWORK, int* IWORK, int* INFO);
 
 int sci_ricc(char *fname, void* pvApiCtx)
 {

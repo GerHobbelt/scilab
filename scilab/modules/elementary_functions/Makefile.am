@@ -14,12 +14,6 @@ ELEMENTARIES_FUNCTIONS_C_SOURCES = \
     src/c/scidcopy.c \
     src/c/int2db.c \
     src/c/rea2db.c \
-    src/c/qsort.c \
-    src/c/qsort-char.c \
-    src/c/qsort-double.c \
-    src/c/qsort-int.c \
-    src/c/qsort-short.c \
-    src/c/qsort-string.c \
     src/c/basic_functions.c \
     src/c/abs.c \
     src/c/atan.c \

@@ -17,10 +17,13 @@
 #include "Scierror.h"
 #include "localization.h"
 
-extern int C2F(icopy)();
-extern int C2F(dcopy)();
-extern int C2F(mb03od)();
-extern int C2F(dorgqr)();
+extern int C2F(icopy)(int* n, int* dx, int* incx, int* dy, int* incy);
+extern int C2F(dcopy)(int* n, double* dx, int* incx, double* dy, int* incy);
+extern int C2F(mb03od)(char* jobqr, int* m, int* n, double* a, int* lda, int* jpvt, 
+                       double* rcond, double* svlmax, double* tau, int* rank,
+                       double* sval, double* dwork, int* info);
+extern int C2F(dorgqr)(int* m, int* n, int* k, double* a, int* lda, double* tau,
+                       double* work, int* lwork, int* info);
 
 int sci_rrankqr(char *fname, void* pvApiCtx)
 {

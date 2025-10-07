@@ -57,18 +57,18 @@ rm -f $fout-temp$$
 
 links=`cat $Fin`
 for i in $links
-	do  (  echo "{\"$i\", F2C($i)}," >> $fout-temp$$ ;); done ;
+	do  (  echo "{\"$i\", {F2C($i)}}," >> $fout-temp$$ ;); done ;
 
 links=`cat $Cin`
 for i in $links
-	do  (  echo "{\"$i\", $i}," >> $fout-temp$$ ;); done ;
+	do  (  echo "{\"$i\", {$i}}," >> $fout-temp$$ ;); done ;
 
 links=`cat $CPPin`
 for i in $links
-	do  (  echo "{\"$i\", $i}," >> $fout-temp$$ ;); done ;
+	do  (  echo "{\"$i\", {$i}}," >> $fout-temp$$ ;); done ;
 
 sort $fout-temp$$ >> $fout; 
-echo "{(char *) 0, (ScicosF) 0}};" >> $fout ;
+echo "{(char *) 0, {(ScicosF) 0}}};" >> $fout ;
 
 x=`cat $Fin $Cin $CPPin | wc -l `;
 echo " " >> $fout 

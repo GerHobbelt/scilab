@@ -1738,7 +1738,6 @@ QuicklySearchDiagonal( MatrixPtr Matrix, int Step )
     int  I;
     ElementPtr  ChosenPivot, pOtherInRow, pOtherInCol;
     RealNumber  Magnitude, LargestInCol, LargestOffDiagonal;
-    RealNumber  FindBiggestInColExclude();
 
     /* Begin `QuicklySearchDiagonal'. */
     ChosenPivot = NULL;
@@ -1926,7 +1925,6 @@ SearchDiagonal( MatrixPtr Matrix, register int Step )
     int  NumberOfTies = 0, Size = Matrix->Size;
     ElementPtr  ChosenPivot = NULL;
     RealNumber  Magnitude = 0., Ratio = 0., RatioOfAccepted = 0., LargestInCol = 0.;
-    RealNumber  FindBiggestInColExclude();
 
     /* Begin `SearchDiagonal'. */
     ChosenPivot = NULL;
@@ -3283,7 +3281,6 @@ static ElementPtr
 CreateFillin( MatrixPtr Matrix, register int Row, int Col )
 {
     register  ElementPtr  pElement, *ppElementAbove;
-    ElementPtr  spcCreateElement();
 
     /* Begin `CreateFillin'. */
 

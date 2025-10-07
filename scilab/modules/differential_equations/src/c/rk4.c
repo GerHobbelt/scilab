@@ -24,7 +24,7 @@
  *    array + blas use. Serge Steer INRIA- feb 2012*/
 
 /*--------------------------------------------------------------------------*/
-int C2F(rk4)(double *y, double *dydx, int *n, double *x, double *h, double *yout, void (*derivs)(), double *rwork)
+int C2F(rk4)(double *y, double *dydx, int *n, double *x, double *h, double *yout, void (*derivs)(int *n, double *x, double *y, double *dydx), double *rwork)
 {
     double d = 0.0;
     int i;

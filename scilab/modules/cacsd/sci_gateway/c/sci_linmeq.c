@@ -141,19 +141,19 @@
 #include "elem_common.h"
 #include "Sciwarning.h"
 
-extern int C2F(lsame)();
-extern int C2F(dlacpy)();
-extern int C2F(dlaset)();
-extern int C2F(dswap)();
-extern int C2F(dtrsyl)();
-extern int C2F(sb03md)();
-extern int C2F(sb03od)();
-extern int C2F(sb04md)();
-extern int C2F(sb04nd)();
-extern int C2F(sb04pd)();
-extern int C2F(sb04py)();
-extern int C2F(sb04qd)();
-extern int C2F(sb04rd)();
+extern int C2F(lsame)(char *ca, char *cb);
+extern int C2F(dlacpy)(char *uplo, int *m, int *n, double *a, int *lda, double *b, int *ldb);
+extern int C2F(dlaset)(char *uplo, int *m, int *n, double *alpha, double *beta, double *a, int *lda);
+extern int C2F(dswap)(int *n, double *dx, int *incx, double *dy, int *incy);
+extern int C2F(dtrsyl)(char *trana, char *tranb, int *isgn, int *m, int *n, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *scale, int *info);
+extern int C2F(sb03md)(char *dico, char *job, char *fact, char *trana, int *n, double *a, int *lda, double *u, int *ldu, double *c, int *ldc, double *scale, double *sep, double *ferr, double *wr, double *wi, int *iwork, double *dwork, int *ldwork, int *info);
+extern int C2F(sb03od)(char *dico, char *fact, char *trans, int *n, int *p, double *a, int *lda, double *u, int *ldu, double *c, int *ldc, double *scale, double *wr, double *wi, double *dwork, int *ldwork, int *info);
+extern int C2F(sb04md)(int *n, int *m, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *z, int *ldz, int *iwork, double *dwork, int *ldwork, int *info);
+extern int C2F(sb04nd)(char *job, char *ula, char *ulb, int *n, int *m, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *tol, int *iwork, double *dwork, int *ldwork, int *info);
+extern int C2F(sb04pd)(char *dico, char *facta, char *factb, char *trana, char *tranb, int *isgn, int *n, int *m, double *a, int *lda, double *ue, int *ldue, double *b, int *ldb, double *ve, int *ldve, double *c, int *ldc, double *scale, double *dwork, int *ldwork, int *info);
+extern int C2F(sb04py)(char *trana, char *tranb, int *isgn, int *n, int *m, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *scale, double *dwork, int *info);
+extern int C2F(sb04qd)(int *n, int *m, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *z, int *ldz, int *iwork, double *dwork, int *ldwork, int *info);
+extern int C2F(sb04rd)(char *job, char *ula, char *ulb, int *n, int *m, double *a, int *lda, double *b, int *ldb, double *c, int *ldc, double *tol, int *iwork, double *dwork, int *ldwork, int *info);
 
 int sci_linmeq(char *fname, void* pvApiCtx)
 {
