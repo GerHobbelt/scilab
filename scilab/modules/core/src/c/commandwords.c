@@ -18,7 +18,7 @@
 #include "BOOL.h"
 #include "os_string.h"
 
-static const int nbrCommands = 31;
+static const int nbrCommands = 34;
 static char *CommandWords[] =
 {
     "if", "else",
@@ -36,7 +36,8 @@ static char *CommandWords[] =
     "clc", "continue",
     "try", "catch",
     "exit", "arguments",
-    "classdef"
+    "classdef", "properties",
+    "methods","enumeration"
 };
 
 static const int nbrMustBe = 35;
