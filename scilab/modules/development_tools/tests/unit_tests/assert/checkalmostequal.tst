@@ -95,7 +95,7 @@ instr = "assert_checkalmostequal ( 1 , 2 )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "2", "", "1");
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1", "2", "1", "1");
 MY_assert_equal ( errmsg , refmsg );
 //
 // Check that the error message is correctly handled.
@@ -103,7 +103,7 @@ instr = "assert_checkalmostequal ( 1 , 2 , %eps )";
 ierr=execstr(instr,"errcatch");
 MY_assert_equal ( ierr , 10000 );
 errmsg = lasterror();
-refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "2", "", "1");
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1", "2", "1", "1");
 MY_assert_equal ( errmsg , refmsg );
 //
 // Check that the error message is correctly handled.
@@ -283,3 +283,89 @@ assert_checkalmostequal([1+%i*%z, %i-%z^2], [1+%i*%z, %i-%z^2]);
 assert_checkalmostequal(%i+%z+%eps, %i+%z-%eps, [], 2*%eps);
 assert_checkalmostequal([%i+%z %i*%z]+%eps, [%i+%z %i*%z]-%eps, [], 2*%eps);
 assert_checkalmostequal([1+%i*%z, %i-%z^2]-%eps, [1+%i*%z, %i-%z^2]+%eps, [], 2*%eps);
+
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,1", "1", "1,1", "2");
+[flag,errmsg] = assert_checkalmostequal([2 2], [1 2]);
+MY_assert_equal ( errmsg , refmsg );
+[flag,errmsg] = assert_checkalmostequal([2 2], [1 2], []);
+MY_assert_equal ( errmsg , refmsg );
+[flag,errmsg] = assert_checkalmostequal([2 2], [1 2], [], []);
+MY_assert_equal ( errmsg , refmsg );
+
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[1 ...]", "", "[2 ...]");
+[flag,errmsg] = assert_checkalmostequal([2 2], [1 2], [], [], "matrix");
+MY_assert_equal ( errmsg , refmsg );
+
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,2", "1", "1,2", "2");
+[flag,errmsg] = assert_checkalmostequal([2 2], [2 1]);
+MY_assert_equal ( errmsg , refmsg );
+[flag,errmsg] = assert_checkalmostequal([2 2], [2 1], []);
+MY_assert_equal ( errmsg , refmsg );
+[flag,errmsg] = assert_checkalmostequal([2 2], [2 1], [], []);
+MY_assert_equal ( errmsg , refmsg );
+
+refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[2 ...]", "", "[2 ...]");
+[flag,errmsg] = assert_checkalmostequal([2 2], [2 1], [], [], "matrix");
+MY_assert_equal ( errmsg , refmsg );
+
+v = [%nan %inf -%inf];
+str = ["Nan", "Inf", "-Inf"];
+for i = 1:3
+  p = v(i);
+  s = str(i);
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1", s, "1", "1");
+  [flag,errmsg] = assert_checkalmostequal(1, p);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,1", s, "1,1", "1");
+  [flag,errmsg] = assert_checkalmostequal([1 2], [p 2]);
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 2], [p p]);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[" + s +" ...]", "", "[1 ...]");
+  [flag,errmsg] = assert_checkalmostequal([1 2], [p p], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 2], [p 2], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,2", s, "1,2", "2");
+  [flag,errmsg] = assert_checkalmostequal([1 2], [1 p]);
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 2 p], [1 p 3]);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[1 ...]", "", "[1 ...]");
+  [flag,errmsg] = assert_checkalmostequal([1 2], [1 p], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 2 p], [1 p 3], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1", "1", "1", s);
+  [flag,errmsg] = assert_checkalmostequal(p, 1);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,1", "1", "1,1", s);
+  [flag,errmsg] = assert_checkalmostequal([p p], [1 2]);
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([p 2], [1 2]);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[1 ...]", "", "[" + s + " ...]");
+  [flag,errmsg] = assert_checkalmostequal([p p], [1 2], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([p 2], [1 2], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "1,2", "2", "1,2", s);
+  [flag,errmsg] = assert_checkalmostequal([1 p], [1 2]);
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 p 3], [1 2 p]);
+  MY_assert_equal ( errmsg , refmsg );
+
+  refmsg = msprintf(_("%s: Assertion failed: expected(%s) = %s while computed(%s) = %s"), "assert_checkalmostequal", "", "[1 ...]", "", "[1 ...]");
+  [flag,errmsg] = assert_checkalmostequal([1 p], [1 2], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+  [flag,errmsg] = assert_checkalmostequal([1 p 3], [1 2 p], [], [], "matrix");
+  MY_assert_equal ( errmsg , refmsg );
+end

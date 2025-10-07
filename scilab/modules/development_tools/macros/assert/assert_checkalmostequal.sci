@@ -36,7 +36,8 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
         kninf = find(x==-%inf)
         knan = find(isnan(x))
         kreg = find(abs(x)<>%inf & ~isnan(x))
-        xreg = x(kreg)
+        xreg = zeros(x);
+        xreg(kreg) = x(kreg)
     endfunction
 
     function [areequal, k] = assert_arealmostequal ( computed , expected , reltol , abstol , comptype )
@@ -66,7 +67,7 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
                 entries = ( abs(creg-ereg) <= reltol * max(abs(ereg),abs(creg)) + abstol )
                 // Compute the global condition from the entries conditions
                 areclose = and(entries)
-                k = find(~entries | or(kcpinf <> kepinf) | or(kcninf <> keninf) | or(kcnan <> kenan) , 1)
+                k = find(~entries, 1);
             end
         end
         // The regular values must be almost equal and
@@ -200,7 +201,8 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
         sub = "";
         if ( size(expected,"*") == 1 ) then
             estr = string(expected)
-        elseif ( size(nexp, 2) > 1 ) then
+            sub = string(k);
+        elseif ( size(nexp, 2) > 1 & k <> []) then
             sub = strcat(string(ind2sub(nexp, k)), ",");
             estr = string(expected(k))
         else
@@ -208,8 +210,7 @@ function [flag,errmsg] = assert_checkalmostequal ( varargin )
         end
         if ( size(computed,"*") == 1 ) then
             cstr = string(computed)
-        elseif ( size(ncom, 2) > 1 ) then
-            sub = strcat(string(ind2sub(ncom, k)), ",");
+        elseif ( size(ncom, 2) > 1 & k <> []) then
             cstr = string(computed(k))
         else
             cstr = "[" + string(computed(1)) + " ...]"
