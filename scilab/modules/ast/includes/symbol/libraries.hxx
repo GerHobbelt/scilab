@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2014 - Scilab Enterprises - Antoine ELIAS
 *
@@ -97,7 +97,8 @@ struct Libraries
     bool getVarsNameForWho(std::list<std::wstring>* lstVarName, int* iVarLenMax, bool bSorted = false) const;
     int whereis(std::list<std::wstring>& lst, const Symbol& _key);
     int librarieslist(std::list<std::wstring>& lst);
-
+    void unrefLibrary(types::InternalType* lib);
+  
 private:
     MapLibs libs;
 };

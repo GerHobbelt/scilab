@@ -160,6 +160,8 @@ public:
         return getLevel(sym) == 0;
     }
 
+    void unrefLibrary(types::InternalType* lib);
+
 private:
 
     types::InternalType* get(const Symbol& key, int _iLevel);

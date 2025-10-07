@@ -145,6 +145,10 @@ bool Variable::put(types::InternalType* _pIT, int _iLevel)
             if (pIT)
             {
                 _pIT->IncreaseRef();
+                if (pIT->isLibrary())
+                {
+                    Context::getInstance()->unrefLibrary(pIT);
+                }
                 pIT->DecreaseRef();
                 pIT->killMe();
             }

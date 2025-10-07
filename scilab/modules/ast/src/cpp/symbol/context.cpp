@@ -812,4 +812,9 @@ void Context::scope_object_end()
     objects.pop();
 }
 
+void Context::unrefLibrary(types::InternalType* lib)
+{
+    libraries.unrefLibrary(lib);
+}
+
 }

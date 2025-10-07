@@ -1,4 +1,4 @@
-/*
+﻿/*
 *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
 *  Copyright (C) 2015 - Scilab Enterprises - Antoine ELIAS
 *
@@ -23,19 +23,19 @@ void Library::put(types::Library* _pLib, int _iLevel)
 {
     if (empty() || top()->m_iLevel < _iLevel)
     {
-        //create a new level
+        // create a new level
         stack.push(new ScopedLibrary(_iLevel, _pLib));
     }
     else
     {
-        //update current level
+        // update current level
         types::Library* pLib = top()->m_pLib;
         if (pLib != _pLib)
         {
             // data is manage by variables.
             // So if this library have to be killed
             // this is alredy done by variables.
-            //pLib->killMe();
+            // pLib->killMe();
             top()->m_pLib = _pLib;
         }
     }
@@ -66,7 +66,7 @@ Library* Libraries::getOrCreate(const Symbol& _key)
     MapLibs::const_iterator it = libs.find(_key);
     if (it == libs.end())
     {
-        //create an empty StackedValues
+        // create an empty StackedValues
         Library* lib = new Library(_key);
         libs[_key] = lib;
         return lib;
@@ -89,10 +89,10 @@ int Libraries::getLevel(const Symbol& _key) const
     {
         for (auto i = libs.rbegin(), end = libs.rend(); i != end; ++i)
         {
-            Library * lib = i->second;
+            Library* lib = i->second;
             if (!lib->empty())
             {
-                types::MacroFile * pMF = lib->get(_key);
+                types::MacroFile* pMF = lib->get(_key);
                 if (pMF)
                 {
                     return lib->top()->m_iLevel;
@@ -135,7 +135,7 @@ bool Libraries::putInPreviousScope(const Symbol& _keyLib, types::Library* _pLib,
 
 types::InternalType* Libraries::get(const Symbol& _key, int _iLevel)
 {
-    //does _key is a lib name
+    // does _key is a lib name
     auto lib = libs.find(_key);
     if (lib != libs.end())
     {
@@ -148,7 +148,7 @@ types::InternalType* Libraries::get(const Symbol& _key, int _iLevel)
         }
     }
 
-    //does _key is a macro in a lib
+    // does _key is a macro in a lib
     for (auto it = libs.rbegin(), itEnd = libs.rend(); it != itEnd; ++it)
     {
         Library* lib = it->second;
@@ -177,7 +177,7 @@ bool Libraries::remove(const Symbol& _key, int _iLevel)
         {
             if (it->second->top()->m_iLevel == _iLevel)
             {
-                ScopedLibrary * pSL = it->second->top();
+                ScopedLibrary* pSL = it->second->top();
                 it->second->pop();
                 delete pSL;
                 return true;
@@ -230,8 +230,8 @@ void Libraries::clearAll()
     {
         while (!lib.second->empty())
         {
-            ScopedLibrary * pSL = lib.second->top();
-            types::InternalType * pIT = pSL->m_pLib;
+            ScopedLibrary* pSL = lib.second->top();
+            types::InternalType* pIT = pSL->m_pLib;
             pIT->killMe();
             lib.second->pop();
             delete pSL;
@@ -289,4 +289,19 @@ int Libraries::librarieslist(std::list<std::wstring>& lst)
     return static_cast<int>(lst.size());
 }
 
+void Libraries::unrefLibrary(types::InternalType* library)
+{
+    for (auto lib : libs)
+    {
+        if (lib.second->empty() == false)
+        {
+            if (lib.second->top()->m_pLib == library)
+            {
+                lib.second->pop();
+                return;
+            }
+        }
+    }
 }
+
+} // namespace symbol

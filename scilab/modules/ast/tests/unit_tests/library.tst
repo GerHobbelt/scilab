@@ -13,8 +13,7 @@
 //
 //
 // <-- CLI SHELL MODE -->
-//
-// <-- ENGLISH IMPOSED -->
+// <-- NO CHECK REF -->
 //
 
 cd TMPDIR;
@@ -80,3 +79,9 @@ endfunction
 
 resumeLib();
 resumeLib();
+
+clear myliblib;
+//overwrite of library variable
+l = lib("SCI/modules\atoms\macros\atoms_internals\");
+l = 1;
+assert_checkerror("mylib", [], 999);
