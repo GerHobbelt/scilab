@@ -15,7 +15,10 @@ assert_checkequal(copyfile("SCI/contrib/toolbox_skeleton", tbx_package_workdir_t
 exec(tbx_package_workdir_test + filesep() + "builder.sce", -1);
 
 // package
-package1 = tbx_package(tbx_package_workdir_test);
+[package1, _, desc] = tbx_package(tbx_package_workdir_test);
+assert_checkequal(typeof(desc), "st");
+assert_checktrue(isfield(desc, "packages"));
+assert_checktrue(isfield(desc.packages, "toolbox_skeleton"));
 
 atomsInstall(package1);
 assert_checktrue(atomsIsInstalled("toolbox_skeleton"));

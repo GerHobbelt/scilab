@@ -5,7 +5,7 @@
 // For more information, see the COPYING file which you should have received
 // along with this program.
 
-function [package_file, listing] = tbx_package(tbx_path, build_id, customize)
+function [package_file, listing, DESCRIPTION] = tbx_package(tbx_path, build_id, customize)
     arguments
         tbx_path (1,1) string {mustBeFolder} = pwd()
         build_id (1,1) string = ""
@@ -19,7 +19,7 @@ function [package_file, listing] = tbx_package(tbx_path, build_id, customize)
     end
     
     DESCRIPTION = atomsDESCRIPTIONread(fullfile(tbx_path, "DESCRIPTION"));
-    OSNAME = atomsGetPlatform();
+    [OSNAME, ARCH] = atomsGetPlatform();
     native = %f;
 
     name = fieldnames(DESCRIPTION("packages"));
@@ -95,7 +95,7 @@ function [package_file, listing] = tbx_package(tbx_path, build_id, customize)
         if strindex(extension, ".h") == 1 && strindex(pname, workdir + filesep() + "include") == 1 then
             // this is a .h, .hxx, .hpp, ... file in the root_package/include directory
             // it will be included in the package
-            native = 1
+            native = %t
         elseif extension == ".sce" then
             if strindex(fname, "build") == 1 then
                 // this is a build*.sce file ; it will not be included
@@ -133,5 +133,18 @@ function [package_file, listing] = tbx_package(tbx_path, build_id, customize)
         error(errmsg);
     end
     listing = compress(package_file, workdir);
+
+    // Update DESCRIPTION
+    if native then
+        basekeyname = OSNAME + ARCH;
+        DESCRIPTION.packages(name)(version)("HasNativeCode") = "Yes";
+    else
+        basekeyname = "binary";
+        DESCRIPTION.packages(name)(version)("HasNativeCode") = "No";
+    end
+    DESCRIPTION.packages(name)(version)(basekeyname + "Name") = package_file;
+    DESCRIPTION.packages(name)(version)(basekeyname + "Md5") = getmd5(package_file);
+    DESCRIPTION.packages(name)(version)(basekeyname + "Size") = fileinfo(package_file)(1);
+
     rmdir(workdir, 's');
 endfunction
