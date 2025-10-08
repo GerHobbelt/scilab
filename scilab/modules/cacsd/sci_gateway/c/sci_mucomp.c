@@ -22,7 +22,7 @@
 extern int C2F(ab13md)(char* JOB, int* N, doublecomplex* Z, int* LDZ, 
                        int* M, int* K, int* T, double* X, double* BOUND, 
                        double* D, double* G, int* IWORK, double* RWORK,
-                       int* LRWORK, doublecomplex* ZWORK, int* LZWORK,
+                       int* LRWORK, const doublecomplex* ZWORK, int* LZWORK,
                        int* INFO);
 
 //     [bound,D,G] = mucomp(Z,K,T)

@@ -20,12 +20,12 @@
 #include "localization.h"
 
 extern int C2F(icopy)(int* n, int* sx, int* incx, int* sy, int* incy);
-extern int C2F(zcopy)(int* n, doublecomplex* sx, int* incx, doublecomplex* sy, int* incy); 
+extern int C2F(zcopy)(int* n, doublecomplex* sx, int* incx, const doublecomplex* sy, int* incy); 
 extern int C2F(zb03od)(char* job, int* m, int* n, doublecomplex* a, int* lda, int* jpvt, 
-                       double* rcond, double* svlmax, doublecomplex* tau, int* rank,
-                       double* sval, doublecomplex* dwork, int* ldwork, double* rwork, int* info);
-extern int C2F(zungqr)(int* m, int* n, int* k, doublecomplex* a, int* lda,
-                       doublecomplex* tau, doublecomplex* work, int* lwork, int* info);
+                       double* rcond, double* svlmax, const doublecomplex* tau, int* rank,
+                       double* sval, const doublecomplex* dwork, int* ldwork, double* rwork, int* info);
+extern int C2F(zungqr)(int* m, int* n, int* k, const doublecomplex* a, int* lda,
+                       const doublecomplex* tau, const doublecomplex* work, int* lwork, int* info);
 
 int sci_zrankqr(char *fname, void* pvApiCtx)
 {
