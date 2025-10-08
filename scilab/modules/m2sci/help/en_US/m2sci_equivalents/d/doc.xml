@@ -38,8 +38,8 @@ doc item
                 </td>
                 <td>
                     <programlisting role="example"><![CDATA[
-help
-help item
+doc
+doc item
 ]]></programlisting>
                 </td>
             </tr>

@@ -68,5 +68,5 @@ if ~m2sciTestConversion("LOG2") then bugmes();quit;end
   Conversion of M-tree: Done
 TESTING M2SCI: creating varslist file...
   Macro to tree conversion: Done
-  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type doc mtlb_<funname> in Scilab command window to get information about improvements.
   ****** End of mfile2sci() session ******

@@ -125,7 +125,7 @@ double precision x(n),v(n)
 fct(int *n, double x[],double v[],int *iflag)
  ]]></programlisting>
         <para>
-            Incremental link is possible (help <literal>link</literal>).
+            Incremental link is possible (doc <literal>link</literal>).
         </para>
         <para>
             <literal>jac</literal> is an "external". This external returns

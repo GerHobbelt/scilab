@@ -25,7 +25,7 @@ static char *CommandWords[] =
     "for", "while",
     "end", "select",
     "case", "quit",
-    "return", "help",
+    "return", "doc",
     "what", "who",
     "pause", "clear",
     "resume", "then",

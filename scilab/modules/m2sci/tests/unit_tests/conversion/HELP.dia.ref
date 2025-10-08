@@ -23,29 +23,22 @@ mprintf("%s\n", m2sciTestConversionNoExe("HELP"));
   Syntax modification: Done
   Macro to tree conversion...
   Conversion of M-tree...
-  L.6: Unknown variable help is a M-file.
-  L.7: Unknown variable help is a M-file.
-  !! L.7: No Scilab equivalent for: help("/")
-  L.8: Unknown variable help is a M-file.
-  L.9: Unknown variable help is a M-file.
-  !! L.9: No Scilab equivalent for: help("toolbox/")
-  L.10: Unknown variable help is a M-file.
-  !! L.10: No Scilab equivalent for: help("toolbox/function")
-  L.11: Unknown variable help is a M-file.
+  L.6: Unknown variable doc is a M-file.
+  !! L.7: No Scilab equivalent for: doc("/")
+  !! L.9: No Scilab equivalent for: doc("toolbox/")
+  !! L.10: No Scilab equivalent for: doc("toolbox/function")
   Conversion of M-tree: Done
 TESTING M2SCI: creating varslist file...
   Macro to tree conversion: Done
   Translation may be wrong (see the //!! comments).
   ****** End of mfile2sci() session ******
-
-// Test file for function help()
+// Test file for function doc()
 // Copyright INRIA
 // Matlab version: 6.5.0.180913a (R13)
 // V.C.
-
-help
-help("/")
-help("function")
-help("toolbox/")
-help("toolbox/function")
-help("names")
+doc
+doc("/")
+doc("function")
+doc("toolbox/")
+doc("toolbox/function")
+doc("names")

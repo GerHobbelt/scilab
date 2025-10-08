@@ -68,7 +68,7 @@ endfunction
 function sciterm = helpRedirectExternal2Scilab(exterm)
     sciterm = exterm
     filename = SCIHOME + filesep() + "XConfiguration.xml"
-    res = xmlGetValues("//general/documentation/body/help", "redirectMatlab2Scilab", filename);
+    res = xmlGetValues("//general/documentation/body/doc", "redirectMatlab2Scilab", filename);
     if res=="checked" then
         filename = SCI + "/modules/helptools/data/external2scilab_equiv.csv"
         tmp = csvRead(filename,";",[],"string",[]);

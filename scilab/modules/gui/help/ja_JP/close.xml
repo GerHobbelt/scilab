@@ -26,7 +26,7 @@
         <synopsis>
             close
             close(H)
-            close help
+            close doc
             close xcos
             close xcos!
             close editvar

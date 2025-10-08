@@ -91,7 +91,7 @@ linspace("")
 setlanguage ru;
 linspace("")
 
-help linspace // the page should appear in Russian (if the help browser was closed)
+doc linspace // the page should appear in Russian (if the help browser was closed)
 
 // Restoring the initial language
 setlanguage(L)

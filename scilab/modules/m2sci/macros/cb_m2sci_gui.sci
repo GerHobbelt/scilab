@@ -179,13 +179,13 @@ function cb_m2sci_gui
         // --- mfile2sci help ---
         //
     elseif get(gcbo, "tag")=="mfile2sci_help_menu" then
-        help mfile2sci
+        doc mfile2sci
 
         //
         // --- translatepaths help ---
         //
     elseif get(gcbo, "tag")=="translatepaths_help_menu" then
-        help translatepaths
+        doc translatepaths
 
         //
         // --- About M2SCI ---

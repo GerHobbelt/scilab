@@ -39,7 +39,7 @@ help toolboxName
                 </td>
                 <td>
                     <programlisting role="no-scilab-exec"><![CDATA[
-help
+doc
 // No equivalent
 // No equivalent
 ]]></programlisting>

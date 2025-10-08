@@ -40,7 +40,7 @@ function y=myfunction(x)
   y=x^2+1
 endfunction
 
-help myfunction
+doc myfunction
  ]]></programlisting>
     </refsection>
     <refsection role="see also">

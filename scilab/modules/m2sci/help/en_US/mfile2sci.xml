@@ -166,7 +166,7 @@
             For efficiency, these functions may be replaced by the proper scilab equivalent
             instructions.
             To get information about replacement, enter:
-            <literal>help mtlb_&lt;function_name></literal> in Scilab command window
+            <literal>doc mtlb_&lt;function_name></literal> in Scilab command window
         </para>
         <para>
             Some other functions like plot, has no straightforward equivalent in scilab.

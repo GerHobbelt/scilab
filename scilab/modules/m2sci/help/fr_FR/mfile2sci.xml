@@ -173,7 +173,7 @@
             fonction d'émulation nommée mtlb_&lt;function_name>. Pour une meilleure éfficacité,
             ces fonctions peuvent être remplacées par les instructions Scilab équivalentes.
             Pour avoir des informations sur le remplacement, entrer :
-            help mtlb_&lt;function_name> dans la fenêtre de commande Scilab.
+            doc mtlb_&lt;function_name> dans la fenêtre de commande Scilab.
         </para>
         <para>
             D'autres fonctions comme plot, n'ont pas d'équivalent direct en Scilab. Elles sont

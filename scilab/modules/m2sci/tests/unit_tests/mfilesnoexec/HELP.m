@@ -1,12 +1,12 @@
-% Test file for function help()
+% Test file for function doc()
 % Copyright INRIA
 % Matlab version: 6.5.0.180913a (R13)
 % V.C.
 
-help
-help /
-help function
-help toolbox/
-help toolbox/function
-help syntax
+doc
+doc /
+doc function
+doc toolbox/
+doc toolbox/function
+doc syntax
 

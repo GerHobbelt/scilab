@@ -92,7 +92,7 @@ linspace("")
 setlanguage ru;
 linspace("")
 
-help linspace // la page doit apparaitre en Russe (si le navigateur a été réouvert)
+doc linspace // la page doit apparaitre en Russe (si le navigateur a été réouvert)
 
 // Rétablissement de la langue initiale
 setlanguage(L)

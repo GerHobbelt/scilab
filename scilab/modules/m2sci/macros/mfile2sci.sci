@@ -372,7 +372,7 @@ function res = mfile2sci(fil, results_path, Recmode, only_double, verbose_mode, 
         // Output summary information
         infos = []
         if m2sci_infos(1) then
-            infos = gettext("Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.");
+            infos = gettext("Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type doc mtlb_<funname> in Scilab command window to get information about improvements.");
         end
         if m2sci_infos(2) then
             infos = [infos ; gettext("Translation may be wrong (see the //!! comments).")]

@@ -27,9 +27,9 @@ assert_checkequal(winsid(), []);
 
 // Help
 // ----
-help
+doc
 sleep(200)
-close help
+close doc
 jimport org.scilab.modules.gui.helpbrowser.ScilabHelpBrowser
 hb = ScilabHelpBrowser.getHelpBrowserWithoutCreation()
 sleep(100)

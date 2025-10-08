@@ -41,7 +41,7 @@ mfile2sci(MFILE,TMPDIR,,%T);
   ! L.2: mtlb(rep) can be replaced by rep() or rep whether rep is an M-file or not.
   Conversion of M-tree: Done
   Macro to tree conversion: Done
-  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type doc mtlb_<funname> in Scilab command window to get information about improvements.
   ****** End of mfile2sci() session ******
 fd=mopen(SCIFILE,"r");
 SCIFILECONTENTS=mgetl(fd,-1);

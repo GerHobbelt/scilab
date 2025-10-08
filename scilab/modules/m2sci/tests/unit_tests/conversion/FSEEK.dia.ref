@@ -27,7 +27,7 @@ mprintf("%s\n", m2sciTestConversionNoExe("FSEEK"));
   Conversion of M-tree: Done
 TESTING M2SCI: creating varslist file...
   Macro to tree conversion: Done
-  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type help mtlb_<funname> in Scilab command window to get information about improvements.
+  Translation may be improved: see the //! comments and for all mtlb_<funname> function call\n  Type doc mtlb_<funname> in Scilab command window to get information about improvements.
   ****** End of mfile2sci() session ******
 
 // Test file for function fseek()

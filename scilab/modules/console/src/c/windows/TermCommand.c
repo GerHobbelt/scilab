@@ -33,7 +33,7 @@ void ControlX_Command(void)
 /*--------------------------------------------------------------------------*/
 void F1_Command(void)
 {
-    StoreCommand("help");
+    StoreCommand("doc");
 }
 /*--------------------------------------------------------------------------*/
 void F2_Command(void)
