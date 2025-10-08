@@ -241,7 +241,8 @@
                     <emphasis role="bold">'h' or 'hh'</emphasis> is for hour, 12 hours format.
                 </para>
                 <para>
-                    With this format, you must add <emphasis role="bold">'a'</emphasis> to specify 'AM'/'PM.
+                    With this format, you must add <emphasis role="bold">'a'</emphasis> to specify 'AM'/'PM. For more details, 
+                    see Hour time format section.
                 </para>
             </listitem>
             <listitem>
@@ -275,6 +276,48 @@
         <para/>
     </refsection>
     <refsection>
+        <title>Hour time Format</title>
+        <para>
+            The symbols <literal>h</literal> and <literal>hh</literal> represent hours in
+            <emphasis role="bold">12-hour format</emphasis> (from 1 to 12). They must be combined with
+            <literal>a</literal> to specify AM or PM.
+        </para>
+        <programlisting role="no-scilab-exec"><![CDATA[
+            hh:mm[:ss[.SSS]] a
+            datetime("2025-10-07 14:05:32.250", "OutputFormat", "hh:mm:ss.SSS a")
+            // Result: 02:05:32.250 PM
+        ]]></programlisting>
+        <para>where:</para>
+        <itemizedlist>
+            <listitem>
+                <para><literal>h</literal>: hour in 12-hour format without leading zero (1-12)</para>
+            </listitem>
+            <listitem>
+                <para><literal>hh</literal>: hour in 12-hour format with leading zero (01-12)</para>
+            </listitem>
+            <listitem>
+                <para><literal>mm</literal>: minutes (00-59)</para>
+            </listitem>
+            <listitem>
+                <para><literal>ss</literal>: seconds (00-59), optional</para>
+            </listitem>
+            <listitem>
+                <para><literal>SSS</literal>: milliseconds, optional</para>
+            </listitem>
+            <listitem>
+                <para><literal>a</literal>: AM/PM indicator</para>
+            </listitem>
+        </itemizedlist>
+        <para>
+            To display time in 24-hour format, use <literal>H</literal> or <literal>HH</literal>:
+        </para>
+        <programlisting role="no-scilab-exec"><![CDATA[
+        HH:mm[:ss[.SSS]]
+        datetime("2025-10-07 14:05:00", "OutputFormat", "HH:mm")
+        // Result: 14:05
+        ]]></programlisting>
+    </refsection>
+    <refsection>
         <title>Examples</title>
         <para><emphasis role="bold">No argument</emphasis></para>
         <para>
@@ -282,6 +325,13 @@
         dt = datetime()
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime()
+
+            dt = [datetime]
+
+            2025-10-07 15:16:07.789
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with keyword</emphasis></para>
         <para>
@@ -291,6 +341,25 @@
         dt = datetime("tomorrow")
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime("yesterday")
+
+            dt = [datetime]
+
+            2025-10-06
+
+            --> dt = datetime("today")
+
+            dt = [datetime]
+
+            2025-10-07
+
+            --> dt = datetime("tomorrow")
+
+            dt = [datetime]
+
+            2025-10-08
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with datestr - default formats: 'yyyy-MM-dd HH:mm:ss' or 'dd-MMM-yyyy HH:mm:ss'</emphasis></para>
         <para>If the format of datestr does not match with the default format, 'InputFormat' has to be specified.</para>
@@ -311,6 +380,71 @@
         dt = datetime(["01-Dec-2022 09:53:30"; ""; "31-Dec-2022 23:59:59"])
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime("2022-09-01")
+
+            dt = [datetime]
+
+            2022-09-01
+
+            --> dt = datetime("01-Sep-2022")
+
+            dt = [datetime]
+
+            2022-09-01
+
+            --> dt = datetime("2022-09-01 09:53:30")
+
+            dt = [datetime]
+
+            2022-09-01 09:53:30
+
+            --> dt = datetime("01-Sep-2022 09:53:30")
+
+            dt = [datetime]
+
+            2022-09-01 09:53:30
+
+            --> 
+
+            --> dt = datetime(["2022-09-01" "2022-09-15"])
+
+            dt = [1x2 datetime]
+
+            2022-09-01   2022-09-15
+
+            --> dt = datetime(["10-Apr-2022" "20-Aug-2022"])
+
+            dt = [1x2 datetime]
+
+            2022-04-10   2022-08-20
+
+            --> dt = datetime(["2022-09-01 09:53:30"; "2022-09-01 11:46:15"])
+
+            dt = [2x1 datetime]
+
+            2022-09-01 09:53:30
+            2022-09-01 11:46:15
+
+            --> dt = datetime(["01-Dec-2022 09:53:30"; "31-Dec-2022 23:59:59"])
+
+            dt = [2x1 datetime]
+
+            2022-12-01 09:53:30
+            2022-12-31 23:59:59
+
+            --> 
+
+            --> // with ""
+
+            --> dt = datetime(["01-Dec-2022 09:53:30"; ""; "31-Dec-2022 23:59:59"])
+
+            dt = [3x1 datetime]
+
+            2022-12-01 09:53:30
+                            NaT
+            2022-12-31 23:59:59
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with InputFormat</emphasis></para>
         <para>
@@ -326,6 +460,47 @@
         ]]>
         </programlisting>
         </para>
+        <para><emphasis role="bold">Datetime with 12-hour time format</emphasis></para>
+        <para>
+        <programlisting role="example"><![CDATA[
+            val = ["14:40:51"; "14:40:56"; "14:41:01"; "14:41:06"; "14:41:11"; "14:41:16"];
+            d = datetime(val, "InputFormat", "HH:mm:ss", "OutputFormat", "hh:mm:ss a")
+
+            d = datetime(2025, 10, 7, 8, (1:10)', 0, "OutputFormat", "h:mm a")
+        ]]>
+        </programlisting>
+        <screen><![CDATA[
+            --> val = ["14:40:51"; "14:40:56"; "14:41:01"; "14:41:06"; "14:41:11"; "14:41:16"];
+
+            --> d = datetime(val, "InputFormat", "HH:mm:ss", "OutputFormat", "hh:mm:ss a")
+
+            d = [6x1 datetime]
+
+            02:40:51 PM
+            02:40:56 PM
+            02:41:01 PM
+            02:41:06 PM
+            02:41:11 PM
+            02:41:16 PM
+
+            --> 
+
+            --> d = datetime(2025, 10, 7, 8, (1:10)', 0, "OutputFormat", "h:mm a")
+
+            d = [10x1 datetime]
+
+            8:01 AM
+            8:02 AM
+            8:03 AM
+            8:04 AM
+            8:05 AM
+            8:06 AM
+            8:07 AM
+            8:08 AM
+            8:09 AM
+            8:10 AM
+        ]]></screen>
+        </para>
         <para><emphasis role="bold">Datetime with X</emphasis></para>
         <para>
         <programlisting role="example"><![CDATA[
@@ -336,6 +511,33 @@
         dt = datetime([2022 12 1 9 53 30; 2022 12 31 23 59 59])
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime([2022 9 1])
+
+            dt = [datetime]
+
+            2022-09-01
+
+            --> dt = datetime([2022 9 1; 2022 9 15])
+
+            dt = [2x1 datetime]
+
+            2022-09-01
+            2022-09-15
+
+            --> dt = datetime([2022 12 1 9 53 30])
+
+            dt = [datetime]
+
+            2022-12-01 09:53:30
+
+            --> dt = datetime([2022 12 1 9 53 30; 2022 12 31 23 59 59])
+
+            dt = [2x1 datetime]
+
+            2022-12-01 09:53:30
+            2022-12-31 23:59:59
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with Y, M, D</emphasis></para>
         <para>
@@ -347,6 +549,40 @@
         dt = datetime([1990:5:2000]', 1, 1)
         ]]>
         </programlisting>
+        <screen><![CDATA[
+        --> dt = datetime(1789, 7, 14)
+
+        dt = [datetime]
+
+        1789-07-14
+
+        --> dt = datetime([1789 2022], 7, 14)
+
+        dt = [1x2 datetime]
+
+        1789-07-14   2022-07-14
+
+        --> dt = datetime(2022,1:12, 1)
+
+        dt = [1x12 datetime]
+
+        2022-01-01   2022-02-01   2022-03-01   2022-04-01   2022-05-01   2022-06-01   2022-07-01   2022-08-01   2022-09-01   2022-10-01   2022-11-01   2022-12-01
+
+        --> dt = datetime(2022, 1, [1 14; 15 31])
+
+        dt = [2x2 datetime]
+
+        2022-01-01   2022-01-14
+        2022-01-15   2022-01-31
+
+        --> dt = datetime([1990:5:2000]', 1, 1)
+
+        dt = [3x1 datetime]
+
+        1990-01-01
+        1995-01-01
+        2000-01-01
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with Y, M, D, H, MI, S</emphasis></para>
         <para>
@@ -356,6 +592,26 @@
         dt = datetime([2010; 2020], 6, [14; 23], 12, 47, 5)
         ]]>
         </programlisting>
+        <screen><![CDATA[
+        --> dt = datetime(2010, 6, 14, 12, 47, 5)
+
+        dt = [datetime]
+
+        2010-06-14 12:47:05
+
+        --> dt = datetime(2010, 6, 14, 12, 47:2:59, 5)
+
+        dt = [1x7 datetime]
+
+        2010-06-14 12:47:05   2010-06-14 12:49:05   2010-06-14 12:51:05   2010-06-14 12:53:05   2010-06-14 12:55:05   2010-06-14 12:57:05   2010-06-14 12:59:05
+
+        --> dt = datetime([2010; 2020], 6, [14; 23], 12, 47, 5)
+
+        dt = [2x1 datetime]
+
+        2010-06-14 12:47:05
+        2020-06-23 12:47:05
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with Y, M, D, H, MI, S, MS</emphasis></para>
         <para>
@@ -365,6 +621,33 @@
         dt = datetime([2010; 2020], 6, [14; 23], 12, 47, 5, [300; 234])
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime(2010, 6, 14, 12, 47, 5, 300)
+
+            dt = [datetime]
+
+            2010-06-14 12:47:05.300
+
+            --> dt = datetime(2010, 6, 14, 12, 47:2:59, 5, 300)
+
+            dt = [1x7 datetime]
+
+                    column 1 to 6
+
+            2010-06-14 12:47:05.300   2010-06-14 12:49:05.300   2010-06-14 12:51:05.300   2010-06-14 12:53:05.300   2010-06-14 12:55:05.300   2010-06-14 12:57:05.300
+
+
+                    column 7 to 7
+
+            2010-06-14 12:59:05.300
+
+            --> dt = datetime([2010; 2020], 6, [14; 23], 12, 47, 5, [300; 234])
+
+            dt = [2x1 datetime]
+
+            2010-06-14 12:47:05.300
+            2020-06-23 12:47:05.234
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with ConvertFrom</emphasis></para>
         <para>
@@ -376,6 +659,31 @@
         dt = datetime(20140402, "ConvertFrom", "yyyymmdd")
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime(datenum(), "ConvertFrom", "datenum")
+
+            dt = [datetime]
+
+            2025-10-07 15:30:30.415
+
+            --> dt = datetime(44819.3834418981, "ConvertFrom", "excel")
+
+            dt = [datetime]
+
+            2022-09-15 09:12:09.380
+
+            --> dt = datetime(1663226303.936, "ConvertFrom", "posixtime")
+
+            dt = [datetime]
+
+            2022-09-15 09:18:23.936
+
+            --> dt = datetime(20140402, "ConvertFrom", "yyyymmdd")
+
+            dt = [datetime]
+
+            2014-04-02
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with OutputFormat</emphasis></para>
         <para>
@@ -391,6 +699,57 @@
         dt = datetime("2022-09-01 00:41 AM", "OutputFormat", "dd/MM/yy hh:mm a")
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime("2022-09-01", "OutputFormat", "dd MMMM yyyy")
+
+            dt = [datetime]
+
+            01 September 2022
+
+            --> dt = datetime("2022-09-01", "OutputFormat", "eeee, dd MMMM yyyy")
+
+            dt = [datetime]
+
+            Thursday, 01 September 2022
+
+            --> dt = datetime("2022-09-01", "OutputFormat", "MMMM d, yyyy")
+
+            dt = [datetime]
+
+            September 1, 2022
+
+            --> dt = datetime("2022-09-01", "OutputFormat", "dd/MM/yy")
+
+            dt = [datetime]
+
+            01/09/22
+
+            --> 
+
+            --> dt = datetime("2022-09-01 08:10", "OutputFormat", "dd MMMM yyyy HH:mm")
+
+            dt = [datetime]
+
+            01 September 2022 08:10
+
+            --> dt = datetime("2022-09-01 08:10", "OutputFormat", "eeee, dd MMMM yyyy HH:mm")
+
+            dt = [datetime]
+
+            Thursday, 01 September 2022 08:10
+
+            --> dt = datetime("2022-09-01 08:10:30", "OutputFormat", "MMMM d, yyyy HH:mm:ss")
+
+            dt = [datetime]
+
+            September 1, 2022 08:10:30
+
+            --> dt = datetime("2022-09-01 00:41 AM", "OutputFormat", "dd/MM/yy hh:mm a")
+
+            dt = [datetime]
+
+            01/09/22 12:41 AM
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Datetime with InputFormat and OutputFormat</emphasis></para>
         <para>
@@ -399,6 +758,19 @@
         dt = datetime("12 December 2022 09:50 PM", "InputFormat", "dd MMMM yyyy hh:mm a", "OutputFormat", "MM/dd/yy HH:mm:ss")
         ]]>
         </programlisting>
+        <screen><![CDATA[
+            --> dt = datetime("12 December 2022", "InputFormat", "dd MMMM yyyy", "OutputFormat", "MM/dd/yy")
+
+            dt = [datetime]
+
+            12/12/22
+
+            --> dt = datetime("12 December 2022 09:50 PM", "InputFormat", "dd MMMM yyyy hh:mm a", "OutputFormat", "MM/dd/yy HH:mm:ss")
+
+            dt = [datetime]
+
+            12/12/22 21:50:00
+        ]]></screen>
         </para>
         <para><emphasis role="bold">Extraction - Insertion - Computation</emphasis></para>
         <para>
@@ -410,8 +782,53 @@
         dt = matrix(dt, 2, 2)
         dt(1,2) = dt(1,2) + duration(12, 0, 0)
         dt(2,1) = duration(9,45,12) + dt(2,1)
-
         ]]></programlisting>
+        <screen><![CDATA[
+            --> dt = datetime(2022, 08, 31):calmonths(2):datetime(2022, 12, 31)
+
+            dt = [1x3 datetime]
+
+            2022-08-31   2022-10-31   2022-12-31
+
+            --> dt(2)
+
+            ans = [datetime]
+
+            2022-10-31
+
+            --> dt($+1) = dt($) + calmonths(2)
+
+            dt = [1x4 datetime]
+
+            2022-08-31   2022-10-31   2022-12-31   2023-03-03
+
+            --> size(dt)
+
+            ans = [1x2 double]
+
+            1.   4.
+
+            --> dt = matrix(dt, 2, 2)
+
+            dt = [2x2 datetime]
+
+            2022-08-31   2022-12-31
+            2022-10-31   2023-03-03
+
+            --> dt(1,2) = dt(1,2) + duration(12, 0, 0)
+
+            dt = [2x2 datetime]
+
+            2022-08-31 00:00:00   2022-12-31 12:00:00
+            2022-10-31 00:00:00   2023-03-03 00:00:00
+
+            --> dt(2,1) = duration(9,45,12) + dt(2,1)
+
+            dt = [2x2 datetime]
+
+            2022-08-31 00:00:00   2022-12-31 12:00:00
+            2022-10-31 09:45:12   2023-03-03 00:00:00
+        ]]></screen>
         </para>
     </refsection>
     <refsection role="see also">
