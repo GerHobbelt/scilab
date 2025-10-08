@@ -1941,8 +1941,8 @@ extern void yyerror(std::string);
 //yylloc.last_column += yyleng;
 
 /* -*- Verbose Special Debug -*- */
-//#define DEV
-//#define TOKENDEV
+// #define DEV
+// #define TOKENDEV
 
 #ifdef DEV
 #define DEBUG(x) std::cout << "[DEBUG] " << x << std::endl;
@@ -2451,16 +2451,19 @@ YY_RULE_SETUP
 case 13:
 YY_RULE_SETUP
 {
-  if (last_token != DOT)
-  {
-    ParserSingleInstance::popControlStatus();
-  }
   if (YY_START == BEGINID) yy_pop_state();
+  
   if (paren_levels.size() != 0 && /* within parenthesis */
+    last_token != DOT &&
     ((lambda_levels.size() != 0 && paren_levels.top() > 1) /* within lambda */
     || (lambda_levels.size() == 0 && paren_levels.top() > 0)) /*outside lambda */)
   {
     return scan_throw(DOLLAR);  
+  }
+
+  if (last_token != DOT)
+  {
+    ParserSingleInstance::popControlStatus();
   }
   return scan_throw(END);
 }
@@ -2468,7 +2471,7 @@ YY_RULE_SETUP
 case 14:
 YY_RULE_SETUP
 {
-  if (paren_levels.size() != 0)
+  if (paren_levels.size() != 0 && last_token != DOT)
   {
     return scan_throw(DOLLAR);
   }

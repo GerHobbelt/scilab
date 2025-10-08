@@ -97,3 +97,25 @@ clear x; x(1:end)=42
 assert_checkequal(x, []);
 x=[]; x(1:end)=42
 assert_checkequal(x, []);
+
+// Exception cases where end is not last element
+s = struct("end", 2);
+M = [10, 20, 30];
+C = {10, 20, 30};
+assert_checkequal(s("end"), 2);
+assert_checkequal(s.end, 2);
+assert_checkequal(M(s.end), 20);
+assert_checkequal(M(s.end + 1), 30);
+assert_checkequal(M(s.end - 1), 10);
+assert_checkequal(C(s.end), {20});
+assert_checkequal(C(s.end + 1), {30});
+assert_checkequal(C(s.end - 1), {10});
+assert_checkequal(C{s.end}, 20);
+assert_checkequal(C{s.end + 1}, 30);
+assert_checkequal(C{s.end - 1}, 10);
+
+// Mixing ends
+a = 1:7;
+b.end = 4;
+a(b.end:end) = 1;
+assert_checkequal(a, [1,2,3,1,1,1, 1]);
