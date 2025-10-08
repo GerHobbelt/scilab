@@ -26,5 +26,6 @@ for i = 1 : size(tab_ref,'*')
   fz = TMPDIR + filesep() + 'dir_' + tab_ref(i) + filesep() + 'file_' + tab_ref(i);
   mputl(f,TMPDIR + filesep() + 'dir_' + tab_ref(i) + filesep() + 'toto.sci');
   genlib('toto'+string(i) , TMPDIR+ filesep() + 'dir_' + tab_ref(i) + filesep());
+  execstr('toto'+string(i)+'=lib(TMPDIR+ filesep() + ''dir_'' + tab_ref(i) + filesep())');
   if libraryinfo('toto'+string(i)) <> 'toto' then pause,end
 end

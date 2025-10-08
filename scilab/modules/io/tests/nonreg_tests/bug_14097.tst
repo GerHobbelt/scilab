@@ -22,13 +22,15 @@ macro_foo = ["function [] = foo()"; ...
 "endfunction"];
 mputl(macro_foo, macro_dir + "foo.sci");
 
-ref = pathconvert("TMPDIR/macros/");
+ref = pathconvert("TMPDIR/macros/", %F);
 genlib("foolib", TMPDIR + "/macros");
+foolib = lib(TMPDIR + "/macros");
 s1=string(foolib)(1);
 assert_checkequal(s1, ref);
 clear foolib;
 
 genlib("foolib", TMPDIR + "/macros/");
+foolib = lib(TMPDIR + "/macros/");
 s2=string(foolib)(1);
 assert_checkequal(s2, ref);
 clear foolib;

@@ -27,6 +27,7 @@ class EXTERN_AST Library : public GenericType
 {
 public :
     Library(const std::wstring& _wstPath);
+    Library(const std::wstring& _wstPath, bool _bAutoImport);
     ~Library();
 
     bool isLibrary(void)
@@ -66,6 +67,11 @@ public :
         return true;
     }
 
+    bool isAutoImport()
+    {
+        return bAutoImport;
+    }
+
     bool extract(const std::wstring& name, InternalType *& out);
 
     void add(const std::wstring& _wstName, MacroFile* _macro);
@@ -77,6 +83,7 @@ private:
     std::wstring m_wstPath;
     typedef std::unordered_map<std::wstring, MacroFile*> MacroMap;
     MacroMap m_macros;
+    bool bAutoImport;
 };
 }
 

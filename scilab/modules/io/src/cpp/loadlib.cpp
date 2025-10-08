@@ -34,7 +34,7 @@ extern "C"
 
 static char *GetXmlFileEncoding(std::string _filename);
 
-types::Library* loadlib(const std::wstring& _wstXML, int* err, bool _isFile, bool _bAddInContext)
+types::Library* loadlib(const std::wstring& _wstXML, int* err, bool _isFile, bool _bAddInContext, bool _AutoImport)
 {
     types::Library* lib = NULL;
 
@@ -83,7 +83,7 @@ types::Library* loadlib(const std::wstring& _wstXML, int* err, bool _isFile, boo
         return lib;
     }
 
-    lib = new types::Library(expanded ? wstOriginalPath : wstPath);
+    lib = new types::Library(expanded ? wstOriginalPath : wstPath, _AutoImport);
 
     std::wstring stFilename(wstPath);
     if (stFilename.empty() == false && *stFilename.rbegin() != DIR_SEPARATORW[0])

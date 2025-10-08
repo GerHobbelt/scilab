@@ -30,8 +30,17 @@ extern "C"
 
 namespace types
 {
-Library::Library(const std::wstring& _wstPath) :
-    m_wstPath(_wstPath)
+Library::Library(const std::wstring& _wstPath) : 
+    m_wstPath(_wstPath),
+    bAutoImport(true)
+{
+#ifndef NDEBUG
+    Inspector::addItem(this);
+#endif
+}
+
+Library::Library(const std::wstring& _wstPath, bool _bAutoImport) : m_wstPath(_wstPath),
+                                                                    bAutoImport(_bAutoImport)
 {
 #ifndef NDEBUG
     Inspector::addItem(this);
@@ -59,6 +68,7 @@ Library::~Library()
 
 bool Library::toString(std::wostringstream& ostr)
 {
+    ostr << L"Auto import symbols : " << (isAutoImport() ? L"true" : L"false") << std::endl;
     wchar_t output[1024] = {0};
     os_swprintf(output, 1024, _W("Functions files location : %ls.\n").c_str(), m_wstPath.c_str());
 

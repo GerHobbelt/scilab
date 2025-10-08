@@ -370,7 +370,7 @@ bool Context::put(Variable* _var, types::InternalType* _pIT)
 {
     if (_pIT->isLibrary())
     {
-        Library* lib = libraries.getOrCreate(_var->getSymbol());
+        Library* lib = libraries.getOrCreate(_var->getSymbol(), _pIT->getAs<types::Library>()->isAutoImport());
         lib->put((types::Library*)_pIT, m_iLevel);
     }
 

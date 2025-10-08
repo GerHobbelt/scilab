@@ -25,6 +25,7 @@ end
 //------------------------------------
 genlib("Electricallib","SCI/modules/scicos_blocks/macros/Electrical",%f,%t);
 //------------------------------------
+lib("SCI/modules/scicos/macros/scicos_utils");
 if with_modelica_compiler() then
 
     // create models file in current directory

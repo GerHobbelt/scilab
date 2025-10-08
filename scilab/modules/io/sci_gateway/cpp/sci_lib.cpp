@@ -30,13 +30,14 @@ extern "C"
 /*--------------------------------------------------------------------------*/
 types::Function::ReturnValue sci_gwlib(types::typed_list &in, int /*_iRetCount*/, types::typed_list &out)
 {
-    if (in.size() != 1)
+    if (in.size() > 2)
     {
-        Scierror(78, _("%s: Wrong number of input argument(s): %d expected.\n"), "lib", 1);
+        Scierror(78, _("%s: Wrong number of input argument(s): At most %d expected.\n"), "lib", 2);
         return types::Function::Error;
     }
 
     types::InternalType* pIT = in[0];
+    types::InternalType* pITAutoExpand;
 
     if (pIT->isString() == false)
     {
@@ -52,10 +53,32 @@ types::Function::ReturnValue sci_gwlib(types::typed_list &in, int /*_iRetCount*/
         return types::Function::Error;
     }
 
+    bool bAutoExpand = true;
+
+    if (in.size() == 2)
+    {
+        pITAutoExpand = in[1];
+        if (pITAutoExpand->isBool() == false)
+        {
+            Scierror(999, _("%s: Wrong type for input argument #%d: bool expected.\n"), "lib", 2);
+            return types::Function::Error;
+        }
+        
+        types::Bool* pBool = pITAutoExpand->getAs<types::Bool>();
+
+        if (pBool->isScalar() == false)
+        {
+            Scierror(999, _("%s: Wrong size for input argument #%d: bool expected.\n"), "lib", 2);
+            return types::Function::Error;
+        }
+
+        bAutoExpand = pBool->get(0);
+    }
+
     wchar_t* pstPath = pS->get(0);
     wchar_t* pwstPath = pathconvertW(pstPath, TRUE, FALSE, AUTO_STYLE);
     int err = 0;
-    types::Library* lib = loadlib(pwstPath, &err, false, false);
+    types::Library* lib = loadlib(pwstPath, &err, false, false, bAutoExpand);
     FREE(pwstPath);
 
     switch (err)

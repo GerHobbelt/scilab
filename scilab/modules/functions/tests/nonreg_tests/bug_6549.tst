@@ -32,6 +32,7 @@ mkdir("bug_6549");
 cd("bug_6549");
 mputl(f,"toto.sci");
 if genlib("bug_6549lib",TMPDIR + "/bug_6549") <> %t then pause,end;
+bug_6549lib=lib(TMPDIR + "/bug_6549");
 // =============================================================================
 ierr = execstr("toto","errcatch");
 if ierr <> 0 then pause,end

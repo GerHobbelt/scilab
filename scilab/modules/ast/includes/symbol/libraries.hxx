@@ -41,7 +41,8 @@ struct Library
 {
     typedef std::stack<ScopedLibrary*> StackLib;
 
-    Library(const Symbol& _name) : name(_name), m_global(false) {};
+    Library(const Symbol& _name) : name(_name), m_global(false), bAutoImport(true) {};
+    Library(const Symbol& _name, bool _AutoImport) : name(_name), m_global(false), bAutoImport(_AutoImport){};
 
     void put(types::Library* _pLib, int _iLevel);
     types::MacroFile* get(const Symbol& _keyMacro) const;
@@ -72,10 +73,16 @@ struct Library
         return name;
     }
 
+    inline bool isAutoImport() const
+    {
+        return bAutoImport;
+    }
+
 private :
     StackLib stack;
     Symbol name;
     bool m_global;
+    bool bAutoImport;
 };
 
 struct Libraries
@@ -84,7 +91,7 @@ struct Libraries
 
     Libraries() {}
 
-    Library* getOrCreate(const Symbol& _key);
+    Library* getOrCreate(const Symbol& _key, bool _AutoImport);
     int getLevel(const Symbol& _key) const;
     void put(const Symbol& _keyLib, types::Library* _pLib, int _iLevel);
     bool putInPreviousScope(const Symbol& _keyLib, types::Library* _pLib, int _iLevel);

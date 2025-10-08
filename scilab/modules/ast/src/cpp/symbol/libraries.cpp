@@ -61,13 +61,13 @@ int Library::getMacrosName(std::list<std::wstring>& lst)
     return static_cast<int>(lst.size());
 }
 
-Library* Libraries::getOrCreate(const Symbol& _key)
+Library* Libraries::getOrCreate(const Symbol& _key, bool _AutoImport)
 {
     MapLibs::const_iterator it = libs.find(_key);
     if (it == libs.end())
     {
-        // create an empty StackedValues
-        Library* lib = new Library(_key);
+        //create an empty StackedValues
+        Library* lib = new Library(_key, _AutoImport);
         libs[_key] = lib;
         return lib;
     }
@@ -89,8 +89,8 @@ int Libraries::getLevel(const Symbol& _key) const
     {
         for (auto i = libs.rbegin(), end = libs.rend(); i != end; ++i)
         {
-            Library* lib = i->second;
-            if (!lib->empty())
+            Library * lib = i->second;
+            if (!lib->empty() && lib->isAutoImport())
             {
                 types::MacroFile* pMF = lib->get(_key);
                 if (pMF)
@@ -106,13 +106,13 @@ int Libraries::getLevel(const Symbol& _key) const
 
 void Libraries::put(const Symbol& _keyLib, types::Library* _pLib, int _iLevel)
 {
-    Library* lib = getOrCreate(_keyLib);
+    Library* lib = getOrCreate(_keyLib, _pLib->isAutoImport());
     lib->put(_pLib, _iLevel);
 }
 
 bool Libraries::putInPreviousScope(const Symbol& _keyLib, types::Library* _pLib, int _iLevel)
 {
-    Library* lib = getOrCreate(_keyLib);
+    Library* lib = getOrCreate(_keyLib, _pLib->isAutoImport());
 
     if (lib->empty())
     {
@@ -152,7 +152,7 @@ types::InternalType* Libraries::get(const Symbol& _key, int _iLevel)
     for (auto it = libs.rbegin(), itEnd = libs.rend(); it != itEnd; ++it)
     {
         Library* lib = it->second;
-        if (lib->empty() == false)
+        if (lib->empty() == false && lib->isAutoImport())
         {
             if (_iLevel == SCOPE_ALL || lib->top()->m_iLevel == _iLevel)
             {

@@ -23,7 +23,10 @@
     </refnamediv>
     <refsynopsisdiv>
         <title>Syntax</title>
-        <synopsis>namelib = lib(lib_dir)</synopsis>
+        <synopsis>
+            namelib = lib(lib_dir)
+            namelib = lib(lib_dir, auto_import)
+        </synopsis>
     </refsynopsisdiv>
     <refsection>
         <title>Arguments</title>
@@ -43,13 +46,23 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
+                <term>auto_import</term>
+                <listitem>
+                    <para>
+                        Boolean value: if <literal>%T</literal> (default value) then symbols contained in the loaded library will be automatically imported/available in Scilab.
+                        If <literal>%F</literal>, symbols contained in the loaded library will only be accessible using the dot-name's syntax <literal>namelib.symbolname(...)</literal>.
+                        See <link linkend="library">library</link> dedicated page for more information.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
                 <term>namelib</term>
                 <listitem>
                     <para>
                         Scilab variable (of <link linkend="type">type 14</link> and
                         <link linkend="typeof">typeof "library"</link>) addressing the loaded
                         library (its handle).
-                        This output argument is mandatory. Otherwise, lib() sets
+                        This output argument is mandatory. Otherwise, <literal>lib()</literal> sets
                         <literal>ans</literal> as library's identifier,  whose value will be
                         overwritten and lost shortly after.
                     </para>
@@ -231,11 +244,42 @@ abc
 
 Undefined variable: atomsOpenProgressBar
 ]]></screen>
-    </refsection>
-        <para>
-            Let's now use load() to reload the library:
-        </para>
-        <programlisting role="example"><![CDATA[
+    <para>
+        Let's now use lib() without automatic symbol import:
+    </para>
+    <programlisting role="example"><![CDATA[
+mkdir(fullfile(TMPDIR, "libnoimport"));
+mputl(["function ret=noimportfcn()";"    ret=""libnoimport""";"endfunction"], fullfile(TMPDIR, "libnoimport", "noimportfcn.sci"));
+genlib("libnoimportlib", fullfile(TMPDIR, "libnoimport"), %f, %t);
+libnoimportlib = lib(fullfile(TMPDIR, "libnoimport"), %F);
+noimportfcn() // => error
+libnoimportlib.noimportfcn() // OK
+ ]]></programlisting>
+    <screen><![CDATA[
+--> mkdir(fullfile(TMPDIR, "libnoimport"));
+
+--> mputl(["function ret=noimportfcn()";"    ret=""libnoimport""";"endfunction"], fullfile(TMPDIR, "libnoimport", "noimportfcn.sci"));
+
+--> genlib("libnoimportlib", fullfile(TMPDIR, "libnoimport"), %f, %t);
+-- Creation of [libnoimportlib] (Macros) --
+genlib: Processing file: noimportfcn.sci
+
+--> libnoimportlib = lib(fullfile(TMPDIR, "libnoimport"), %F);
+
+--> noimportfcn() // => error
+
+Undefined variable: noimportfcn
+
+--> libnoimportlib.noimportfcn() // OK
+
+ ans = 
+
+  "libnoimport"
+]]></screen>
+    <para>
+        Let's now use load() to reload the library:
+    </para>
+    <programlisting role="example"><![CDATA[
 // The default name of the library is "atomsinternalslib"
 // It is not loaded at the Scilab startup:
 atomsinternalslib      // => error
@@ -265,6 +309,7 @@ atomslib                 library                       2488
 
 --> winid = atomsOpenProgressBar("Message", %t);     // now it works
 ]]></screen>
+    </refsection>
     <refsection role="see also">
         <title>See also</title>
         <simplelist type="inline">
@@ -299,6 +344,12 @@ atomslib                 library                       2488
                 <revdescription>
                     lib() no longer needs the <literal>names</literal> file (ignored).
                     It now uses the <literal>lib</literal> file, that is now mandatory.
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <literal>auto_import</literal> parameter added. Libraries can be loaded without exposing their symbols.
                 </revdescription>
             </revision>
         </revhistory>

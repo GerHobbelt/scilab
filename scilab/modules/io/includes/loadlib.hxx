@@ -32,6 +32,6 @@ struct MacroInfo
 };
 
 typedef std::unordered_map<std::wstring, MacroInfo> MacroInfoList;
-IO_IMPEXP types::Library* loadlib(const std::wstring& _wstXML, int* ierr, bool _isFile = true, bool _bAddInContext = true);
+IO_IMPEXP types::Library* loadlib(const std::wstring& _wstXML, int* ierr, bool _isFile = true, bool _bAddInContext = true, bool _bAutoImport = true);
 IO_IMPEXP int parseLibFile(const std::wstring& _wstXML, MacroInfoList& info, std::wstring& libname);
 #endif /* !__LOADLIB_H__ */

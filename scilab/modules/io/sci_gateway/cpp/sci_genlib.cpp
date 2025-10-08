@@ -351,11 +351,7 @@ types::Function::ReturnValue sci_genlib(types::typed_list &in, int _iRetCount, t
 
         symbol::Context* ctx = symbol::Context::getInstance();
         symbol::Symbol sym = symbol::Symbol(pstLibName);
-        if (ctx->isprotected(sym) == false)
-        {
-            ctx->put(symbol::Symbol(pstLibName), pLib);
-        }
-        else
+        if (ctx->isprotected(sym))
         {
             Scierror(999, _("Redefining permanent variable.\n"));
 

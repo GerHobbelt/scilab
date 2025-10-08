@@ -25,16 +25,18 @@ mkdir("lib1");
 mputl(["function ret = lib_test";"  ret= ""lib1""";"endfunction"], "lib1/lib_test.sci");
 //generate lib ( aka "lib1lib" )
 genlib("lib1lib","lib1",%f,%t);
+lib1 = lib("lib1/");
 assert_checkequal(lib_test(), "lib1");
-clear lib1lib lib_test;
+clear lib1 lib1lib lib_test;
 
 //same things with TMPDIR/lib2
 mkdir("lib2");
 mputl(["function ret = lib_test";"  ret= ""lib2""";"endfunction"], "lib2/lib_test.sci");
 //generate lib ( aka "lib2lib" )
 genlib("lib2lib","lib2",%f,%t);
+lib2 = lib("lib2/");
 assert_checkequal(lib_test(), "lib2");
-clear lib2lib lib_test;
+clear lib2 lib2lib lib_test;
 
 //now try to load lib1lib
 lib1lib = lib("lib1");
@@ -53,20 +55,24 @@ lib1lib = lib("lib1");
 assert_checkequal(lib1lib.lib_test(), "lib1");
 lib2lib = lib("lib2");
 assert_checkequal(lib2lib.lib_test(), "lib2");
+clear lib1lib lib2lib lib_test
 
 
 m = mgetl("SCI/modules/ast/tests/unit_tests/test_macro.sci");
 mkdir("test");
 mputl(m, "test/test_macro.sci");
 genlib("testlib","test",%f,%t);
+test = lib("test/");
 assert_checkequal(test_macro(4), 16);
 assert_checkequal(exists("internal_macro"), 0);
 assert_checkequal(exists("x"), 0);
+clear test testlib m
 
 internal_macro = 1;x = 18;
 assert_checkequal(test_macro(5), 20);
 assert_checkequal(internal_macro, 1);
 assert_checkequal(x, 18);
+clear internal_macro test_macro x
 
 // resume library
 mkdir("mylib");
@@ -79,9 +85,19 @@ endfunction
 
 resumeLib();
 resumeLib();
+clear l
 
 clear myliblib;
 //overwrite of library variable
 l = lib("SCI/modules\atoms\macros\atoms_internals\");
 l = 1;
 assert_checkerror("mylib", [], 999);
+
+//test without auto import
+mkdir("libnoimport");
+mputl(["function ret = libnoimport_test";"  ret= ""libnoimport""";"endfunction"], "libnoimport/libnoimport_test.sci");
+//generate lib ( aka "lib1lib" )
+genlib("libnoimportlib","libnoimport",%f,%t);
+libnoimportlib = lib("libnoimport", %F);
+assert_checkequal(exists("libnoimport_test"), 0);
+assert_checkequal(libnoimportlib.libnoimport_test(), "libnoimport");
