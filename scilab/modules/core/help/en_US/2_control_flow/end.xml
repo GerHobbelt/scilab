@@ -28,6 +28,13 @@
             <literal>for</literal>, <literal>while</literal>, <literal>if</literal>,
             <literal>select</literal> must be terminated by <literal>end</literal>.
         </para>
+        <para>
+            <literal>end</literal> can also close a <literal>function</literal> block
+            instead of <literal>endfunction</literal> (prefered notation).
+        </para>
+        <para>
+            <literal>end</literal> can also denotes the last index (row or column) of an array, equivalent to <link linkend="dollar">$</link> (prefered notation).
+        </para>
     </refsection>
     <refsection>
         <title>Examples</title>
@@ -49,6 +56,8 @@ for i = 1:n
         a(i,j) = 1/(i+j-1);
     end
 end
+
+a(end, end)
  ]]></programlisting>
     </refsection>
     <refsection role="see also">
@@ -107,6 +116,12 @@ end
                             Assignments like <literal>end=1</literal> are no longer possible.
                         </listitem>
                     </itemizedlist>
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para><literal>end</literal> can now also denotes the last index (row or column) of an array.</para>
                 </revdescription>
             </revision>
         </revhistory>

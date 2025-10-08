@@ -351,6 +351,20 @@ sharp             "#"
     ParserSingleInstance::popControlStatus();
   }
   if (YY_START == BEGINID) yy_pop_state();
+  if (paren_levels.size() != 0 && /* within parenthesis */
+    ((lambda_levels.size() != 0 && paren_levels.top() > 1) /* within lambda */
+    || (lambda_levels.size() == 0 && paren_levels.top() > 0)) /*outside lambda */)
+  {
+    return scan_throw(DOLLAR);  
+  }
+  return scan_throw(END);
+}
+
+<MATRIX>"end" {
+  if (paren_levels.size() != 0)
+  {
+    return scan_throw(DOLLAR);
+  }
   return scan_throw(END);
 }
 
@@ -532,6 +546,11 @@ sharp             "#"
 <INITIAL,MATRIX,CLASSDEC>{booloror}       return scan_throw(OROR);
 
 <INITIAL>{lparen} {
+  if(paren_levels.size() == 0) {
+    paren_levels.push(0);
+  }
+  ++paren_levels.top();
+
   if (lambda_levels.size()) {
     ++lambda_levels.top();
   }
@@ -540,6 +559,8 @@ sharp             "#"
 <CLASSDEC>{lparen}    return scan_throw(LPAREN);
 
 <INITIAL>{rparen} {
+  --paren_levels.top();
+  
   if (lambda_levels.size()) {
     --lambda_levels.top();
     if (lambda_levels.top() == 0) {

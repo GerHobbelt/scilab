@@ -30,6 +30,13 @@
             Utilisé à la fin des boucles ou des structures conditionnelles. Les structures
             <literal>for, while, if, select</literal> doivent être terminées par <literal>end</literal> .
         </para>
+        <para>
+            <literal>end</literal> peut aussi fermer un bloc <literal>function</literal>
+            en remplacement de <literal>endfunction</literal> (notation à privilégier).
+        </para>
+        <para>
+            <literal>end</literal> peut aussi représenter le dernier élement (ligne ou colonne) d'un tableau, équivalent de <link linkend="dollar">$</link> (notation à privilégier).
+        </para>
     </refsection>
     <refsection>
         <title>Exemples</title>
@@ -51,7 +58,9 @@ for i = 1:n
         a(i,j) = 1/(i+j-1);
     end
 end
- ]]></programlisting>
+
+a(end, end)
+]]></programlisting>
     </refsection>
     <refsection role="see also">
         <title>Voir aussi</title>
@@ -110,6 +119,12 @@ end
                             <literal>end=1</literal> ne sont plus possibles.
                         </listitem>
                     </itemizedlist>
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para><literal>end</literal> peut aussi représenter le dernier élement (ligne ou colonne) d'un tableau.</para>
                 </revdescription>
             </revision>
         </revhistory>

@@ -21,7 +21,7 @@
     <refsection>
         <title>Description</title>
         <para>
-            The <literal>$</literal> symbol denotes the last index (row or column) of the array. It is therefore equal to the number of rows or columns.
+            The <literal>$</literal> symbol denotes the last index (row or column) of the array. It is therefore equal to the number of rows or columns. In this case, <literal>$</literal> (prefered notation) can be replaced by <link linkend="end">end</link>.
         </para>
         <para>
             The <literal>$</literal> symbol is also used to LaTeX texts, which must start and end by <literal>$</literal>. See also  <link linkend="math_rendering_features_in_graphic">math_rendering_features_in_graphic</link>.
