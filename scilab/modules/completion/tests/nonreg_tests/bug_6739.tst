@@ -25,6 +25,7 @@ m=['function y = acosd(x)'
 'endfunction'];
 mputl(m,TMPDIR+'/test/acosd.sci');
 genlib('testlib',TMPDIR+'/test/');
+testlib = lib(TMPDIR+'/test/');
 
 acosd(3); //ok
 
