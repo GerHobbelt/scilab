@@ -106,13 +106,6 @@ for cmapFun = cmapFunctions
     assert_checkequal(cmap4, []);
 end
 
-// Check that obsolete functions can still be called until removed
-for cmapFun = cmapFunctionsMisc
-    cmap = [];
-    execstr("cmap = " + cmapFun + "colormap(42);");
-    assert_checkequal(size(cmap), [42, 3]);
-end
-
 // Check default size for colormaps
 close(winsid());
 // No figure then use the size of the default figure colormap
