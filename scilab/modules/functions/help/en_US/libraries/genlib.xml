@@ -190,14 +190,6 @@ endfunction
             </itemizedlist>
         </para>
         <para>
-            Finally, <literal>genlib(..)</literal> loads the created or updated library and sets
-            its identifier to a variable named <varname>lib_name</varname>, in the current scope.
-            If the variable <varname>lib_name</varname> already exists and is protected,
-            an error occurs: The library has been created but can't be loaded
-            (<link linkend="predef">predef all</link> can be used to unprotect the variable
-            named <varname>lib_name</varname> before running <literal>genlib(..)</literal>).
-        </para>
-        <para>
             If the option <literal>force=%t</literal> is used, all <literal>.sci</literal> files
             are compiled, even if their content has not changed.
         </para>
@@ -265,6 +257,12 @@ endfunction
                             independently with load().
                         </listitem>
                     </itemizedlist>
+                </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revdescription>
+                    <para>Generated library is not automatically loaded anymore. <link linkend="lib">lib</link> must be called.</para>
                 </revdescription>
             </revision>
         </revhistory>

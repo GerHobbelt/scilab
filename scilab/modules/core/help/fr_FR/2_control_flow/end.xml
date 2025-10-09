@@ -30,13 +30,6 @@
             Utilisé à la fin des boucles ou des structures conditionnelles. Les structures
             <literal>for, while, if, select</literal> doivent être terminées par <literal>end</literal> .
         </para>
-        <para>
-            <literal>end</literal> peut aussi fermer un bloc <literal>function</literal>
-            en remplacement de <literal>endfunction</literal> (notation à privilégier).
-        </para>
-        <para>
-            <literal>end</literal> peut aussi représenter le dernier élement (ligne ou colonne) d'un tableau, équivalent de <link linkend="dollar">$</link> (notation à privilégier).
-        </para>
     </refsection>
     <refsection>
         <title>Exemples</title>

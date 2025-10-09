@@ -192,16 +192,6 @@ endfunction
             </itemizedlist>
         </para>
         <para>
-            Наконец, <literal>genlib(..)</literal> загружает созданную или обновлённую
-            библиотеку и устанавливает её идентификатор в переменную, названную
-            <varname>lib_name</varname>, в текущей области просмотра. Если переменная
-            <varname>lib_name</varname> уже существует и защищена,то возникает ошибка:
-            библиотека была создана, но не может быть загружена
-            (<link linkend="predef">predef all</link> может использоваться для снятия
-            защиты с переменной, названной <varname>lib_name</varname> перед запуском
-            <literal>genlib(..)</literal>).
-        </para>
-        <para>
             Если используется опция <literal>force=%t</literal>, то все
             <literal>.sci</literal>-файлы компилируются, даже если их содержимое не
             было изменено.

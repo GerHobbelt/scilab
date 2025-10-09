@@ -28,13 +28,6 @@
             <literal>for</literal>, <literal>while</literal>, <literal>if</literal>,
             <literal>select</literal> must be terminated by <literal>end</literal>.
         </para>
-        <para>
-            <literal>end</literal> can also close a <literal>function</literal> block
-            instead of <literal>endfunction</literal> (prefered notation).
-        </para>
-        <para>
-            <literal>end</literal> can also denotes the last index (row or column) of an array, equivalent to <link linkend="dollar">$</link> (prefered notation).
-        </para>
     </refsection>
     <refsection>
         <title>Examples</title>
