@@ -100,21 +100,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="autumncolormap">autumncolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="autumn">autumn</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="bone">bone</term>
                 <listitem>
                     <para>Computes a gray colormap with <literal>n</literal> colors with a light blue tone.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="bonecolormap">bonecolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="bone">bone</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -124,21 +112,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="coolcolormap">coolcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="cool">cool</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="copper">copper</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from black to a light copper tone.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="coppercolormap">coppercolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="copper">copper</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -148,21 +124,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="graycolormap">graycolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="gray">gray</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="hot">hot</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> hot colors varying from red to yellow.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="hotcolormap">hotcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="hot">hot</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -174,21 +138,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="hsvcolormap">hsvcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="hsv">hsv</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="jet">jet</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from blue, lightblue, green, yellow, orange then red.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="jetcolormap">jetcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="jet">jet</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -198,21 +150,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="oceancolormap">oceancolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="ocean">ocean</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="parula">parula</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from blue to yellow.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="parulacolormap">parulacolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="parula">parula</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -222,21 +162,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="pinkcolormap">pinkcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="pink">pink</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="rainbow">rainbow</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from red through orange, yellow, green,blue to violet.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="rainbowcolormap">rainbowcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="rainbow">rainbow</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -246,21 +174,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="springcolormap">springcolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="spring">spring</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="summer">summer</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from green to yellow.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="summercolormap">summercolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="summer">summer</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -276,21 +192,9 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
-                <term xml:id="whitecolormap">whitecolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="white">white</link> instead.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
                 <term xml:id="winter">winter</term>
                 <listitem>
                     <para>Computes a colormap with <literal>n</literal> colors varying from blue to green.</para>
-                </listitem>
-            </varlistentry>
-            <varlistentry>
-                <term xml:id="wintercolormap">wintercolormap</term>
-                <listitem>
-                    <para>This function is obsolete and will be removed in Scilab 2026.0.0, please use <link linkend="winter">winter</link> instead.</para>
                 </listitem>
             </varlistentry>
             <varlistentry>
@@ -558,14 +462,6 @@
             <revision>
                 <revnumber>2024.1.0</revnumber>
                 <revremark>
-                    Functions <literal>autumncolormap</literal>, <literal>bonecolormap</literal>, <literal>coolcolormap</literal>, <literal>coppercolormap</literal>, <literal>graycolormap</literal>, <literal>hotcolormap</literal>,
-                    <literal>hsvcolormap</literal>, <literal>jetcolormap</literal>, <literal>oceancolormap</literal>, <literal>parulacolormap</literal>, <literal>pinkcolormap</literal>, <literal>rainbowcolormap</literal>,
-                    <literal>springcolormap</literal>, <literal>summercolormap</literal>, <literal>whitecolormap</literal>, <literal>wintercolormap</literal> are obsolete and will be removed in Scilab 2026.0.0, see above for more details.
-                </revremark>
-            </revision>
-            <revision>
-                <revnumber>2024.1.0</revnumber>
-                <revremark>
                     New colormap functions <literal>blues</literal>, <literal>BrBG</literal>, <literal>BuGn</literal>, <literal>BuPu</literal>, <literal>coolwarm</literal>, <literal>GnBu</literal>, <literal>greens</literal>, <literal>greys</literal>,
                     <literal>oranges</literal>, <literal>OrRd</literal>, <literal>PiYG</literal>, <literal>PRGn</literal>, <literal>PuBu</literal>, <literal>PuBuGn</literal>, <literal>PuOr</literal>, <literal>PuRd</literal>,
                     <literal>purples</literal>, <literal>RdBu</literal>, <literal>RdGy</literal>, <literal>RdPu</literal>, <literal>RdYlBu</literal>, <literal>RdYlGn</literal>, <literal>reds</literal>, <literal>spectral</literal>,
@@ -577,6 +473,14 @@
                 <revremark>
                     New colormaps functions <literal>turbo</literal>, <literal>flag</literal>, <literal>prism</literal>, <literal>Accent</literal>, <literal>Dark2</literal>, <literal>Paired</literal>, <literal>Pastel1</literal>, <literal>Pastel2</literal>,
                     <literal>Set1</literal>, <literal>Set2</literal>, <literal>Set3</literal> introduced.
+                </revremark>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revremark>
+                    Functions <literal>autumncolormap</literal>, <literal>bonecolormap</literal>, <literal>coolcolormap</literal>, <literal>coppercolormap</literal>, <literal>graycolormap</literal>, <literal>hotcolormap</literal>,
+                    <literal>hsvcolormap</literal>, <literal>jetcolormap</literal>, <literal>oceancolormap</literal>, <literal>parulacolormap</literal>, <literal>pinkcolormap</literal>, <literal>rainbowcolormap</literal>,
+                    <literal>springcolormap</literal>, <literal>summercolormap</literal>, <literal>whitecolormap</literal>, <literal>wintercolormap</literal> removed.
                 </revremark>
             </revision>
         </revhistory>

@@ -78,21 +78,6 @@ function varargout = mapsound(w, dt, frange, rate, Colormap)
               //          in order to get lighter colors for lower amplitudes
         if isdef("Colormap","l") then
             select Colormap
-            case autumncolormap, e = -15
-            case bonecolormap, e = -1
-            case coolcolormap, e = 20
-            case coppercolormap, e = -15
-            case graycolormap, e = -1
-            case hotcolormap, e = -1
-            case hsvcolormap, e = 15
-            case jetcolormap, e = -20
-            case oceancolormap, e = -1
-            case parulacolormap, e = -10,
-            case pinkcolormap, e = -1
-            case rainbowcolormap, e = 20
-            case springcolormap, e = -10
-            case summercolormap, e = -10
-            case wintercolormap, e = -20
             case autumn, e = -15
             case bone, e = -1
             case cool, e = 20

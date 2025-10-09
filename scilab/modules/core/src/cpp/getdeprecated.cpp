@@ -34,25 +34,7 @@ std::unordered_map<std::wstring, std::wstring> getDeprecated()
         {L"demo_compiler", L"haveacompiler"},
         {L"demo_file_choice", L"x_choose"},
         {L"demo_function_choice", L"x_choose"},
-        {L"demo_choose", L"x_choose"},
-
-        // Scilab 2024.1.0 => 2026.0.0
-        {L"autumncolormap", L"autumn"},
-        {L"bonecolormap", L"bone"},
-        {L"coolcolormap", L"cool"},
-        {L"coppercolormap", L"copper"},
-        {L"graycolormap", L"gray"},
-        {L"hotcolormap", L"hot"},
-        {L"hsvcolormap", L"hsv"},
-        {L"jetcolormap", L"jet"},
-        {L"oceancolormap", L"ocean"},
-        {L"parulacolormap", L"parula"},
-        {L"pinkcolormap", L"pink"},
-        {L"rainbowcolormap", L"rainbow"},
-        {L"springcolormap", L"spring"},
-        {L"summercolormap", L"summer"},
-        {L"whitecolormap", L"white"},
-        {L"wintercolormap", L"winter"}
+        {L"demo_choose", L"x_choose"}
     };
 }
 
@@ -69,6 +51,22 @@ std::unordered_map<std::wstring, std::wstring> getDeleted()
         {L"dassl", L"dae"},
         {L"dasrt", L"dae"},
         {L"daskr", L"dae"},
+        {L"autumncolormap", L"autumn"},
+        {L"bonecolormap", L"bone"},
+        {L"coolcolormap", L"cool"},
+        {L"coppercolormap", L"copper"},
+        {L"graycolormap", L"gray"},
+        {L"hotcolormap", L"hot"},
+        {L"hsvcolormap", L"hsv"},
+        {L"jetcolormap", L"jet"},
+        {L"oceancolormap", L"ocean"},
+        {L"parulacolormap", L"parula"},
+        {L"pinkcolormap", L"pink"},
+        {L"rainbowcolormap", L"rainbow"},
+        {L"springcolormap", L"spring"},
+        {L"summercolormap", L"summer"},
+        {L"whitecolormap", L"white"},
+        {L"wintercolormap", L"winter"},
 
         // Scilab 2024.0.0 => 2025.0.0
         {L"getURL", L"http_get"},
