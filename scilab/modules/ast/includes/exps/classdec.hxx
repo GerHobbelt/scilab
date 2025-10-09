@@ -178,6 +178,11 @@ public:
         return _properties;
     }
 
+    virtual bool isClassDec() const
+    {
+        return true;
+    }
+
     virtual ExpType getType() const
     {
         return CLASSDEC;

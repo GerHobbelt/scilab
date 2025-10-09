@@ -109,7 +109,12 @@ public:
         return PROPERTIESDEC;
     }
 
-protected:
+    virtual bool isPropertiesDec() const
+    {
+        return true;
+    }
+
+  protected:
     exps_t _properties;
     exps_t _attributes;
 };

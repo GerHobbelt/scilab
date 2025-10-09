@@ -49,6 +49,10 @@ void TreeVisitor::visit(const SeqExp  &e)
         {
             continue;
         }
+        if (it->isClassDec())
+        {
+            continue;
+        }
 
         if (it->isAssignExp() ||
                 it->isCommentExp() ||

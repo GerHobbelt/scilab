@@ -109,7 +109,12 @@ public:
         return ENUMDEC;
     }
 
-protected:
+    virtual bool isEnumDec() const
+    {
+        return true;
+    }
+
+  protected:
     exps_t _attributes;
     exps_t _enumeration;
 };

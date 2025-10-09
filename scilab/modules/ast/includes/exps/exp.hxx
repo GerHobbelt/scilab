@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2007-2008 - DIGITEO - Bruno JOFRET
  *
@@ -605,6 +605,26 @@ public:
     }
 
     inline virtual bool isArgumentsExp() const
+    {
+        return false;
+    }
+
+    inline virtual bool isClassDec() const
+    {
+        return false;
+    }
+
+    inline virtual bool isEnumDec() const
+    {
+        return false;
+    }
+
+    inline virtual bool isPropertiesDec() const
+    {
+        return false;
+    }
+
+    inline virtual bool isMethodsDec() const
     {
         return false;
     }

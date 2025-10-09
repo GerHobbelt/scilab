@@ -111,7 +111,12 @@ public:
         return METHODSDEC;
     }
 
-protected:
+    virtual bool isMethodsDec() const
+    {
+        return true;
+    }
+
+  protected:
     exps_t _attributes;
     exps_t _methods;
 };
