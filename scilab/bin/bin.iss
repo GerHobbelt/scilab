@@ -26,11 +26,11 @@ Source: bin\msvcp140.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\msvcp140_1.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\msvcp140_2.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\msvcp140_atomic_wait.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
-Source: bin\msvcp140_clr0400.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\msvcp140_codecvt_ids.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 
 Source: bin\vcruntime140.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\vcruntime140_1.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
+Source: bin\vcruntime140_threads.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\vccorlib140.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 Source: bin\concrt140.dll; DestDir: {app}\bin; Components: {#COMPN_SCILAB}
 
