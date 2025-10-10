@@ -339,7 +339,7 @@ struct objs
         ChildrenToUpdateOwner tempOwning(controller, childrenToUpdate);
 
         // Process the children / parent relationship
-        ScicosID parentDiagram;
+        ScicosID parentDiagram = ScicosID();
         controller.getObjectProperty(adaptee, PARENT_DIAGRAM, parentDiagram);
         int offset = 0;
         for (const auto & update : childrenToUpdate)
@@ -473,10 +473,16 @@ struct version
                 return false;
             }
 
+            if (adaptor.getAdaptee()->kind() == BLOCK)
+            {
+                // version field is not present on the model for non-diagram ; let's pass it !
+                get_or_allocate_logger()->log(LOG_INFO, _("Ignored \"version\" field for block %ld.\n"), adaptor.getAdaptee()->id());
+                return true;
+            }
             if (adaptor.getAdaptee()->kind() != DIAGRAM)
             {
                 // version field is not present on the model for non-diagram ; let's pass it !
-                get_or_allocate_logger()->log(LOG_ERROR, _("Wrong dimension for field %s: %d-by-%d expected.\n"), "version", 1, 1);
+                get_or_allocate_logger()->log(LOG_WARNING, _("Ignored \"version\" for field %s: %d-by-%d expected.\n"), "version", 1, 1);
                 return true;
             }
             model::Diagram* adaptee = static_cast<model::Diagram*>(adaptor.getAdaptee());

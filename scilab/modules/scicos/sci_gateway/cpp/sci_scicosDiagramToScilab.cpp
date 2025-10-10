@@ -138,10 +138,14 @@ static types::InternalType* importFile(char const* file)
     ScicosID uid = controller.createObject(DIAGRAM);
     
     auto logger = get_or_allocate_logger();
-    logger->log(LOG_DEBUG, [&](std::stringstream& msg){
-        msg << "Importing file " << file << "\n";
-        // msg << "Reset logger to " << uid << "\n";
-        // logger->setLastObject(uid);
+    logger->log(LOG_DEBUG, [&](char* first, char* last) {
+        to_chars_t io(first, last);
+        io = io + "Importing file " + std::string_view(file);
+        
+        // DEBUG io = io + "Reset logger to " + uid;
+        // DEBUG logger->setLastObject(uid);
+
+        return io + "\n";
     });
 
     size_t fLen = strlen(file);

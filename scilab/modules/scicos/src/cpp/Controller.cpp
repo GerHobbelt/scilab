@@ -12,13 +12,13 @@
  *
  */
 
-#include <atomic>
-#include <string>
-#include <vector>
-#include <map>
-#include <utility>
 #include <algorithm>
+#include <atomic>
 #include <iterator>
+#include <map>
+#include <string>
+#include <utility>
+#include <vector>
 
 #include "utilities.hxx"
 
@@ -27,7 +27,8 @@
 
 #include "LoggerView.hxx"
 
-extern "C" {
+extern "C"
+{
 #include "scicos.h"
 }
 
@@ -37,9 +38,8 @@ namespace org_scilab_modules_scicos
 /*
  * Implement SharedData methods
  */
-Controller::SharedData::SharedData() :
-    onModelStructuralModification(), model(),
-    onViewsStructuralModification(), allNamedViews(), allViews()
+Controller::SharedData::SharedData() : onModelStructuralModification(), model(),
+                                       onViewsStructuralModification(), allNamedViews(), allViews()
 {
     unlock(&onModelStructuralModification);
     unlock(&onViewsStructuralModification);
@@ -153,6 +153,11 @@ model::BaseObject* Controller::createBaseObject(kind_t k)
 model::BaseObject* Controller::referenceBaseObject(model::BaseObject* o) const
 {
     lock(&m_instance.onModelStructuralModification);
+    if (o == nullptr || o->id() == ScicosID())
+    {
+        unlock(&m_instance.onModelStructuralModification);
+        return nullptr;
+    }
 
     unsigned refCount = m_instance.model.referenceObject(o);
 
@@ -388,9 +393,9 @@ model::BaseObject* Controller::cloneBaseObject(cloned_t& mapped, model::BaseObje
     cloneProperties<int>(initial, cloned);
     cloneProperties<bool>(initial, cloned);
     cloneProperties<std::string>(initial, cloned, _strShared);
-    cloneProperties<std::vector<double> >(initial, cloned, _vecDblShared);
-    cloneProperties<std::vector<int> >(initial, cloned, _vecIntShared);
-    cloneProperties<std::vector<std::string> >(initial, cloned, _vecStrShared);
+    cloneProperties<std::vector<double>>(initial, cloned, _vecDblShared);
+    cloneProperties<std::vector<int>>(initial, cloned, _vecIntShared);
+    cloneProperties<std::vector<std::string>>(initial, cloned, _vecStrShared);
 
     // deep copy children, manage ScicosID and std::vector<ScicosID>
     if (k == ANNOTATION)
@@ -476,7 +481,7 @@ void Controller::mapProperty(cloned_t& mapped, model::BaseObject* initial, model
         {
             if (v != ScicosID())
             {
-                model::BaseObject *opposite = getBaseObject(v);
+                model::BaseObject* opposite = getBaseObject(v);
                 cloned = cloneBaseObject(mapped, opposite, true, true)->id();
             }
             else
@@ -493,7 +498,7 @@ void Controller::mapProperty(cloned_t& mapped, model::BaseObject* initial, model
     setObjectProperty(clone, p, cloned);
 }
 
-std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObject *initial, object_properties_t p, bool cloneIfNotFound)
+std::vector<ScicosID> Controller::mappedVector(cloned_t& mapped, model::BaseObject* initial, object_properties_t p, bool cloneIfNotFound)
 {
     std::vector<ScicosID> v;
     getObjectProperty(initial, p, v);
@@ -501,7 +506,7 @@ std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObje
     std::vector<ScicosID> cloned;
     cloned.reserve(v.size());
 
-    for (const ScicosID &id : v)
+    for (const ScicosID& id : v)
     {
         if (id == ScicosID())
         {
@@ -510,7 +515,7 @@ std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObje
             continue;
         }
 
-        model::BaseObject *opposite = getBaseObject(id);
+        model::BaseObject* opposite = getBaseObject(id);
         cloned_t::iterator it = mapped.find(id);
         if (it != mapped.end())
         {
@@ -522,7 +527,7 @@ std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObje
             {
                 if (id != ScicosID())
                 {
-                    model::BaseObject *clone = cloneBaseObject(mapped, opposite, true, true);
+                    model::BaseObject* clone = cloneBaseObject(mapped, opposite, true, true);
                     cloned.push_back(clone->id());
                 }
                 else
@@ -543,10 +548,10 @@ std::vector<ScicosID> Controller::mappedVector(cloned_t &mapped, model::BaseObje
 
 void Controller::updateChildrenRelatedPropertiesAfterClone(cloned_t& mapped)
 {
-    for (auto const &it : mapped)
+    for (auto const& it : mapped)
     {
-        model::BaseObject *initial = it.second.initial;
-        model::BaseObject *cloned = it.second.cloned;
+        model::BaseObject* initial = it.second.initial;
+        model::BaseObject* cloned = it.second.cloned;
 
         switch (initial->kind())
         {
@@ -566,7 +571,7 @@ void Controller::updateChildrenRelatedPropertiesAfterClone(cloned_t& mapped)
 ScicosID Controller::cloneObject(ScicosID uid, bool cloneChildren, bool clonePorts)
 {
     cloned_t mapped;
-    model::BaseObject *clone =
+    model::BaseObject* clone =
         cloneBaseObject(mapped, getBaseObject(uid), cloneChildren, clonePorts);
     updateChildrenRelatedPropertiesAfterClone(mapped);
 
@@ -621,20 +626,18 @@ void Controller::sortAndFillKind(std::vector<ScicosID>& uids, std::vector<int>& 
             continue;
         }
 
-        container.push_back({ uid, m_instance.model.getKind(uid) });
+        container.push_back({uid, m_instance.model.getKind(uid)});
     }
 
     // sort according to the kinds
-    std::stable_sort(container.begin(), container.end(), [] (const local_pair & a, const local_pair & b)
-    {
-        return a.second < b.second;
-    });
+    std::stable_sort(container.begin(), container.end(), [](const local_pair& a, const local_pair& b)
+                     { return a.second < b.second; });
 
     // move things back
     uids.clear();
     uids.reserve(container.size());
     kinds.reserve(container.size());
-    for (const auto & v : container)
+    for (const auto& v : container)
     {
         uids.push_back(v.first);
         kinds.push_back(v.second);
@@ -681,7 +684,7 @@ bool Controller::getObjectProperty(ScicosID uid, kind_t k, object_properties_t p
 {
     return getObjectProperty<>(uid, k, p, v);
 }
-bool Controller::getObjectProperty(ScicosID uid, kind_t k, object_properties_t p, std::vector< std::string >& v) const
+bool Controller::getObjectProperty(ScicosID uid, kind_t k, object_properties_t p, std::vector<std::string>& v) const
 {
     return getObjectProperty<>(uid, k, p, v);
 }
@@ -728,7 +731,7 @@ update_status_t Controller::setObjectProperty(ScicosID uid, kind_t k, object_pro
 {
     return setObjectProperty<>(uid, k, p, v);
 }
-update_status_t Controller::setObjectProperty(ScicosID uid, kind_t k, object_properties_t p, const std::vector< std::string >& v)
+update_status_t Controller::setObjectProperty(ScicosID uid, kind_t k, object_properties_t p, const std::vector<std::string>& v)
 {
     return setObjectProperty<>(uid, k, p, v);
 }
@@ -746,4 +749,3 @@ model::BaseObject* Controller::getBaseObject(ScicosID uid) const
 }
 
 } /* namespace org_scilab_modules_scicos */
-

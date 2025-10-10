@@ -21,7 +21,6 @@
 #include <cmath> // for trunc
 #include <cstdio> // for sprintf
 #include <limits>
-#include <string_view>
 #include <system_error> // for std::errc
 #include <string>
 #include <string_view>

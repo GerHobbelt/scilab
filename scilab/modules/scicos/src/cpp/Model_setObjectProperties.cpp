@@ -372,11 +372,11 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
             case EXPRS:
             {
                 std::vector<double> exprs;
-                // var2vec enconding for scalar string:
+                // var2vec encoding for scalar string:
                 //  * type
                 //  * number of dims
                 //  * scalar 1x1
-                //  * string lengths
+                //  * string lengths (as double[] needed size)
                 //  * utf8 content \0 terminated
                 exprs.push_back(sci_strings);
                 exprs.push_back(2);
@@ -384,8 +384,8 @@ update_status_t Model::setObjectProperty(model::BaseObject* object, object_prope
                 exprs.push_back(1);
                 // Adding the '\0' byte to the length
                 size_t len = v.length() + 1;
-                exprs.push_back((int)len);
                 int offset_cur = static_cast<int>((len * sizeof(char) + sizeof(double) - 1) / sizeof(double));
+                exprs.push_back(offset_cur);
                 // resize
                 size_t size = exprs.size();
                 exprs.resize(size + offset_cur);

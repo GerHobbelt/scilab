@@ -594,7 +594,7 @@ private:
         }
         
         return 1;
-    };
+    }
     template<typename T>
     int loadComponentObjectProperty(xmlTextReaderPtr reader, model::BaseObject* o, enum object_properties_t prop, enum xcosNames element, T& shared)
     {
@@ -605,7 +605,7 @@ private:
             }
             return 1;
         });
-    };
+    }
     int loadConnector(xmlTextReaderPtr reader, model::BaseObject* o);
     int loadConnectorContent(xmlTextReaderPtr reader, model::BaseObject* o);
     int loadParameterSet(xmlTextReaderPtr reader, model::BaseObject* o);
@@ -648,12 +648,12 @@ private:
             return controller.setObjectProperty(dest, dest_prop, shared);
         }
         return FAIL;
-    };
+    }
     template<typename T> inline
     update_status_t copy_property(model::BaseObject* src, model::BaseObject* dest, object_properties_t prop, T& shared)
     {
         return copy_property<T>(src, prop, dest, prop, shared);
-    };
+    }
     void assignInnerPortIndexes(model::BaseObject* parent);
     int assignIOBlockChildren(model::BaseObject* parent, bool alwaysAssign);
     void assignOutterPortIndexes(model::BaseObject* parent);

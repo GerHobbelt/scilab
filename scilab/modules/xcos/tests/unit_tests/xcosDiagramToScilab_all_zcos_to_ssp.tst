@@ -4,6 +4,7 @@
 // This file is distributed under the same license as the Scilab package.
 
 // <-- XCOS TEST -->
+// <-- NO CHECK REF -->
 //
 // <-- Short Description -->
 // Internal test to check that xcos files and zcos files can be loaded and saved as SSP files

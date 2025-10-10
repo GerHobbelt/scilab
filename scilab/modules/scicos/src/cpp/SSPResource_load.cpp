@@ -955,10 +955,10 @@ int SSPResource::loadConnectorContent(xmlTextReaderPtr reader, model::BaseObject
     }
 
     LoggerView* logger = get_or_allocate_logger();
-    logger->log(LOG_DEBUG, [&](std::stringstream& msg)
+    logger->log(LOG_DEBUG, [&](char* first, char* last)
     {
         const auto& r = references.back().back();
-        msg << "block " << logger->id(r.block) << " port " << logger->id(r.port) << " named " << r.element << " " << r.connector << "\n";
+        return to_chars_t(first, last) + "block " + logger->id(r.block) + " port " + logger->id(r.port) + " named " + std::string_view(r.element) + " " + std::string_view(r.connector) + "\n";
     });
     return 1;
 }
@@ -1730,9 +1730,8 @@ int SSPResource::loadConnection(xmlTextReaderPtr reader, model::BaseObject* o)
 
     // verbose for debugging
     LoggerView* logger = get_or_allocate_logger();
-    logger->log(LOG_DEBUG, [&](std::stringstream& msg) {
-        msg << "connect link " << logger->id(link);
-        msg << " : from " << logger->id(startIT->port) << " - to " << logger->id(endIT->port) << "\n";
+    logger->log(LOG_DEBUG, [&](char* first, char* last) {
+        return to_chars_t(first, last) + "connect link " + logger->id(link) + " : from " + logger->id(startIT->port) + " - to " + logger->id(endIT->port) + "\n";
     });
 
     return 1;
@@ -3074,18 +3073,20 @@ int SSPResource::processElement(xmlTextReaderPtr reader, const xmlChar* nsURI)
     const xmlChar* name = xmlTextReaderConstLocalName(reader);
 
     auto logger = get_or_allocate_logger();
-    logger->log(LOG_DEBUG, [&](std::stringstream &msg) {
-        msg << "processed depth is ";
+    logger->log(LOG_DEBUG, [&](char* first, char* last) {
+        to_chars_t io(first, last);
+        io = io + "processed depth is ";
         if (processed.size() > 0)
         {
-            msg << "( " << logger->id(processed[0]) << " , " << processed[0]->kind() << " )";
+            model::BaseObject* o = processed[0];
+            io = io + "( " + logger->id(o) + " , " + o->kind() + " )";
         }
         for (int i = 1; i < processed.size(); i++)
         {
-            msg << ",  ";
-            msg << "( " << logger->id(processed[i]) << " , " << processed[i]->kind() << " )";
+            model::BaseObject* o = processed[i];
+            io = io + ", ( " + logger->id(o) + " , " + o->kind() + " )";
         }
-        msg << "\n";
+        return io + "\n";
     });
 
     // lookup for known node names

@@ -601,10 +601,16 @@ bool update_ports_property(const Adaptor& adaptor, const object_properties_t por
         // Adding to a superblock
         controller.getObjectProperty(parentBlock, BLOCK, CHILDREN, children);
     }
-    else
+    else if (parentDiagram != ScicosID())
     {
         // Adding to a diagram
         controller.getObjectProperty(parentDiagram, DIAGRAM, CHILDREN, children);
+    }
+
+    // early return on block allocation
+    if (p == CONNECTED_SIGNALS && children.empty())
+    {
+        return false;
     }
 
     std::deque<int> newPorts (value->getSize());
@@ -705,7 +711,9 @@ bool update_ports_property(const Adaptor& adaptor, const object_properties_t por
                     break;
                 default:
                     // should never happen
-                    assert(!"Not managed kind of port");
+                    std::string adapter = adapterName<p>(port_kind);
+                    std::string field = adapterFieldName<p>(port_kind);
+                    get_or_allocate_logger()->log(LOG_FATAL, _("Wrong type for field %s.%s: Not managed kind of port.\n"), adapter.data(), field.data());
                     return false;
             }
             addNewPort<p>(createdPort, newPort, controller);

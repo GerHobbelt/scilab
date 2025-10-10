@@ -304,7 +304,7 @@ void sciblk4(scicos_block* blk, const int flag)
     *****************************/
     types::List* pITin = nullptr;
     types::List** work = (types::List**) blk->work;
-    if (blk->scsptr == nullptr && *work != nullptr)
+    if (work != nullptr && *work != nullptr && blk->scsptr == nullptr)
     {
         // re-use the TList allocated on a previous call when not a debug block
         pITin = *work;
@@ -374,8 +374,6 @@ void sciblk4(scicos_block* blk, const int flag)
     if (pITout->isTList() == false)
     {
         set_block_error(-1);
-        pITout->killMe();
-        return;
     }
     auto t = pITout->getAs<types::TList>();
     
@@ -391,9 +389,8 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 14 - xd */
                 if (getDoubleArray(t->getField(L"xd"), blk->xd, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
 
                 if ((funtyp[kfun - 1] == 10004) || (funtyp[kfun - 1] == 10005))
@@ -401,9 +398,8 @@ void sciblk4(scicos_block* blk, const int flag)
                     /* 15 - res */
                     if (getDoubleArray(t->getField(L"res"), blk->res, blk->nx) == false)
                     {
-                        t->killMe();
                         set_block_error(-1);
-                        return;
+                        goto sciblk4_exit_free_data;
                     }
                 }
             }
@@ -431,9 +427,8 @@ void sciblk4(scicos_block* blk, const int flag)
                             int type = blk->outsz[i + blk->nout * 2];
                             if (sci2var(lout->get(i), blk->outptr[i], type, row, col) == false)
                             {
-                                t->killMe();
                                 set_block_error(-1);
-                                return;
+                                goto sciblk4_exit_free_data;
                             }
                         }
                     }
@@ -448,9 +443,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getDoubleArray(t->getField(L"z"), blk->z, blk->nz) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -459,9 +453,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getOpaquePointer(t->getField(L"oz"), blk->ozptr) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -470,17 +463,15 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 13 - x */
                 if (getDoubleArray(t->getField(L"x"), blk->x, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
 
                 /* 14 - xd */
                 if (getDoubleArray(t->getField(L"xd"), blk->xd, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -495,9 +486,8 @@ void sciblk4(scicos_block* blk, const int flag)
             /* 23 - evout */
             if (getDoubleArray(t->getField(L"evout"), blk->evout, blk->nevout) == false)
             {
-                t->killMe();
                 set_block_error(-1);
-                return;
+                goto sciblk4_exit_free_data;
             }
             break;
         }
@@ -511,9 +501,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getDoubleArray(t->getField(L"z"), blk->z, blk->nz) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -522,9 +511,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getOpaquePointer(t->getField(L"oz"), blk->ozptr) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -533,17 +521,15 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 13 - x */
                 if (getDoubleArray(t->getField(L"x"), blk->x, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
 
                 /* 14 - xd */
                 if (getDoubleArray(t->getField(L"xd"), blk->xd, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -557,9 +543,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getDoubleArray(t->getField(L"z"), blk->z, blk->nz) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -568,9 +553,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getOpaquePointer(t->getField(L"oz"), blk->ozptr) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -591,9 +575,8 @@ void sciblk4(scicos_block* blk, const int flag)
                             const int type = blk->outsz[i + blk->nout * 2];
                             if (sci2var(lout->get(i), blk->outptr[i], type, row, col) == false)
                             {
-                                t->killMe();
                                 set_block_error(-1);
-                                return;
+                                goto sciblk4_exit_free_data;
                             }
                         }
                     }
@@ -612,9 +595,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getDoubleArray(t->getField(L"z"), blk->z, blk->nz) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -623,9 +605,8 @@ void sciblk4(scicos_block* blk, const int flag)
             {
                 if (getOpaquePointer(t->getField(L"oz"), blk->ozptr) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -634,17 +615,15 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 13 - x */
                 if (getDoubleArray(t->getField(L"x"), blk->x, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
 
                 /* 14 - xd */
                 if (getDoubleArray(t->getField(L"xd"), blk->xd, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
 
@@ -665,9 +644,8 @@ void sciblk4(scicos_block* blk, const int flag)
                             const int type = blk->outsz[i + blk->nout * 2];
                             if (sci2var(lout->get(i), blk->outptr[i], type, row, col) == false)
                             {
-                                t->killMe();
                                 set_block_error(-1);
-                                return;
+                                goto sciblk4_exit_free_data;
                             }
                         }
                     }
@@ -687,9 +665,8 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 40 - xprop */
                 if (getDoubleArrayAsInt(t->getField(L"xprop"), blk->xprop, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
             break;
@@ -703,9 +680,8 @@ void sciblk4(scicos_block* blk, const int flag)
             /* 33 - g */
             if (getDoubleArray(t->getField(L"g"), blk->g, blk->ng) == false)
             {
-                t->killMe();
                 set_block_error(-1);
-                return;
+                goto sciblk4_exit_free_data;
             }
 
             if (get_phase_simulation() == 1)
@@ -713,9 +689,8 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 39 - mode */
                 if (getDoubleArrayAsInt(t->getField(L"mode"), blk->mode, blk->nmode) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
             break;
@@ -730,9 +705,8 @@ void sciblk4(scicos_block* blk, const int flag)
                 /* 15 - res */
                 if (getDoubleArray(t->getField(L"res"), blk->res, blk->nx) == false)
                 {
-                    t->killMe();
                     set_block_error(-1);
-                    return;
+                    goto sciblk4_exit_free_data;
                 }
             }
             break;
@@ -741,14 +715,15 @@ void sciblk4(scicos_block* blk, const int flag)
 
     // store internal TList after the blk struct refresh
     // Note: on call_debug_scicos, the TList is always constructed/deleted
-    if (blk->scsptr == nullptr && flag != 5)
+    if (work != nullptr && flag != 5 && blk->scsptr == nullptr)
     {
         t->IncreaseRef();
         *work = t;
     }
 
-    t->killMe();
-    if (t != pITin)
+sciblk4_exit_free_data:
+    pITout->killMe();
+    if (pITout != pITin)
         pITin->killMe();
     return;
 }

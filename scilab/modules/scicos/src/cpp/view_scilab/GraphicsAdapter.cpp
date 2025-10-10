@@ -697,9 +697,15 @@ static void relink_cached(Controller& controller, model::BaseObject* adaptee, co
     std::vector<ScicosID> ports;
     controller.getObjectProperty(adaptee, p, ports);
 
-    if (cached_information.size() != ports.size())
+    if (cached_information.size() < ports.size())
     {
-        // defensive programming: unable to relink as something goes wrong on the adapters
+        // model.out contains more ports than graphics.pout ; grows with zero
+        cached_information.resize(ports.size());
+    }
+    else if (cached_information.size() > ports.size() && cached_information != partial_port_t::value_type(cached_information.size()))
+    {
+        // defensive programming: there is more connections than ports
+        // error out as something goes wrong on the adapters
         std::string property_name, uid;
         resolve_log_information(controller, adaptee, p, property_name, uid);
         get_or_allocate_logger()->log(LOG_ERROR, _("Wrong number of \"%s\" ports for Block #%d - \"%s\" : %d expected.\n"), property_name.c_str(), indexOf(adaptee->id(), children), uid.c_str(), (int) cached_information.size());
@@ -722,20 +728,10 @@ static void relink_cached(Controller& controller, model::BaseObject* adaptee, co
             model::Port* port = controller.getBaseObject<model::Port>(ports[i]);
             controller.setObjectProperty(port, CONNECTED_SIGNALS, opposite->id());
         }
-        else if (index == 0)
-        {
-            // corner case: relink to non connected block, smart-connect the links if there is enough ports.
-            // TODO: is it already done ?
-            std::string property_name, uid;
-            resolve_log_information(controller, adaptee, p, property_name, uid);
-            get_or_allocate_logger()->log(LOG_ERROR, _("Partial information in \"%s(%d)\" is unset for Block #%d - \"%s\" : a value between 1 and %d expected.\n"), property_name.c_str(), i, indexOf(adaptee->id(), children), uid.c_str(), (int) children.size());
-        }
-        else
-        {
-            std::string property_name, uid;
-            resolve_log_information(controller, adaptee, p, property_name, uid);
-            get_or_allocate_logger()->log(LOG_ERROR, _("Partial information in \"%s(%d)\" is invalid for Block #%d - \"%s\" : a value between 1 and %d expected.\n"), property_name.c_str(), i, indexOf(adaptee->id(), children), uid.c_str(), (int) children.size());
-        }
+
+        // two cases discard the relink here:
+        //  * index is set to a link not created yet, it will be resolved at link creation
+        //  * index == 0, this is a not connected ; keep it as unconnected
     }
 }
 
@@ -789,9 +785,6 @@ void GraphicsAdapter::relink(Controller& controller, model::Block* adaptee, cons
         // unable to relink as there is no information to do so
         return;
     }
-
-    std::string uid;
-    controller.getObjectProperty(adaptee, UID, uid);
     
     relink_cached(controller, adaptee, children, it->second.pin, INPUTS);
     relink_cached(controller, adaptee, children, it->second.pout, OUTPUTS);

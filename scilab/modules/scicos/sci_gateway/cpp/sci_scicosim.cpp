@@ -159,13 +159,18 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
     /************************************
     * Helper for owned values
     ************************************/
-    struct AllocatedInternals : std::vector<types::InternalType*> {
-        ~AllocatedInternals() {
-            for (types::InternalType* ptr : *this)
-            {
+    struct OutputArgument {
+        OutputArgument(types::InternalType* p, const types::typed_list &out) : ptr(p), outputs(out) {}
+
+        ~OutputArgument() {
+            auto it = std::find(outputs.begin(), outputs.end(), ptr);
+            if (it == outputs.end()) {
                 ptr->killMe();
             }
         };
+
+        types::InternalType* ptr;
+        const types::typed_list &outputs;
     };
     struct UTF8AllocatedStrings : std::vector<char*> {
         ~UTF8AllocatedStrings() {
@@ -175,9 +180,31 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
             }
         };
     };
-    
-    AllocatedInternals allocatedInternals;
+    struct AllocatedArray : std::vector<double*> {
+        ~AllocatedArray() {
+            for (double* ptr : *this)
+            {
+                delete[] ptr;
+            }
+        };
+    };
+    struct ConvertToInteger {
+        ConvertToInteger(types::Double* v) : ptr(v)
+        {
+            ptr->convertToInteger();
+        }
+        ~ConvertToInteger() {
+            ptr->convertFromInteger();
+        }
+        int* get() {
+            return (int*) ptr->get();
+        }
+        
+        types::Double* ptr;
+    };
+
     UTF8AllocatedStrings allocatedStrings;
+    AllocatedArray allocatedArray;
     
     /************************************
     * Variables and constants definition
@@ -207,118 +234,106 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
         Scierror(999, _("%s: Wrong type for input argument #%d : A tlist expected.\n"), funname.data(), 1);
         return types::Function::Error;
     }
-    types::TList* il_state_input = in[0]->getAs<types::TList>();
-    types::TList* il_state = new types::TList();
-    allocatedInternals.push_back(il_state);
-    
-    if (il_state_input->getSize() < 9)
+    types::TList* il_state = in[0]->getAs<types::TList>();
+    if (il_state->getSize() < 9)
     {
         Scierror(999, _("%s: Wrong size for input argument #%d : %d elements expected.\n"), funname.data(), 1, 9);
         return types::Function::Error;
     }
 
+    // make a deep copy as the state is modified by the function and we need to return it
+    il_state = il_state->clone();
+    OutputArgument il_state_out(il_state, out);
+    
     // Make a copy of 'il_state' in a global variabe
-    set_il_state(il_state_input);
-
-    types::String* header_state = il_state_input->get(0)->getAs<types::String>();
-    il_state->append(header_state->clone());
+    set_il_state(il_state);
 
     /*2 : state.x      */
-    if (il_state_input->get(1)->isDouble() == false)
+    if (il_state->get(1)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 2, 1);
         return types::Function::Error;
     }
-    types::Double* il_state_x_input = il_state_input->get(1)->getAs<types::Double>();
-    il_state->append(il_state_x_input->clone());
-    types::Double* il_state_x = il_state->get(1)->getAs<types::Double>();
+    types::Double* il_state_x = il_state->get(1)->getAs<types::Double>()->clone();
+    il_state->set(1, il_state_x);
     double* l_state_x = il_state_x->get();
     
     /*3 : state.z      */
-    if (il_state_input->get(2)->isDouble() == false)
+    if (il_state->get(2)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 3, 1);
         return types::Function::Error;
     }
-    types::Double* il_state_z_input = il_state_input->get(2)->getAs<types::Double>();
-    il_state->append(il_state_z_input->clone());
-    types::Double* il_state_z = il_state->get(2)->getAs<types::Double>();
+    types::Double* il_state_z = il_state->get(2)->getAs<types::Double>()->clone();
+    il_state->set(2, il_state_z);
     double* l_state_z = il_state_z->get();
 
     /*4 : state.oz     */
-    types::List* il_state_oz_input = il_state_input->get(3)->getAs<types::List>();
-    types::List* il_state_oz = new types::List();
-    for (int i = 0; i < il_state_oz_input->getSize(); ++i)
+    types::List* il_state_oz = il_state->get(3)->getAs<types::List>()->clone();
+    for (int i = 0; i < il_state_oz->getSize(); i++)
     {
-        types::InternalType* l_state_oz_input = il_state_oz_input->get(i);
-        il_state_oz->append(l_state_oz_input->clone());
+        il_state_oz->set(i, il_state_oz->get(i)->clone());
     }
-    il_state->append(il_state_oz);
+    il_state->set(3, il_state_oz);
     int noz = il_state_oz->getSize(); // 'nlnk' is the dimension of the list 'state.oz'
 
     /*5 : state.iz     */
-    if (il_state_input->get(4)->isDouble() == false)
+    if (il_state->get(4)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 5, 1);
         return types::Function::Error;
     }
-    types::Double* il_state_iz_input = il_state_input->get(4)->getAs<types::Double>();
-    il_state->append(il_state_iz_input->clone());
-    types::Double* il_state_iz = il_state->get(4)->getAs<types::Double>();
+    types::Double* il_state_iz = il_state->get(4)->getAs<types::Double>()->clone();
+    il_state->set(4, il_state_iz);
     void** l_state_iz = (void**) il_state_iz->get();
     int m1e5 = il_state_iz->getRows();
 
     /*6 : state.tevts  */
-    if (il_state_input->get(5)->isDouble() == false)
+    if (il_state->get(5)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 6, 1);
         return types::Function::Error;
     }
-    types::Double* il_state_tevts_input = il_state_input->get(5)->getAs<types::Double>();
-    il_state->append(il_state_tevts_input->clone());
-    types::Double* il_state_tevts = il_state->get(5)->getAs<types::Double>();
+    types::Double* il_state_tevts = il_state->get(5)->getAs<types::Double>()->clone();
+    il_state->set(5, il_state_tevts);
     double* l_state_tevts = il_state_tevts->get();
     int m1e6 = il_state_tevts->getRows();
 
     /*7 : state.evtspt */
-    if (il_state_input->get(6)->isDouble() == false)
+    if (il_state->get(6)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 7, 1);
         return types::Function::Error;
     }
-    types::Double* il_state_evtspt_input = il_state_input->get(6)->getAs<types::Double>();
-    il_state->append(il_state_evtspt_input->clone());
-    types::Double* il_state_evtspt = il_state->get(6)->getAs<types::Double>();
-    il_state_evtspt->convertToInteger();
-    int* l_state_evtspt = (int*) il_state_evtspt->get();
+    types::Double* il_state_evtspt = il_state->get(6)->getAs<types::Double>()->clone();
+    il_state->set(6, il_state_evtspt);
+    ConvertToInteger _state_evtspt(il_state_evtspt);
+    int* l_state_evtspt = _state_evtspt.get();
     int m1e7 = il_state_evtspt->getRows();
 
     /*8 : state.pointi */
-    if (il_state_input->get(7)->isDouble() == false)
+    if (il_state->get(7)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 8, 1);
         return types::Function::Error;
     }
-    types::Double* il_pointi_input = il_state_input->get(7)->getAs<types::Double>();
-    il_state->append(il_pointi_input->clone());
-    types::Double* il_pointi = il_state->get(7)->getAs<types::Double>();
-    il_pointi->convertToInteger();
-    int* l_pointi = (int*) il_pointi->get();
+    types::Double* il_pointi = il_state->get(7)->getAs<types::Double>()->clone();
+    il_state->set(7, il_pointi);
+    ConvertToInteger _pointi(il_pointi);
+    int* l_pointi = _pointi.get();
 
     /*9 : state.outtb  */
-    if (il_state_input->get(8)->isList() == false)
+    if (il_state->get(8)->isList() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A list expected.\n"), funname.data(), 9, 1);
         return types::Function::Error;
     }
-    types::List* il_state_outtb_input = il_state_input->get(8)->getAs<types::List>();
-    types::List* il_state_outtb = new types::List();
-    for (int i = 0; i < il_state_outtb_input->getSize(); ++i)
+    types::List* il_state_outtb = il_state->get(8)->getAs<types::List>()->clone();
+    for (int i = 0; i < il_state_outtb->getSize(); i++)
     {
-        types::InternalType* l_state_outtb_input = il_state_outtb_input->get(i);
-        il_state_outtb->append(l_state_outtb_input->clone());
+        il_state_outtb->set(i, il_state_outtb->get(i)->clone());
     }
-    il_state->append(il_state_outtb);
+    il_state->set(8, il_state_outtb);
     int nlnk = il_state_outtb->getSize(); // 'nlnk' is the dimension of the list 'state.outtb'
 
     /***************
@@ -329,14 +344,14 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
         Scierror(999, _("%s: Wrong type for input argument #%d : A matrix expected.\n"), funname.data(), 2);
         return types::Function::Error;
     }
-    types::Double* il_tcur_input = in[1]->getAs<types::Double>();
-    types::Double* il_tcur = il_tcur_input->clone()->getAs<types::Double>();
-    allocatedInternals.push_back(il_tcur);
+    types::Double* il_tcur = in[1]->getAs<types::Double>();
     if (il_tcur->isScalar() == false)
     {
         Scierror(999, _("%s: Wrong size for input argument #%d : A scalar expected.\n"), funname.data(), 2);
         return types::Function::Error;
     }
+    il_tcur = il_tcur->clone();
+    OutputArgument il_tcur_out(il_tcur, out);
     double* l_tcur = il_tcur->get();
 
     /*************
@@ -363,329 +378,266 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
         Scierror(999, _("%s: Wrong type for input argument #%d : A tlist expected.\n"), funname.data(), 4);
         return types::Function::Error;
     }
-    types::TList* il_sim_input = in[3]->getAs<types::TList>();
-    types::TList* il_sim = new types::TList();
-    allocatedInternals.push_back(il_sim);
+    types::TList* il_sim = in[3]->getAs<types::TList>();
+    
+    // Make a copy of 'il_sim' in a global variable
+    set_il_sim(il_sim);
 
-    // Make a copy of 'il_sim' in a global variabe
-    set_il_sim(il_sim_input);
-
-    if (il_sim_input->getSize() < 34)
+    if (il_sim->getSize() < 34)
     {
         Scierror(999, _("%s: Wrong size for input argument #%d : %d elements expected.\n"), funname.data(), 4, 34);
         return types::Function::Error;
     }
 
-    types::String* header_sim = il_sim_input->get(0)->getAs<types::String>();
-    il_sim->append(header_sim->clone());
-
     /*2  : sim.funs*/
-    if (il_sim_input->get(1)->isList() == false)
+    if (il_sim->get(1)->isList() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A list expected.\n"), funname.data(), 2, 4);
         return types::Function::Error;
     }
-    types::List* il_sim_fun_input = il_sim_input->get(1)->getAs<types::List>();
-    types::List* il_sim_fun = new types::List();
-    for (int i = 0; i < il_sim_fun_input->getSize(); ++i)
-    {
-        types::InternalType* l_sim_fun_input = il_sim_fun_input->get(i);
-        il_sim_fun->append(l_sim_fun_input->clone());
-    }
-    il_sim->append(il_sim_fun);
+    types::List* il_sim_fun = il_sim->get(1)->getAs<types::List>();
     int nblk = il_sim_fun->getSize(); // 'nblk' is the dimension of the list 'sim.funs'
 
     /*3  : sim.xptr   */
-    if (il_sim_input->get(2)->isDouble() == false)
+    if (il_sim->get(2)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 3, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_xptr_input = il_sim_input->get(2)->getAs<types::Double>();
-    il_sim->append(il_sim_xptr_input->clone());
     types::Double* il_sim_xptr = il_sim->get(2)->getAs<types::Double>();
-    il_sim_xptr->convertToInteger();
-    int* l_sim_xptr = (int*) il_sim_xptr->get();
+    ConvertToInteger _sim_xptr(il_sim_xptr);
+    int* l_sim_xptr = _sim_xptr.get();
     int m_xptr = il_sim_xptr->getRows();
 
     /*4  : sim.zptr   */
-    if (il_sim_input->get(3)->isDouble() == false)
+    if (il_sim->get(3)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 4, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_zptr_input = il_sim_input->get(3)->getAs<types::Double>();
-    il_sim->append(il_sim_zptr_input->clone());
     types::Double* il_sim_zptr = il_sim->get(3)->getAs<types::Double>();
-    il_sim_zptr->convertToInteger();
-    int* l_sim_zptr = (int*) il_sim_zptr->get();
+    ConvertToInteger _sim_zptr(il_sim_zptr);
+    int* l_sim_zptr = _sim_zptr.get();
     int m_zptr = il_sim_zptr->getRows();
 
     /*5  : sim.ozptr   */
-    if (il_sim_input->get(4)->isDouble() == false)
+    if (il_sim->get(4)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 5, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ozptr_input = il_sim_input->get(4)->getAs<types::Double>();
-    il_sim->append(il_sim_ozptr_input->clone());
     types::Double* il_sim_ozptr = il_sim->get(4)->getAs<types::Double>();
-    il_sim_ozptr->convertToInteger();
-    int* l_sim_ozptr = (int*) il_sim_ozptr->get();
+    ConvertToInteger _sim_ozptr(il_sim_ozptr);
+    int* l_sim_ozptr = _sim_ozptr.get();
     int m_ozptr = il_sim_ozptr->getRows();
 
     /*6  : sim.zcptr  */
-    if (il_sim_input->get(5)->isDouble() == false)
+    if (il_sim->get(5)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 6, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_zcptr_input = il_sim_input->get(5)->getAs<types::Double>();
-    il_sim->append(il_sim_zcptr_input->clone());
     types::Double* il_sim_zcptr = il_sim->get(5)->getAs<types::Double>();
-    il_sim_zcptr->convertToInteger();
-    int* l_sim_zcptr = (int*) il_sim_zcptr->get();
+    ConvertToInteger _sim_zcptr(il_sim_zcptr);
+    int* l_sim_zcptr = _sim_zcptr.get();
     int m_zcptr = il_sim_zcptr->getRows();
 
     /*7  : sim.inpptr */
-    if (il_sim_input->get(6)->isDouble() == false)
+    if (il_sim->get(6)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 7, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_inpptr_input = il_sim_input->get(6)->getAs<types::Double>();
-    il_sim->append(il_sim_inpptr_input->clone());
     types::Double* il_sim_inpptr = il_sim->get(6)->getAs<types::Double>();
-    il_sim_inpptr->convertToInteger();
-    int* l_sim_inpptr = (int*) il_sim_inpptr->get();
+    ConvertToInteger _sim_inpptr(il_sim_inpptr);
+    int* l_sim_inpptr = _sim_inpptr.get();
     int m_inpptr = il_sim_inpptr->getRows();
 
     /*8  : sim.outptr */
-    if (il_sim_input->get(7)->isDouble() == false)
+    if (il_sim->get(7)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 8, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_outpptr_input = il_sim_input->get(7)->getAs<types::Double>();
-    il_sim->append(il_sim_outpptr_input->clone());
     types::Double* il_sim_outptr = il_sim->get(7)->getAs<types::Double>();
-    il_sim_outptr->convertToInteger();
-    int* l_sim_outptr = (int*) il_sim_outptr->get();
+    ConvertToInteger _sim_outptr(il_sim_outptr);
+    int* l_sim_outptr = _sim_outptr.get();
     int m_outptr = il_sim_outptr->getRows();
 
     /*9  : sim.inplnk */
-    if (il_sim_input->get(8)->isDouble() == false)
+    if (il_sim->get(8)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 9, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_inplnk_input = il_sim_input->get(8)->getAs<types::Double>();
-    il_sim->append(il_sim_inplnk_input->clone());
     types::Double* il_sim_inplnk = il_sim->get(8)->getAs<types::Double>();
-    il_sim_inplnk->convertToInteger();
-    int* l_sim_inplnk = (int*) il_sim_inplnk->get();
+    ConvertToInteger _sim_inplnk(il_sim_inplnk);
+    int* l_sim_inplnk = _sim_inplnk.get();
 
     /*10  : sim.outlnk */
-    if (il_sim_input->get(9)->isDouble() == false)
+    if (il_sim->get(9)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 10, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_outlnk_input = il_sim_input->get(9)->getAs<types::Double>();
-    il_sim->append(il_sim_outlnk_input->clone());
     types::Double* il_sim_outlnk = il_sim->get(9)->getAs<types::Double>();
-    il_sim_outlnk->convertToInteger();
-    int* l_sim_outlnk = (int*) il_sim_outlnk->get();
+    ConvertToInteger _sim_outlnk(il_sim_outlnk);
+    int* l_sim_outlnk = _sim_outlnk.get();
 
     /*11 : sim.rpar   */
-    if (il_sim_input->get(10)->isDouble() == false)
+    if (il_sim->get(10)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 11, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_rpar_input = il_sim_input->get(10)->getAs<types::Double>();
-    il_sim->append(il_sim_rpar_input->clone());
     types::Double* il_sim_rpar = il_sim->get(10)->getAs<types::Double>();
     double* l_sim_rpar = il_sim_rpar->get();
 
     /*12 : sim.rpptr  */
-    if (il_sim_input->get(11)->isDouble() == false)
+    if (il_sim->get(11)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 12, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_rpptr_input = il_sim_input->get(11)->getAs<types::Double>();
-    il_sim->append(il_sim_rpptr_input->clone());
     types::Double* il_sim_rpptr = il_sim->get(11)->getAs<types::Double>();
-    il_sim_rpptr->convertToInteger();
-    int* l_sim_rpptr = (int*) il_sim_rpptr->get();
+    ConvertToInteger _sim_rpptr(il_sim_rpptr);
+    int* l_sim_rpptr = _sim_rpptr.get();
     int m_rpptr = il_sim_rpptr->getRows();
 
     /*13 : sim.ipar   */
-    if (il_sim_input->get(12)->isDouble() == false)
+    if (il_sim->get(12)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 13, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ipar_input = il_sim_input->get(12)->getAs<types::Double>();
-    il_sim->append(il_sim_ipar_input->clone());
     types::Double* il_sim_ipar = il_sim->get(12)->getAs<types::Double>();
-    il_sim_ipar->convertToInteger();
-    int* l_sim_ipar = (int*) il_sim_ipar->get();
+    ConvertToInteger _sim_ipar(il_sim_ipar);
+    int* l_sim_ipar = _sim_ipar.get();
 
     /*14 : sim.ipptr  */
-    if (il_sim_input->get(13)->isDouble() == false)
+    if (il_sim->get(13)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 14, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ipptr_input = il_sim_input->get(13)->getAs<types::Double>();
-    il_sim->append(il_sim_ipptr_input->clone());
     types::Double* il_sim_ipptr = il_sim->get(13)->getAs<types::Double>();
-    il_sim_ipptr->convertToInteger();
-    int* l_sim_ipptr = (int*) il_sim_ipptr->get();
+    ConvertToInteger _sim_ipptr(il_sim_ipptr);
+    int* l_sim_ipptr = _sim_ipptr.get();
     int m_ipptr = il_sim_ipptr->getRows();
 
     /*15 : sim.opar   */
-    if (il_sim_input->get(14)->isList() == false)
+    if (il_sim->get(14)->isList() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A list expected.\n"), funname.data(), 15, 4);
         return types::Function::Error;
     }
-    types::List* il_sim_opar_input = il_sim_input->get(14)->getAs<types::List>();
-    types::List* il_sim_opar = new types::List();
-    for (int i = 0; i < il_sim_opar_input->getSize(); ++i)
-    {
-        types::InternalType* l_sim_opar_input = il_sim_opar_input->get(i);
-        il_sim_opar->append(l_sim_opar_input->clone());
-    }
-    il_sim->append(il_sim_opar);
+    types::List* il_sim_opar = il_sim->get(14)->getAs<types::List>();
     int nopar = il_sim_opar->getSize(); // 'nopar' is the dimension of the list 'sim.opar'
 
     /*16 : sim.opptr  */
-    if (il_sim_input->get(15)->isDouble() == false)
+    if (il_sim->get(15)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 16, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_opptr_input = il_sim_input->get(15)->getAs<types::Double>();
-    il_sim->append(il_sim_opptr_input->clone());
     types::Double* il_sim_opptr = il_sim->get(15)->getAs<types::Double>();
-    il_sim_opptr->convertToInteger();
-    int* l_sim_opptr = (int*) il_sim_opptr->get();
+    ConvertToInteger _sim_opptr(il_sim_opptr);
+    int* l_sim_opptr = _sim_opptr.get();
     int m_opptr = il_sim_opptr->getRows();
 
     /*17 : sim.clkptr */
-    if (il_sim_input->get(16)->isDouble() == false)
+    if (il_sim->get(16)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 17, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_clkptr_input = il_sim_input->get(16)->getAs<types::Double>();
-    il_sim->append(il_sim_clkptr_input->clone());
     types::Double* il_sim_clkptr = il_sim->get(16)->getAs<types::Double>();
-    il_sim_clkptr->convertToInteger();
-    int* l_sim_clkptr = (int*) il_sim_clkptr->get();
+    ConvertToInteger _sim_clkptr(il_sim_clkptr);
+    int* l_sim_clkptr = _sim_clkptr.get();
     int m_clkptr = il_sim_clkptr->getRows();
 
     /*18 : sim.ordptr */
-    if (il_sim_input->get(17)->isDouble() == false)
+    if (il_sim->get(17)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 18, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ordptr_input = il_sim_input->get(17)->getAs<types::Double>();
-    il_sim->append(il_sim_ordptr_input->clone());
     types::Double* il_sim_ordptr = il_sim->get(17)->getAs<types::Double>();
-    il_sim_ordptr->convertToInteger();
-    int* l_sim_ordptr = (int*) il_sim_ordptr->get();
+    ConvertToInteger _sim_ordptr(il_sim_ordptr);
+    int* l_sim_ordptr = _sim_ordptr.get();
     int m_ordptr = il_sim_ordptr->getRows();
 
     /*19 : sim.execlk */
-    if (il_sim_input->get(18)->isDouble() == false)
+    if (il_sim->get(18)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 19, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_execlk_input = il_sim_input->get(18)->getAs<types::Double>();
-    il_sim->append(il_sim_execlk_input->clone());
-
+    
     /*20 : sim.ordclk */
-    if (il_sim_input->get(19)->isDouble() == false)
+    if (il_sim->get(19)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 20, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ordclk_input = il_sim_input->get(19)->getAs<types::Double>();
-    il_sim->append(il_sim_ordclk_input->clone());
     types::Double* il_sim_ordclk = il_sim->get(19)->getAs<types::Double>();
-    il_sim_ordclk->convertToInteger();
-    int* l_sim_ordclk = (int*) il_sim_ordclk->get();
+    ConvertToInteger _sim_ordclk(il_sim_ordclk);
+    int* l_sim_ordclk = _sim_ordclk.get();
     int m_ordclk = il_sim_ordclk->getRows();
     int n_ordclk = il_sim_ordclk->getCols();
 
     /*21 : sim.cord   */
-    if (il_sim_input->get(20)->isDouble() == false)
+    if (il_sim->get(20)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 21, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_cord_input = il_sim_input->get(20)->getAs<types::Double>();
-    il_sim->append(il_sim_cord_input->clone());
     types::Double* il_sim_cord = il_sim->get(20)->getAs<types::Double>();
-    il_sim_cord->convertToInteger();
-    int* l_sim_cord = (int*) il_sim_cord->get();
+    ConvertToInteger _sim_cord(il_sim_cord);
+    int* l_sim_cord = _sim_cord.get();
     int m_cord = il_sim_cord->getRows();
     int n_cord = il_sim_cord->getCols();
 
     /*22 : sim.oord   */
-    if (il_sim_input->get(21)->isDouble() == false)
+    if (il_sim->get(21)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 22, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_oord_input = il_sim_input->get(21)->getAs<types::Double>();
-    il_sim->append(il_sim_oord_input->clone());
     types::Double* il_sim_oord = il_sim->get(21)->getAs<types::Double>();
-    il_sim_oord->convertToInteger();
-    int* l_sim_oord = (int*) il_sim_oord->get();
+    ConvertToInteger _sim_oord(il_sim_oord);
+    int* l_sim_oord = _sim_oord.get();
     int m_oord = il_sim_oord->getRows();
     int n_oord = il_sim_oord->getCols();
 
     /*23 : sim.zord   */
-    if (il_sim_input->get(22)->isDouble() == false)
+    if (il_sim->get(22)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 23, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_zord_input = il_sim_input->get(22)->getAs<types::Double>();
-    il_sim->append(il_sim_zord_input->clone());
     types::Double* il_sim_zord = il_sim->get(22)->getAs<types::Double>();
-    il_sim_zord->convertToInteger();
-    int* l_sim_zord = (int*) il_sim_zord->get();
+    ConvertToInteger _sim_zord(il_sim_zord);
+    int* l_sim_zord = _sim_zord.get();
     int m_zord = il_sim_zord->getRows();
     int n_zord = il_sim_zord->getCols();
 
     /*24 : sim.critev */
-    if (il_sim_input->get(23)->isDouble() == false)
+    if (il_sim->get(23)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 24, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_critev_input = il_sim_input->get(23)->getAs<types::Double>();
-    il_sim->append(il_sim_critev_input->clone());
     types::Double* il_sim_critev = il_sim->get(23)->getAs<types::Double>();
-    il_sim_critev->convertToInteger();
-    int* l_sim_critev = (int*) il_sim_critev->get();
+    ConvertToInteger _sim_critev(il_sim_critev);
+    int* l_sim_critev = _sim_critev.get();
 
     /*25 : sim.nb     */
-    if (il_sim_input->get(24)->isDouble() == false)
+    if (il_sim->get(24)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 25, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_nb_input = il_sim_input->get(24)->getAs<types::Double>();
-    il_sim->append(il_sim_nb_input->clone());
     types::Double* il_sim_nb = il_sim->get(24)->getAs<types::Double>();
     double* l_sim_nb = il_sim_nb->get();
 
@@ -696,82 +648,67 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
     }
 
     /*26 : sim.ztyp   */
-    if (il_sim_input->get(25)->isDouble() == false)
+    if (il_sim->get(25)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 26, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ztyp_input = il_sim_input->get(25)->getAs<types::Double>();
-    il_sim->append(il_sim_ztyp_input->clone());
     types::Double* il_sim_ztyp = il_sim->get(25)->getAs<types::Double>();
-    il_sim_ztyp->convertToInteger();
-    int* l_sim_ztyp = (int*) il_sim_ztyp->get();
+    ConvertToInteger _sim_ztyp(il_sim_ztyp);
+    int* l_sim_ztyp = _sim_ztyp.get();
 
     /*27 : sim.nblk   */
-    if (il_sim_input->get(26)->isDouble() == false)
+    if (il_sim->get(26)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 27, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_nblk_input = il_sim_input->get(26)->getAs<types::Double>();
-    il_sim->append(il_sim_nblk_input->clone());
-
+    
     /*28 : sim.ndcblk */
-    if (il_sim_input->get(27)->isDouble() == false)
+    if (il_sim->get(27)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 28, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_ndcblk_input = il_sim_input->get(27)->getAs<types::Double>();
-    il_sim->append(il_sim_ndcblk_input->clone());
-
+    
     /*29 : sim.subscr */
-    if (il_sim_input->get(28)->isDouble() == false)
+    if (il_sim->get(28)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 29, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_subscr_input = il_sim_input->get(28)->getAs<types::Double>();
-    il_sim->append(il_sim_subscr_input->clone());
     types::Double* il_sim_subscr = il_sim->get(28)->getAs<types::Double>();
-    il_sim_subscr->convertToInteger();
-    int* l_sim_subscr = (int*) il_sim_subscr->get();
+    ConvertToInteger _sim_subscr(il_sim_subscr);
+    int* l_sim_subscr = _sim_subscr.get();
     int m_subscr = il_sim_subscr->getRows();
 
     /*30 : sim.funtyp */
-    if (il_sim_input->get(29)->isDouble() == false)
+    if (il_sim->get(29)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 30, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_funtyp_input = il_sim_input->get(29)->getAs<types::Double>();
-    il_sim->append(il_sim_funtyp_input->clone());
     types::Double* il_sim_funtyp = il_sim->get(29)->getAs<types::Double>();
-    il_sim_funtyp->convertToInteger();
-    int* l_sim_funtyp = (int*) il_sim_funtyp->get();
+    double* l_sim_funtyp = il_sim_funtyp->get();
 
     /*31 : sim.iord   */
-    if (il_sim_input->get(30)->isDouble() == false)
+    if (il_sim->get(30)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 31, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_iord_input = il_sim_input->get(30)->getAs<types::Double>();
-    il_sim->append(il_sim_iord_input->clone());
     types::Double* il_sim_iord = il_sim->get(30)->getAs<types::Double>();
-    il_sim_iord->convertToInteger();
-    int* l_sim_iord = (int*) il_sim_iord->get();
+    ConvertToInteger _sim_iord(il_sim_iord);
+    int* l_sim_iord = _sim_iord.get();
     int m_iord = il_sim_iord->getRows();
     int n_iord = il_sim_iord->getCols();
 
     /*32 : sim.labels */
-    if (il_sim_input->get(31)->isString() == false)
+    if (il_sim->get(31)->isString() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A string matrix expected.\n"), funname.data(), 32, 4);
         return types::Function::Error;
     }
-    types::String* il_sim_lab_input = il_sim_input->get(31)->getAs<types::String>();
-    il_sim->append(il_sim_lab_input->clone());
     types::String* il_sim_lab = il_sim->get(31)->getAs<types::String>();
     std::vector<int> il_sim_labptr(il_sim_lab->getSize(), 0);
     std::vector<char*> l_sim_lab(il_sim_lab->getSize(), nullptr);
@@ -783,25 +720,21 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
     }
 
     /*33 : sim.modptr */
-    if (il_sim_input->get(32)->isDouble() == false)
+    if (il_sim->get(32)->isDouble() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A matrix expected.\n"), funname.data(), 33, 4);
         return types::Function::Error;
     }
-    types::Double* il_sim_modptr_input = il_sim_input->get(32)->getAs<types::Double>();
-    il_sim->append(il_sim_modptr_input->clone());
     types::Double* il_sim_modptr = il_sim->get(32)->getAs<types::Double>();
-    il_sim_modptr->convertToInteger();
-    int* l_sim_modptr = (int*) il_sim_modptr->get();
+    ConvertToInteger _sim_modptr(il_sim_modptr);
+    int* l_sim_modptr = _sim_modptr.get();
 
     /*34 : sim.uids */
-    if (il_sim_input->get(33)->isString() == false)
+    if (il_sim->get(33)->isString() == false)
     {
         Scierror(999, _("%s: Wrong type for element #%d of argument #%d : A string matrix expected.\n"), funname.data(), 34, 4);
         return types::Function::Error;
     }
-    types::String* il_sim_uid_input = il_sim_input->get(33)->getAs<types::String>();
-    il_sim->append(il_sim_uid_input->clone());
     types::String* il_sim_uid = il_sim->get(33)->getAs<types::String>();
     std::vector<int> il_sim_uidptr(il_sim_uid->getSize(), 0);
     std::vector<char*> l_sim_uid(il_sim_uid->getSize(), nullptr);
@@ -964,6 +897,7 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
     *******************************/
     // Define new variable 'lfunpt'
     std::vector<voidg> lfunpt(nblk, nullptr);
+    std::vector<int> lfuntyp(nblk, 0);
     for (int i = 0; i < nblk; ++i) // For each block
     {
         types::InternalType* pIT = il_sim_fun->get(i);
@@ -971,10 +905,11 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
         if (pIT->isCallable())
         {
             lfunpt[i] = (voidg)pIT;
+            lfuntyp[i] = (int) l_sim_funtyp[i];
             // Keep 'l_sim_funtyp' negative for Scilab macros
-            if (l_sim_funtyp[i] > 0)
+            if (lfuntyp[i] > 0)
             {
-                l_sim_funtyp[i] *= -1;
+                lfuntyp[i] *= -1;
             }
         }
         // Block is defined by a function described by a string
@@ -991,11 +926,11 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
             char* c_str = wide_string_to_UTF8(w_str);
             if (strcmp(c_str, "ifthel") == 0)
             {
-                l_sim_funtyp[i] = 11; // Magic value for "if-then-else" block
+                lfuntyp[i] = 11; // Magic value for "if-then-else" block
             }
             else if (strcmp(c_str, "eselect") == 0)
             {
-                l_sim_funtyp[i] = 12; // Magic value for "eselect" block
+                lfuntyp[i] = 12; // Magic value for "eselect" block
             }
             else
             {
@@ -1005,10 +940,11 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                 {
                     // C interface from "tabsim" defined in blocks.h
                     lfunpt[i] = f;
-                    if (l_sim_funtyp[i] < 0)
+                    lfuntyp[i] = (int) l_sim_funtyp[i];
+                    if (lfuntyp[i] < 0)
                     {
                         // Keep 'l_sim_funtyp' positive for Fortran functions
-                        l_sim_funtyp[i] *= -1;
+                        lfuntyp[i] *= -1;
                     }
                 }
                 // Block is defined by a predefined scilab function
@@ -1019,6 +955,7 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                     {
                         //linked functions
                         lfunpt[i] = (voidg) pEP->functionPtr;
+                        lfuntyp[i] = (int) l_sim_funtyp[i];
                     }
                     else
                     {
@@ -1027,7 +964,7 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                         {
                             //macros
                             lfunpt[i] = (voidg) pMacro;
-                            l_sim_funtyp[i] *= -1;
+                            lfuntyp[i] = -1 * (int) l_sim_funtyp[i];
                         }
                         else
                         {
@@ -1173,7 +1110,9 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                         // Allocate a long array in order to make the real and complex parts contiguous (oparDouble->get() and oparDouble->getImg())
                         try
                         {
-                            opar[j] = new double[2 * oparDouble->getSize()];
+                            double* copied = new double[2 * oparDouble->getSize()];
+                            opar[j] = copied;
+                            allocatedArray.push_back(copied);
                         }
                         catch (const std::bad_alloc& /*e*/)
                         {
@@ -1182,7 +1121,6 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                         }
                         memcpy(opar[j], oparDouble->get(), oparDouble->getSize() * sizeof(double)); // Real part
                         memcpy((double*)(opar[j]) + oparDouble->getSize(), oparDouble->getImg(), oparDouble->getSize() * sizeof(double)); // Complex part
-                        // FIXME: delete oparDouble because we copied it instead of using it?
                     }
                     oparsz[j] = oparDouble->getRows();
                     oparsz[j + nopar] = oparDouble->getCols();
@@ -1301,7 +1239,9 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                         // Allocate a long array in order to make the real and complex parts contiguous (outtbDouble->get() and outtbDouble->getImg())
                         try
                         {
-                            outtbptr[j] = new double[2 * outtbDouble->getSize()];
+                            double* copied = new double[2 * outtbDouble->getSize()];
+                            outtbptr[j] = copied;
+                            allocatedArray.push_back(copied);
                         }
                         catch (const std::bad_alloc& /*e*/)
                         {
@@ -1310,7 +1250,6 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                         }
                         memcpy(outtbptr[j], outtbDouble->get(), outtbDouble->getSize() * sizeof(double)); // Real part
                         memcpy((double*)(outtbptr[j]) + outtbDouble->getSize(), outtbDouble->getImg(), outtbDouble->getSize() * sizeof(double)); // Complex part
-                        // FIXME: delete outtbDouble because we copied it instead of using it?
                     }
                     outtbsz[j] = outtbDouble->getRows();
                     outtbsz[j + nlnk] = outtbDouble->getCols();
@@ -1422,7 +1361,7 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                 l_tf, l_state_tevts, l_state_evtspt,
                 &m1e5, l_pointi, outtbptr.data(), outtbsz.data(), outtbtyp.data(),
                 outtb_elem.data(), &nelem, &nlnk,
-                lfunpt.data(), l_sim_funtyp, l_sim_inpptr,
+                lfunpt.data(), lfuntyp.data(), l_sim_inpptr,
                 l_sim_outptr, l_sim_inplnk, l_sim_outlnk,
                 l_sim_rpar, l_sim_rpptr, l_sim_ipar, l_sim_ipptr,
                 opar.data(), oparsz.data(), opartyp.data(), l_sim_opptr,
@@ -1433,6 +1372,9 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
                 l_sim_critev, &nblk, l_sim_ztyp,
                 l_sim_zcptr, l_sim_subscr, &m_subscr,
                 simpar, &flag, &ierr);
+
+    set_il_state(nullptr);
+    set_il_sim(nullptr);
 
     /*************************************
     * Switch to appropriate message error
@@ -1588,14 +1530,7 @@ types::Function::ReturnValue sci_scicosim(types::typed_list &in, int _iRetCount,
     /*********************
     * Return Lhs variables
     *********************/
-    // Convert integer parameters of 'il_state' into double parameters
-    il_state_evtspt->convertFromInteger();
-    il_pointi->convertFromInteger();
 
-    // state and tcur are in the allocatedInternals owned vector, protect them from being deleted
-    allocatedInternals.erase(std::find(allocatedInternals.begin(), allocatedInternals.end(), il_state));
-    allocatedInternals.erase(std::find(allocatedInternals.begin(), allocatedInternals.end(), il_tcur));
-    
     out.push_back(il_state);
     out.push_back(il_tcur);
 

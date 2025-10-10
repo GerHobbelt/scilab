@@ -283,25 +283,31 @@ bool Model::getObjectProperty(model::BaseObject* object, object_properties_t p, 
                 std::vector<double> exprs;
                 o->getExprs(exprs);
 
-                //  * type
-                //  * number of dims
-                //  * scalar 1x1
-                //  * string length
-                //  * utf8 content \0 terminated
+                //  [0] type
+                //  [1] number of dims
+                //  [2] scalar 1x1
+                //  [3] scalar 1x1
+                //  [4] string length
+                //  [5] utf8 content \0 terminated
                 if (exprs.size() < 6)
                     return false;
                 if (exprs[0] != sci_strings)
                     return false;
-                if (exprs[1] < 2)
+                if (exprs[1] != 2)
                     return false;
-                if (exprs[2] < 1)
+                if (exprs[2] != 1)
                     return false;
-                if (exprs[3] < 1)
+                if (exprs[3] != 1)
                     return false;
                 size_t len = (size_t)exprs[4] * sizeof(double) / sizeof(char);
 
-                char* data = (char*)&(exprs[5]);
-                v.assign((char*)data, len);
+                const char* first = (const char*)&(exprs[5]);
+                const char* last = std::char_traits<char>::find(first, len, '\0');
+                if (last == nullptr || first[len -1] != '\0')
+                    // there is no \0 ending the string, ignore
+                    return false;
+                // this is a \0 terminated string, assign
+                v.assign(first, (size_t)(last - first + 1));
                 return true;
             }
             case STYLE:

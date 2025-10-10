@@ -21,6 +21,7 @@
 #include <sstream>
 #include <string>
 
+#include "scilabexception.hxx"
 #include "scilabWrite.hxx"
 extern "C"
 {
@@ -36,14 +37,10 @@ namespace org_scilab_modules_scicos
 
 static const bool USE_SCILAB_WRITE = true;
 
-LoggerView::LoggerView() : View(), m_level(LOG_WARNING), m_lastObject(ScicosID())
-{
-    m_lastObject = 0;
-}
+// set the shared buffer with non-allocating size
+LoggerView::LoggerView() : View(), m_level(LOG_WARNING), m_lastObject(ScicosID()), buffer(15, '\0') {}
 
-LoggerView::~LoggerView()
-{
-}
+LoggerView::~LoggerView() {}
 
 static std::wstring levelTable[] =
     {
@@ -95,22 +92,6 @@ const std::string LoggerView::toDisplay(enum LogLevel level)
     return "";
 }
 
-void LoggerView::log(enum LogLevel level, const std::stringstream& msg)
-{
-    if (level >= this->m_level)
-    {
-        std::string str = msg.str();
-        if (USE_SCILAB_WRITE)
-        {
-            scilabForcedWrite((LoggerView::toDisplay(level) + str).data());
-        }
-        else
-        {
-            std::cerr << LoggerView::toDisplay(level) << str;
-        }
-    }
-}
-
 void LoggerView::log(enum LogLevel level, const std::string& msg)
 {
     if (level >= this->m_level)
@@ -130,8 +111,10 @@ void LoggerView::log(enum LogLevel level, const char* msg, ...)
 {
     if (level >= this->m_level)
     {
-        const int N = 1024;
-        std::vector<char> buffer(N);
+        if (buffer.size() < N)
+        {
+            buffer.resize(N);
+        }
         char* str = buffer.data();
 
         va_list opts;
@@ -150,7 +133,7 @@ void LoggerView::log(enum LogLevel level, const char* msg, ...)
             else if (level >= LOG_ERROR)
             {
                 // map to a Scilab error
-                Scierror(-1, msg.data());
+                throw ast::InternalError(msg);
             }
             else
             {
@@ -169,7 +152,6 @@ void LoggerView::log(enum LogLevel level, const wchar_t* msg, ...)
 {
     if (level >= this->m_level)
     {
-        const int N = 1024;
         std::vector<wchar_t> buffer(N);
         wchar_t* str = buffer.data();
 
@@ -193,318 +175,150 @@ void LoggerView::log(enum LogLevel level, const wchar_t* msg, ...)
     }
 }
 
-void LoggerView::log(enum LogLevel level, const std::function<std::string(void)> format_fun)
+void LoggerView::log(enum LogLevel level, const std::function <std::to_chars_result(char* first, char* last)> to_chars_fun)
 {
     if (level >= this->m_level)
     {
-        log(level, format_fun());
+        auto result = to_chars_fun(buffer.data(), buffer.data() + buffer.size());
+        // early exit if the result is not an error
+        if (result.ec == std::errc())
+        {
+            *result.ptr = '\0';
+            if (USE_SCILAB_WRITE)
+            {
+                scilabForcedWrite(LoggerView::toDisplay(level).c_str());
+                scilabForcedWrite(buffer.data());
+            }
+            else
+            {
+                std::cerr << LoggerView::toDisplay(level) << std::string(buffer.data(), result.ptr);
+            }
+            return;
+        }
+
+        // slow case, we need to resize the string
+        while (result.ec == std::errc::value_too_large && buffer.size() < N)
+        {
+            // grow capacity (will reallocate)
+            buffer.reserve(buffer.capacity() + 1);
+            // make it available
+            buffer.resize(buffer.capacity());
+            // transform
+            result = to_chars_fun(buffer.data(), buffer.data() + buffer.size());
+        }
+
+        // handle errors
+        if (result.ec == std::errc())
+        {
+            *result.ptr = '\0';
+            if (USE_SCILAB_WRITE)
+            {
+                scilabForcedWrite(LoggerView::toDisplay(level).c_str());
+                scilabForcedWrite(buffer.data());
+            }
+            else
+            {
+                std::cerr << LoggerView::toDisplay(level) << std::string(buffer.data(), result.ptr);
+            }
+        }
+        else if (result.ec == std::errc::invalid_argument)
+        {
+            // Handle invalid argument case, e.g., log an error message
+            log(LOG_ERROR, "programming error: to_chars function called with invalid arguments");
+        }
+        else
+        {
+            std::string str = std::make_error_code(result.ec).message();
+            // Handle error case, e.g., log an error message
+            log(LOG_ERROR, "Failed to convert to_chars: error code %d \"%s\"", result.ec, str.c_str());
+        }
     }
 }
 
-void LoggerView::log(enum LogLevel level, const std::function<void(std::stringstream& msg)> format_fun)
+// operator<<-like function using to_chars(), renamed to avoid conflict with operator<<
+template<typename T>
+constexpr std::ostream& concat_with_to_chars(std::ostream& os, T t)
 {
-    if (level >= this->m_level)
+    std::string str(15, '\0');
+    auto result = to_chars(str.data(), str.data() + str.size(), t);
+    // fast non allocating case with small string optimization
+    if (result.ec == std::errc())
     {
-        std::stringstream msg;
-        format_fun(msg);
-        log(level, msg);
+        str.resize(result.ptr - str.data());
+        os << str;
+        return os;
     }
-}
-
-// generated with :
-// awk ' $2 == "//!<" {sub(",","", $1); print "case " $1 ":\n    os << \"" $1 "\";\n    break;" }' modules/scicos/includes/utilities.hxx
-
-std::ostream& operator<<(std::ostream& os, update_status_t u)
-{
-    switch (u)
+    // slow case, we need to resize the string
+    // limit the resize to 1K bytes to avoid infinite loop
+    while(result.ec == std::errc::value_too_large && str.size() < 1024)
     {
-        case SUCCESS:
-            os << "SUCCESS";
-            break;
-        case NO_CHANGES:
-            os << "NO_CHANGES";
-            break;
-        case FAIL:
-            os << "FAIL";
-            break;
+        str.resize(str.size() * 2, '\0');
+        result = to_chars(str.data(), str.data() + str.size(), t);
+    }
+    // handle errors
+    if (result.ec == std::errc())
+    {
+        str.resize(result.ptr - str.data());
+        os << str;
+        return os;
+    }
+    switch(result.ec)
+    {
+        case std::errc::invalid_argument:
+            return os << "programming error: operator<<(typename T) caller is buggy";
+        case std::errc::value_too_large:
+            return os << "programming error: operator<<(typename T) is buggy";
+        default:
+            return os << "programming error on operator<<(typename T)";
     }
     return os;
 }
 
+// explicit implementation of operator<< for kind_t
 std::ostream& operator<<(std::ostream& os, kind_t k)
 {
-    switch (k)
-    {
-        case ANNOTATION:
-            os << "ANNOTATION";
-            break;
-        case BLOCK:
-            os << "BLOCK";
-            break;
-        case DIAGRAM:
-            os << "DIAGRAM";
-            break;
-        case LINK:
-            os << "LINK";
-            break;
-        case PORT:
-            os << "PORT";
-            break;
-    }
-    return os;
+    return concat_with_to_chars(os, k);
 }
 
+// explicit implementation of operator<< for object_properties_t
 std::ostream& operator<<(std::ostream& os, object_properties_t p)
 {
-    switch (p)
-    {
-        case AUTHOR:
-            os << "AUTHOR";
-            break;
-        case CHILDREN:
-            os << "CHILDREN";
-            break;
-        case COLOR:
-            os << "COLOR";
-            break;
-        case CONNECTED_SIGNALS:
-            os << "CONNECTED_SIGNALS";
-            break;
-        case CONTROL_POINTS:
-            os << "CONTROL_POINTS";
-            break;
-        case COPYRIGHT:
-            os << "COPYRIGHT";
-            break;
-        case DATATYPE_COLS:
-            os << "DATATYPE_COLS";
-            break;
-        case DATATYPE_ROWS:
-            os << "DATATYPE_ROWS";
-            break;
-        case DATATYPE_TYPE:
-            os << "DATATYPE_TYPE";
-            break;
-        case DATATYPE:
-            os << "DATATYPE";
-            break;
-        case DEBUG_LEVEL:
-            os << "DEBUG_LEVEL";
-            break;
-        case DESCRIPTION:
-            os << "DESCRIPTION";
-            break;
-        case DESTINATION_PORT:
-            os << "DESTINATION_PORT";
-            break;
-        case DIAGRAM_CONTEXT:
-            os << "DIAGRAM_CONTEXT";
-            break;
-        case DSTATE:
-            os << "DSTATE";
-            break;
-        case EQUATIONS:
-            os << "EQUATIONS";
-            break;
-        case EVENT_INPUTS:
-            os << "EVENT_INPUTS";
-            break;
-        case EVENT_OUTPUTS:
-            os << "EVENT_OUTPUTS";
-            break;
-        case EXPRS:
-            os << "EXPRS";
-            break;
-        case FILE_VERSION:
-            os << "FILE_VERSION";
-            break;
-        case FIRING:
-            os << "FIRING";
-            break;
-        case FONT_SIZE:
-            os << "FONT_SIZE";
-            break;
-        case FONT:
-            os << "FONT";
-            break;
-        case GENERATION_DATE:
-            os << "GENERATION_DATE";
-            break;
-        case GENERATION_TOOL:
-            os << "GENERATION_TOOL";
-            break;
-        case GEOMETRY:
-            os << "GEOMETRY";
-            break;
-        case GLOBAL_SSP_ANNOTATION:
-            os << "GLOBAL_SSP_ANNOTATION";
-            break;
-        case GLOBAL_XMLNS:
-            os << "GLOBAL_XMLNS";
-            break;
-        case IMPLICIT:
-            os << "IMPLICIT";
-            break;
-        case INPUTS:
-            os << "INPUTS";
-            break;
-        case INTERFACE_FUNCTION:
-            os << "INTERFACE_FUNCTION";
-            break;
-        case IPAR:
-            os << "IPAR";
-            break;
-        case KIND:
-            os << "KIND";
-            break;
-        case LABEL:
-            os << "LABEL";
-            break;
-        case LICENSE:
-            os << "LICENSE";
-            break;
-        case NAME:
-            os << "NAME";
-            break;
-        case NMODE:
-            os << "NMODE";
-            break;
-        case NZCROSS:
-            os << "NZCROSS";
-            break;
-        case ODSTATE:
-            os << "ODSTATE";
-            break;
-        case OPAR:
-            os << "OPAR";
-            break;
-        case OUTPUTS:
-            os << "OUTPUTS";
-            break;
-        case PARAMETER_DESCRIPTION:
-            os << "PARAMETER_DESCRIPTION";
-            break;
-        case PARAMETER_ENCODING:
-            os << "PARAMETER_ENCODING";
-            break;
-        case PARAMETER_NAME:
-            os << "PARAMETER_NAME";
-            break;
-        case PARAMETER_TYPE:
-            os << "PARAMETER_TYPE";
-            break;
-        case PARAMETER_UNIT:
-            os << "PARAMETER_UNIT";
-            break;
-        case PARAMETER_VALUE:
-            os << "PARAMETER_VALUE";
-            break;
-        case PARENT_BLOCK:
-            os << "PARENT_BLOCK";
-            break;
-        case PARENT_DIAGRAM:
-            os << "PARENT_DIAGRAM";
-            break;
-        case PATH:
-            os << "PATH";
-            break;
-        case PORT_KIND:
-            os << "PORT_KIND";
-            break;
-        case PORT_NUMBER:
-            os << "PORT_NUMBER";
-            break;
-        case PORT_REFERENCE:
-            os << "PORT_REFERENCE";
-            break;
-        case PROPERTIES:
-            os << "PROPERTIES";
-            break;
-        case RELATED_TO:
-            os << "RELATED_TO";
-            break;
-        case RPAR:
-            os << "RPAR";
-            break;
-        case SIM_BLOCKTYPE:
-            os << "SIM_BLOCKTYPE";
-            break;
-        case SIM_DEP_UT:
-            os << "SIM_DEP_UT";
-            break;
-        case SIM_FUNCTION_API:
-            os << "SIM_FUNCTION_API";
-            break;
-        case SIM_FUNCTION_NAME:
-            os << "SIM_FUNCTION_NAME";
-            break;
-        case SIM_SCHEDULE:
-            os << "SIM_SCHEDULE";
-            break;
-        case SOURCE_BLOCK:
-            os << "SOURCE_BLOCK";
-            break;
-        case SOURCE_PORT:
-            os << "SOURCE_PORT";
-            break;
-        case SSP_ANNOTATION:
-            os << "SSP_ANNOTATION";
-            break;
-        case STATE:
-            os << "STATE";
-            break;
-        case STYLE:
-            os << "STYLE";
-            break;
-        case THICK:
-            os << "THICK";
-            break;
-        case UID:
-            os << "UID";
-            break;
-        case VERSION_NUMBER:
-            os << "VERSION_NUMBER";
-            break;
-        case MAX_OBJECT_PROPERTIES:
-            os << "";
-            break;
-    }
-    return os;
+    return concat_with_to_chars(os, p);
 }
 
 void LoggerView::objectCreated(const ScicosID& uid, kind_t k)
 {
-    std::stringstream ss;
-    ss << "objectCreated" << "( " << id(uid) << " , " << k << " )" << '\n';
-    log(LOG_INFO, ss);
+    log(LOG_INFO, [=](char* first, char* last) {
+        return to_chars_t(first, last) + "objectCreated( " + id(uid) + " , " + k + " )\n";
+    });
 }
 
 void LoggerView::objectReferenced(const ScicosID& uid, kind_t k, unsigned refCount)
 {
-    std::stringstream ss;
-    ss << "objectReferenced" << "( " << id(uid) << " , " << k << " ) : " << refCount << '\n';
-    log(LOG_TRACE, ss);
+    log(LOG_TRACE, [=](char* first, char* last) {
+        return to_chars_t(first, last) + "objectReferenced( " + id(uid) + " , " + k + " ) : " + refCount + "\n";
+    });
 }
 
 void LoggerView::objectUnreferenced(const ScicosID& uid, kind_t k, unsigned refCount)
 {
-    std::stringstream ss;
-    ss << "objectUnreferenced" << "( " << id(uid) << " , " << k << " ) : " << refCount << '\n';
-    log(LOG_TRACE, ss);
+    log(LOG_TRACE, [=](char* first, char* last) {
+        return to_chars_t(first, last) + "objectUnreferenced( " + id(uid) + " , " + k + " ) : " + refCount + "\n";
+    });
 }
 
 void LoggerView::objectDeleted(const ScicosID& uid, kind_t k)
 {
-    std::stringstream ss;
-    ss << "objectDeleted" << "( " << id(uid) << " , " << k << " )" << '\n';
-    log(LOG_INFO, ss);
+    log(LOG_INFO, [=](char* first, char* last) {
+        return to_chars_t(first, last) + "objectDeleted( " + id(uid) + " , " + k + " )\n";
+    });
 }
 
 void LoggerView::objectCloned(const ScicosID& uid, const ScicosID& cloned, kind_t k)
 {
-    std::stringstream ss;
-    ss << "objectCloned" << "( " << id(uid) << " , " << cloned << " , " << k << " )" << '\n';
-    log(LOG_INFO, ss);
+    log(LOG_INFO, [=](char* first, char* last) {
+        return to_chars_t(first, last) + "objectCloned( " + id(uid) + " , " + id(cloned) + " , " + k + " )\n";
+    });
 }
 
 //
@@ -639,45 +453,47 @@ static inline std::string to_string_link(Controller& controller, ScicosID uid, k
 
 void LoggerView::propertyUpdated(const ScicosID& uid, kind_t k, object_properties_t p, update_status_t u)
 {
-    std::stringstream ss;
-    ss << "propertyUpdated" << "( " << id(uid) << " , " << k << " , " << p << " ) : " << u;
+    auto to_chars_fun = [=](char* first, char* last) -> std::to_chars_result {
+        to_chars_t io(first, last);
+        
+        io = io + "propertyUpdated( " + id(uid) + " , " + k + " , " + p + " ) : " + u;
 
-    // DEBUG Controller controller;
-    // DEBUG
-    // DEBUG if (p == CHILDREN || p == INPUTS || p == OUTPUTS || p == EVENT_INPUTS || p == EVENT_OUTPUTS || p == CONNECTED_SIGNALS)
-    // DEBUG {
-    // DEBUG     std::vector<ScicosID> end;
-    // DEBUG     controller.getObjectProperty(uid, k, p, end);
-    // DEBUG     if (end.size() > 0)
-    // DEBUG     {
-    // DEBUG         ss << " [ " << end[0];
-    // DEBUG         for (auto it = end.begin() + 1; it != end.end(); ++it)
-    // DEBUG             ss << " , " << *it;
-    // DEBUG
-    // DEBUG         ss << " ]";
-    // DEBUG     }
-    // DEBUG     else
-    // DEBUG     {
-    // DEBUG         ss << " []";
-    // DEBUG     }
-    // DEBUG }
-    // DEBUG
-    // DEBUG if (p == SOURCE_PORT || p == DESTINATION_PORT || p == SOURCE_BLOCK)
-    // DEBUG {
-    // DEBUG     ScicosID end;
-    // DEBUG     controller.getObjectProperty(uid, k, p, end);
-    // DEBUG     ss << " " << end;
-    // DEBUG }
+        // DEBUG Controller controller;
+        // DEBUG if (p == CHILDREN || p == INPUTS || p == OUTPUTS || p == EVENT_INPUTS || p == EVENT_OUTPUTS || p == CONNECTED_SIGNALS)
+        // DEBUG {
+        // DEBUG     std::vector<ScicosID> end;
+        // DEBUG     controller.getObjectProperty(uid, k, p, end);
+        // DEBUG     if (end.size() > 0)
+        // DEBUG     {
+        // DEBUG         io = io + " [ " + id(end[0]);
+        // DEBUG         for (auto it = end.begin() + 1; it != end.end(); ++it)
+        // DEBUG         {
+        // DEBUG             io = io + " , " + id(*it);
+        // DEBUG         }
+        // DEBUG         io = io + " ]";
+        // DEBUG     }
+        // DEBUG     else
+        // DEBUG     {
+        // DEBUG         io = io + " []";
+        // DEBUG     }
+        // DEBUG }
+        // DEBUG if (p == SOURCE_PORT || p == DESTINATION_PORT || p == SOURCE_BLOCK)
+        // DEBUG {
+        // DEBUG     ScicosID end;
+        // DEBUG     controller.getObjectProperty(uid, k, p, end);
+        // DEBUG     io = io + " " + id(end);
+        // DEBUG }
 
-    ss << '\n';
+        return io + "\n";
+    };
 
     if (u == NO_CHANGES)
     {
-        log(LOG_TRACE, ss);
+        log(LOG_TRACE, to_chars_fun);
     }
     else
     {
-        log(LOG_DEBUG, ss);
+        log(LOG_DEBUG, to_chars_fun);
     }
 }
 

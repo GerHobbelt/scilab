@@ -190,7 +190,6 @@ static bool exportFile(int index, char const* file, types::InternalType* type)
         Scierror(999, "%s: %s\n", funname, exception.whatStr().c_str());
         return false;
     }
-
     return true;
 }
 /*--------------------------------------------------------------------------*/

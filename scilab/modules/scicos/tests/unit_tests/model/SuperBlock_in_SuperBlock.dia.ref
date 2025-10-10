@@ -57,6 +57,10 @@ Xcos trace:   objectReferenced( 4 , BLOCK ) : 1
 Xcos trace:   propertyUpdated( 4 , BLOCK , GEOMETRY ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , GEOMETRY ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , EXPRS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 4 , BLOCK , INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 4 , BLOCK , OUTPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 4 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 4 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , DESCRIPTION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , STYLE ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 4 , BLOCK ) : 0
@@ -97,6 +101,7 @@ Xcos trace:   objectReferenced( 4 , BLOCK ) : 3
 Xcos debug:   propertyUpdated( 4 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 4 , BLOCK , DIAGRAM_CONTEXT ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 4 , BLOCK ) : 2
+Xcos info:    Ignored "version" field for block 4.
 Xcos trace:   objectUnreferenced( 4 , BLOCK ) : 1
 Xcos trace:   propertyUpdated( 4 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 4 , BLOCK , OPAR ) : NO_CHANGES
@@ -294,6 +299,10 @@ Xcos trace:   objectReferenced( 9 , BLOCK ) : 1
 Xcos trace:   propertyUpdated( 9 , BLOCK , GEOMETRY ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , GEOMETRY ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , EXPRS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 9 , BLOCK , INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 9 , BLOCK , OUTPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 9 , BLOCK , EVENT_INPUTS ) : NO_CHANGES
+Xcos trace:   propertyUpdated( 9 , BLOCK , EVENT_OUTPUTS ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , DESCRIPTION ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , STYLE ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 9 , BLOCK ) : 0
@@ -375,6 +384,7 @@ Xcos trace:   objectReferenced( 9 , BLOCK ) : 3
 Xcos debug:   propertyUpdated( 9 , BLOCK , NAME ) : SUCCESS
 Xcos trace:   propertyUpdated( 9 , BLOCK , DIAGRAM_CONTEXT ) : NO_CHANGES
 Xcos trace:   objectUnreferenced( 9 , BLOCK ) : 2
+Xcos info:    Ignored "version" field for block 9.
 Xcos trace:   objectUnreferenced( 9 , BLOCK ) : 1
 Xcos trace:   propertyUpdated( 9 , BLOCK , IPAR ) : NO_CHANGES
 Xcos trace:   propertyUpdated( 9 , BLOCK , OPAR ) : NO_CHANGES

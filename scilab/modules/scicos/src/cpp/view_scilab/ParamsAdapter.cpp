@@ -249,7 +249,7 @@ struct tol
         if (current->isEmpty())
         {
             // Do nothing in this case to support old diagrams
-            return false;
+            return true;
         }
         if (current->getSize() != 6 && current->getSize() != 7)
         {
@@ -316,6 +316,11 @@ struct tf
         }
 
         types::Double* current = v->getAs<types::Double>();
+        if (current->isEmpty())
+        {
+            // Do nothing in this case to support old diagrams
+            return true;
+        }
         if (current->getSize() != 1)
         {
             get_or_allocate_logger()->log(LOG_ERROR, _("Wrong dimension for field %s.%s: Real expected.\n"), "params", "tf");
