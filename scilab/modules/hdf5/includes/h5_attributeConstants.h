@@ -1,4 +1,4 @@
-/*
+﻿/*
  *  Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  *  Copyright (C) 2012 - Scilab Enterprises - Antoine ELIAS
  *
@@ -48,6 +48,7 @@ static const char g_SCILAB_CLASS_HANDLE[]       = "handle";
 static const char g_SCILAB_CLASS_MACRO[]        = "macro";
 static const char g_SCILAB_CLASS_LAMBDA[]       = "lambda";
 static const char g_SCILAB_CLASS_USERTYPE[]     = "usertype";
+static const char g_SCILAB_CLASS_OBJECT[]       = "object";
 
 //integer precision
 #define SCI_INT8    1

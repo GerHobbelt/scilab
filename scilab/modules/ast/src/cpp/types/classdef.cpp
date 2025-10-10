@@ -349,12 +349,17 @@ void Classdef::internalCall(typed_list& in, optional_list& opt, int _iRetCount, 
         }
     }
 
-    LoadClassdef();
-    Object* obj = new Object(this);
+    Object* obj = createEmptyInstance()->getAs<Object>();
     obj->IncreaseRef();
     obj->callConstructor(in, opt, _iRetCount, out, e);
     obj->DecreaseRef();
     out.push_back(obj);
+}
+
+InternalType* Classdef::createEmptyInstance()
+{
+    LoadClassdef();
+    return new Object(this);
 }
 
 Classdef* Classdef::insert(typed_list* _pArgs, InternalType* _pSource)
@@ -441,7 +446,7 @@ bool Classdef::extract(const std::wstring& name, InternalType*& out)
         optional_list opt;
         typed_list out1;
 
-        Object* obj = new Object(this);
+        Object* obj = createEmptyInstance()->getAs<Object>();
         obj->IncreaseRef();
         obj->callConstructor(e->second, opt, 0, out1, ast::CommentExp(Location(), new std::wstring(L"")));
         instances[e->first] = obj;
@@ -609,34 +614,6 @@ InternalType* Classdef::instantiateProperty(const std::wstring& name, const OBJ_
         delete exec;
         pIT->DecreaseRef();
         return pIT;
-    }
-}
-
-Callable* Classdef::instantiateMethod(const std::wstring& name, const OBJ_ATTR& attr, bool isStatic)
-{
-    //sciprint("instantiateMethod: %ls\n", name.data());
-    Macro* m = attr.callable->getAs<Macro>();
-    std::vector<symbol::Variable*>* inputs = new std::vector<symbol::Variable*>();
-    for (auto&& i : *m->getInputs())
-    {
-        inputs->push_back(i);
-    }
-
-    std::vector<symbol::Variable*>* outputs = new std::vector<symbol::Variable*>();
-    for (auto&& o : *m->getOutputs())
-    {
-        outputs->push_back(o);
-    }
-
-    ast::SeqExp* body = m->getBody()->clone()->getAs<ast::SeqExp>();
-
-    if (isStatic)
-    {
-        return new Macro(m->getName(), this, *inputs, *outputs, *body, getName());
-    }
-    else
-    {
-        return new Macro(m->getName(), *inputs, *outputs, *body, getName());
     }
 }
 

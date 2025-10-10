@@ -115,7 +115,8 @@ public:
     */
 
     InternalType* instantiateProperty(const std::wstring& name, const OBJ_ATTR& attr);
-    Callable* instantiateMethod(const std::wstring& name, const OBJ_ATTR& attr, bool isStatic = false);
+    InternalType* createEmptyInstance();
+
 private:
     std::wstring name;
     std::map<std::wstring, OBJ_ATTR> props;

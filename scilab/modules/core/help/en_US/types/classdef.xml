@@ -197,6 +197,29 @@ Color.BLUE
                     </para>
                     <para>
                         For functions, define a method with the same name (ex: <literal>disp</literal> in following example)
+                        <para>There is special functions called by internal mecanism like:</para>
+                        <itemizedlist>
+                            <listitem>
+                                <para>
+                                    <literal>saveobj</literal>: call when saving an object to serialize data.
+                                    <para>prototype: <code>function data = saveobj(), end</code></para>
+                                    <para>You have to return a native scilab variable (struct, list, ...) except objects that contains all data you want to save.</para>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <literal>loadobj</literal>: called when object is restore by <literal>load</literal> function.
+                                    <para>prototype: <code>function loadobj(data), end</code></para>
+                                    <para><literal>data</literal> is the variable returned by <literal>saveobj</literal>.</para>
+                                </para>
+                            </listitem>
+                            <listitem>
+                                <para>
+                                    <literal>delete</literal>: called when object is cleared
+                                    <para>prototype: <code>function delete(), end</code></para>
+                                </para>
+                            </listitem>
+                        </itemizedlist>
                     </para>
                     <para>
                         For operators following the lookup table :
@@ -342,6 +365,12 @@ Color.BLUE
                             <td>insert(i1, i2, ..., b)</td>
                         </tr>
                     </informaltable>
+                    <para>
+                        for the most part of overload, you can definie a specific one for a identitified type.
+                        <para>ex: insert_s (insertion of a double in the object).</para>
+                        <para>generic one will be used if specific one does not exist.</para>
+                        <para>Search order is: specific (insert_s), generic (insert), scilab standard (%type1_i_type2)</para>
+                    </para>
                 </listitem>
             </itemizedlist>
             <programlisting role='example'>
@@ -355,8 +384,24 @@ classdef Matrix
             this.value = v;
         end
 
-        function r = plus(a ,b)
+        function r = plus(a ,b) //generic overload for operation +
             r = Matrix(a.value + b.value);
+        end
+
+        function r = plus_b(a ,b) //overload for Matrix + bool or bool + Matrix
+            if isa(a, "Matrix") then
+                r = Matrix(a.value + double(b));
+            else
+                r = Matrix(double(a) + b.value);
+            end
+        end
+
+        function r = plus_i(a ,b) //overload for Matrix + int or int + Matrix
+            if isa(a, "Matrix") then
+                r = Matrix(a.value + double(b));
+            else
+                r = Matrix(double(a) + b.value);
+            end
         end
 
         function disp()
@@ -368,6 +413,10 @@ end
 a = Matrix([1 2 3 4]);
 b = Matrix([4 3 2 1]);
 a + b
+a + %t
+%f + b
+a + int8(10)
+int8(10) + b
 ]]>
             </programlisting>
         </para>

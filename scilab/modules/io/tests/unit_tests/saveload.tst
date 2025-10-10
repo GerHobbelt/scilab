@@ -7,6 +7,7 @@
 // =============================================================================
 //
 // <-- TEST WITH GRAPHIC -->
+// <-- NO CHECK REF -->
 //
 
 funcprot(0);
@@ -259,3 +260,42 @@ refD = d;
 clear d;
 load(TMPDIR + "/SuperBlock.sod");
 assert_checktrue(and(d==refD));
+
+
+//objects
+classdef saveload
+    properties(private)
+        pri = 0;
+    end
+    properties(protected)
+        pro = 1;
+    end
+    properties(public)
+        pub = 2;
+    end
+    methods
+        function a = getPrivate(), a = this.pri;end
+        function a = getProtected(), a = this.pro;end
+        function a = getPublic(), a = this.pub;end
+
+        function data = saveobj()
+            data.pri = this.pri;
+            data.pro = this.pro;
+            data.pub = this.pub;
+        end
+
+        function loadobj(data)
+            this.pri = data.pri;
+            this.pro = data.pro;
+            this.pub = data.pub;
+        end
+    end
+end
+
+obj = saveload();
+save("TMPDIR/object.sod", "obj");
+clear obj;
+load("TMPDIR/object.sod");
+assert_checkequal(obj.getPrivate(), 0);
+assert_checkequal(obj.getProtected(), 1);
+assert_checkequal(obj.getPublic(), 2);

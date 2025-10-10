@@ -66,6 +66,7 @@ static hid_t export_sparse(hid_t parent, const std::string& name, types::Sparse*
 static hid_t export_cell(hid_t parent, const std::string& name, types::Cell* data, hid_t xfer_plist_id);
 static hid_t export_macro(hid_t parent, const std::string& name, types::Macro* data, hid_t xfer_plist_id);
 static hid_t export_usertype(hid_t parent, const std::string& name, types::UserType* data, hid_t xfer_plist_id);
+static hid_t export_object(hid_t parent, const std::string& name, types::Object* data, hid_t xfer_plist_id);
 
 static hid_t export_boolean_sparse(hid_t parent, const std::string& name, types::SparseBool* data, hid_t xfer_plist_id);
 static hid_t export_handles(hid_t parent, const std::string& name, types::GraphicHandle* data, hid_t xfer_plist_id);
@@ -190,7 +191,17 @@ types::Function::ReturnValue sci_hdf5_save(types::typed_list &in, int _iRetCount
                     return types::Function::Error;
                 }
 
-                if (pIT->isClassdef() || pIT->isObject())
+                if (pIT->isObject())
+                {
+                    types::Object* obj = pIT->getAs<types::Object>();
+                    if (obj->hasMethod(L"saveobj") == false)
+                    {
+                        Scierror(999, _("%s: Object variable must implement \"saveobj\" method to be saved.\n"), fname.data());
+                        return types::Function::Error;
+                    }
+                }
+
+                if (pIT->isClassdef())
                 {
                     Scierror(999, _("%s: Wrong type for variable \"%ls\", Classdef and Object cannot be saved.\n"), fname.data(), wvar, i + 1);
                     return types::Function::Error;
@@ -409,6 +420,9 @@ hid_t export_data(hid_t parent, const std::string& name, types::InternalType* da
             break;
         case types::InternalType::ScilabUserType:
             dataset = export_usertype(parent, name, data->getAs<types::UserType>(), xfer_plist_id);
+            break;
+        case types::InternalType::ScilabObject:
+            dataset = export_object(parent, name, data->getAs<types::Object>(), xfer_plist_id);
             break;
         default:
         {
@@ -1065,5 +1079,31 @@ static hid_t export_usertype(hid_t parent, const std::string& name, types::UserT
     delete str;
     it->DecreaseRef();
 
+    return ret;
+}
+
+static hid_t export_object(hid_t parent, const std::string& name, types::Object* data, hid_t xfer_plist_id)
+{
+    types::InternalType* it = data->serialize();
+    if (it == nullptr)
+    {
+        return -1; //unable to save
+    }
+
+    // create a struct around "object" to be able to restore it.
+    types::Struct* str = new types::Struct(1, 1);
+    types::SingleStruct* ss = str->get()[0];
+
+    // add fields
+    ss->addField(L"type");
+    ss->addField(L"data");
+
+    // assign values to new fields
+    ss->set(L"type", new types::String(data->getShortTypeStr().data()));
+    ss->set(L"data", it);
+
+    hid_t ret = export_struct(parent, name, str, g_SCILAB_CLASS_OBJECT, xfer_plist_id);
+
+    delete str;
     return ret;
 }

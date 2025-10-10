@@ -89,6 +89,8 @@ public:
     void scope_begin(const std::wstring& method) { scope.push(method); }
     void scope_end() { scope.pop(); }
 
+    InternalType* serialize();
+    bool deserialize(InternalType* data);
   private:
     Classdef* def;
     std::map<std::wstring, InternalType*> properties;

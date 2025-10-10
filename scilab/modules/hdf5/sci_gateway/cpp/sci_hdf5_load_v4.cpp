@@ -1,4 +1,4 @@
-/*
+﻿/*
  * Scilab ( https://www.scilab.org/ ) - This file is part of Scilab
  * Copyright (C) 2023 - Dassault Systèmes S.E. - Antoine ELIAS
  *
@@ -68,7 +68,7 @@ static types::InternalType* import_boolean_sparse(hid_t dataset);
 static types::InternalType* import_macro(hid_t dataset, bool islambda = false);
 static types::InternalType* import_lambda(hid_t dataset);
 static types::InternalType* import_usertype(hid_t dataset);
-
+static types::InternalType* import_object(hid_t dataset);
 
 /*--------------------------------------------------------------------------*/
 static const std::string fname("load");
@@ -282,6 +282,10 @@ types::InternalType* import_data(hid_t dataset)
         return import_usertype(dataset);
     }
 
+    if (type == g_SCILAB_CLASS_OBJECT)
+    {
+        return import_object(dataset);
+    }
 
     return nullptr;
 }
@@ -1249,4 +1253,56 @@ static types::InternalType* import_usertype(hid_t dataset)
     }
 
     return out[0];
+}
+
+static types::InternalType* import_object(hid_t dataset)
+{
+    types::InternalType* it = import_struct(dataset);
+    if (it == nullptr || it->isStruct() == false)
+    {
+        delete it;
+        return nullptr;
+    }
+
+    types::Struct* str = it->getAs<types::Struct>();
+
+    if (str->isScalar() == false)
+    {
+        delete it;
+        return nullptr;
+    }
+
+    types::SingleStruct* ss = str->get()[0];
+
+    // extract type from struct
+    types::InternalType* itType = ss->get(L"type");
+    if (itType == nullptr || itType->getId() != types::InternalType::IdScalarString)
+    {
+        delete it;
+        return nullptr;
+    }
+
+    types::String* s = itType->getAs<types::String>();
+    std::wstring type = s->get()[0];
+
+    types::InternalType* data = ss->get(L"data");
+    if (data == nullptr)
+    {
+        delete it;
+        return nullptr;
+    }
+
+    types::Classdef* def = symbol::Context::getInstance()->getClassdef(type);
+    if (def != nullptr)
+    {
+        types::Object* obj = def->createEmptyInstance()->getAs<types::Object>();
+        if (obj->deserialize(data))
+        {
+            return obj;
+        }
+
+        obj->killMe();
+    }
+
+    return nullptr;
 }

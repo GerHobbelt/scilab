@@ -467,4 +467,40 @@ String* Object::getFields()
 
     return pFields;
 }
+
+InternalType* Object::serialize()
+{
+    InternalType* data = nullptr;
+    if (hasMethod(L"saveobj"))
+    {
+        typed_list in, out;
+        optional_list opt;
+        if (callMethod(L"saveobj", in, opt, 1, out, ast::CommentExp(Location(), new std::wstring(L""))) == Function::OK)
+        {
+            if (out.size() == 1)
+            {
+                return out[0];
+            }
+        }
+    }
+
+    return data;
+}
+
+bool Object::deserialize(InternalType* data)
+{
+    if (hasMethod(L"loadobj"))
+    {
+        typed_list in, out;
+        IncreaseRef();
+        in.push_back(this);
+        optional_list opt;
+        auto ret = callMethod(L"loadobj", in, opt, 1, out,ast::CommentExp(Location(), new std::wstring(L"")));
+        DecreaseRef();
+        return true;
+    }
+
+    return false;
+}
+
 } // namespace types
