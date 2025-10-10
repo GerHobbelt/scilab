@@ -119,3 +119,12 @@ a = 1:7;
 b.end = 4;
 a(b.end:end) = 1;
 assert_checkequal(a, [1,2,3,1,1,1, 1]);
+
+// Wrong usage as return value
+function [a,b] = testMe()
+    a = 0;
+    b = 0;
+end
+errmsg = ["Illegal use of reserved keyword ''$'' or ''end''."];
+assert_checkerror("[x, $] = testMe()", errmsg);
+assert_checkerror("[x, end] = testMe()", errmsg);

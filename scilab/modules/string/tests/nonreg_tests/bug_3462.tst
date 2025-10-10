@@ -6,6 +6,7 @@
 // =============================================================================
 
 // <-- CLI SHELL MODE -->
+// <-- NO CHECK REF -->
 
 // <-- Non-regression test for bug 3462 -->
 //
@@ -17,9 +18,10 @@
 //   The match string returned by regexp is not the right one if the subject
 //   string contains backslashes.
 
-if regexp("\n", "/n/") <> 2 then pause,end
-if regexp("\>15Hello, world.", "/world/") <> 12 then pause,end
+assert_checkequal(regexp("\n", "/n/"), 2);
+assert_checkequal(regexp("\>15Hello, world.", "/world/"), 12);
 
-[start,end,match] = regexp("/usr\local/en_US","/([a-z][a-z]_[A-Z][A-Z])$/");
-if [start,end] <> [12,16] then pause,end;
-if match <> "en_US" then pause,end
+[start, final, match] = regexp("/usr\local/en_US","/([a-z][a-z]_[A-Z][A-Z])$/");
+assert_checkequal(start, 12);
+assert_checkequal(final, 16);
+assert_checkequal(match, "en_US");

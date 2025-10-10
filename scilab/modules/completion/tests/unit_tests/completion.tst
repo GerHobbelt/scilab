@@ -6,13 +6,15 @@
 //  This file is distributed under the same license as the Scilab package.
 // =============================================================================
 
+// <-- NO CHECK REF -->
+
 //===============================
 // unit tests completion
 //===============================
 
 function [] = check_completion(actual, expected)
     for i = 1 : size(actual, "r")
-        [start,end,match] = regexp(actual(i,1), "/(?i)^(" + expected + ")/");
+        [_, _, match] = regexp(actual(i,1), "/(?i)^(" + expected + ")/");
         assert_checktrue(match <> "");
     end
 endfunction

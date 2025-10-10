@@ -538,10 +538,18 @@ void RunVisitorT<T>::visitprivate(const AssignExp  &e)
             return;
         }
 
+        if (e.getLeftExp().isDollarVar())
+        {
+            std::wostringstream os;
+            os << _W("Illegal use of reserved keyword '$' or 'end'.");
+            //os << ((Location)e.getLeftExp().getLocation()).getLocationString() << std::endl;
+            throw ast::InternalError(os.str(), 999, e.getLeftExp().getLocation());
+        }
+
         std::wostringstream os;
         os << _W("unknown script form");
-        //os << ((Location)e.getRightExp().getLocation()).getLocationString() << std::endl;
-        throw ast::InternalError(os.str(), 999, e.getRightExp().getLocation());
+        //os << ((Location)e.getLeftExp().getLocation()).getLocationString() << std::endl;
+        throw ast::InternalError(os.str(), 999, e.getLeftExp().getLocation());
     }
     catch (const InternalError& error)
     {
