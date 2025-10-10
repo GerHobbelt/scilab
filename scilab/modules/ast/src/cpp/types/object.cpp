@@ -443,7 +443,8 @@ String* Object::getFields()
 
     for (auto&& p : def->getProperties())
     {
-        if (hidden.find(p.first) == hidden.end())
+        OBJ_ATTR attr = std::get<0>(p.second);
+        if (attr.hidden == false)
         {
             fields.push_back(p.first);
         }
@@ -451,7 +452,8 @@ String* Object::getFields()
 
     for (auto&& m : def->getMethods())
     {
-        if (hidden.find(m.first) == hidden.end())
+        OBJ_ATTR attr = std::get<0>(m.second);
+        if (attr.hidden == false)
         {
             fields.push_back(m.first);
         }

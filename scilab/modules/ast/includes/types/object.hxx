@@ -92,7 +92,6 @@ public:
   private:
     Classdef* def;
     std::map<std::wstring, InternalType*> properties;
-    std::set<std::wstring> hidden;
     std::stack<std::wstring> scope;
     Object* parent;
     bool bHasToString;
