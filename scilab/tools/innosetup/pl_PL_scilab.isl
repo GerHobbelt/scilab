@@ -109,7 +109,7 @@ pl_PL.DescriptionAssociateBinSav =Associate *.bin, *.sav files with Scilab
 ;
 pl_PL.DescriptionAssociateGraph =Associate *.graph *.graphb files with Scilab
 ;
-pl_PL.DescriptionAssociateScicos =Associate *.xcos *.cos *.cosf files with Scilab
+pl_PL.DescriptionAssociateScicos =Associate *.ssp *.zcos *.xcos *.cosf files with Scilab
 ;
 pl_PL.DescriptionDefaultInstall =Installation (Default)
 pl_PL.DescriptionFullInstall =Full installation

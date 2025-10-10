@@ -109,7 +109,7 @@ ja_JP.DescriptionAssociateBinSav =Associate *.bin, *.sav files with Scilab
 ;
 ja_JP.DescriptionAssociateGraph =Associate *.graph *.graphb files with Scilab
 ;
-ja_JP.DescriptionAssociateScicos =Associate *.xcos *.cos *.cosf files with Scilab
+ja_JP.DescriptionAssociateScicos =Associate *.ssp *.zcos *.xcos *.cosf files with Scilab
 ;
 ja_JP.DescriptionDefaultInstall =Installation (Default)
 ja_JP.DescriptionFullInstall =Full installation

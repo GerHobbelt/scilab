@@ -30,6 +30,11 @@
         <comment xml:lang="en">Scilab/Xcos compressed schema</comment>
         <glob pattern="*.zcos"/>
     </mime-type>
+    <mime-type type="application/x-scilab-ssp">
+        <sub-class-of type="application/x-scilab-bin"/>
+        <comment xml:lang="en">Scilab/Xcos SSP schema</comment>
+        <glob pattern="*.ssp"/>
+    </mime-type>
     <mime-type type="application/x-scilab-sod">
         <sub-class-of type="application/x-hdf5"/>
         <comment xml:lang="en">Scilab open data format (hdf5 based)</comment>
@@ -45,10 +50,5 @@
         <sub-class-of type="application/x-scilab-sce"/>
         <comment xml:lang="en">Scicos schema</comment>
         <glob pattern="*.cosf"/>
-    </mime-type>
-    <mime-type type="application/x-scilab-cos">
-        <sub-class-of type="application/x-scilab-bin"/>
-        <comment xml:lang="en">Scicos binary schema</comment>
-        <glob pattern="*.cos"/>
     </mime-type>
 </mime-info>

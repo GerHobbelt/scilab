@@ -10,8 +10,8 @@
 // <-- WINDOWS ONLY -->
 // <-- NO CHECK REF -->
 
-res = winqueryreg("HKEY_CLASSES_ROOT","Scilab5.cos");
 res = winqueryreg("HKEY_CLASSES_ROOT","Scilab5.cosf");
 res = winqueryreg("HKEY_CLASSES_ROOT","Scilab5.xcos");
 res = winqueryreg("HKEY_CLASSES_ROOT","Scilab5.zcos");
+res = winqueryreg("HKEY_CLASSES_ROOT","Scilab5.ssp");
 

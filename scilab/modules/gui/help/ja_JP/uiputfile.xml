@@ -108,7 +108,7 @@
     <refsection>
         <title>例</title>
         <programlisting role="example"><![CDATA[
-uiputfile(["*.bin"; "*.sce"; "*.cos*"])
+uiputfile(["*.bin"; "*.sce"; "*.cosf*"])
 uiputfile(["*.xcos|*.zcos", "Xcos files"; "*.sce|*.sci", "Scilab scripts"])
 uiputfile(["*.sci"; "*.bin"], "SCI/modules/gui/macros/")
 uiputfile(["*.sc*"; "*.bin"], "SCI/modules/gui/macros/")

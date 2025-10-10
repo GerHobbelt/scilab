@@ -114,6 +114,20 @@ Root: HKCR; Subkey: {#APPLICATION_EXTENSION_DEM}\shell\{cm:RegKeyRunWith} {#Scil
 Root: HKCR; Subkey: {#APPLICATION_EXTENSION_DEM}\shell\print\command; ValueType: string; ValueData: """{app}\bin\wscilex.exe"" {#ARGUMENT_ACTION_PRINT} ""%1"""; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateTSTDEM
 ;
 ;-------------------------------------------------------------------------------
+;Files .ssp
+#define APPLICATION_EXTENSION_SSP "Scilab5.ssp"
+#define SSP_ENTRY ".ssp"
+#define ICON_SSP_POS 12
+;
+Root: HKCR; Subkey: {#SSP_ENTRY}; ValueType: string; ValueData: {#APPLICATION_EXTENSION_SSP}; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
+;
+Root: HKCR; Subkey: {#APPLICATION_EXTENSION_SSP}; ValueType: string; ValueData: "{#ScilabName} Application"; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
+;
+Root: HKCR; Subkey: {#APPLICATION_EXTENSION_SSP}\DefaultIcon; ValueType: string; ValueData: {app}\bin\wscilex.exe,{#ICON_SSP_POS}; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
+;
+Root: HKCR; Subkey: {#APPLICATION_EXTENSION_SSP}\shell\{cm:RegKeyRunWith} {#ScilabName}\command; ValueType: string; ValueData: """{app}\bin\wscilex.exe"" {#ARGUMENT_ACTION_RUN} ""%1"""; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS;
+;
+;-------------------------------------------------------------------------------
 ;Files .zcos
 #define APPLICATION_EXTENSION_ZCOS "Scilab5.zcos"
 #define ZCOS_ENTRY ".zcos"
@@ -140,20 +154,6 @@ Root: HKCR; Subkey: {#APPLICATION_EXTENSION_XCOS}; ValueType: string; ValueData:
 Root: HKCR; Subkey: {#APPLICATION_EXTENSION_XCOS}\DefaultIcon; ValueType: string; ValueData: {app}\bin\wscilex.exe,{#ICON_XCOS_POS}; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
 ;
 Root: HKCR; Subkey: {#APPLICATION_EXTENSION_XCOS}\shell\{cm:RegKeyRunWith} {#ScilabName}\command; ValueType: string; ValueData: """{app}\bin\wscilex.exe"" {#ARGUMENT_ACTION_RUN} ""%1"""; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS;
-;
-;-------------------------------------------------------------------------------
-;Files .cos
-#define APPLICATION_EXTENSION_COS "Scilab5.cos"
-#define COS_ENTRY ".cos"
-#define ICON_COS_POS 2
-;
-Root: HKCR; Subkey: {#COS_ENTRY}; ValueType: string; ValueData: {#APPLICATION_EXTENSION_COS}; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
-;
-Root: HKCR; Subkey: {#APPLICATION_EXTENSION_COS}; ValueType: string; ValueData: "{#ScilabName} Application"; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
-;
-Root: HKCR; Subkey: {#APPLICATION_EXTENSION_COS}\DefaultIcon; ValueType: string; ValueData: {app}\bin\wscilex.exe,{#ICON_COS_POS}; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS
-;
-Root: HKCR; Subkey: {#APPLICATION_EXTENSION_COS}\shell\{cm:RegKeyRunWith} {#ScilabName}\command; ValueType: string; ValueData: """{app}\bin\wscilex.exe"" {#ARGUMENT_ACTION_RUN} ""%1"""; Flags: deletekey uninsdeletekey noerror; Tasks: AssociateSCICOS;
 ;
 ;-------------------------------------------------------------------------------
 ;Files .cosf

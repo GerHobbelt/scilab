@@ -67,19 +67,19 @@ BOOL IsABinOrSavFile(char *chainefichier)
 /*--------------------------------------------------------------------------*/
 BOOL IsAScicosFile(char *chainefichier)
 {
-    if (IsAScicosFileCOS(chainefichier) ||
-            IsAScicosFileCOSF(chainefichier) ||
+    if (    IsAScicosFileCOSF(chainefichier) ||
             IsAScicosFileXCOS(chainefichier) ||
-            IsAScicosFileZCOS(chainefichier))
+            IsAScicosFileZCOS(chainefichier) ||
+            IsAScicosFileSSP(chainefichier))
     {
         return TRUE;
     }
     return FALSE;
 }
 /*--------------------------------------------------------------------------*/
-BOOL IsAScicosFileCOS(char *chainefichier)
+BOOL IsAScicosFileSSP(char *chainefichier)
 {
-    return isGoodExtension(chainefichier, ".COS");
+    return isGoodExtension(chainefichier, ".SSP");
 }
 /*--------------------------------------------------------------------------*/
 BOOL IsAScicosFileCOSF(char *chainefichier)

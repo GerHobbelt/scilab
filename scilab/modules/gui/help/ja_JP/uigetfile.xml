@@ -120,11 +120,11 @@
     <refsection>
         <title>例</title>
         <programlisting role="example">
-            uigetfile(["*.bin"; "*.sce"; "*.cos*"])
+            uigetfile(["*.bin"; "*.sce"; "*.cosf"])
             uigetfile(["*.tst|*.dia.ref","Tests files"])
             uigetfile(["*.sci"; "*.bin"], "SCI/modules/gui/macros/")
             uigetfile(["*.sc*"; "*.bin"], "SCI/modules/gui/macros/")
-            uigetfile(["*.xcos|*.zcos","Xcos files"; "*.bin","BIN files"], "SCI/modules/gui/macros/")
+            uigetfile(["*.ssp|*.xcos|*.zcos","Xcos files"; "*.bin","BIN files"], "SCI/modules/gui/macros/")
             uigetfile(["*.sce"; "*.bin"], "SCI/modules/gui/macros/", "Choose a file name", %t);
             uigetfile(["*.sce"; "*.bin"], "SCI/modules/gui/macros/", "Choose a file name", %f);
         </programlisting>

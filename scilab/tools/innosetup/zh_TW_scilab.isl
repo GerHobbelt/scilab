@@ -109,7 +109,7 @@ zh_TW.DescriptionAssociateBinSav =Associate *.bin, *.sav files with Scilab
 ;
 zh_TW.DescriptionAssociateGraph =Associate *.graph *.graphb files with Scilab
 ;
-zh_TW.DescriptionAssociateScicos =Associate *.xcos *.cos *.cosf files with Scilab
+zh_TW.DescriptionAssociateScicos =Associate *.ssp *.zcos *.xcos *.cosf files with Scilab
 ;
 zh_TW.DescriptionDefaultInstall =Installation (Default)
 zh_TW.DescriptionFullInstall =Full installation

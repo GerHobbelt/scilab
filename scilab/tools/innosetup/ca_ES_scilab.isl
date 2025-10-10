@@ -109,7 +109,7 @@ ca_ES.DescriptionAssociateBinSav =Associate *.bin, *.sav files with Scilab
 ;
 ca_ES.DescriptionAssociateGraph =Associate *.graph *.graphb files with Scilab
 ;
-ca_ES.DescriptionAssociateScicos =Associate *.xcos *.cos *.cosf files with Scilab
+ca_ES.DescriptionAssociateScicos =Associate *.ssp *.zcos *.xcos *.cosf files with Scilab
 ;
 ca_ES.DescriptionDefaultInstall =Installation (Default)
 ca_ES.DescriptionFullInstall =Full installation

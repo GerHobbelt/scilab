@@ -85,7 +85,7 @@ en_US.DescriptionAssociateBinSav =Associate *.bin, *.sav files with Scilab
 ;
 en_US.DescriptionAssociateGraph =Associate *.graph *.graphb files with Scilab
 ;
-en_US.DescriptionAssociateScicos =Associate *.xcos *.cos *.cosf *.zcos files with Scilab
+en_US.DescriptionAssociateScicos =Associate *.ssp *.zcos *.xcos *.cosf files with Scilab
 ;
 en_US.DescriptionAssociateSOD =Associate *.sod files with Scilab
 ;

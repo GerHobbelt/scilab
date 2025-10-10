@@ -29,7 +29,7 @@
 /*--------------------------------------------------------------------------*/
 #define BIN_EXTENSION_FILE ".bin"
 #define SAV_EXTENSION_FILE ".sav"
-#define COS_EXTENSION_FILE ".cos"
+#define SSP_EXTENSION_FILE ".ssp"
 #define COSF_EXTENSION_FILE ".cosf"
 #define ZCOS_EXTENSION_FILE ".zcos"
 #define XCOS_EXTENSION_FILE ".xcos"
@@ -118,7 +118,7 @@ static char *getCommandByFileExtension(char *File, char *FileExtension)
         {
             command = buildCommand(FORMAT_LOAD_FILES, File);
         }
-        else if (stricmp(FileExtension, COS_EXTENSION_FILE) == 0 ||
+        else if (stricmp(FileExtension, SSP_EXTENSION_FILE) == 0 ||
                  stricmp(FileExtension, COSF_EXTENSION_FILE) == 0 ||
                  stricmp(FileExtension, ZCOS_EXTENSION_FILE) == 0 ||
                  stricmp(FileExtension, XCOS_EXTENSION_FILE) == 0 ||
