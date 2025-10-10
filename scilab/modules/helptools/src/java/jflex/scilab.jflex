@@ -160,7 +160,7 @@ amp = "&"
 
 operator = ".*" | "./" | ".\\" | ".^" | ".**" | "+" | "-" | "/" | "\\" | "*" | "^" | "**" | "==" | "~=" | ".*." | "./." | ".\\." | "/." | "=" | "|" | "@" | "@=" | "~"
 
-structureKwds = "if" | "for" | "while" | "try" | "select" | "switch" | "end" | "then" | "do" | "catch" | "case" | "otherwise" | "elseif" | "else" | "arguments"
+structureKwds = "if" | "for" | "while" | "try" | "select" | "switch" | "end" | "then" | "do" | "catch" | "case" | "otherwise" | "elseif" | "else" | "arguments" | "classdef" | "enumeration" | "properties" | "methods"
 
 controlKwds = "abort" | "break" | "quit" | "return" | "resume" | "pause" | "continue" | "exit"
 
