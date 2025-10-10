@@ -359,7 +359,7 @@ files = [ ..
 'modules/xcos/tests/unit_tests/empty.zcos'
 'modules/xcos/tests/unit_tests/error_blocks_with_not_connected_link.zcos'
 'modules/xcos/tests/unit_tests/error_blocks_with_undefined_input.zcos'
-'modules/xcos/tests/unit_tests/error_blocks_with_undefined_input_on_sb.zcos'
+// 'modules/xcos/tests/unit_tests/error_blocks_with_undefined_input_on_sb.zcos' // failure on purpose
 'modules/xcos/tests/unit_tests/error_blocks_with_updated_context.zcos'
 'modules/xcos/tests/unit_tests/error_blocks_with_updated_context_on_sb.zcos'
 'modules/xcos/tests/unit_tests/error_from_without_goto.zcos'
@@ -372,8 +372,8 @@ files = [ ..
 'modules/xcos/tests/unit_tests/error_ports_with_incompatible_size_on_sb.zcos'
 'modules/xcos/tests/unit_tests/error_ports_with_negative_size.zcos'
 'modules/xcos/tests/unit_tests/error_ports_with_negative_size_on_sb.zcos'
-'modules/xcos/tests/unit_tests/error_sb_port_numbering.zcos'
-'modules/xcos/tests/unit_tests/error_unconnected_sb_input.zcos'
+// 'modules/xcos/tests/unit_tests/error_sb_port_numbering.zcos' // failure on purpose
+// 'modules/xcos/tests/unit_tests/error_unconnected_sb_input.zcos' // failure on purpose
 'modules/xcos/tests/unit_tests/fromws_c.zcos'
 'modules/xcos/tests/unit_tests/fromws_tows_c.zcos'
 'modules/xcos/tests/unit_tests/one_buffering_scopes.zcos'

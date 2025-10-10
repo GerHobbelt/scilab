@@ -50,7 +50,7 @@ load_and_indent("SCI/modules/xcos/tests/unit_tests/DC Motor.ssp", "SystemStructu
 
 // load and save
 if isfile("TMPDIR/sample.ssp") then deletefile("TMPDIR/sample.ssp"); end
-scs_m1 = scicosDiagramToScilab("modules/xcos/tests/unit_tests/DC Motor.ssp");
+scs_m1 = scicosDiagramToScilab("SCI/modules/xcos/tests/unit_tests/DC Motor.ssp");
 scicosDiagramToScilab("TMPDIR/sample.ssp", scs_m1);
 scicosDiagramToScilab("TMPDIR/sample.dot", scs_m1);
 
