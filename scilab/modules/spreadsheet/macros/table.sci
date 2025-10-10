@@ -77,7 +77,7 @@ function t = table(varargin)
     ref_size = size(varargin(1));
     for i = 1:rhs
         tmp = varargin(i);
-        typ = ["constant", "boolean", "string", "duration", "datetime", "calendarduration", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64"];
+        typ = ["constant", "boolean", "string", "duration", "datetime", "calendarduration", "uint8", "uint16", "uint32", "uint64", "int8", "int16", "int32", "int64", "ce"];
         if and(typeof(tmp) <> typ) then
             error(msprintf(_("%s: Wrong type for input argument #%d: Must be %s.\n"), fname, i, varargin(i), sci2exp(typ)));
         end

@@ -15,6 +15,7 @@ function t = cell2table(c, varargin)
     end
 
     l = list();
+    s = [];
     for j = 1:size(c, 2)
         r = c{:, j};
         try
@@ -22,6 +23,12 @@ function t = cell2table(c, varargin)
         catch
             error(msprintf(_("%s: Wrong type for c{:, %d}: same type by column expected.\n"), "cell2table", j));
         end
+        s = [s size(l(j), "*")];
     end
+    idx = find(s <> s(1));
+    for j = idx
+        l(j) = {l(j)};
+    end
+
     t = table(l(:), varargin(:))
 endfunction

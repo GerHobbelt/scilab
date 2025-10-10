@@ -252,6 +252,10 @@ for i = 1:3
 end
 assert_checkequal(table2struct(T), expected);
 
+// cell2table
+c = cell2table({1,[1;2]});
+assert_checkequal(c, table(1, {[1;2]}));
+
 // timeseries2table
 refMsg = msprintf(_("%s: Wrong type for input argument #%d: A timeseries expected.\n"), "timeseries2table", 1);
 assert_checkerror("timeseries2table(T)", refMsg);

@@ -58,6 +58,16 @@
                 </listitem>
             </varlistentry>
             <varlistentry>
+                <term><emphasis role="bold">"AsArray"</emphasis>, boolean</term>
+                <listitem>
+                    <para>
+                        Converts a structure matrix where fields may have different sizes.
+                        Default value: %t if <literal>st</literal> is a structure matrix, %f otherwise.
+                    </para>
+                    <para/>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
                 <term>t</term>
                 <listitem>
                     <para>output argument - table object</para>
@@ -95,6 +105,49 @@
             // or table(a)
         ]]>
         </programlisting>
+        <screen><![CDATA[
+--> st
+
+ st = [struct] with fields:
+
+  Code = ["AF";"NA";"OC";"AN";"AS";"EU";"SA"]
+  NameContinent = ["Africa";"North America";"Oceania";"Antarctica";"Asia";"Europe";"South America"]
+  Area = [30065000;24256000;7687000;13209000;44579000;9938000;17819000]
+  NumberCountry = [54;23;14;%nan;47;45;12]
+  LifeExpectancy = [60;78;75;%nan;72;75;74]
+  
+--> t = struct2table(st)
+
+ t = [7x5 table]
+
+   Code   NameContinent     Area     NumberCountry   LifeExpectancy
+   ____   _____________   ________   _____________   ______________
+                                                                   
+   AF     Africa          30065000   54              60            
+   NA     North America   24256000   23              78            
+   OC     Oceania         7687000    14              75            
+   AN     Antarctica      13209000   Nan             Nan           
+   AS     Asia            44579000   47              72            
+   EU     Europe          9938000    45              75            
+   SA     South America   17819000   12              74            
+   
+  --> a
+
+ a = [1x2 struct] with fields:
+
+  a
+  b
+  
+ --> t = struct2table(a)
+
+ t = [2x2 table]
+
+    a     b 
+   ___   ___
+            
+   1     2  
+   3     4   
+    ]]></screen>
         </para>
         <para><emphasis role="bold">t = struct2table(m, "RowNames", val)</emphasis></para>
         <para>
@@ -117,6 +170,150 @@
             // or table(st, "RowNames", Code)
         ]]>
         </programlisting>
+        <screen><![CDATA[
+--> st
+
+ st = [struct] with fields:
+
+  Code = ["AF";"NA";"OC";"AN";"AS";"EU";"SA"]
+  NameContinent = ["Africa";"North America";"Oceania";"Antarctica";"Asia";"Europe";"South America"]
+  Area = [30065000;24256000;7687000;13209000;44579000;9938000;17819000]
+  NumberCountry = [54;23;14;%nan;47;45;12]
+  LifeExpectancy = [60;78;75;%nan;72;75;74]
+  
+--> t = struct2table(st)
+
+ t = [7x5 table]
+
+   Code   NameContinent     Area     NumberCountry   LifeExpectancy
+   ____   _____________   ________   _____________   ______________
+                                                                   
+   AF     Africa          30065000   54              60            
+   NA     North America   24256000   23              78            
+   OC     Oceania         7687000    14              75            
+   AN     Antarctica      13209000   Nan             Nan           
+   AS     Asia            44579000   47              72            
+   EU     Europe          9938000    45              75            
+   SA     South America   17819000   12              74            
+   
+--> t.Properties.RowNames = t.Code;
+
+--> t.Code = []
+
+ t = [7x4 table]
+
+         NameContinent     Area     NumberCountry   LifeExpectancy
+         _____________   ________   _____________   ______________
+                                                                  
+    AF   Africa          30065000   54              60            
+    NA   North America   24256000   23              78            
+    OC   Oceania         7687000    14              75            
+    AN   Antarctica      13209000   Nan             Nan           
+    AS   Asia            44579000   47              72            
+    EU   Europe          9938000    45              75            
+    SA   South America   17819000   12              74           
+    
+--> st
+
+ st = [struct] with fields:
+
+  NameContinent = ["Africa";"North America";"Oceania";"Antarctica";"Asia";"Europe";"South America"]
+  Area = [30065000;24256000;7687000;13209000;44579000;9938000;17819000]
+  NumberCountry = [54;23;14;%nan;47;45;12]
+  LifeExpectancy = [60;78;75;%nan;72;75;74]
+
+--> t = struct2table(st, "RowNames", Code)
+
+ t = [7x4 table]
+
+         NameContinent     Area     NumberCountry   LifeExpectancy
+         _____________   ________   _____________   ______________
+                                                                  
+    AF   Africa          30065000   54              60            
+    NA   North America   24256000   23              78            
+    OC   Oceania         7687000    14              75            
+    AN   Antarctica      13209000   Nan             Nan           
+    AS   Asia            44579000   47              72            
+    EU   Europe          9938000    45              75            
+    SA   South America   17819000   12              74        
+    ]]></screen>
+        </para>
+        <para><emphasis role="bold">struct2table with "AsArray" option</emphasis></para>
+        <para>
+        <programlisting role="example"><![CDATA[
+            s.x = [1;2;3];
+            s.y = [10;20;30];
+            s.z = [100;200;300];
+            s
+            t = struct2table(s)
+            t = struct2table(s, "AsArray", %t)
+        ]]>
+        </programlisting>
+        <screen><![CDATA[
+--> s
+
+ s = [struct] with fields:
+
+  x = [1;2;3]
+  y = [10;20;30]
+  z = [100;200;300]
+
+--> t = struct2table(s)
+
+ t = [3x3 table]
+
+    x     y     z 
+   ___   ___   ___
+                  
+   1     10    100
+   2     20    200
+   3     30    300
+
+--> t = struct2table(s, "AsArray", %t)
+
+ t = [1x3 table]
+
+        x              y              z      
+   ____________   ____________   ____________
+                                             
+   [3x1 double]   [3x1 double]   [3x1 double]
+
+    ]]></screen>
+    <programlisting role="example"><![CDATA[
+            Dates = struct('day',25, 'month','DEC', 'year',2006);
+            Dates(2) = struct('year',2000, 'day',29, 'weekday',3, 'month', "FEB");
+            Dates
+            t = struct2table(Dates)
+            t.weekday
+        ]]>
+        </programlisting>
+        <screen><![CDATA[
+--> Dates
+
+ Dates = [2x1 struct] with fields:
+
+  day
+  month
+  year
+  weekday
+
+--> t = struct2table(Dates)
+
+ t = [2x4 table]
+
+   day   month   year   weekday
+   ___   _____   ____   _______
+                               
+   25    DEC     2006   []     
+   29    FEB     2000   3      
+
+--> t.weekday
+
+ ans = {2x1 cell}
+
+  []
+  3 
+    ]]></screen>
         </para>
     </refsection>
     <refsection role="see also">
@@ -138,6 +335,12 @@
                 <revdescription>
                     Introduction in Scilab.
                 </revdescription>
+            </revision>
+            <revision>
+                <revnumber>2026.0.0</revnumber>
+                <revremark>
+                    <literal>"AsArray"</literal> option converts a structure matrix where fields may have different sizes.
+                </revremark>
             </revision>
         </revhistory>
     </refsection>
