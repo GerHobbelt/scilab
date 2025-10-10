@@ -32,12 +32,13 @@
             <tr>
                 <td>
                     <programlisting role="no-scilab-exec"><![CDATA[
-end % (index)
+end % Last index
                  ]]></programlisting>
                 </td>
                 <td>
                     <programlisting role="example"><![CDATA[
-$
+$ // Last index (prefered notation)
+end // Last index
                  ]]></programlisting>
                 </td>
             </tr>

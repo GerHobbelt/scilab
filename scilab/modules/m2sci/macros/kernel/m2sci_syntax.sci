@@ -24,7 +24,6 @@ function [helppart, txt, batch] = m2sci_syntax(txt)
     //  - isacomment
     //  - isinstring
     //  - replace_brackets
-    //  - replace_end_dollar
 
     if ~isdef("octave_mode"), octave_mode = %f, end
 
@@ -331,9 +330,6 @@ function [helppart, txt, batch] = m2sci_syntax(txt)
     // Replace {..} by (..) or [..] : useful for cells translation
     txt = replace_brackets(txt)
 
-    // Replace end with $ where it is relevant
-    txt = replace_end_dollar(txt)
-
     // Place function definition line at first line
     kc = strindex(txt(first_ncl),"function")
     if kc==[] then
@@ -421,27 +417,6 @@ function txt = replace_brackets(txt)
             elseif ~isempty(strindex(txt(k),"}")) then
                 txt(k) = strsubst(txt(k),"}","]))")
             end
-        end
-    end
-endfunction
-
-// ---------------------------------------------------------------------------
-
-function txt = replace_end_dollar(txt)
-
-    patterns = ["/(?:\(|\-|\+|\*|\:|\,)\s*end\s*(\)|(\-|\+|\*|\/|\:|\,).*?\))/"
-                "/(?:\{|\-|\+|\*|\:|\,)\s*end\s*(\}|(\-|\+|\*|\/|\:|\,).*?\})/"
-                ]'
-    for pattern = patterns
-        rows = grep(txt, pattern, "r");
-        for i = rows
-            t = txt(i);
-            [d, f, M] = regexp(t, pattern);
-            Mr = strsubst(M, "end", "$");
-            for j = 1:size(M,1)
-                t = strsubst(t, M(j), Mr(j));
-            end
-            txt(i) = t;
         end
     end
 endfunction
