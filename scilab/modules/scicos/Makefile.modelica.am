@@ -23,7 +23,7 @@ if OCAML
 TARGET = modelicac XML2Modelica modelicat
 BASE_PATH = $(srcdir)/src/
 bin_PROGRAMS = $(TARGET)
-OCAMLLIBS=nums.cma
+OCAMLPKGS=num
 
 
 ### XML2Modelica
@@ -111,22 +111,22 @@ SUFFIXES += .mll .mly
 # Build the binaries, disabling parallel building as ocamldep ordering seems to fail on some systems
 
 modelicac: $(modelicac_SOURCES) $(MLS_modelicac)
-	$(OCAMLOPT) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicac)
+	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(MLS_modelicac)
 
 modelicac.ocamlc: $(modelicac_SOURCES) $(MLS_modelicac)
-	$(OCAMLC) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicac)
+	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(MLS_modelicac)
 
 XML2Modelica: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-	$(OCAMLOPT) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_XML2Modelica)
+	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(MLS_XML2Modelica)
 
 XML2Modelica.ocamlc: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-	$(OCAMLC) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS) $(MLS_XML2Modelica)
+	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(MLS_XML2Modelica)
 
 modelicat: $(modelicat_SOURCES) $(MLS_modelicat)
-	$(OCAMLOPT) -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicat)
+	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(MLS_modelicat)
 
 modelicat.ocamlc: $(modelicat_SOURCES) $(MLS_modelicat)
-	$(OCAMLC) -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicat)
+	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(MLS_modelicat)
 
 CLEANFILES = $(BASE_PATH)/*/*.cmi \
 	$(BASE_PATH)/*/*.o \

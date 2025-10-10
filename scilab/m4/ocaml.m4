@@ -39,6 +39,10 @@ AC_DEFUN([AC_CHECK_PROG_OCAML],[
 	if test "$OCAMLLEX" = no; then
 		AC_MSG_ERROR([ocamllex not found. Mandatory to build the Scicos modelica compiler.])
 	fi
+	AC_CHECK_PROG(OCAMLFIND,ocamlfind,ocamlfind,no)
+	if test "$OCAMLFIND" = no; then
+		AC_MSG_ERROR([ocamlfind not found. Mandatory to build the Scicos modelica compiler (Use --without-modelica to disable the Modelica compiler).])
+	fi
 	AC_DEFINE([WITH_OCAML],[],[With OCAML])
 
 	AC_SUBST(OCAMLC)
@@ -49,5 +53,6 @@ AC_DEFUN([AC_CHECK_PROG_OCAML],[
 	AC_SUBST(OCAMLYACC)
 	AC_SUBST(OCAMLLEX)
 	AC_SUBST(WITH_OCAML)
+	AC_SUBST(OCAMLFIND)
 ]
 )

@@ -2411,6 +2411,7 @@ if test $XCOS_ENABLE = yes; then
      echo "  OCAMLOPT ........... = $OCAMLOPT"
      echo "  OCAMLOPTFLAGS ...... = $OCAMLOPTFLAGS"
      echo "  OCAMLDEP ........... = $OCAMLDEP"
+     echo "  OCAMLFIND .......... = $OCAMLFIND"
    else
      echo "Will not build Modelica compiler"
    fi

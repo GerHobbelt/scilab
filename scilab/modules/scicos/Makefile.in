@@ -932,6 +932,7 @@ OBJEXT = @OBJEXT@
 OCAMLC = @OCAMLC@
 OCAMLCFLAGS = @OCAMLCFLAGS@
 OCAMLDEP = @OCAMLDEP@
+OCAMLFIND = @OCAMLFIND@
 OCAMLLEX = @OCAMLLEX@
 OCAMLOPT = @OCAMLOPT@
 OCAMLOPTFLAGS = @OCAMLOPTFLAGS@
@@ -1374,7 +1375,7 @@ HELP_CHAPTERFILE = addchapter.sce
 HELP_CHAPTERLANG = en_US fr_FR pt_BR
 @OCAML_TRUE@@XCOS_TRUE@TARGET = modelicac XML2Modelica modelicat
 @OCAML_TRUE@@XCOS_TRUE@BASE_PATH = $(srcdir)/src/
-@OCAML_TRUE@@XCOS_TRUE@OCAMLLIBS = nums.cma
+@OCAML_TRUE@@XCOS_TRUE@OCAMLPKGS = num
 
 ### XML2Modelica
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica_SOURCES = \
@@ -3874,22 +3875,22 @@ distclean-local:
 # Build the binaries, disabling parallel building as ocamldep ordering seems to fail on some systems
 
 @OCAML_TRUE@@XCOS_TRUE@modelicac: $(modelicac_SOURCES) $(MLS_modelicac)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicac)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(MLS_modelicac)
 
 @OCAML_TRUE@@XCOS_TRUE@modelicac.ocamlc: $(modelicac_SOURCES) $(MLS_modelicac)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicac)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_MODELICAC) $(OCAMLOPTFLAGS) $(MLS_modelicac)
 
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_XML2Modelica)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(MLS_XML2Modelica)
 
 @OCAML_TRUE@@XCOS_TRUE@XML2Modelica.ocamlc: $(XML2Modelica_SOURCES) $(MLS_XML2Modelica)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(OCAMLLIBS) $(MLS_XML2Modelica)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ -I $(BASE_PATH_XML2Modelica) $(OCAMLCFLAGS) $(MLS_XML2Modelica)
 
 @OCAML_TRUE@@XCOS_TRUE@modelicat: $(modelicat_SOURCES) $(MLS_modelicat)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLOPT) -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(OCAMLLIBS:.cma=.cmxa) $(MLS_modelicat)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLOPT) -package $(OCAMLPKGS) -linkpkg -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(MLS_modelicat)
 
 @OCAML_TRUE@@XCOS_TRUE@modelicat.ocamlc: $(modelicat_SOURCES) $(MLS_modelicat)
-@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLC) -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(OCAMLLIBS) $(MLS_modelicat)
+@OCAML_TRUE@@XCOS_TRUE@	$(OCAMLFIND) $(OCAMLC) -package $(OCAMLPKGS) -linkpkg -o $@ $(INCLUDE_modelicat) $(OCAMLOPTFLAGS) $(MLS_modelicat)
 
 # Build modelica stuff
 
