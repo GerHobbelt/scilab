@@ -25,7 +25,7 @@ namespace types
 
 bool Callable::invoke(typed_list & in, optional_list & opt, int _iRetCount, typed_list & out, const ast::Exp & e)
 {
-    //check recursion before try catch, to make difference with  errors
+    //check recursion before try catch, to make difference with errors
     if (ConfigVariable::increaseRecursion())
     {
         //reset previous error before call function
@@ -35,11 +35,11 @@ bool Callable::invoke(typed_list & in, optional_list & opt, int _iRetCount, type
         // add line and function name in where
         int iFirstLine = e.getLocation().first_line;
         ConfigVariable::where_begin(iFirstLine + 1 - ConfigVariable::getMacroFirstLines(), this, e.getLocation());
-        Callable::ReturnValue Ret;
+        Callable::ReturnValue ret = Callable::OK;
 
         try
         {
-            Ret = call(in, opt, _iRetCount, out);
+            ret = call(in, opt, _iRetCount, out);
             ConfigVariable::where_end();
             ConfigVariable::decreaseRecursion();
         }
@@ -56,7 +56,7 @@ bool Callable::invoke(typed_list & in, optional_list & opt, int _iRetCount, type
             throw ia;
         }
 
-        if (Ret == Callable::Error)
+        if (ret == Callable::Error)
         {
             throw ast::InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
         }

@@ -115,7 +115,7 @@ void RunVisitorT<T>::visitprivate(const OpExp& e)
                 in.push_back(pITR);
                 pITR->IncreaseRef();
 
-                types::Function::ReturnValue ret = obj->callMethod(method_type, in, opt, 1, out);
+                types::Function::ReturnValue ret = obj->callMethod(method_type, in, opt, 1, out, e);
                 if (ret == types::Function::OK && out.size() == 1)
                 {
                     pResult = out[0];

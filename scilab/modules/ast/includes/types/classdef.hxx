@@ -120,14 +120,14 @@ private:
     std::wstring name;
     std::map<std::wstring, OBJ_ATTR> props;
     std::map<std::wstring, OBJ_ATTR> meths;
-    std::vector<std::wstring> superclass;
     std::map<std::wstring, std::vector<types::InternalType*>> enumerations;
+    std::vector<std::wstring> superclass;
     std::map<std::wstring, InternalType*> instances;
     std::vector<std::tuple<std::wstring, Classdef*>> supers;
     bool initialized;
 
     void LoadClassdef();
-    void call(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out);
+    void internalCall(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e);
 
 /*****************************/
 

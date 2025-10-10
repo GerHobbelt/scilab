@@ -12,6 +12,7 @@
 #include "objectmethod.hxx"
 #include "configvariable.hxx"
 #include "overload.hxx"
+#include "commentexp.hxx"
 
 extern "C"
 {
@@ -54,7 +55,7 @@ Object::~Object()
     optional_list opt;
     typed_list out;
     IncreaseRef();
-    callMethod(L"delete", in, opt, 0, out);
+    callMethod(L"delete", in, opt, 0, out, ast::CommentExp(Location(), new std::wstring(L"")));
     DecreaseRef();
     for (auto&& prop : properties)
     {
@@ -120,11 +121,6 @@ bool Object::toString(std::wostringstream& ostr)
     return false;
 }
 
-bool Object::invoke(typed_list& in, optional_list& /*opt*/, int /*_iRetCount*/, typed_list& out, const ast::Exp& /*e*/)
-{
-    return true;
-}
-
 bool Object::extract(const std::wstring& name, InternalType*& out)
 {
     Classdef* ref = def;
@@ -179,7 +175,7 @@ bool Object::extract(const std::wstring& name, InternalType*& out)
     return false;
 }
 
-Object* Object::insert(typed_list* _pArgs, InternalType* _pSource)
+Object* Object::insert(typed_list* _pArgs, InternalType* _pSource, const ast::Exp& e)
 {
     // update of property
     if (_pArgs->size() == 1 && (*_pArgs)[0]->isString())
@@ -216,13 +212,18 @@ Object* Object::insert(typed_list* _pArgs, InternalType* _pSource)
         in.push_back(_pSource);
         _pSource->IncreaseRef();
 
-        Function::ReturnValue ret = callMethod(fname, in, opt, 0, out);
+        Function::ReturnValue ret = callMethod(fname, in, opt, 0, out, e);
         for (auto&& p : *_pArgs)
         {
             p->DecreaseRef();
         }
 
         _pSource->DecreaseRef();
+
+        if(ret == Function::Error)
+        {
+            throw ast::InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), Location());
+        }
 
         return this;
     }
@@ -281,7 +282,7 @@ bool Object::setProperty(const std::wstring& prop, InternalType* value)
     }
 }
 
-Function::ReturnValue Object::callConstructor(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+Function::ReturnValue Object::callConstructor(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e)
 {
     OBJ_ATTR attr = def->getConstructor();
     if (attr.callable == nullptr)
@@ -306,11 +307,11 @@ Function::ReturnValue Object::callConstructor(typed_list& in, optional_list& opt
         }
     }
 
-    Function::ReturnValue ret = callMethod(def->getName(), attr.callable, in, opt, _iRetCount, out);
+    Function::ReturnValue ret = callMethod(def->getName(), attr.callable, in, opt, _iRetCount, out, e);
     return ret == Function::Error ? ret : Function::OK;
 }
 
-Function::ReturnValue Object::callSuperclassContructor(Classdef* super, typed_list & in, optional_list& opt, int _iRetCount, typed_list& out)
+Function::ReturnValue Object::callSuperclassContructor(Classdef* super, typed_list & in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e)
 {
     OBJ_ATTR attr = super->getConstructor();
     if (attr.callable == nullptr)
@@ -328,7 +329,7 @@ Function::ReturnValue Object::callSuperclassContructor(Classdef* super, typed_li
         }
     }
 
-    Function::ReturnValue ret = callMethod(super->getName(), attr.callable, in, opt, _iRetCount, out);
+    Function::ReturnValue ret = callMethod(super->getName(), attr.callable, in, opt, _iRetCount, out, e);
     if (ret == Function::Error)
     {
         return Function::Error;
@@ -337,7 +338,7 @@ Function::ReturnValue Object::callSuperclassContructor(Classdef* super, typed_li
     return Function::OK;
 }
 
-Function::ReturnValue Object::callMethod(const std::wstring& method, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+Function::ReturnValue Object::callMethod(const std::wstring& method, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e)
 {
     Callable* call = def->getMethod(method);
     if (call == nullptr)
@@ -346,10 +347,10 @@ Function::ReturnValue Object::callMethod(const std::wstring& method, typed_list&
         return Function::OK_NoResult;
     }
 
-    return callMethod(method, call, in, opt, _iRetCount, out);
+    return callMethod(method, call, in, opt, _iRetCount, out, e);
 }
  
-Function::ReturnValue Object::callMethod(const std::wstring& method, Callable* call, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+Function::ReturnValue Object::callMethod(const std::wstring& method, Callable* call, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e)
 {
     if (call == nullptr)
     {
@@ -366,32 +367,53 @@ Function::ReturnValue Object::callMethod(const std::wstring& method, Callable* c
         call->getAs<MacroFile>()->getMacro()->setParent(this);
     }
 
-    try
+    if (ConfigVariable::increaseRecursion())
     {
-        if (ConfigVariable::increaseRecursion())
+        //reset previous error before call function
+        ConfigVariable::resetError();
+        //update verbose";" flag
+        ConfigVariable::setVerbose(e.isVerbose());
+        // add line and function name in where
+        int iFirstLine = e.getLocation().first_line;
+        ConfigVariable::where_begin(iFirstLine + 1 - ConfigVariable::getMacroFirstLines(), call, e.getLocation());
+        Callable::ReturnValue res = Callable::OK;
+
+        scope.push(def->getMethodClassdef(method));
+        try
         {
-            // add line and function name in where
-            ConfigVariable::where_begin(call->getFirstLine(), call, Location());
-
-            scope.push(def->getMethodClassdef(method));
-            Function::ReturnValue res = call->call(in, opt, _iRetCount, out);
+            res = call->call(in, opt, _iRetCount, out);
+        }
+        catch (ast::InternalError & ie)
+        {
             scope.pop();
-
-            // remove function name in where
             ConfigVariable::where_end();
             ConfigVariable::decreaseRecursion();
-
-            return res;
+            throw ie;
         }
-        else
+        catch (ast::InternalAbort & ia)
         {
-            throw ast::RecursionException();
+            scope.pop();
+            ConfigVariable::where_end();
+            ConfigVariable::decreaseRecursion();
+            throw ia;
         }
-    }
-    catch (ast::InternalError& e)
-    {
+
         scope.pop();
-        throw e;
+
+        // remove function name in where
+        ConfigVariable::where_end();
+        ConfigVariable::decreaseRecursion();
+
+        if (res == Callable::Error)
+        {
+            throw ast::InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
+        }
+
+        return res;
+    }
+    else
+    {
+        throw ast::RecursionException();
     }
 }
 

@@ -1200,7 +1200,7 @@ void RunVisitorT<T>::visitprivate(const NotExp &e)
 
         pValue->IncreaseRef();
         in.push_back(pValue);
-        if (pValue->getAs<types::Object>()->callMethod(L"not", in, opt, 1, out) != types::Function::OK)
+        if (pValue->getAs<types::Object>()->callMethod(L"not", in, opt, 1, out, e) != types::Function::OK)
         {
             cleanInOut(in, out);
             CoverageInstance::stopChrono((void*)&e);
@@ -1281,7 +1281,7 @@ void RunVisitorT<T>::visitprivate(const TransposeExp &e)
 
         pValue->IncreaseRef();
         in.push_back(pValue);
-        if (pValue->getAs<types::Object>()->callMethod(L"ctranspose", in, opt, 1, out) != types::Function::OK)
+        if (pValue->getAs<types::Object>()->callMethod(L"ctranspose", in, opt, 1, out, e) != types::Function::OK)
         {
             cleanInOut(in, out);
             CoverageInstance::stopChrono((void*)&e);
@@ -1301,7 +1301,7 @@ void RunVisitorT<T>::visitprivate(const TransposeExp &e)
 
         pValue->IncreaseRef();
         in.push_back(pValue);
-        if (pValue->getAs<types::Object>()->callMethod(L"transpose", in, opt, 1, out) != types::Function::OK)
+        if (pValue->getAs<types::Object>()->callMethod(L"transpose", in, opt, 1, out, e) != types::Function::OK)
         {
             cleanInOut(in, out);
             CoverageInstance::stopChrono((void*)&e);
@@ -1565,6 +1565,16 @@ void RunVisitorT<T>::visitprivate(const ClassDec & e)
                     attr.access = accessFlag;
                     attr.callable = method;
                     methods[method->getName()] = attr;
+                    // In case of exec file, set the file name in the Macro to store where it is defined.
+                    std::wstring strFile = ConfigVariable::getExecutedFile();
+                    const std::vector<ConfigVariable::WhereEntry>& lWhereAmI = ConfigVariable::getWhere();
+                    if (strFile != L"" &&  // check if we are executing a script or a macro
+                        lWhereAmI.empty() == false &&
+                        lWhereAmI.back().m_file_name != nullptr && // check the last function execution is a macro
+                        *(lWhereAmI.back().m_file_name) == strFile) // check the last execution is the same macro as the executed one
+                    {
+                        method->setFileName(strFile);
+                    }
                     continue;
                 }
             }
@@ -1599,7 +1609,6 @@ void RunVisitorT<T>::visitprivate(const ClassDec & e)
             wchar_t szError[bsiz];
             os_swprintf(szError, bsiz, _W("%ls: Unknown method declaration.\n").c_str(), L"'classdef'");
             throw InternalError(szError, 999, me->getLocation());
-
         }
     }
 

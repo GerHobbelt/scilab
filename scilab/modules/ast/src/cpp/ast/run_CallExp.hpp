@@ -53,7 +53,7 @@ void RunVisitorT<T>::visitprivate(const CallExp& e)
                 {
                     inTmp.erase(inTmp.begin());
                     types::optional_list opt;
-                    types::Function::ReturnValue ret = obj->callMethod(method, inTmp, opt, iRetCount, outTmp);
+                    types::Function::ReturnValue ret = obj->callMethod(method, inTmp, opt, iRetCount, outTmp, e);
                     if (ret != types::Function::Error)
                     {
                         if (iSaveExpectedSize != -1 && iSaveExpectedSize > outTmp.size())
@@ -297,7 +297,7 @@ void RunVisitorT<T>::visitprivate(const CallExp& e)
                     types::Object* obj = in[0]->getAs<types::Object>();
                     types::typed_list in2(in.begin() + 1, in.end());
                     types::optional_list opt;
-                    ret = obj->callMethod(method, in2, opt, iRetCount, out);
+                    ret = obj->callMethod(method, in2, opt, iRetCount, out, e);
 
                     if (ret == types::Function::OK)
                     {
@@ -312,7 +312,7 @@ void RunVisitorT<T>::visitprivate(const CallExp& e)
                 {
                     types::optional_list opt;
 
-                    if (pIT->getAs<types::Object>()->callMethod(L"extract", in, opt, 1, out) != types::Function::OK)
+                    if (pIT->getAs<types::Object>()->callMethod(L"extract", in, opt, 1, out, e) != types::Function::OK)
                     {
                         throw InternalError(ConfigVariable::getLastErrorMessage(), ConfigVariable::getLastErrorNumber(), e.getLocation());
                     }

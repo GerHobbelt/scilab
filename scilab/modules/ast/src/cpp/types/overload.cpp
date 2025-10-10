@@ -92,29 +92,12 @@ types::Function::ReturnValue Overload::call(const std::wstring& _stOverloadingFu
 {
     if (in.size() > 0 && in[0]->isObject())
     {
-        try
+        types::Object* obj = in[0]->getAs<types::Object>();
+        types::typed_list in2(in.begin() + 1, in.end());
+        types::optional_list opt;
+        if (obj->callMethod(_stOverloadingFunctionName, in2, opt, _iRetCount, out, ast::CommentExp(_location, new std::wstring(L""))) == types::Function::OK)
         {
-            types::Object* obj = in[0]->getAs<types::Object>();
-            types::typed_list in2(in.begin() + 1, in.end());
-            types::optional_list opt;
-            if (obj->callMethod(_stOverloadingFunctionName, in2, opt, _iRetCount, out) == types::Function::OK)
-            {
-                return types::Function::OK;
-            }
-        }
-        catch (const ast::InternalError& ie)
-        {
-            ConfigVariable::fillWhereError(ie.GetErrorLocation());
-            // remove function name in where
-            ConfigVariable::where_end();
-            ConfigVariable::decreaseRecursion();
-            throw ie;
-        }
-        catch (const ast::InternalAbort& ia)
-        {
-            ConfigVariable::where_end();
-            ConfigVariable::decreaseRecursion();
-            throw ia;
+            return types::Function::OK;
         }
     }
 

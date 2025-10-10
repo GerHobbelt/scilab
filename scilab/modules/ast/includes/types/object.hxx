@@ -64,14 +64,13 @@ public:
     std::map<std::wstring, InternalType*> getProperties() const { return properties; }
     bool setProperty(const std::wstring& prop, InternalType* value);
 
-    Function::ReturnValue callConstructor(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out);
-    Function::ReturnValue callMethod(const std::wstring& method, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out);
-    Function::ReturnValue callMethod(const std::wstring& method, Callable* call, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out);
-    Function::ReturnValue callSuperclassContructor(Classdef* super, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out);
-    bool invoke(typed_list& in, optional_list& /*opt*/, int /*_iRetCount*/, typed_list& out, const ast::Exp& /*e*/) override;
+    Function::ReturnValue callConstructor(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e);
+    Function::ReturnValue callMethod(const std::wstring& method, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e);
+    Function::ReturnValue callMethod(const std::wstring& method, Callable* call, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e);
+    Function::ReturnValue callSuperclassContructor(Classdef* super, typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e);
 
     bool extract(const std::wstring& name, InternalType*& out);
-    Object* insert(typed_list* _pArgs, InternalType* _pSource) override;
+    Object* insert(typed_list* _pArgs, InternalType* _pSource, const ast::Exp& e);
 
     Object* clone()
     {

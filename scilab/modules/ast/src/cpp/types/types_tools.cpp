@@ -20,6 +20,7 @@
 #include "types_tools.hxx"
 #include "overload.hxx"
 #include "scilabWrite.hxx"
+#include "commentexp.hxx"
 
 extern "C"
 {
@@ -955,7 +956,7 @@ types::Function::ReturnValue VariableToString(types::InternalType* pIT, const wc
                 types::typed_list in;
                 types::optional_list opt;
                 types::typed_list out;
-                types::Function::ReturnValue ret = obj->callMethod(L"disp", in, opt, 0, out);
+                types::Function::ReturnValue ret = obj->callMethod(L"disp", in, opt, 0, out, ast::CommentExp(Location(), new std::wstring(L"")));
                 return ret;
             }
         }

@@ -163,7 +163,7 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                                 poRow->IncreaseRef();
                                 pIT->IncreaseRef();
 
-                                if (obj->callMethod(L"horzcat", in, opt, 1, out) == types::Function::OK && out.size() == 1)
+                                if (obj->callMethod(L"horzcat", in, opt, 1, out, e) == types::Function::OK && out.size() == 1)
                                 {
                                     poRow = out[0];
                                 }
@@ -465,7 +465,7 @@ void RunVisitorT<T>::visitprivate(const MatrixExp &e)
                         pGTResult->IncreaseRef();
                         pGT->IncreaseRef();
 
-                        if (obj->callMethod(L"vertcat", in, opt, 1, out) == types::Function::OK && out.size() == 1)
+                        if (obj->callMethod(L"vertcat", in, opt, 1, out, e) == types::Function::OK && out.size() == 1)
                         {
                             poResult = out[0];
                         }

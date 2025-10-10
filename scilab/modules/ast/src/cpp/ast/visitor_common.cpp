@@ -1893,6 +1893,10 @@ types::InternalType* insertionCall(const ast::Exp& e, types::typed_list* _pArgs,
             {
                 pOut = _pVar->getAs<types::Struct>()->insert(_pArgs, _pInsert);
             }
+            else if (_pVar->isObject())
+            {
+                pOut = _pVar->getAs<types::Object>()->insert(_pArgs, _pInsert, e);
+            }
             else if (_pVar->isUserType())
             {
                 pOut = _pVar->getAs<types::UserType>()->insert(_pArgs, _pInsert);
@@ -2356,7 +2360,11 @@ types::InternalType* insertionCall(const ast::Exp& e, types::typed_list* _pArgs,
                     }
                 }
 
-                if (_pVar->isUserType())
+                if (_pVar->isObject())
+                {
+                    pRet = _pVar->getAs<types::Object>()->insert(_pArgs, _pInsert, e);
+                }
+                else if (_pVar->isUserType())
                 {
                     pRet = _pVar->getAs<types::UserType>()->insert(_pArgs, _pInsert);
                 }
@@ -2636,7 +2644,7 @@ std::wstring printTypeDimsInfo(types::InternalType *pIT)
         types::optional_list opt;
         pDblOne->IncreaseRef();
         in.push_back(pDblOne);
-        ret = pIT->getAs<types::Object>()->callMethod(L"outline", in, opt, 1, out);
+        ret = pIT->getAs<types::Object>()->callMethod(L"outline", in, opt, 1, out, ast::CommentExp(Location(), new std::wstring(L"")));
         if (ret == types::Function::OK && out.size() == 1)
         {
             normalProcess = false;

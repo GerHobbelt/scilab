@@ -201,7 +201,6 @@ void Classdef::showMethodTable()
     int max_len = 0;
     for (auto&& v : methods)
     {
-        Classdef* def = std::get<1>(v.second);
         max_len = std::max(max_len, (int)v.first.length());
     }
 
@@ -281,7 +280,7 @@ bool Classdef::invoke(typed_list& in, optional_list& opt, int _iRetCount, typed_
         {
             case AccessModifier::PUBLIC:
             {
-                call(in, opt, _iRetCount, out);
+                internalCall(in, opt, _iRetCount, out, e);
                 return true;
             }
             case AccessModifier::PROTECTED:
@@ -295,7 +294,7 @@ bool Classdef::invoke(typed_list& in, optional_list& opt, int _iRetCount, typed_
                         types::Classdef* caller = currentObj->getClassdef();
                         if (caller == this || isAncestorOf(caller))
                         {
-                            call(in, opt, _iRetCount, out);
+                            internalCall(in, opt, _iRetCount, out, e);
                             return true;
                         }
                     }
@@ -307,6 +306,7 @@ bool Classdef::invoke(typed_list& in, optional_list& opt, int _iRetCount, typed_
                 //continue to error
                 break;
             }
+            default: {}
         }
 
         wchar_t szError[128];
@@ -330,7 +330,7 @@ bool Classdef::invoke(typed_list& in, optional_list& opt, int _iRetCount, typed_
     return false;
 }
 
-void Classdef::call(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out)
+void Classdef::internalCall(typed_list& in, optional_list& opt, int _iRetCount, typed_list& out, const ast::Exp& e)
 {
     //call of class constructor in constructor (A < B  A() { B() }
     InternalType* current = symbol::Context::getInstance()->getCurrentObject();
@@ -342,7 +342,7 @@ void Classdef::call(typed_list& in, optional_list& opt, int _iRetCount, typed_li
             if (isAncestorOf(obj->getClassdef()))
             {
                 obj->IncreaseRef();
-                obj->callSuperclassContructor(this, in, opt, _iRetCount, out);
+                obj->callSuperclassContructor(this, in, opt, _iRetCount, out, e);
                 obj->DecreaseRef();
                 return;
             }
@@ -352,7 +352,7 @@ void Classdef::call(typed_list& in, optional_list& opt, int _iRetCount, typed_li
     LoadClassdef();
     Object* obj = new Object(this);
     obj->IncreaseRef();
-    obj->callConstructor(in, opt, _iRetCount, out);
+    obj->callConstructor(in, opt, _iRetCount, out, e);
     obj->DecreaseRef();
     out.push_back(obj);
 }
@@ -443,7 +443,7 @@ bool Classdef::extract(const std::wstring& name, InternalType*& out)
 
         Object* obj = new Object(this);
         obj->IncreaseRef();
-        obj->callConstructor(e->second, opt, 0, out1);
+        obj->callConstructor(e->second, opt, 0, out1, ast::CommentExp(Location(), new std::wstring(L"")));
         instances[e->first] = obj;
 
         out = obj;
@@ -650,6 +650,7 @@ AccessModifier Classdef::reduceAccess(AccessModifier access)
         case AccessModifier::PRIVATE:
             access = AccessModifier::NONE;
             break;
+        default: {}
     }
 
     return access;
