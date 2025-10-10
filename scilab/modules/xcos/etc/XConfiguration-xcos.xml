@@ -2,8 +2,13 @@
 <xcos title="Xcos">
     <body>
         <xcos-preferences number-of-recently-open="5" file-format="0">
-            <file-format code="0" description="ZCOS"/>
-            <file-format code="1" description="XCOS"/>
+            <!-- See XcosFileType.java for enum values -->
+            <file-format code="0" description="SSP"/>
+            <file-format code="1" description="ZCOS"/>
+            <file-format code="2" description="XCOS"/>
+            <file-format code="3" description="XCOS"/>
+            <file-format code="4" description="XMI"/>
+            <file-format code="5" description="COSF"/>
         </xcos-preferences>
     </body>
     <edition title="Edition">

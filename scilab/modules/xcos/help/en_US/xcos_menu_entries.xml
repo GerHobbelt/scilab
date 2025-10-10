@@ -111,8 +111,8 @@
                     </inlinemediaobject>
                 </para>
                 <para>
-                    Select the <emphasis>Open</emphasis> menu item to load a XML (<emphasis>.zcos</emphasis>) or a binary file
-                    (<emphasis>.cos</emphasis>) which contain saved block diagram or a palette. The command open a dialog box allows
+                    Select the <emphasis>Open</emphasis> menu item to load an SSP (<emphasis>.ssp</emphasis>), a XCOS (<emphasis>.xcos</emphasis> or <emphasis>.zcos</emphasis>) or a Scilab file
+                    (<emphasis>.cosf</emphasis>) which contain saved block diagram or a palette. The command open a dialog box allows
                     you to choose the folder and the file.
                 </para>
                 <para/>
@@ -133,7 +133,7 @@
                 <para>
                     If you select this menu item and you have never clicked on the <emphasis>Save</emphasis> or
                     <emphasis>Save As</emphasis> menu item, a dialog allows you to choose a directory and
-                    specify a file name without extension. The default extension is <emphasis>.zcos</emphasis>.
+                    specify a file name without extension. The default extension is <emphasis>.ssp</emphasis>.
                 </para>
                 <para>The diagram takes the name of the file (without the extension).</para>
                 <para/>

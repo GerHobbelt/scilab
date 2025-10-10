@@ -43,7 +43,7 @@
             <listitem>
                 <para>
                     <emphasis role="bold">filename : </emphasis> a character string containing
-                    the path of the diagram file (.xcos or .zcos extension). If no input
+                    the path of the diagram file (.ssp or .zcos extension). If no input
                     argument is used, an empty diagram is opened (default name Untitled).
                 </para>
             </listitem>

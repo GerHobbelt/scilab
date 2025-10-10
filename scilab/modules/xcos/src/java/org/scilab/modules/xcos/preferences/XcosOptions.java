@@ -37,7 +37,7 @@ public class XcosOptions {
 
     public static class Preferences {
         private int numberOfRecentlyOpen = 5;
-        private XcosFileType fileFormat = XcosFileType.ZCOS;
+        private XcosFileType fileFormat = XcosFileType.SSP;
 
         private Preferences() {
         }

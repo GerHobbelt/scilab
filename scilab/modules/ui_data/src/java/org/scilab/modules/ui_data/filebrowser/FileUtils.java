@@ -65,6 +65,7 @@ public final class FileUtils {
         extToIcon.put("cosf", SCILABICON);
         extToIcon.put("xcos", SCILABICON);
         extToIcon.put("zcos", SCILABICON);
+        extToIcon.put("ssp", SCILABICON);
         extToIcon.put("bin", SCILABICON);
         extToIcon.put("sod", SCILABICON);
         extToIcon.put("dem", SCILABICON);

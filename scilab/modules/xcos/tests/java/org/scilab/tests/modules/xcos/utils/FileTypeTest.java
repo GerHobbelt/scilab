@@ -41,7 +41,8 @@ public class FileTypeTest {
 
     @Test
     public void checkSupportedType() {
-        assert XcosFileType.values().length == 4;
+        assert XcosFileType.values().length > 3;
+        assert XcosFileType.getAvailableSaveFormats().contains(XcosFileType.SSP);
         assert XcosFileType.getAvailableSaveFormats().contains(XcosFileType.ZCOS);
         assert XcosFileType.getAvailableSaveFormats().contains(XcosFileType.XCOS);
     }

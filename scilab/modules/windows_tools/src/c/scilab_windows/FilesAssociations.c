@@ -40,6 +40,7 @@ static BOOL IsAScicosFileCOS(char *chainefichier);
 static BOOL IsAScicosFileCOSF(char *chainefichier);
 static BOOL IsAScicosFileXCOS(char *chainefichier);
 static BOOL IsAScicosFileZCOS(char *chainefichier);
+static BOOL IsAScicosFileSSP(char *chainefichier);
 static BOOL IsASciNotesFileSCE(char *chainefichier);
 static BOOL IsASciNotesFileSCI(char *chainefichier);
 static BOOL IsASciNotesFileTST(char *chainefichier);
