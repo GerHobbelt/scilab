@@ -6,6 +6,7 @@
 // ============================================================================
 
 // <-- TEST WITH XCOS -->
+// <-- CLI SHELL MODE -->
 // <-- NO CHECK REF -->
 
 //
@@ -19,6 +20,7 @@ function check_memleaks(diary_id)
     log = mgetl(TMPDIR + "/mvc_leak.log");
     log = log(grep(log, ["objectCreated", "objectDeleted"]));
 
+    disp(log)
     objects = strtod(csvTextScan(log, " ", ".", "string")(:, 7));
     objects = gsort(objects);
 
@@ -30,25 +32,18 @@ function check_memleaks(diary_id)
 endfunction
 
 loadXcosLibs();
-jimport java.lang.System;
 scicos_log("INFO");
 
 
 diary_id = diary(TMPDIR + "/mvc_leak.log");
-importXcosDiagram(SCI+"/modules/xcos/demos/Discrete-KalmanFilter.zcos");
+scs_m = scicosDiagramToScilab(SCI+"/modules/xcos/tests/unit_tests/mvc_memleaks_Discrete_KalmanFilter.ssp");
 clear scs_m;
-System.gc();
-System.runFinalization();
-sleep(2, "s");
 check_memleaks(diary_id);
 
 diary_id = diary(TMPDIR + "/mvc_leak.log");
-importXcosDiagram(SCI+"/modules/xcos/demos/Discrete-KalmanFilter.zcos");
+scs_m = scicosDiagramToScilab(SCI+"/modules/xcos/tests/unit_tests/mvc_memleaks_Discrete_KalmanFilter.ssp");
 xcos_simulate(scs_m, 4);
 clear scs_m;
-System.gc();
-System.runFinalization();
-sleep(2, "s");
 check_memleaks(diary_id);
 
 deletefile(TMPDIR + "/mvc_leak.log");
