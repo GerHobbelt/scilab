@@ -12,9 +12,10 @@
 function demo_spectral()
 
     // generate white data
-    rand("normal");
+    s = rand("seed");
     rand("seed", 0);
-    x = rand(1:1024-33+1);
+    x = rand(1:1024-33+1, "normal");
+    rand("seed", s);
 
     // make low-pass filter with eqfir
     nf = 33;

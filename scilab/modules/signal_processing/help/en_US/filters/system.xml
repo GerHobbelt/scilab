@@ -93,9 +93,8 @@ q=[.03 0.01;.01 0.03];
 r=2*eye(2);
 // initialize system process
 rand("seed",2);
-rand("normal");
 p0c=chol(p0);
-x0=m0+p0c'*rand(ones(m0));
+x0=m0+p0c'*rand(ones(m0), "normal");
 yt=[];
 //initialize kalman filter
 xke0=m0;pk0=p0;

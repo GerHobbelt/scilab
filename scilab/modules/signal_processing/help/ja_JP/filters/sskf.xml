@@ -154,17 +154,16 @@
 
         <programlisting role="example"><![CDATA[
 rand("seed",5);
-rand("normal");
 q=[.03 0.01;.01 0.03];
-u=rand(2,11);
+u=rand(2, 11, "normal");
 f=[1.1 0.1;0 0.8];
 g=(chol(q))';
 m0=[10 10]';
 p0=[2 0;0 2];
-x0=m0+(chol(p0))'*rand(2,1);
+x0=m0+(chol(p0))'*rand(2, 1, "normal");
 x=ltitr(f,g,u,x0);
 r=[2 0;0 2];
-v=(chol(r))'*rand(2,11);
+v=(chol(r))'*rand(2, 11, "normal");
 y=x+v;
 h=eye(2,2);
 [xe pe]=sskf(y,f,h,q,r,m0)
@@ -173,4 +172,3 @@ h=eye(2,2);
     </refsection>
 
 </refentry>
-

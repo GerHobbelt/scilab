@@ -109,29 +109,32 @@
         <para><emphasis role="bold">Two compact clusters with noise</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 n = 50;
                 X = [rand(n,2); rand(n,2)+3];
                 X = [X; 6*rand(10,2)];
                 labels = dbscan(X, 0.5, 5);
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Two compact clusters with noise");
-                gca().isoview = "on";
             ]]></programlisting>
             <scilab:image>
+                rand("seed", 0)
                 n = 50;
                 X = [rand(n,2); rand(n,2)+3];
                 X = [X; 6*rand(10,2)];
                 labels = dbscan(X, 0.5, 5);
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Two compact clusters with noise");
-                gca().isoview = "on";
             </scilab:image>
         </para>
         <para><emphasis role="bold">Three clusters of different densities</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 X1 = 0.3*rand(100,2);
                 X2 = rand(50,2) + 3;
                 X3 = 1.8*rand(100,2) - 2;
@@ -146,6 +149,7 @@
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 X1 = 0.3*rand(100,2);
                 X2 = rand(50,2) + 3;
                 X3 = 1.8*rand(100,2) - 2;
@@ -154,14 +158,15 @@
                 labels = dbscan(X, 0.4, 5);
 
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Three clusters of different densities");
-                gca().isoview = "on";
             </scilab:image>
         </para>
         <para><emphasis role="bold">half-moon shaped data</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 n = 100;
                 t = linspace(0, %pi, n)';
                 X1 = [cos(t), sin(t)] + 0.05*rand(n,2);
@@ -171,11 +176,12 @@
                 labels = dbscan(X, 0.2, 5);
 
                 scf();
-                scatter(X(:,1), X(:,2), [], labels, "fill");
                 gca().isoview = "on";
+                scatter(X(:,1), X(:,2), [], labels, "fill");
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 n = 100;
                 t = linspace(0, %pi, n)';
                 X1 = [cos(t), sin(t)] + 0.05*rand(n,2);
@@ -185,13 +191,14 @@
                 labels = dbscan(X, 0.2, 5);
 
                 scf();
-                scatter(X(:,1), X(:,2), [], labels, "fill");
                 gca().isoview = "on";
+                scatter(X(:,1), X(:,2), [], labels, "fill");
             </scilab:image>
         </para>
         <para><emphasis role="bold">Circular cluster with noise</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 theta = 2*%pi*rand(200,1);
                 r = 1 + 0.1*rand(200,1);
                 X1 = [r.*cos(theta), r.*sin(theta)]; // circle
@@ -202,12 +209,13 @@
                 labels = dbscan(X, 0.2, 5);
 
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Circular cluster with noise");
-                gca().isoview = "on";
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 theta = 2*%pi*rand(200,1);
                 r = 1 + 0.1*rand(200,1);
                 X1 = [r.*cos(theta), r.*sin(theta)]; // circle
@@ -218,14 +226,15 @@
                 labels = dbscan(X, 0.2, 5);
 
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Circular cluster with noise");
-                gca().isoview = "on";
             </scilab:image>
         </para>
         <para><emphasis role="bold">Nested spirals</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 t = linspace(0, 4*%pi, 200)';
                 r = linspace(0.1, 1, 200)';
 
@@ -236,12 +245,13 @@
                 labels = dbscan(X, 0.15, 5);
 
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Nested spirals");
-                gca().isoview = "on";
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 t = linspace(0, 4*%pi, 200)';
                 r = linspace(0.1, 1, 200)';
 
@@ -252,9 +262,9 @@
                 labels = dbscan(X, 0.15, 5);
 
                 scf();
+                gca().isoview = "on";
                 scatter(X(:,1), X(:,2), [], labels, "fill");
                 xtitle("Nested spirals");
-                gca().isoview = "on";
             </scilab:image>
         </para>
     </refsection>

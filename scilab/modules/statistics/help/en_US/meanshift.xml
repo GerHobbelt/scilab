@@ -148,6 +148,7 @@
         <para><emphasis role="bold">Two well-separated blobs</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 n = 20;
                 X1 = [rand(n, 2) + 1; rand(n, 2) + 5];
                 [centers1, labels1] = meanshift(X1, 1);
@@ -156,6 +157,7 @@
                 plot(centers1(:,1), centers1(:,2), 'r*', "markersize", 10, "thickness", 3);
             ]]></programlisting>
             <scilab:image>
+                rand("seed", 0)
                 n = 20;
                 X1 = [rand(n, 2) + 1; rand(n, 2) + 5];
                 [centers1, labels1] = meanshift(X1, 1);
@@ -167,6 +169,7 @@
         <para><emphasis role="bold">Three nearby clusters</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 n = 20;
                 X2 = [rand(n, 2) + 1; rand(n, 1) + 3, rand(n, 1) + 1; rand(n, 1) + 2, rand(n, 1) + 3];
                 [centers2, labels2] = meanshift(X2, 0.8);
@@ -176,6 +179,7 @@
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 n = 20;
                 X2 = [rand(n, 2) + 1; rand(n, 1) + 3, rand(n, 1) + 1; rand(n, 1) + 2, rand(n, 1) + 3];
                 [centers2, labels2] = meanshift(X2, 0.8);
@@ -187,6 +191,7 @@
         <para><emphasis role="bold">Unequal cluster sizes</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 X3 = [rand(50, 2)+2; rand(5,2)+8];
                 opts = struct("bin_seeding", %t, "min_bin_freq", 2);
                 [centers3, labels3] = meanshift(X3, 1.2, opts);
@@ -196,6 +201,7 @@
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 X3 = [rand(50, 2)+2; rand(5,2)+8];
                 opts = struct("bin_seeding", %t, "min_bin_freq", 2);
                 [centers3, labels3] = meanshift(X3, 1.2, opts);
@@ -207,6 +213,7 @@
         <para><emphasis role="bold">Gaussian kernel</emphasis></para>
         <para>
             <programlisting role="example"><![CDATA[
+                rand("seed", 0)
                 n = 20;
                 X4 = [rand(n, 2) + 1; rand(n, 1) + 3 rand(n, 1) + 1];
 
@@ -221,6 +228,7 @@
             ]]>
             </programlisting>
             <scilab:image>
+                rand("seed", 0)
                 n = 20;
                 X4 = [rand(n, 2) + 1; rand(n, 1) + 3 rand(n, 1) + 1];
 

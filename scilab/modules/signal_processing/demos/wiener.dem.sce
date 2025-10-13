@@ -14,11 +14,10 @@ function demo_wiener()
     // observation given the old state
 
     function [x1,y] = systemForWiener(x0,f,g,h,q,r)
-        rand("normal");
         q2 = chol(q);
         r2 = chol(r);
-        u = q2'*rand(ones(x0));
-        v = r2'*rand(ones(x0));
+        u = q2'*rand(ones(x0), "normal");
+        v = r2'*rand(ones(x0), "normal");
         x1 = f*x0+g*u;
         y = h*x1+v;
     endfunction
@@ -42,11 +41,12 @@ function demo_wiener()
 
     // initialize system process
 
-    rand("seed",66);
-    rand("normal");
+    s = rand("seed");
+    rand("seed", 66);
     p0c = chol(p0);
-    x0 = m0 + p0c'*rand(ones(m0));
-    y = h*x0+chol(r)'*rand(ones(1:hi))';
+    x0 = m0 + p0c'*rand(ones(m0), "normal");
+    y = h*x0+chol(r)'*rand(ones(1:hi), "normal")';
+    radn("seed", s);
     yt = y;
 
     //initialize plotted variables
@@ -70,6 +70,8 @@ function demo_wiener()
     // get the wiener filter estimate
 
     [xs, ps, xf, pf] = wiener(yt, m0, p0, ft, gt, ht, qt, rt);
+
+
 
     // plot result
 

@@ -145,10 +145,8 @@ histplot()
 // サブウインドウのデフォルト値に戻します
 xsetech([0,0,1,1])
  ]]></programlisting>
-        <scilab:image>
-            
+        <scilab:image localized="true">
             set(gca(),"font_style",2,"font_size",0);
-            
             xsetech([0,0,0.5,0.5]);
             plot3d()
             xsetech([0.5,0,0.5,0.5]);

@@ -30,10 +30,10 @@ function [C, centers] = kmeans(X, k)
 
 	// init classe centers
 	n = size(X, 1);
-	index = ceil(n * rand(1, k));
+	index = ceil(n * rand(1, k, "uniform"));
 	u = unique(index);
 	while length(u) <> length(index) then
-		index = ceil(n * rand(1, k));
+		index = ceil(n * rand(1, k, "uniform"));
 		u = unique(index);
 	end
 
