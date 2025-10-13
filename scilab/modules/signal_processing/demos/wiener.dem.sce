@@ -46,7 +46,7 @@ function demo_wiener()
     p0c = chol(p0);
     x0 = m0 + p0c'*rand(ones(m0), "normal");
     y = h*x0+chol(r)'*rand(ones(1:hi), "normal")';
-    radn("seed", s);
+    rand("seed", s);
     yt = y;
 
     //initialize plotted variables
