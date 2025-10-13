@@ -23,7 +23,7 @@
 int MoveFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename)
 {
     int ierr = 0;
-    ierr = CopyFileFunction(DestinationFilename, SourceFilename);
+    ierr = CopyFileFunction(DestinationFilename, SourceFilename, 0);
     if (ierr == 0)
     {
         if (deleteafileW(SourceFilename))
@@ -47,7 +47,7 @@ int MoveDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirector
         createdirectoryW(DestinationDirectory);
     }
 
-    ierr = CopyDirectoryFunction(DestinationDirectory, SourceDirectory);
+    ierr = CopyDirectoryFunction(DestinationDirectory, SourceDirectory, 0);
     if (ierr == 0)
     {
         if (removedirW(SourceDirectory))

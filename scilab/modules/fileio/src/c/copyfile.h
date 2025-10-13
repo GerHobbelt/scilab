@@ -19,13 +19,23 @@
 #include <wchar.h>
 #include "dynlib_fileio.h"
 
+// copyfile options can be used to mimic Unix "cp" command line options, recursive is always set
+enum CopyFileOptions {
+    // copy links as links on Linux, copy file content on Windows
+    COPYFILE_OS_DEFAULT = 1,
+    // copy symbolic links
+    COPYFILE_PRESERVE,
+    // copy file content
+    COPYFILE_RESOLVE,
+};
+
 /**
 * copy a file
 * @param[in] destination filename
 * @param[in] source filename
 * @return error number
 */
-FILEIO_IMPEXP int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename);
+FILEIO_IMPEXP int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions);
 
 /**
 * copy a directory
@@ -33,7 +43,7 @@ FILEIO_IMPEXP int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *Source
 * @param[in] source directory
 * @return error number
 */
-FILEIO_IMPEXP int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory);
+FILEIO_IMPEXP int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions);
 
 #endif /* __COPYFILE_H__ */
 /*--------------------------------------------------------------------------*/

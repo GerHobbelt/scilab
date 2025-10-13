@@ -640,7 +640,7 @@ void CoverModule::copyFile(const std::wstring& inDir, const std::wstring& outDir
     const std::wstring out = outDir + DIR_SEPARATORW + filename;
     wchar_t* _input = expandPathVariableW((wchar_t*)in.c_str());
     wchar_t* _output = expandPathVariableW((wchar_t*)out.c_str());
-    CopyFileFunction(_output, _input);
+    CopyFileFunction(_output, _input, 0);
     FREE(_input);
     FREE(_output);
 }

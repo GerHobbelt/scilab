@@ -16,6 +16,7 @@
 #ifdef _MSC_VER
 #include <windows.h>
 #include <shellapi.h>
+#include <accctrl.h>
 #include <string.h>
 #include "copyfile.h"
 #include "BOOL.h"
@@ -26,20 +27,24 @@
 #include "PATH_MAX.h"
 #include "os_string.h"
 /*--------------------------------------------------------------------------*/
-static int CopyFileFunction_windows(wchar_t *DestinationFilename, wchar_t *SourceFilename);
-static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t *SourceDirectory);
+static BOOL SETUP_SYMBOLIC_LINK_NAME = TRUE;
 /*--------------------------------------------------------------------------*/
-int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename)
+static int CopyFileFunction_windows(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions);
+static int CopyFileFunction_windows(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions);
+static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions);
+static int preserve_all(wchar_t *DestinationDirectory, wchar_t *SourceDirectory);
+/*--------------------------------------------------------------------------*/
+int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions)
 {
     if (os_wcsicmp(DestinationFilename, SourceFilename) == 0)
     {
         SetLastError(ERROR_ACCESS_DENIED);
         return 1;
     }
-    return CopyFileFunction_windows(DestinationFilename, SourceFilename);
+    return CopyFileFunction_windows(DestinationFilename, SourceFilename, CopyFileOptions);
 }
 /*--------------------------------------------------------------------------*/
-int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory)
+int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions)
 {
     /* remove last file separator if it does not exist */
     if ( (SourceDirectory[wcslen(SourceDirectory) - 1] == L'\\') ||
@@ -62,20 +67,44 @@ int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirector
     }
 
 
-    return CopyDirectoryFunction_windows(DestinationDirectory, SourceDirectory);
+    return CopyDirectoryFunction_windows(DestinationDirectory, SourceDirectory, CopyFileOptions);
 }
 /*--------------------------------------------------------------------------*/
-static int CopyFileFunction_windows(wchar_t *DestinationFilename, wchar_t *SourceFilename)
+static int CopyFileFunction_windows(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions)
 {
-    BOOL bFailIfExists = FALSE;
-    if (!CopyFileW(SourceFilename, DestinationFilename, bFailIfExists))
+    BOOL ans;
+    if (CopyFileOptions == COPYFILE_PRESERVE)
     {
-        return 1;
+        // copy symbolic link as symbolic link
+        WIN32_FILE_ATTRIBUTE_DATA fileInformation;
+        memset(&fileInformation, 0, sizeof(WIN32_FILE_ATTRIBUTE_DATA));
+        ans = GetFileAttributesExW(SourceFilename, GetFileExInfoStandard, &fileInformation);
+        if (ans && (fileInformation.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT))
+        {
+            ans = CopyFileExW(SourceFilename, DestinationFilename, NULL, NULL, NULL, COPY_FILE_COPY_SYMLINK);            
+        }
+        else
+        {
+            // regular file copy
+            ans = CopyFileExW(SourceFilename, DestinationFilename, NULL, NULL, NULL, 0);
+        }
+        
+        // preserve timestamps and attributes
+        if (ans)
+        {
+            ans = preserve_all(DestinationFilename, SourceFilename);
+        }
     }
-    return 0;
+    else // COPYFILE_OS_DEFAULT or COPYFILE_RESOLVE or unset
+    {
+        ans = CopyFileExW(SourceFilename, DestinationFilename, NULL, NULL, NULL, 0);
+    }
+
+    // windows api return non zero if ok
+    return (ans ? 0 : 1);
 }
 /*--------------------------------------------------------------------------*/
-static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t *SourceDirectory)
+static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions)
 {
     WIN32_FIND_DATAW dir_find_data;
     wchar_t src_buffer[MAX_PATH * 2 + 1];
@@ -132,13 +161,29 @@ static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t 
             wcscpy(src_buffer + wcslen(SourceDirectory) + 1, dir_find_data.cFileName);
             wcscpy(dest_buffer + wcslen(DestinationDirectory) + 1, dir_find_data.cFileName);
 
+            // copy symbolic link as symbolic link
+            if (CopyFileOptions == COPYFILE_PRESERVE && (dir_find_data.dwFileAttributes & FILE_ATTRIBUTE_REPARSE_POINT))
+            { 
+                ans = CopyFileExW(src_buffer, dest_buffer, NULL, NULL, NULL, COPY_FILE_COPY_SYMLINK);
+                if (!ans)
+                {
+                    break;
+                }
+                continue;
+            }
+
+            //  recursive file copy
             if (dir_find_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
             {
-                ans = (CopyDirectoryFunction_windows( dest_buffer, src_buffer) == 0);
+                ans = (CopyDirectoryFunction_windows(dest_buffer, src_buffer, CopyFileOptions) == 0);
             }
             else
             {
-                ans = CopyFileW(src_buffer, dest_buffer, FALSE);
+                ans = CopyFileW(src_buffer, dest_buffer, 0);
+                if (ans && CopyFileOptions == COPYFILE_PRESERVE)
+                {
+                    ans = preserve_all(dest_buffer, src_buffer);
+                }
             }
             if (!ans)
             {
@@ -148,7 +193,32 @@ static int CopyDirectoryFunction_windows(wchar_t *DestinationDirectory, wchar_t 
         while (FindNextFileW(find_handle, &dir_find_data));
         FindClose(find_handle);
     }
+    // windows api return non zero if ok
     return (ans ? 0 : 1);
+}
+/*--------------------------------------------------------------------------*/
+static int preserve_all(wchar_t *DestinationFilename, wchar_t *SourceFilename)
+{
+    // Preserve file attributes
+    WIN32_FILE_ATTRIBUTE_DATA fileInfo;
+    if (GetFileAttributesExW(SourceFilename, GetFileExInfoStandard, &fileInfo))
+    {
+        SetFileAttributesW(DestinationFilename, fileInfo.dwFileAttributes);
+    }
+
+    // Preserve timestamps
+    HANDLE hSource = CreateFileW(SourceFilename, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    HANDLE hDest = CreateFileW(DestinationFilename, GENERIC_WRITE, FILE_SHARE_READ, NULL, OPEN_EXISTING, 0, NULL);
+    if (hSource != INVALID_HANDLE_VALUE && hDest != INVALID_HANDLE_VALUE)
+    {
+        FILETIME creationTime, lastAccessTime, lastWriteTime;
+        if (GetFileTime(hSource, &creationTime, &lastAccessTime, &lastWriteTime))
+        {
+            SetFileTime(hDest, &creationTime, &lastAccessTime, &lastWriteTime);
+        }
+        CloseHandle(hSource);
+        CloseHandle(hDest);
+    }
 }
 /*--------------------------------------------------------------------------*/
 #endif /* #ifdef _MSC_VER */

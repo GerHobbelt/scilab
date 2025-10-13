@@ -35,6 +35,7 @@
 /*--------------------------------------------------------------------------*/
 static wchar_t *getFilenameWithExtension(wchar_t* wcFullFilename);
 static int returnCopyFileResultOnStack(int ierr, char *fname , void* pvApiCtx);
+static int applyFlag(int* iFlag, wchar_t* pStFlag, char *fname , void* pvApiCtx);
 /*--------------------------------------------------------------------------*/
 int sci_copyfile(char *fname, void* pvApiCtx)
 {
@@ -47,8 +48,12 @@ int sci_copyfile(char *fname, void* pvApiCtx)
     wchar_t *pStVarTwo = NULL;
     wchar_t *pStVarTwoExpanded = NULL;
 
-    /* Check Input & Output parameters */
-    CheckRhs(2, 2);
+    int *piAddressFlag = NULL;
+    wchar_t *pStFlag = NULL;
+    int iFlag = 0;
+
+    /* Check Input, Output and Flag parameters */
+    CheckRhs(2, 3);
     CheckLhs(0, 2);
 
     sciErr = getVarAddressFromPosition(pvApiCtx, 1, &piAddressVarOne);
@@ -130,6 +135,71 @@ int sci_copyfile(char *fname, void* pvApiCtx)
         return 0;
     }
 
+    if (Rhs >= 3)
+    {
+        sciErr = getVarAddressFromPosition(pvApiCtx, 3, &piAddressFlag);
+        if (sciErr.iErr)
+        {
+            if (pStVarOneExpanded)
+            {
+                FREE(pStVarOneExpanded);
+            }    
+            if (pStVarTwoExpanded)
+            {
+                FREE(pStVarTwoExpanded);
+            }
+
+            printError(&sciErr, 0);
+            Scierror(999, _("%s: Can not read input argument #%d.\n"), fname, 1);
+            return 0;
+        }
+        if (!isStringType(pvApiCtx, piAddressFlag) && !isScalar(pvApiCtx, piAddressFlag))
+        {
+            if (pStVarOneExpanded)
+            {
+                FREE(pStVarOneExpanded);
+            }    
+            if (pStVarTwoExpanded)
+            {
+                FREE(pStVarTwoExpanded);
+            }
+
+            Scierror(999, _("%s: Wrong type for input argument #%d: string expected.\n"), fname, 3);
+            return 0;
+        }
+        if (getAllocatedSingleWideString(pvApiCtx, piAddressFlag, &pStFlag))
+        {
+            if (pStVarOneExpanded)
+            {
+                FREE(pStVarOneExpanded);
+            }
+            if (pStVarTwoExpanded)
+            {
+                FREE(pStVarTwoExpanded);
+            }
+
+            Scierror(999, _("%s: Can not read input argument #%d.\n"), fname, 3);
+            return 0;
+        }
+        if (applyFlag(&iFlag, pStFlag, fname, pvApiCtx))
+        {
+            if (pStVarOneExpanded)
+            {
+                FREE(pStVarOneExpanded);
+            }
+            if (pStVarTwoExpanded)
+            {
+                FREE(pStVarTwoExpanded);
+            }
+
+            Scierror(999, _("%s: Can not decode argument #%d, \"%ls\" option is not supported.\n"), fname, 3, pStFlag);
+            FREE(pStFlag);
+            return 0;
+        }
+        FREE(pStFlag);
+    }
+
+
     if (isdirW(pStVarOneExpanded) || FileExistW(pStVarOneExpanded))
     {
         int ierrCopy = 0;
@@ -139,7 +209,7 @@ int sci_copyfile(char *fname, void* pvApiCtx)
             if (isdirW(pStVarOneExpanded))
             {
                 /* copy a directory into a directory */
-                ierrCopy = CopyDirectoryFunction(pStVarTwoExpanded, pStVarOneExpanded);
+                ierrCopy = CopyDirectoryFunction(pStVarTwoExpanded, pStVarOneExpanded, iFlag);
             }
             else if (FileExistW(pStVarOneExpanded))
             {
@@ -165,7 +235,7 @@ int sci_copyfile(char *fname, void* pvApiCtx)
                         wcscat(destFullFilename, L"/");
                         wcscat(destFullFilename, filename);
 
-                        ierrCopy = CopyFileFunction(destFullFilename, pStVarOneExpanded);
+                        ierrCopy = CopyFileFunction(destFullFilename, pStVarOneExpanded, iFlag);
 
                         FREE(filename);
                         FREE(destFullFilename);
@@ -181,7 +251,7 @@ int sci_copyfile(char *fname, void* pvApiCtx)
                 else
                 {
                     /* copy a file into a file */
-                    ierrCopy = CopyFileFunction(pStVarTwoExpanded, pStVarOneExpanded);
+                    ierrCopy = CopyFileFunction(pStVarTwoExpanded, pStVarOneExpanded, iFlag);
                 }
             }
             else
@@ -356,5 +426,27 @@ static int returnCopyFileResultOnStack(int ierr, char *fname, void* pvApiCtx)
     PutLhsVar();
     return 0;
 }
-
+/*--------------------------------------------------------------------------*/
+// update iFlag according to pStFlag string value
+// return 0 if ok, 1 if not ok
+static int applyFlag(int* iFlag, wchar_t* pStFlag, char *fname , void* pvApiCtx)
+{
+    if (wcscmp(pStFlag, L"osdefault") == 0)
+    {
+        *iFlag = COPYFILE_OS_DEFAULT;
+    }
+    else if (wcscmp(pStFlag, L"preserve") == 0)
+    {
+        *iFlag = COPYFILE_PRESERVE;
+    }
+    else if (wcscmp(pStFlag, L"resolve") == 0)
+    {
+        *iFlag = COPYFILE_RESOLVE;
+    }
+    else
+    {
+        return 1;
+    }
+    return 0;
+}
 /*--------------------------------------------------------------------------*/

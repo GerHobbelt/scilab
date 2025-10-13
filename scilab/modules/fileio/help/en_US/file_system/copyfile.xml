@@ -22,7 +22,8 @@
     <refsynopsisdiv>
         <title>Syntax</title>
         <synopsis>copyfile(source, destination)
-            [status, message] = copyfile(source, destination)
+            copyfile(source, destination, mode)
+            [status, errmsg] = copyfile(...)
         </synopsis>
     </refsynopsisdiv>
     <refsection>
@@ -43,6 +44,31 @@
                     </para>
                 </listitem>
             </varlistentry>
+            <varlistentry>
+                <term>mode</term>
+                <listitem>
+                    <para>character string: option to modify the way to copy.</para>
+                    <para>
+                        <code>"osdefault"</code> (default) copy the file using default OS functions.
+                        <code>"preserve"</code> preserve symbolic links instead of copying the file content.
+                        <code>"resolve"</code> copy the file content.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>status</term>
+                <listitem>
+                    <para>double: 1 if the copy operation succeeded, 0 otherwise.
+                    </para>
+                </listitem>
+            </varlistentry>
+            <varlistentry>
+                <term>errmsg</term>
+                <listitem>
+                    <para>a character string: the error message if any, or an empty string if no error occurred.
+                    </para>
+                </listitem>
+            </varlistentry>
         </variablelist>
     </refsection>
     <refsection>
@@ -59,17 +85,17 @@
             </warning>
         </para>
         <para>
-            <code>[status, msg] = copyfile(source, destination)</code>
-            copies <varname>source</varname> to <varname>destination</varname>, returning the <varname>status</varname> and a <varname>message</varname>.
+            <code>[status, errmsg] = copyfile(source, destination)</code>
+            copies <varname>source</varname> to <varname>destination</varname>, returning the <varname>status</varname> and a <varname>errmsg</varname>.
         </para>
         <para>
             Whatever the operating system, if the copy succeeds, the <varname>status</varname> is 1
-            and the <varname>message</varname> is empty; if the copy fails, the <varname>status</varname> is 0 and the
-            <varname>message</varname> is not empty.
+            and the <varname>errmsg</varname> is empty; if the copy fails, the <varname>status</varname> is 0 and the
+            <varname>errmsg</varname> is not empty.
         </para>
         <para>
-            The timestamp given to the destination file is identical to that
-            taken from source file.
+            Timestamps and symbolic links are preserved when using the <code>"preserve"</code> option.
+            <warning>On Windows, symbolic links might require special privilege.</warning>
         </para>
     </refsection>
     <refsection>

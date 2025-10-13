@@ -35,20 +35,21 @@
 #include "fullpath.h"
 #include "os_string.h"
 /*--------------------------------------------------------------------------*/
-static int CopyFileFunction_others(wchar_t *DestinationFilename, wchar_t *SourceFilename);
-static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *SourceDirectory);
-static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir);
+static int CopyFileFunction_others(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions);
+static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions);
+static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir, int CopyFileOptions);
+static int preserve_all(char *DestinationFilename, char *SourceFilename, struct stat* sourceStat);
 /*--------------------------------------------------------------------------*/
-int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename)
+int CopyFileFunction(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions)
 {
     if (os_wcsicmp(DestinationFilename, SourceFilename) == 0)
     {
         return EPERM;
     }
-    return CopyFileFunction_others(DestinationFilename, SourceFilename);
+    return CopyFileFunction_others(DestinationFilename, SourceFilename, CopyFileOptions);
 }
 /*--------------------------------------------------------------------------*/
-int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory)
+int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions)
 {
     /* remove last file separator if it does not exist */
     if ( (SourceDirectory[wcslen(SourceDirectory) - 1] == L'\\') ||
@@ -64,12 +65,12 @@ int CopyDirectoryFunction(wchar_t *DestinationDirectory, wchar_t *SourceDirector
         DestinationDirectory[wcslen(DestinationDirectory) - 1] = L'\0';
     }
 
-    return CopyDirectoryFunction_others(DestinationDirectory, SourceDirectory);
+    return CopyDirectoryFunction_others(DestinationDirectory, SourceDirectory, CopyFileOptions);
 
 }
 /*--------------------------------------------------------------------------*/
 /* Copy file with all attributes  */
-static int CopyFileFunction_others(wchar_t *DestinationFilename, wchar_t *SourceFilename)
+static int CopyFileFunction_others(wchar_t *DestinationFilename, wchar_t *SourceFilename, int CopyFileOptions)
 {
     char *pStrDest = wide_string_to_UTF8(DestinationFilename);
     char *pStrSrc = wide_string_to_UTF8(SourceFilename);
@@ -96,54 +97,84 @@ static int CopyFileFunction_others(wchar_t *DestinationFilename, wchar_t *Source
     FREE(strSrcFullPath);
     FREE(strDestFullPath);
 
-    if ((sfd = open (pStrSrc, O_RDONLY, 0)) < 0)
+    if (lstat (pStrSrc, &st) < 0)
     {
         status = errno;
         goto err;
     }
 
-    if (fstat (sfd, &st) < 0)
+    // copy symbolic link as symbolic link
+    if (CopyFileOptions == COPYFILE_PRESERVE && S_ISLNK(st.st_mode))
     {
-        status = errno;
-        goto err;
+        char link_target[PATH_MAX];
+        ssize_t len = readlink(pStrSrc, link_target, sizeof(link_target) - 1);
+        if (len < 0) {
+            status = errno;
+            goto err;
+        }
+        // create the symbolic link
+        link_target[len] = '\0';
+        if (symlink(link_target, pStrDest) < 0) {
+            status = errno;
+            goto err;
+        }
     }
-
-    if ((dfd = open (pStrDest, O_WRONLY | O_CREAT | O_TRUNC, st.st_mode & 0777)) < 0)
+    else
     {
-        status = errno;
-        goto err;
-    }
-
-    while ((nread = read (sfd, buf, sizeof (buf))) > 0)
-    {
-        ptr = buf;
-        while (nread > 0)
+        // handle regular file
+        if ((sfd = open (pStrSrc, O_RDONLY, 0)) < 0)
         {
-            nwritten = write (dfd, ptr, nread);
-            if (nwritten <= 0)
+            status = errno;
+            goto err;
+        }
+
+        if ((dfd = open (pStrDest, O_WRONLY | O_CREAT | O_TRUNC, st.st_mode & 0777)) < 0)
+        {
+            status = errno;
+            goto err;
+        }
+
+        while ((nread = read (sfd, buf, sizeof (buf))) > 0)
+        {
+            ptr = buf;
+            while (nread > 0)
             {
-                status = errno;
-                goto err;
+                nwritten = write (dfd, ptr, nread);
+                if (nwritten <= 0)
+                {
+                    status = errno;
+                    goto err;
+                }
+                nread -= nwritten;
+                ptr += nwritten;
             }
-            nread -= nwritten;
-            ptr += nwritten;
+        }
+
+        if (nread < 0)
+        {
+            status = errno;
+            goto err;
+        }
+
+        if (close (dfd) < 0)
+        {
+            status = errno;
+            goto err;
+        }
+
+        fchmod (dfd, st.st_mode & 0777);
+        close (sfd);
+    }
+
+    if (CopyFileOptions == COPYFILE_PRESERVE)
+    {
+        if(preserve_all(pStrDest, pStrSrc, &st))
+        {
+            status = errno;
+            goto err;
         }
     }
 
-    if (nread < 0)
-    {
-        status = errno;
-        goto err;
-    }
-
-    if (close (dfd) < 0)
-    {
-        status = errno;
-        goto err;
-    }
-
-    fchmod (dfd, st.st_mode & 0777);
-    close (sfd);
     FREE(pStrDest);
     pStrDest = NULL;
     FREE(pStrSrc);
@@ -168,7 +199,7 @@ err:
     return status;
 }
 /*--------------------------------------------------------------------------*/
-static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *SourceDirectory)
+static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *SourceDirectory, int CopyFileOptions)
 {
     char *pStrDest = wide_string_to_UTF8(DestinationDirectory);
     char *pStrSrc = wide_string_to_UTF8(SourceDirectory);
@@ -206,8 +237,8 @@ static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *
             }
         }
     }
-
-    ierr = RecursiveCopyDirectory(pStrDest, pStrSrc);
+    
+    ierr = RecursiveCopyDirectory(pStrDest, pStrSrc, CopyFileOptions);
 
     FREE(pStrDest);
     FREE(pStrSrc);
@@ -220,10 +251,11 @@ static int CopyDirectoryFunction_others(wchar_t *DestinationDirectory, wchar_t *
     return 0;
 }
 /*--------------------------------------------------------------------------*/
-static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir)
+static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir, int CopyFileOptions)
 {
     DIR *dir;
     struct dirent *ent;
+    struct stat statBuf;
 
     dir = opendir(SourceDir) ;
 
@@ -267,8 +299,27 @@ static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir)
                 closedir(dir);
                 return EACCES;
             }
+            
+            if (stat(filenameSRC, &statBuf) == -1)
+            {
+                FREE(filenameDST);
+                FREE(filenameSRC);
+                closedir(dir);
+                return errno;
+            }
+            if (CopyFileOptions == COPYFILE_PRESERVE)
+            {
+                ierr = preserve_all(filenameDST, filenameSRC, &statBuf);
+            }
+            if (ierr)
+            {
+                FREE(filenameDST);
+                FREE(filenameSRC);
+                closedir(dir);
+                return ierr;
+            }
 
-            ierr = RecursiveCopyDirectory(filenameDST, filenameSRC);
+            ierr = RecursiveCopyDirectory(filenameDST, filenameSRC, CopyFileOptions);
             if (ierr)
             {
                 FREE(filenameDST);
@@ -282,7 +333,7 @@ static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir)
             wchar_t* wcfileDest = to_wide_string(filenameDST);
             wchar_t* wcfileSrc = to_wide_string(filenameSRC);
 
-            int ierr = CopyFileFunction_others(wcfileDest,  wcfileSrc);
+            int ierr = CopyFileFunction_others(wcfileDest,  wcfileSrc, CopyFileOptions);
             FREE(wcfileDest);
             FREE(wcfileSrc);
 
@@ -301,6 +352,31 @@ static int RecursiveCopyDirectory(char *DestinationDir, char *SourceDir)
 
     closedir(dir);
     return 0;
+}
+/*--------------------------------------------------------------------------*/
+static int preserve_all(char *DestinationFilename, char *SourceFilename, struct stat* sourceStat)
+{
+    int ierr = 0;
+
+    // Preserve directory timestamps, owner and mode
+    struct utimbuf times = {sourceStat->st_atime, sourceStat->st_mtime};
+    ierr = utime(DestinationFilename, &times);
+    if (ierr)
+    {
+        return ierr;
+    }
+    ierr = chown(DestinationFilename, sourceStat->st_uid, sourceStat->st_gid);
+    if (ierr)
+    {
+        return ierr;
+    }
+    ierr = chmod(DestinationFilename, sourceStat->st_mode);
+    if (ierr)
+    {
+        return ierr;
+    }
+
+    return ierr;
 }
 /*--------------------------------------------------------------------------*/
 #endif /* #ifndef _MSC_VER */

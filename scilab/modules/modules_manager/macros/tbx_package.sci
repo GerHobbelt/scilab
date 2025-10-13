@@ -44,7 +44,7 @@ function [package_file, listing, DESCRIPTION] = tbx_package(tbx_path, build_id, 
     end
 
     // copy the full directory content, preserving internal symbolic links
-    [status, msg] = copyfile(tbx_path, workdir);
+    [status, msg] = copyfile(tbx_path, workdir, "preserve");
     if status <> 1 then
         errmsg = msprintf("%s: unable to copy %s to %s: %s", "tbx_package", tbx_path, workdir, msg);
         error(errmsg);
