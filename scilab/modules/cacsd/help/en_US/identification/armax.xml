@@ -119,6 +119,7 @@ B(z) = b0+b1*z+...+b_s z^s ( s=-1 => B(z)=0)
         <title>Examples</title>
         <programlisting role="example"><![CDATA[
 //-Ex1- Arma model : y(t) = 0.2*u(t-1)+0.01*e(t-1)
+rand("seed", 0);
 ny=1,nu=1,sig=0.01;
 Arma=armac(1,[0,0.2],[0,1],ny,nu,sig)  //defining the above arma model
 u=rand(1,1000,'normal');     //a random input sequence u
@@ -131,6 +132,7 @@ Dcoeff=Armaest('d');    //Coefficients of the polynomial D(x)
  ]]></programlisting>
         <programlisting role="example"><![CDATA[
 //-Ex2- Arma1: y_t -0.8*y_{t-1} + 0.2*y_{t-2} =  sig*e(t)
+rand("seed", 0);
 ny=1,nu=1;sig=0.001;
 // First step: simulation the Arma1 model, for that we define
 // Arma2: y_t -0.8*y_{t-1} + 0.2*y_{t-2} = sig*u(t)

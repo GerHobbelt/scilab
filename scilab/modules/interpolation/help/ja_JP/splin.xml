@@ -263,11 +263,12 @@ xtitle("interpolation of the Runge function")
         </scilab:image>
         <programlisting role="example"><![CDATA[
 // 例 2 : ランダムなデータで異なるスプラインの動作を示す
+rand("seed", 0);
 a = 0; b = 1;        // 補間の間隔
 n = 10;              // 補間点のnb
 m = 800;             // 評価を行う離散点
 x = linspace(a,b,n)'; // 補間点の横座標
-y = rand(x);          // 補間点の縦座標
+y = rand(x,"uniform");          // 補間点の縦座標
 xx = linspace(a,b,m)';
 yk = interp(xx, x, y, splin(x,y,"not_a_knot"));
 yf = interp(xx, x, y, splin(x,y,"fast"));
@@ -280,11 +281,12 @@ xtitle("Various spline and sub-splines on random data")
 show_window()
  ]]></programlisting>
         <scilab:image>
+            rand("seed", 0)
             a = 0; b = 1;        // interval of interpolation
             n = 10;              // nb of interpolation  points
             m = 800;             // discretization for evaluation
             x = linspace(a,b,n)'; // abscissae of interpolation points
-            y = rand(x);          // ordinates of interpolation points
+            y = rand(x,"uniform");          // ordinates of interpolation points
             xx = linspace(a,b,m)';
             yk = interp(xx, x, y, splin(x,y,"not_a_knot"));
             yf = interp(xx, x, y, splin(x,y,"fast"));

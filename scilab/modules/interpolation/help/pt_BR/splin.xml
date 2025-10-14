@@ -243,11 +243,12 @@ plot2d(x, y, -9)
 xtitle("Intepolação da função de Runge")
 
 // exemplo 2 : mostra comportamento de splines diferentes em dados aleatórios
+rand("seed", 0);
 a = 0; b = 1;        // intervalo de interpolação
 n = 10;              // número de pontos de interpolação
 m = 800;             // discretização para avaliação
 x = linspace(a,b,n)'; // abscissas dos pontos de interpolação
-y = rand(x);          // ordenadas dos pontos de interpolação
+y = rand(x,"uniform");          // ordenadas dos pontos de interpolação
 xx = linspace(a,b,m)';
 yk = interp(xx, x, y, splin(x,y,"not_a_knot"));
 yf = interp(xx, x, y, splin(x,y,"fast"));

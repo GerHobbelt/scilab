@@ -259,11 +259,12 @@ xtitle("interpolation of the Runge function")
         </scilab:image>
         <programlisting role="example"><![CDATA[
 // example 2 : show behavior of different splines on random data
+rand("seed", 0)
 a = 0; b = 1;        // interval of interpolation
 n = 10;              // nb of interpolation  points
 m = 800;             // discretization for evaluation
 x = linspace(a,b,n)'; // abscissae of interpolation points
-y = rand(x);          // ordinates of interpolation points
+y = rand(x, "uniform");          // ordinates of interpolation points
 xx = linspace(a,b,m)';
 yk = interp(xx, x, y, splin(x,y,"not_a_knot"));
 yf = interp(xx, x, y, splin(x,y,"fast"));
@@ -276,11 +277,12 @@ xtitle("Various spline and sub-splines on random data")
 show_window()
  ]]></programlisting>
         <scilab:image>
+            rand("seed", 0)
             a = 0; b = 1;        // interval of interpolation
             n = 10;              // nb of interpolation  points
             m = 800;             // discretization for evaluation
             x = linspace(a,b,n)'; // abscissae of interpolation points
-            y = rand(x);          // ordinates of interpolation points
+            y = rand(x,"uniform");          // ordinates of interpolation points
             xx = linspace(a,b,m)';
             yk = interp(xx, x, y, splin(x,y,"not_a_knot"));
             yf = interp(xx, x, y, splin(x,y,"fast"));

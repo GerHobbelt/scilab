@@ -155,9 +155,10 @@ xtitle("Interpolação por spline de cos(x)cos(y)"+str)
         <para/>
         <programlisting role="example"><![CDATA[
 // exemplo 2 : diferentes funções de interpolação em dados aleatórios
+rand("seed", 0)
 n = 6;
 x = linspace(0,1,n); y = x;
-z = rand(n,n);
+z = rand(n,n,"uniform");
 np = 50;
 xp = linspace(0,1,np); yp = xp;
 [XP, YP] = ndgrid(xp,yp);

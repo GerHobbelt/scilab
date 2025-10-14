@@ -176,9 +176,10 @@ xtitle("spline interpolation of cos(x)cos(y)"+str)
 
         <programlisting role="example"><![CDATA[
 // example 2 : different interpolation functions on random data
+rand("seed", 0)
 n = 6;
 x = linspace(0,1,n); y = x;
-z = rand(n,n);
+z = rand(n,n, "uniform");
 np = 50;
 xp = linspace(0,1,np); yp = xp;
 [XP, YP] = ndgrid(xp,yp);
@@ -203,9 +204,10 @@ xtitle("monotone")
  ]]></programlisting>
         <scilab:image>
             // example 2 : different interpolation functions on random data
+            rand("seed", 0)
             n = 6;
             x = linspace(0,1,n); y = x;
-            z = rand(n,n);
+            z = rand(n,n, "uniform");
             np = 50;
             xp = linspace(0,1,np); yp = xp;
             [XP, YP] = ndgrid(xp,yp);
