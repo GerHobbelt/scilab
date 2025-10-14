@@ -8,6 +8,7 @@
 // <-- CLI SHELL MODE -->
 // <-- ENGLISH IMPOSED -->
 // <-- NO CHECK REF -->
+// <-- LINUX ONLY --> On windows, depending on the OS/permission this might not pass
 
 //
 // copyfile() have an option argument to copy or preserve symlink
@@ -33,11 +34,6 @@ function create_symbolic_link(target, link_name)
         status = host("ln -s " + target + " " + link_name);
     end
     
-    if status <> 0 && getos() == "Windows" then
-        // warning on unsupported symbolic link on Windows
-        warning("Failed to create symbolic link from " + target + " to " + link_name);
-        exit(0);
-    end
     if status <> 0 then
         error("Failed to create symbolic link from " + target + " to " + link_name);
     end
