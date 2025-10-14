@@ -237,7 +237,7 @@ void LoggerView::log(enum LogLevel level, const std::function <std::to_chars_res
 
 // operator<<-like function using to_chars(), renamed to avoid conflict with operator<<
 template<typename T>
-constexpr std::ostream& concat_with_to_chars(std::ostream& os, T t)
+static std::ostream& concat_with_to_chars(std::ostream& os, T t)
 {
     std::string str(15, '\0');
     auto result = to_chars(str.data(), str.data() + str.size(), t);
