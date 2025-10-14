@@ -898,12 +898,12 @@ XCOS_FALSE
 XCOS_TRUE
 OCAML_FALSE
 OCAML_TRUE
+OCAMLFIND_FALSE
+OCAMLFIND_TRUE
 XCOS_ENABLE
 WITH_OCAML
 OCAMLOPTFLAGS
 OCAMLCFLAGS
-OCAMLFIND_FALSE
-OCAMLFIND_TRUE
 OCAMLFIND
 OCAMLLEX
 OCAMLYACC
@@ -13565,14 +13565,6 @@ fi
 		{ printf "%s\n" "$as_me:${as_lineno-$LINENO}: WARNING: ocamlfind not found. Dependency resolution is set to manual, build might fail (Use --without-modelica to disable the Modelica compiler)." >&5
 printf "%s\n" "$as_me: WARNING: ocamlfind not found. Dependency resolution is set to manual, build might fail (Use --without-modelica to disable the Modelica compiler)." >&2;}
 	fi
-	 if test "$OCAMLFIND" = no; then
-  OCAMLFIND_TRUE=
-  OCAMLFIND_FALSE='#'
-else
-  OCAMLFIND_TRUE='#'
-  OCAMLFIND_FALSE=
-fi
-
 
 printf "%s\n" "#define WITH_OCAML /**/" >>confdefs.h
 
@@ -13594,6 +13586,14 @@ printf "%s\n" "#define WITH_OCAML /**/" >>confdefs.h
 fi
 
 
+
+ if test "$OCAMLFIND" = no; then
+  OCAMLFIND_TRUE=
+  OCAMLFIND_FALSE='#'
+else
+  OCAMLFIND_TRUE='#'
+  OCAMLFIND_FALSE=
+fi
 
  if test "$with_modelica" != no -a "$OCAMLC" != no -a "$OCAMLOPT" != no; then
   OCAML_TRUE=

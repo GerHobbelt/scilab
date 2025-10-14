@@ -926,6 +926,7 @@ fi
 
 AC_SUBST(XCOS_ENABLE)
 
+AM_CONDITIONAL(OCAMLFIND, test "$OCAMLFIND" = no)
 AM_CONDITIONAL(OCAML, test "$with_modelica" != no -a "$OCAMLC" != no -a "$OCAMLOPT" != no)
 AM_CONDITIONAL(XCOS, test "$XCOS_ENABLE" != no)
 
