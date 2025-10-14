@@ -58,6 +58,9 @@ int get_last_token();
 /** \brief For scanner just step . */
 void scan_step(void);
 
+/** \brief Reset scanner internal variables. */
+void scan_reset(void);
+
 /** \brief Error from the scanner (from scanscilab) . */
 void scan_error(std::string msg);
 

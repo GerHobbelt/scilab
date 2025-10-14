@@ -563,7 +563,7 @@ sharp             "#"
 
 <INITIAL>{rparen} {
   --paren_levels.top();
-  
+
   if (lambda_levels.size()) {
     --lambda_levels.top();
     if (lambda_levels.top() == 0) {
@@ -838,7 +838,12 @@ sharp             "#"
   scan_throw(EOL);
 }
 
-
+<CLASSDEC>
+  {
+    <<EOF>> {
+      scan_reset();
+    }
+}
 
 
 <MATRIX>
@@ -1082,7 +1087,7 @@ sharp             "#"
 
   <<EOF>>       {
     yy_pop_state();
-    paren_levels.pop();
+    scan_reset();
   }
 }
 
@@ -1122,6 +1127,7 @@ sharp             "#"
 
   <<EOF>>    {
     yy_pop_state();
+    scan_reset();
   }
 
   .                    {
@@ -1196,6 +1202,7 @@ sharp             "#"
 
   <<EOF>>    {
     yy_pop_state();
+    scan_reset();
     wchar_t *pwstBuffer = to_wide_string(pstBuffer.c_str());
     if (pstBuffer.c_str() != NULL && pwstBuffer == NULL)
     {
@@ -1254,6 +1261,7 @@ sharp             "#"
 
  <<EOF>>                    {
       yy_pop_state();
+      scan_reset();
 //    std::string str = "unexpected end of file in a comment";
 //    scan_error(str);
   }
@@ -1493,6 +1501,7 @@ sharp             "#"
 
     <<EOF>>                     {
       BEGIN(INITIAL);
+      scan_reset();
     }
 
     <*>.                                {
@@ -1509,11 +1518,20 @@ sharp             "#"
 }
 
 %%
+void scan_reset() {
+  while(YY_START != INITIAL) {
+    yy_pop_state();
+  }
+  classdef_inner_level = 0;
+  paren_levels = {};
+  lambda_levels = {};
+}
+
 
 int scan_throw(int token) {
   last_token = token;
 #ifdef DEV
-  std::cout << "--> [DEBUG] " << token_to_string(YY_START) << " TOKEN : " << token_to_string(token);
+  std::cout << "--> [DEBUG] Lex=" << token_to_string(YY_START) << " console=" << ParserSingleInstance::getControlStatus() << " TOKEN : " << token_to_string(token);
   std::cout << " @(" << yylloc.first_line << "." << yylloc.first_column << " -> " << yylloc.last_line << "." << yylloc.last_column << ")";
   if (token == ID || token == STR)
   {

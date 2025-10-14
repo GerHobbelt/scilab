@@ -2743,7 +2743,7 @@ case 45:
 YY_RULE_SETUP
 {
   --paren_levels.top();
-  
+
   if (lambda_levels.size()) {
     --lambda_levels.top();
     if (lambda_levels.top() == 0) {
@@ -3155,6 +3155,12 @@ YY_RULE_SETUP
 }
 	YY_BREAK
 
+case YY_STATE_EOF(CLASSDEC):
+{
+      scan_reset();
+    }
+	YY_BREAK
+
 case 98:
 YY_RULE_SETUP
 {
@@ -3429,7 +3435,7 @@ YY_RULE_SETUP
 case YY_STATE_EOF(MATRIX):
 {
     yy_pop_state();
-    paren_levels.pop();
+    scan_reset();
   }
 	YY_BREAK
 
@@ -3477,6 +3483,7 @@ YY_RULE_SETUP
 case YY_STATE_EOF(LINEBREAK):
 {
     yy_pop_state();
+    scan_reset();
   }
 	YY_BREAK
 case 121:
@@ -3554,6 +3561,7 @@ YY_RULE_SETUP
 case YY_STATE_EOF(LINECOMMENT):
 {
     yy_pop_state();
+    scan_reset();
     wchar_t *pwstBuffer = to_wide_string(pstBuffer.c_str());
     if (pstBuffer.c_str() != NULL && pwstBuffer == NULL)
     {
@@ -3621,6 +3629,7 @@ YY_RULE_SETUP
 case YY_STATE_EOF(REGIONCOMMENT):
 {
       yy_pop_state();
+      scan_reset();
 //    std::string str = "unexpected end of file in a comment";
 //    scan_error(str);
   }
@@ -3916,6 +3925,7 @@ YY_RULE_SETUP
 case YY_STATE_EOF(SHELLMODE):
 {
       BEGIN(INITIAL);
+      scan_reset();
     }
 	YY_BREAK
 case 157:
@@ -3938,7 +3948,6 @@ ECHO;
 	YY_BREAK
 			case YY_STATE_EOF(INITIAL):
 			case YY_STATE_EOF(BEGINID):
-			case YY_STATE_EOF(CLASSDEC):
 				yyterminate();
 
 	case YY_END_OF_BUFFER:
@@ -4964,10 +4973,19 @@ void yyfree (void * ptr )
 
 #define YYTABLES_NAME "yytables"
 
+void scan_reset() {
+  while(YY_START != INITIAL) {
+    yy_pop_state();
+  }
+  classdef_inner_level = 0;
+  paren_levels = {};
+  lambda_levels = {};
+}
+
 int scan_throw(int token) {
   last_token = token;
 #ifdef DEV
-  std::cout << "--> [DEBUG] " << token_to_string(YY_START) << " TOKEN : " << token_to_string(token);
+  std::cout << "--> [DEBUG] Lex=" << token_to_string(YY_START) << " console=" << ParserSingleInstance::getControlStatus() << " TOKEN : " << token_to_string(token);
   std::cout << " @(" << yylloc.first_line << "." << yylloc.first_column << " -> " << yylloc.last_line << "." << yylloc.last_column << ")";
   if (token == ID || token == STR)
   {
