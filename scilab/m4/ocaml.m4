@@ -41,8 +41,9 @@ AC_DEFUN([AC_CHECK_PROG_OCAML],[
 	fi
 	AC_CHECK_PROG(OCAMLFIND,ocamlfind,ocamlfind,no)
 	if test "$OCAMLFIND" = no; then
-		AC_MSG_ERROR([ocamlfind not found. Mandatory to build the Scicos modelica compiler (Use --without-modelica to disable the Modelica compiler).])
+		AC_MSG_WARN([ocamlfind not found. Dependency resolution is set to manual, build might fail (Use --without-modelica to disable the Modelica compiler).])
 	fi
+	AM_CONDITIONAL([OCAMLFIND], [test "$OCAMLFIND" = no])
 	AC_DEFINE([WITH_OCAML],[],[With OCAML])
 
 	AC_SUBST(OCAMLC)
