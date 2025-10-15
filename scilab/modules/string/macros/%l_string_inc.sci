@@ -58,6 +58,8 @@ function [head,str]=%l_field_format(x,i,level,maxlevel)
             value = getfield(i,x);
         catch
         end
+        // clear error
+        lasterror()
     end
     if ~exists("value","local")
         head = "void";

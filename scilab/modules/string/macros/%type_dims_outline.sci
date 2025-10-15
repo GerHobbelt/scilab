@@ -11,7 +11,7 @@
 function s = %type_dims_outline(x,typeStr,forceDims,brack)
     if ~isdef("typeStr","local")
         typeStr = typeof(x);
-    end 
+    end
     if ~isdef("forceDims","local")
         forceDims = %f;
     end
@@ -25,5 +25,7 @@ function s = %type_dims_outline(x,typeStr,forceDims,brack)
             sizeStr = part(sprintf("%dx",size(x)'),1:$-1)
             s = sprintf("%s%s %s%s",brack(1),sizeStr,typeStr,brack(2));
         end
+    catch
+        lasterror();
     end
 endfunction
