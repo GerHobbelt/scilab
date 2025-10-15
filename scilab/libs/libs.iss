@@ -21,3 +21,6 @@ Source: libs\intl\*.h; DestDir: {app}\libs\intl; Flags: recursesubdirs; Componen
 
 ; libxml2
 Source: libs\libxml2\*.h; DestDir: {app}\libs\libxml2; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
+
+; pcre2
+Source: libs\pcre2\*.*; DestDir: {app}\libs\pcre2; Flags: recursesubdirs; Components: {#COMPN_SCILAB}
