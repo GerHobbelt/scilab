@@ -29,106 +29,69 @@
     <br/>
     <br/>
     <div class="refsection">
-        <h2 class="title">Welcome to Scilab 2025.1.0</h2>
+        <h2 class="title">Welcome to Scilab 2026.0.0</h2>
         <p class="para">
-            Scilab 2025.1.0 is a new stable release of Scilab, the open-source
+            Scilab 2026.0.0 is a new stable release of Scilab, the open-source
             platform for numerical computation.
         </p>
         <p class="para">
-            Here is a tour of the changes since Scilab 2024.1.0.
+            Here is a tour of the changes since Scilab 2025.1.0.
         </p>
         <p class="para">
-            To view it in the documentation browser, enter <code>doc("2025.1.0")</code>
+            To view it in the documentation browser, enter <code>doc("2026.0.0")</code>
             in the console, and browse related pages.
         </p>
         <h3 class="title">Feature changes and additions</h3>
         <ul>
             <li>New functions:
                 <ul>
-                    <li><code>getdeprecated</code>: Gets names of deprecated functions and replacement function names.</li>
-                    <li><code>kmeans</code>: K-means clustering function.</li>
-                    <li><code>polyfit</code>: Fits a curve with a polynomial.</li>
-                    <li><code>polyval</code>: Evaluates a polynomial for some given values.</li>
-                    <li><code>addvars</code>: Add variables to table or timeseries.</li>
-                    <li><code>combinations</code>: Create a table containing all elements combinations.</li>
-                    <li><code>join</code>: Combine two tables or timeseries.</li>
-                    <li><code>removevars</code>: Remove variables from table or timeseries.</li>
-                    <li><code>diffxy</code>: Derivative of y with respect to x.</li>
-                    <li><code>frank</code>: Computes Frank matrix.</li>
-                    <li><code>hadamard</code>: Hadamard matrix.</li>
-                    <li><code>hankel</code>: Hankel matrix.</li>
-                    <li><code>hilbm</code>: Computes Hilbert matrix.</li>
-                    <li><code>invhilb</code>: Computes inverse of Hilbert matrix.</li>
-                    <li><code>magic</code>: Computes magic square matrix.</li>
-                    <li><code>pascal</code>: Pascal matrix.</li>
-                    <li><code>rosser</code>: Rosser matrix.</li>
-                    <li><code>vander</code>: Computes Vandermonde matrix.</li>
-                    <li><code>wilkinson</code>: Wilkinson matrix.</li>
-                    <li><code>day</code>: Extract day from datetime.</li>
-                    <li><code>month</code>: Extract month from datetime.</li>
-                    <li><code>cart2pol</code>: Convert cartesian coordinates to polar/cylindrical.</li>
-                    <li><code>pol2cart</code>: Convert polar/cylindrical coordinates to cartesian.</li>
-                    <li><code>cylinder</code>: Compute cylinder coordinates.</li>
-                    <li><code>peaks</code>: Compute values of a function with lots of local maxima and minima.</li>
-                    <li><code>sphere</code>: Compute sphere coordinates.</li>
-                    <li><code>rmfield</code>: Remove fields from a struct.</li>
-                    <li><code>tbx_package</code>: Package a toolbox source tree with binaries into a single file.</li>
+                    <li><code>cdftnc()</code>: Cumulative distribution function of the non-central student's T distribution.</li>
+                    <li><code>dbscan()</code>: Density-based clustering.</li>
+                    <li><code>enumeration()</code>: Get the enumeration of a classdef or an object.</li>
+                    <li><code>estimate_bandwidth()</code>: Estimate an appropriate bandwidth for mean shift clustering.</li>
+                    <li><code>gallery()</code>: Generate test matrices.</li>
+                    <li><code>gradient()</code>: Compute numerical gradient.</li>
+                    <li><code>isa()</code>: Check variable type.</li>
+                    <li><code>meanshift()</code>: Mean shift clustering algorithm.</li>
+                    <li><code>methods()</code>: Get accessible methods of a classdef or an object.</li>
+                    <li><code>properties()</code>: Get accessible properties of a classdef or an object.</li>
+                    <li><code>sortrows()</code>: Sort rows of a vector, matrix, table, or timeseries.</li>
+                    <li><code>spset()</code>: Set non-zero entries of a sparse matrix.</li>
                 </ul>
             </li>
             <li>Features improvements:
                 <ul>
-                    <li>New helpers for <code>arguments</code> (<code>mustBeScalar</code>, <code>mustBeScalarOrEmpty</code>, <code>mustBeEqualDimsOrEmpty</code>, <code>mustBeRow</code>, <code>mustBeColumn</code>) are been added.</li>
-                    <li><code>mustBeA</code> helper can now manage "empty" type (for empty matrix cases).</li>
-                    <li>Some Scilab modules (<code>CACSD</code>, <code>Linear Algebra</code>, <code>Time</code> ...) have been updated to use the `arguments` block hence enhancing their performances.</li>
-                    <li><code>pca()</code> function now manages more input/output arguments.</li>
-                    <li><code>writetable()</code> and <code>writetimeseries()</code> have been optimized.</li>
-                    <li><code>addcolor()</code> performances have been improved mainly for huge colormaps.</li>
-                    <li><code>toJSON()</code> and <code>fromJSON()</code> are now based on RapidJSON for efficiency and can manage <code>%Nan</code>, <code>-%Inf</code> and <code>%Inf</code> values.</li>
-                    <li>Option names are no more case-sensitive in <code>pca()</code>, <code>datetime()</code>, ...</li>
-                    <li><code>polyfit()</code> now manages weights for <code>y</code> data.</li>
-                    <li><code>host()</code> can now return both standard output and standard error.</li>
+                    <li><code>host()</code> has been rewritten and is now used as a backend for all other functions that perform system calls (<code>dos()</code>, <code>unix()</code>, <code>unix_g()</code>, <code>unix_s()</code>, <code>unix_w()</code>, and <code>unix_x()</code>), which are now obsolete.</li>
+                    <li><code>intersect()</code> now manages <code>duration</code>, <code>datetime</code>, <code>table</code>, and <code>timeseries</code> types.</li>
+                    <li><code>lib()</code> can now load a library without exposing its symbols (default behavior remains unchanged).</li>
+                    <li><code>setdiff()</code> now manages <code>duration</code>, <code>datetime</code>, <code>table</code>, and <code>timeseries</code> types.</li>
+                    <li><code>table()</code>, and <code>timeseries()</code> now manage integers.</li>
+                    <li><code>union()</code> now manages <code>duration</code>, <code>datetime</code>, <code>table</code>, and <code>timeseries</code> types.</li>
+                    <li>Options names are now case-insensitive for <code>duration()</code>, <code>calendarDuration()</code>, <code>datetime()</code>, <code>timeseries()</code>, <code>table()</code> functions.</li>
                 </ul>
             </li>
             <li>Language changes:
                 <ul>
-                    <li>Anonymous/Lambda functions are now available in Scilab using a dedicated syntax <code>#(x) -> (x+1)</code>.</li>
-                    <li>New simplified syntax to declare complex numbers: <code>1i</code> and <code>1j</code> (equivalent to <code>1*%i</code>).</li>
+                    <li>Classes/Objects can now be defined and used in Scilab based on the new <code>classdef</code>, <code>enumeration</code>, <code>properties</code> & <code>methods</code> keywords.</li>
+                    <li>The <code>end</code> keyword can now be used to specify the last row/column index of an array, similarly to <code>$</code>.</li>
                 </ul>
             </li>
-            <li>Web Tools:
+            <li>Graphics:
                 <ul>
-                    <li><code>timeout</code> optional parameter has been added to <code>http_*</code> functions.</li>
-                    <li><code>http_upload</code> can be used to upload a remote file with a different name as local one.</li>
-                </ul>
-            </li>
-            <li>Graphics &amp; GUI:
-                <ul>
-                    <li>New property <code>"TooltipString"</code> added for <code>uimenu</code> handles.</li>
-                    <li>New properties <code>"cdata_bounds"</code> &amp; <code>"color_range"</code> added for <code>Fac3d</code> handles.</li>
-                    <li><code>"anti_aliasing"</code> property value is now <code>"8x"</code> by default for graphic figures (Anti-aliasing was deactivated by default in previous versions).</li>
-                    <li><code>"fractional_font"</code> property value is now <code>"on"</code> by default for text handles (is was <code>"off"</code> by default in previous versions).</li>
-                    <li>Graphics functions now return the handles they created: <code>h = plot()</code>, <code>h = surf()</code>, ... This feature can be used to replace <code>h = gce()</code> in some cases.</li>
-                    <li>New way to manage rendering (raw text, LaTeX, MathML) of strings in graphics figures with:
-                        <ul>
-                            <li><code>"interpreter"</code> property added for <code>Text</code>, <code>Datatip</code>, <code>Label</code> and <code>Legend</code> handles,</li>
-                            <li><code>"tics_interpreters"</code> property added for <code>Axis</code> handles,</li>
-                            <li><code>"interpreters"</code> property added for <code>x_ticks</code>, <code>y_ticks</code> and <code>z_ticks</code> for <code>Axes</code> handles.</li>
-                        </ul>
-                    </li>
-                    <li>New <code>"browser"</code> style <code>uicontrol</code> based on JCEF (See <a href="https://scilab.discourse.group/t/scilab-2025-1-0-preview-browser-uicontrol/" class="ulink">dedicated post on Discourse</a>).</li>
-                    <li>New discrete/qualitative colormaps: <code>flag</code>, <code>prism</code>, <code>Accent</code>, <code>Dark2</code>, <code>Paired</code>, <code>Pastel1</code>, <code>Pastel2</code>, <code>Set1</code>, <code>Set2</code> and <code>Set3</code>.</li>
-                    <li>New <code>turbo</code> colormap: varying from blue, lightblue, green, yellow, orange then red (quite similar to <code>jet</code> but perceptually uniform).</li>
+                    <li>Axes handles can now have their own colormap. If not provided, then the parent figure colormap is used (as in previous versions).</li>
                 </ul>
             </li>
             <li>Xcos:
                 <ul>
-                    <li><a href="https://ssp-standard.org/" class="ulink">SSP</a> (System Structure and Parametrization) format support preview: Xcos can now load &amp; save SSP files (hence providing better interoperability with other simulation tools).</li>
+                    <li>Diagrams are saved as <a href="https://ssp-standard.org/" class="ulink">SSP</a> (System Structure and Parametrization) files by default. This setting can be edited in user preferences.</li>
+                    <li>Users are now enabled to save their diagrams as COSF files.</li>
+                    <li>COS format is no longer associated with Xcos under Windows.</li>
+                    <li>SSP files are associated with Scilab during installation under Windows.</li>
                 </ul>
             </li>
         </ul>
 
         <p class="para">
-            In this version, extra effort has been expanded on fixing issues and stabilization.
             Detailed information about those improvements can be found in the <a href="CHANGES.html">CHANGES</a> file.
         </p>
     </div>
@@ -140,7 +103,7 @@
                 beginners tutorial</a>
             and <a href="https://www.scilab.org/sites/default/files/Xcos_beginners_0.pdf">Xcos
                 beginners tutorial</a> provided by the Scilab Team.</p>
-        <p class="para">The Scilab Team provides also
+        <p class="para">The Scilab Team also provides
             some <a href="https://www.scilab.org/tutorials">documentation
                 and tutorials</a>.</p>
     </div>
@@ -149,7 +112,7 @@
         <h3 class="title">Other resources</h3>
         <p class="para"><a href="https://www.scilab.org/" class="ulink">Scilab Website</a> - Consult Scilab official
             website</p>
-        <p class="para"><a href="https://gitlab.com/scilab/scilab/-/wikis/home" class="ulink">Wiki</a> - Consult documentations, tricks, etc.
+        <p class="para"><a href="https://gitlab.com/scilab/scilab/-/wikis/home" class="ulink">Wiki</a> - Consult documentation, tricks, etc.
         </p>
         <p class="para"><a href="https://gitlab.com/scilab/scilab/-/issues" class="ulink">Issues</a> - Report bugs and wishes
             about Scilab</p>
@@ -159,7 +122,7 @@
             Communicate and exchange with the community</p>
         <p class="para"><a href="https://atoms.scilab.org/" class="ulink">ATOMS</a> - Browse Scilab packaged modules</p>
         <p class="para"><a href="https://fileexchange.scilab.org/" class="ulink">File Exchange</a> - Exchange your
-            scripts, results and files.</p>
+            scripts, results, and files.</p>
         <br/>
     </div>
 </body>
