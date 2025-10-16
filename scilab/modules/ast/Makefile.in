@@ -1058,6 +1058,10 @@ includes/exps/trycatchexp.hxx \
 includes/exps/vardec.hxx \
 includes/exps/var.hxx \
 includes/exps/whileexp.hxx \
+includes/exps/classdec.hxx \
+includes/exps/enumdec.hxx \
+includes/exps/methodsdec.hxx \
+includes/exps/propertiesdec.hxx \
 includes/operations/doublecomplex.h \
 includes/operations/generic_operations.hxx \
 includes/operations/interface_addition.h \
