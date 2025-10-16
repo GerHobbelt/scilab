@@ -17,13 +17,16 @@ builder_linux:
     - echo "Build image ${SCI_REGISTRY_IMAGE}/linux-builder:${DOCKER_TAG}"
     - .gitlab-ci/docker_setup.sh --builder "${SCI_REGISTRY_IMAGE}/linux-builder" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
-  rules:
+  rules: &BUILD_DOCKER_IMAGES
     - if: $BUILD_DOCKER_IMAGES
     # do not rebuild on contributor's fork
     - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
       when: never
     # do not rebuild on scheduled
     - if: $CI_PIPELINE_SOURCE == "schedule"
+      when: never
+    # do not rebuild on gitlab tag, see docker_tag_linux job
+    - if: $CI_COMMIT_TAG
       when: never
     # rebuild on demand
     - changes:
@@ -46,16 +49,7 @@ prebuild_linux:
     - echo "Build image ${SCI_REGISTRY_IMAGE}/linux-prebuild:${DOCKER_TAG}"
     - .gitlab-ci/docker_setup.sh --prebuild "${SCI_REGISTRY_IMAGE}/linux-prebuild" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
-  rules:
-    - if: $BUILD_DOCKER_IMAGES
-    # do not rebuild on contributor's fork
-    - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
-      when: never
-    # do not rebuild on scheduled
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    # rebuild on demand
-    - changes: *DOCKER_CHANGES
+  rules: *BUILD_DOCKER_IMAGES
 
 tester_linux:
   stage: docker_setup
@@ -65,17 +59,7 @@ tester_linux:
     - docker login -u "${CI_REGISTRY_USER}" -p "${CI_JOB_TOKEN}" "${CI_REGISTRY}"
     - .gitlab-ci/docker_setup.sh --testers --registry "${CI_REGISTRY_IMAGE}" "${DOCKER_TAG}"
     - docker logout "${CI_REGISTRY}"
-  rules:
-    - if: $BUILD_DOCKER_IMAGES
-    # do not rebuild on contributor's fork
-    - if: $CI_PROJECT_PATH_SLUG !~ /scilab-scilab/
-      when: never
-    # do not rebuild on scheduled
-    - if: $CI_PIPELINE_SOURCE == "schedule"
-      when: never
-    # rebuild on demand
-    - changes: *DOCKER_CHANGES
-      allow_failure: true
+  rules: *BUILD_DOCKER_IMAGES
 
 # Tag the docker image when a gitlab tag is created.
 # Keep using the image :${DOCKER_TAG} for the rest of the CI
