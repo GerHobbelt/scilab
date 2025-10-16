@@ -385,14 +385,18 @@ classdef Matrix
         end
 
         function r = plus(a ,b) //generic overload for operation +
-            r = Matrix(a.value + b.value);
+            if isa(a, "Matrix") & isa(b, "Matrix") then
+                r = Matrix(a.value + b.value);
+            else
+                error(sprintf("Operation + not defined for %s and %s.\n", typeof(a), typeof(b)));
+            end
         end
 
-        function r = plus_b(a ,b) //overload for Matrix + bool or bool + Matrix
+        function r = plus_s(a ,b) //overload for Matrix + double or double + Matrix
             if isa(a, "Matrix") then
-                r = Matrix(a.value + double(b));
+                r = Matrix(a.value + b);
             else
-                r = Matrix(double(a) + b.value);
+                r = Matrix(a + b.value);
             end
         end
 
@@ -413,8 +417,8 @@ end
 a = Matrix([1 2 3 4]);
 b = Matrix([4 3 2 1]);
 a + b
-a + %t
-%f + b
+a + 10
+10 + b
 a + int8(10)
 int8(10) + b
 ]]>

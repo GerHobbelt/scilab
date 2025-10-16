@@ -208,3 +208,56 @@ end
 // outline should exist by default (unless you already override it)
 s = T8_Plain().outline();
 assert_checkequal(type(s), 10);
+
+//overload operators
+classdef Matrix
+    properties
+        value = []
+    end
+    methods
+        function Matrix(v)
+            this.value = v;
+        end
+
+        function r = plus(a ,b) //generic overload for operation +
+            if isa(a, "Matrix") & isa(b, "Matrix") then
+                r = Matrix(a.value + b.value);
+            else
+                error(sprintf("Operation + not defined for %s and %s.\n", typeof(a), typeof(b)));
+            end
+        end
+
+        function r = plus_s(a ,b) //overload for Matrix + dobule or double + Matrix
+            if isa(a, "Matrix") then
+                r = Matrix(a.value + b);
+            else
+                r = Matrix(a + b.value);
+            end
+        end
+
+        function r = plus_i(a ,b) //overload for Matrix + int or int + Matrix
+            if isa(a, "Matrix") then
+                r = Matrix(a.value + double(b));
+            else
+                r = Matrix(double(a) + b.value);
+            end
+        end
+
+        function disp()
+            disp(this.value);
+        end
+    end
+end
+
+a = Matrix([1 2 3 4]);
+b = Matrix([4 3 2 1]);
+res = a + b;
+assert_checkequal(res.value, [5 5 5 5]);
+res = a + 10;
+assert_checkequal(res.value, [11 12 13 14]);
+res = 10 + b;
+assert_checkequal(res.value, [14 13 12 11]);
+res = a + int8(10);
+assert_checkequal(res.value, [11 12 13 14]);
+res = int8(10) + b;
+assert_checkequal(res.value, [14 13 12 11]);

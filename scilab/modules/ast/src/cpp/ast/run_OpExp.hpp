@@ -119,9 +119,11 @@ void RunVisitorT<T>::visitprivate(const OpExp& e)
                 if (ret == types::Function::OK && out.size() == 1)
                 {
                     pResult = out[0];
+                    cleanIn(in, out);
+                    setResult(pResult);
+                    CoverageInstance::stopChrono((void*)&e);
+                    return;
                 }
-
-                cleanIn(in, out);
             }
         }
 

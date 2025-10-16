@@ -681,7 +681,7 @@ Function::ReturnValue Classdef::object_disp(typed_list& in, int _iRetCount, type
 Function::ReturnValue Classdef::object_outline(typed_list& in, int _iRetCount, typed_list& out)
 {
     std::wostringstream ostr;
-    ostr << " " << getName() << " object";
+    ostr << " (" << getName() << " object)";
     out.push_back(new String(ostr.str().data()));
     return Function::OK;
 }
